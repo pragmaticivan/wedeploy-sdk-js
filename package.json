@@ -1,0 +1,42 @@
+{
+  "name": "api.js",
+  "version": "0.0.0",
+  "description": "Launchpad Api",
+  "scripts": {
+    "test": "gulp test"
+  },
+  "keywords": [
+    "metal",
+    "metaljs"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/liferay-apps/api.js.git"
+  },
+  "dependencies": {
+    "metaljs": "liferay/metal"
+  },
+  "devDependencies": {
+    "babel": "^4.7.3",
+    "browserify": "^9.0.3",
+    "browserify-imports-renamer": "^0.1.1",
+    "browserify-istanbul": "^0.2.0",
+    "chai": "^2.2.0",
+    "closure-templates": "^20141017.0.1",
+    "gulp": "^3.8.11",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^1.1.0",
+    "isparta": "^2.2.0",
+    "karma": "^0.12.31",
+    "karma-browserify": "^4.0.0",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^0.1.7",
+    "karma-coverage": "eduardolundgren/karma-coverage#next",
+    "karma-mocha": "^0.1.10",
+    "karma-sauce-launcher": "^0.2.10",
+    "karma-sinon": "^1.0.4",
+    "mocha": "^2.2.1",
+    "run-sequence": "^1.0.2",
+    "sinon": "^1.14.1"
+  }
+}
