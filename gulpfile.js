@@ -4,6 +4,7 @@ var uglify = require('gulp-uglify');
 var runSequence = require('run-sequence');
 
 require('metaljs')({
+  globalName: 'launchpad',
   bundleFileName: 'api.js'
 });
 
