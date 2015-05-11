@@ -1,6 +1,6 @@
 'use strict';
 
-import {async} from '../../src/promise/Promise';
+import {async} from 'metal-promise/src/promise/Promise';
 import createFakeXMLHttpRequest from '../fixture/FakeXMLHttpRequest';
 import XhrTransport from '../../src/net/XhrTransport';
 

@@ -3,7 +3,7 @@
 import array from 'metaljs/src/array/array';
 import EventEmitter from 'metaljs/src/events/EventEmitter';
 import EventEmitterProxy from 'metaljs/src/events/EventEmitterProxy';
-import {CancellablePromise} from '../promise/Promise';
+import {CancellablePromise} from 'metal-promise/src/promise/Promise';
 import WebSocketTransport from '../net/WebSocketTransport';
 
 /**

@@ -1,6 +1,6 @@
 'use strict';
 
-import {async} from '../../src/promise/Promise';
+import {async} from 'metal-promise/src/promise/Promise';
 
 var createFakeXMLHttpRequest = function(status, responseText) {
   var FakeXMLHttpRequest = function() {
