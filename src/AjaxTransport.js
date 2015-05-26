@@ -1,7 +1,7 @@
 import core from 'metaljs/src/core';
 import Transport from './Transport';
 import ClientResponse from './ClientResponse';
-import {CancellablePromise as Promise} from 'metal-promise/src/promise/Promise.js';
+import {CancellablePromise as Promise} from 'metal-promise/src/promise/Promise';
 
 /**
  * Provides a convenient interface for data transport.
