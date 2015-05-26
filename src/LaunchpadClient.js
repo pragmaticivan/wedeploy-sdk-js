@@ -28,6 +28,16 @@ class LaunchpadClient {
   }
 
   /**
+   * Creates new socket.io instance.
+   */
+  connect(opt_options) {
+    if (!io) {
+      throw new Error('Socket.io client not loaded');
+    }
+    return io(this.url(), opt_options);
+  }
+
+  /**
    * Creates new {@link LaunchpadBaseClient}.
    */
   path(path) {

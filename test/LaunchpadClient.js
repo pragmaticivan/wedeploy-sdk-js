@@ -16,6 +16,12 @@ describe('LaunchpadClient', function () {
     this.xhr.restore();
   });
 
+  it('should throws exception when socket.io is not loaded', function() {
+    assert.throws(function() {
+      LaunchpadClient.url('/url').connect();
+    }, Error);
+  });
+
   it('should send DELETE request', function(done) {
     LaunchpadClient.url('/url').delete().then(function(response) {
       assert.strictEqual('/url', response.request().url());
@@ -25,7 +31,6 @@ describe('LaunchpadClient', function () {
     });
     this.requests[0].respond(200);
   });
-
 
   it('should send GET request', function(done) {
     LaunchpadClient.url('/url').get().then(function(response) {
