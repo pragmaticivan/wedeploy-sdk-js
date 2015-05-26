@@ -8,14 +8,13 @@ module.exports = function (config) {
 		frameworks: ['mocha', 'chai', 'sinon', 'browserify'],
 
 		files: [
-			'node_modules/closure-templates/soyutils.js',
-			'src/**/*.js',
-			'test/**/*.js'
+			'src/*.js',
+			'test/*.js'
 		],
 
 		preprocessors: {
-			'src/**/*.js': ['browserify'],
-			'test/**/*.js': ['browserify']
+			'src/*.js': ['browserify'],
+			'test/*.js': ['browserify']
 		},
 
 		browserify: {
@@ -31,7 +30,7 @@ module.exports = function (config) {
 		reporters: ['coverage', 'progress'],
 
 		coverageReporter: {
-			ignore: ['**/bower_components/**', '**/test/**', '**/*.soy.js', '**/src/promise/**'],
+			ignore: ['**/bower_components/**', '**/test/**', '**/src/promise/**'],
 			reporters: [
 				{type: 'text-summary'},
 				{type: 'html'},

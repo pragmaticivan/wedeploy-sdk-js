@@ -17,8 +17,8 @@
     "metaljs": "liferay/metal"
   },
   "devDependencies": {
-    "babel": "^4.7.3",
-    "browserify": "^9.0.3",
+    "babel": "^5.2.17",
+    "browserify": "^10.2.1",
     "browserify-imports-renamer": "^0.1.1",
     "browserify-istanbul": "^0.2.0",
     "chai": "^2.2.0",
@@ -26,7 +26,7 @@
     "gulp": "^3.8.11",
     "gulp-rename": "^1.2.2",
     "gulp-uglify": "^1.1.0",
-    "isparta": "^2.2.0",
+    "isparta": "^3.0.3",
     "karma": "^0.12.31",
     "karma-browserify": "^4.0.0",
     "karma-chai": "^0.1.0",
