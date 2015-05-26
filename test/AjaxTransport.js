@@ -141,7 +141,7 @@ describe('AjaxTransport', function () {
     clientRequest.query('query', 1);
     clientRequest.query('query', ' ');
     transport.request(
-          clientRequest.url(), clientRequest.method(), null,
+          clientRequest.url(), clientRequest.method(), null, null,
           clientRequest.queries(), null, false).then(function(xhrResponse) {
             assert.strictEqual('/url?foo=1&query=1&query=%20', xhrResponse.url);
             done();

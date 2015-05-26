@@ -20,8 +20,8 @@ class AjaxTransport extends Transport {
     var self = this;
 
     var deferred = this.request(
-      clientRequest.url(), clientRequest.method(), clientRequest.headers(),
-      clientRequest.queries(), null, false);
+      clientRequest.url(), clientRequest.method(), clientRequest.body(),
+      clientRequest.headers(), clientRequest.queries(), null, false);
 
     return deferred.then(function(response) {
       var clientResponse = new ClientResponse(clientRequest);
@@ -62,6 +62,7 @@ class AjaxTransport extends Transport {
    * Requests the url using XMLHttpRequest.
    * @param {!string} url
    * @param {!string} method
+   * @param {?string} body
    * @param {array.<object<string, string>>=} opt_headers
    * @param {array.<object<string, string>>=} opt_queries
    * @param {number=} opt_timeout
@@ -69,7 +70,7 @@ class AjaxTransport extends Transport {
    * @return {Promise} Deferred ajax request.
    * @protected
    */
-  request(url, method, opt_headers, opt_queries, opt_timeout, opt_sync) {
+  request(url, method, body, opt_headers, opt_queries, opt_timeout, opt_sync) {
     var request = new XMLHttpRequest();
 
     var promise = new Promise(function(resolve, reject) {
@@ -113,7 +114,7 @@ class AjaxTransport extends Transport {
       });
     }
 
-    request.send(null);
+    request.send(core.isDef(body) ? body : null);
 
     if (core.isDefAndNotNull(opt_timeout)) {
       var timeout = setTimeout(function() {
