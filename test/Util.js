@@ -16,4 +16,14 @@ describe('Util', function() {
     assert.strictEqual('foo/bar', Util.joinPaths('foo', '/bar'));
   });
 
+  it('should do what...', function() {
+    var headers = "Name\u003a\u0020Value\u000d\u000aName\u003a\u0020Value";
+    assert.deepEqual([{
+      name: 'Name',
+      value: 'Value'
+    }, {
+      name: 'Name',
+      value: 'Value'
+    }], Util.parseResponseHeaders(headers));
+  });
 });

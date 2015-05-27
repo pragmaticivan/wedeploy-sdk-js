@@ -1,5 +1,6 @@
 import core from 'metaljs/src/core';
 import Transport from './Transport';
+import Util from './Util';
 import ClientResponse from './ClientResponse';
 import {CancellablePromise as Promise} from 'metal-promise/src/promise/Promise';
 
@@ -27,35 +28,9 @@ class AjaxTransport extends Transport {
       var clientResponse = new ClientResponse(clientRequest);
       clientResponse.body(response.responseText);
       clientResponse.statusCode(response.status);
-      clientResponse.headers(self.parseResponseHeaders(response.getAllResponseHeaders()));
+      clientResponse.headers(Util.parseResponseHeaders(response.getAllResponseHeaders()));
       return clientResponse;
     });
-  }
-
-  /**
-   * XmlHttpRequest's getAllResponseHeaders() method returns a string of
-   * response headers according to the format described on the spec:
-   * http://www.w3.org/TR/XMLHttpRequest/#the-getallresponseheaders-method
-   * This method parses that string into a user-friendly name/value pair
-   * object.
-   * @param {string} allHeaders All headers as string.
-   * @return {array.<object<string, string>>=}
-   */
-  parseResponseHeaders(allHeaders) {
-    var headers = [];
-    if (!allHeaders) {
-      return headers;
-    }
-    var pairs = allHeaders.split('\u000d\u000a');
-    for (var i = 0; i < pairs.length; i++) {
-      var index = pairs[i].indexOf('\u003a\u0020');
-      if (index > 0) {
-        var name = pairs[i].substring(0, index);
-        var value = pairs[i].substring(index + 2);
-        headers.push({ name: name, value: value });
-      }
-    }
-    return headers;
   }
 
   /**
