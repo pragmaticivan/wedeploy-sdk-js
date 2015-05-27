@@ -45,14 +45,14 @@ describe('LaunchpadClient', function () {
 
   it('should use different transport', function() {
     var transport = new Transport();
-    var client = LaunchpadClient.url('http://domain:8080/path').use(transport);
+    var client = LaunchpadClient.url().use(transport);
     assert.strictEqual(transport, client.customTransport_);
     assert.ok(client instanceof LaunchpadClient);
   });
 
   it('should inherit parent transport', function() {
     var transport = new Transport();
-    var parent = LaunchpadClient.url('http://domain:8080/path').use(transport);
+    var parent = LaunchpadClient.url().use(transport);
     var child = parent.path('/path');
     assert.strictEqual(parent.customTransport_, child.customTransport_);
   });
