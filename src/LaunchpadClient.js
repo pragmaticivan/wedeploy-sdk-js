@@ -41,7 +41,7 @@ class LaunchpadClient {
    * constructor will be provided:
    *
    *   LaunchpadClient.url('http://domain:8080/path').connect({ foo: true });
-   *     -> io('http://domain:8080/path', { path: '/path', foo: true });
+   *     -> io('domain:8080', { path: '/path', foo: true });
    *
    * @param {object} opt_options
    */
