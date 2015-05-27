@@ -24,7 +24,7 @@ describe('LaunchpadClient', function () {
 
   it('should socket.io use path from client url', function(done) {
     window.io = function(url, opts) {
-      assert.strictEqual('http://domain:8080/path', url);
+      assert.strictEqual('domain:8080', url);
       assert.deepEqual({ path: '/path' }, opts);
       done();
     }
@@ -34,7 +34,7 @@ describe('LaunchpadClient', function () {
 
   it('should socket.io use path from client url and ignore from options', function(done) {
     window.io = function(url, opts) {
-      assert.strictEqual('http://domain:8080/path', url);
+      assert.strictEqual('domain:8080', url);
       assert.deepEqual({ path: '/path' }, opts);
       done();
     }

@@ -41,24 +41,29 @@ class LaunchpadClient {
       throw new Error('Socket.io client not loaded');
     }
 
+    var url = this.parseUrl(this.url());
     opt_options = opt_options || {};
-    opt_options.path = this.getUrlPath(this.url());
+    opt_options.path = url[1];
 
-    return io(this.url(), opt_options);
+    return io(url[0], opt_options);
   }
 
   /**
    * Parses the url separating the domain and port from the path.
    * @param {string} url
-   * @return {string} The url path.
+   * @return {array} Array containing the url domain and path.
    * @protected
    */
-  getUrlPath(url) {
+  parseUrl(url) {
+    var base;
+    var path;
     var domainAt = url.indexOf('//');
     if (domainAt > -1) {
       url = url.substring(domainAt + 2);
     }
-    return url.substring(url.indexOf('/'));
+    base = url.substring(0, url.indexOf('/'));
+    path = url.substring(url.indexOf('/'));
+    return [base, path];
   }
 
   /**
