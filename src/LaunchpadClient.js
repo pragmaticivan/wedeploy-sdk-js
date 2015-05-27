@@ -19,6 +19,8 @@ class LaunchpadClient {
 
     this.headers_ = [];
     this.queries_ = [];
+
+    this.header('Content-Type', 'application/json');
   }
 
   /**

@@ -81,7 +81,7 @@ describe('LaunchpadClient', function () {
     LaunchpadClient.url('/url').post('body').then(function(response) {
       assert.strictEqual('/url', response.request().url());
       assert.strictEqual('POST', response.request().method());
-      assert.strictEqual('body', response.request().body());
+      assert.strictEqual('"body"', response.request().body());
       done();
     });
     this.requests[0].respond(200);
@@ -91,7 +91,7 @@ describe('LaunchpadClient', function () {
     LaunchpadClient.url('/url').put('body').then(function(response) {
       assert.strictEqual('/url', response.request().url());
       assert.strictEqual('PUT', response.request().method());
-      assert.strictEqual('body', response.request().body());
+      assert.strictEqual('"body"', response.request().body());
       done();
     });
     this.requests[0].respond(200);
@@ -101,7 +101,7 @@ describe('LaunchpadClient', function () {
     LaunchpadClient.url('/url').patch('body').then(function(response) {
       assert.strictEqual('/url', response.request().url());
       assert.strictEqual('PATCH', response.request().method());
-      assert.strictEqual('body', response.request().body());
+      assert.strictEqual('"body"', response.request().body());
       done();
     });
     this.requests[0].respond(200);
@@ -147,7 +147,7 @@ describe('LaunchpadClient', function () {
       .header('header', 1)
       .get()
       .then(function(response) {
-        assert.deepEqual([{name: 'header', value: 1}], response.request().headers());
+        assert.deepEqual([{name: 'Content-Type', value: 'application/json'}, {name: 'header', value: 1}], response.request().headers());
         done();
       });
     this.requests[0].respond(200);
@@ -159,7 +159,7 @@ describe('LaunchpadClient', function () {
       .header('header', 2)
       .get()
       .then(function(response) {
-        assert.deepEqual([{name: 'header', value: 1}, {name: 'header', value: 2}], response.request().headers());
+        assert.deepEqual([{name: 'Content-Type', value: 'application/json'}, {name: 'header', value: 1}, {name: 'header', value: 2}], response.request().headers());
         done();
       });
     this.requests[0].respond(200);
