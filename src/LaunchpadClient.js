@@ -1,5 +1,6 @@
 import TransportFactory from './TransportFactory';
 import ClientRequest from './ClientRequest';
+import Util from './Util';
 
 /**
  * Base client contains code that is same for all transports.
@@ -41,29 +42,11 @@ class LaunchpadClient {
       throw new Error('Socket.io client not loaded');
     }
 
-    var url = this.parseUrl(this.url());
+    var url = Util.parseUrl(this.url());
     opt_options = opt_options || {};
     opt_options.path = url[1];
 
     return io(url[0], opt_options);
-  }
-
-  /**
-   * Parses the url separating the domain and port from the path.
-   * @param {string} url
-   * @return {array} Array containing the url domain and path.
-   * @protected
-   */
-  parseUrl(url) {
-    var base;
-    var path;
-    var domainAt = url.indexOf('//');
-    if (domainAt > -1) {
-      url = url.substring(domainAt + 2);
-    }
-    base = url.substring(0, url.indexOf('/'));
-    path = url.substring(url.indexOf('/'));
-    return [base, path];
   }
 
   /**
