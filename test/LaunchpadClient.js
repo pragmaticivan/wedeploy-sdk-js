@@ -1,4 +1,5 @@
 import LaunchpadClient from '../src/LaunchpadClient';
+import Transport from '../src/Transport';
 
 describe('LaunchpadClient', function () {
 
@@ -40,6 +41,20 @@ describe('LaunchpadClient', function () {
     }
     LaunchpadClient.url('http://domain:8080/path').connect({ path: '/ignore' });
     delete window.io;
+  });
+
+  it('should use different transport', function() {
+    var transport = new Transport();
+    var client = LaunchpadClient.url('http://domain:8080/path').use(transport);
+    assert.strictEqual(transport, client.customTransport_);
+    assert.ok(client instanceof LaunchpadClient);
+  });
+
+  it('should inherit parent transport', function() {
+    var transport = new Transport();
+    var parent = LaunchpadClient.url('http://domain:8080/path').use(transport);
+    var child = parent.path('/path');
+    assert.strictEqual(parent.customTransport_, child.customTransport_);
   });
 
   it('should send DELETE request', function(done) {

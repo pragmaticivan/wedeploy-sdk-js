@@ -25,7 +25,15 @@ class LaunchpadClient {
    * Static factory for creating launchpad client.
    */
   static url(url) {
-    return new LaunchpadClient(url);
+    return new LaunchpadClient(url).use(this.customTransport_);
+  }
+
+  /**
+   * Specifies {@link Transport} implementation.
+   */
+  use(transport) {
+    this.customTransport_ = transport;
+    return this;
   }
 
   /**
@@ -53,7 +61,7 @@ class LaunchpadClient {
    * Creates new {@link LaunchpadBaseClient}.
    */
   path(path) {
-    return new LaunchpadClient(this.url(), path);
+    return new LaunchpadClient(this.url(), path).use(this.customTransport_);
   }
 
   /**
@@ -163,7 +171,7 @@ class LaunchpadClient {
    * @return {Promise} Deferred request.
    */
   sendAsync(method, body) {
-    var transport = TransportFactory.instance().getDefault();
+    var transport = this.customTransport_ || TransportFactory.instance().getDefault();
 
     var clientRequest = new ClientRequest();
     clientRequest.body(body);
