@@ -13,7 +13,7 @@ class LaunchpadClient {
     }
 
     var baseUrl = (arguments.length > 1) ? arguments[0] : '';
-    var url = arguments[arguments.length - 1];
+    var url = arguments[arguments.length - 1] || '';
     this.url_ = baseUrl + url;
 
     this.headers_ = [];
@@ -28,13 +28,37 @@ class LaunchpadClient {
   }
 
   /**
-   * Creates new socket.io instance.
+   * Creates new socket.io instance. The parameters passed to socket.io
+   * constructor will be provided:
+   *
+   *   LaunchpadClient.url('http://domain:8080/path').connect({ foo: true });
+   *     -> io('http://domain:8080/path', { path: '/path', foo: true });
+   *
+   * @param {object} opt_options
    */
   connect(opt_options) {
     if (!window.io) {
       throw new Error('Socket.io client not loaded');
     }
+
+    opt_options = opt_options || {};
+    opt_options.path = this.getUrlPath(this.url());
+
     return io(this.url(), opt_options);
+  }
+
+  /**
+   * Parses the url separating the domain and port from the path.
+   * @param {string} url
+   * @return {string} The url path.
+   * @protected
+   */
+  getUrlPath(url) {
+    var domainAt = url.indexOf('//');
+    if (domainAt > -1) {
+      url = url.substring(domainAt + 2);
+    }
+    return url.substring(url.indexOf('/'));
   }
 
   /**

@@ -22,6 +22,26 @@ describe('LaunchpadClient', function () {
     }, Error);
   });
 
+  it('should socket.io use path from client url', function(done) {
+    window.io = function(url, opts) {
+      assert.strictEqual('http://domain:8080/path', url);
+      assert.deepEqual({ path: '/path' }, opts);
+      done();
+    }
+    LaunchpadClient.url('http://domain:8080/path').connect();
+    delete window.io;
+  });
+
+  it('should socket.io use path from client url and ignore from options', function(done) {
+    window.io = function(url, opts) {
+      assert.strictEqual('http://domain:8080/path', url);
+      assert.deepEqual({ path: '/path' }, opts);
+      done();
+    }
+    LaunchpadClient.url('http://domain:8080/path').connect({ path: '/ignore' });
+    delete window.io;
+  });
+
   it('should send DELETE request', function(done) {
     LaunchpadClient.url('/url').delete().then(function(response) {
       assert.strictEqual('/url', response.request().url());
