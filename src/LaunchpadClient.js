@@ -180,9 +180,47 @@ class LaunchpadClient {
     clientRequest.queries(this.queries());
     clientRequest.url(this.url());
 
-    return transport.send(clientRequest);
+    this.encode(clientRequest);
+
+    return transport.send(clientRequest).then(this.decode);
+  }
+
+  /**
+   * Encodes clientRequest body.
+   * @param {ClientRequest} clientRequest
+   * @return {ClientRequest}
+   */
+  encode(clientRequest) {
+    if (LaunchpadClient.TEMP_isContentTypeJson(clientRequest)) {
+      clientRequest.body(JSON.stringify(clientRequest.body()));
+    }
+    return clientRequest;
+  }
+
+  /**
+   * Decodes clientResponse body.
+   * @param {ClientResponse} clientResponse
+   * @return {ClientResponse}
+   */
+  decode(clientResponse) {
+    if (LaunchpadClient.TEMP_isContentTypeJson(clientResponse)) {
+      try {
+        clientResponse.body(JSON.parse(clientResponse.body()));
+      } catch(err) {}
+    }
+    return clientResponse;
   }
 
 }
+
+LaunchpadClient.TEMP_isContentTypeJson = function(clientMessage) {
+  var items = clientMessage.headers();
+  for (var i = items.length - 1; i >= 0 ; i--) {
+    if ('content-type' === items[i].name.toLowerCase()) {
+      return 'application/json' === items[i].value.toLowerCase();
+    }
+  }
+  return false;
+};
 
 export default LaunchpadClient;

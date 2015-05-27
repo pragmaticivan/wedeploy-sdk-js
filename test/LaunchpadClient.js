@@ -165,6 +165,22 @@ describe('LaunchpadClient', function () {
     this.requests[0].respond(200);
   });
 
+  it('should serialize body of json requests', function(done) {
+    LaunchpadClient.url('/url').header('Content-Type', 'application/json').post({ foo: 1 }).then(function(response) {
+      assert.strictEqual('{"foo":1}', response.request().body());
+      done();
+    });
+    this.requests[0].respond(200);
+  });
+
+  it('should deserialize body of json responses', function(done) {
+    LaunchpadClient.url('/url').get().then(function(response) {
+      assert.deepEqual({ foo: 1 }, response.body());
+      done();
+    });
+    this.requests[0].respond(200, { 'Content-Type': 'application/json' }, '{"foo": 1}');
+  });
+
   it('should throws exception for invalid constructor', function() {
     assert.throws(function() {
       new LaunchpadClient();
