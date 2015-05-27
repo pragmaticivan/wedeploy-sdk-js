@@ -1,6 +1,27 @@
 Launchpad api client for JavaScript
 ===============
 
+## Usage
+
+Post
+
+```
+LaunchpadClient
+    .url('/data/tasks')
+    .post({ desc: 'Buy milk' });
+```
+
+Get
+
+```
+LaunchpadClient
+   .url('/data/tasks')
+   .get()
+   .then(function(clientResponse) {
+        console.log(clientResponse.body())
+   });
+```
+
 ## Setup
 
 ```
