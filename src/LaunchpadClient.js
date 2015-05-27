@@ -15,7 +15,7 @@ class LaunchpadClient {
 
     var baseUrl = (arguments.length > 1) ? arguments[0] : '';
     var url = arguments[arguments.length - 1] || '';
-    this.url_ = baseUrl + url;
+    this.url_ = Util.joinPaths(baseUrl, url);
 
     this.headers_ = [];
     this.queries_ = [];

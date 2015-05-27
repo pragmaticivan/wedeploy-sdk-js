@@ -22,6 +22,21 @@ class Util {
     return [base, path];
   }
 
+  /**
+   * Joins two paths.
+   * @param {string} basePath
+   * @param {string} path
+   */
+  static joinPaths(basePath, path) {
+    if (basePath.charAt(basePath.length-1) === '/') {
+      basePath = basePath.substring(0, basePath.length-1);
+    }
+    if (path.charAt(0) === '/') {
+      path = path.substring(1);
+    }
+    return [basePath, path].join('/');
+  }
+
 }
 
 export default Util;
