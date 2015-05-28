@@ -48,7 +48,7 @@ class LaunchpadClient {
    * @param {object} opt_options
    */
   connect(opt_options) {
-    if (!window.io) {
+    if (typeof io === 'undefined') {
       throw new Error('Socket.io client not loaded');
     }
 
