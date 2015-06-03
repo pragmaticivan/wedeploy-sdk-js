@@ -1,4 +1,4 @@
-import core from 'bower:metaljs/src/core';
+import core from 'bower:metal/src/core';
 import Transport from './Transport';
 import Util from './Util';
 import ClientResponse from './ClientResponse';

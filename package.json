@@ -6,8 +6,7 @@
     "test": "gulp test"
   },
   "keywords": [
-    "metal",
-    "metaljs"
+    "metal"
   ],
   "repository": {
     "type": "git",
@@ -39,7 +38,7 @@
     "karma-mocha": "0.1.10",
     "karma-sinon": "^1.0.4",
     "karma-source-map-support": "^1.0.0",
-    "metaljs": "liferay/metal.js#master",
+    "metal": "metal/metal.js#master",
     "mocha": "^2.2.5",
     "run-sequence": "^1.1.0",
     "sinon": "^1.14.1"

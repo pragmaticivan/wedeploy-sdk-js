@@ -3,8 +3,7 @@
   "version": "0.0.0",
   "description": "Launchpad Api",
   "keywords": [
-    "metal",
-    "metaljs"
+    "metal"
   ],
   "ignore": [
     "**/.*",
@@ -13,7 +12,7 @@
     "test"
   ],
   "dependencies": {
-    "metal-promise": "eduardolundgren/metal-promise",
-    "metaljs": "liferay/metal#master"
+    "metal": "metal/metal.js#master",
+    "metal-promise": "metal/metal-promise#master"
   }
 }
