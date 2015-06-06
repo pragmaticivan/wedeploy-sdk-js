@@ -219,7 +219,7 @@ LaunchpadClient.TEMP_isContentTypeJson = function(clientMessage) {
   var items = clientMessage.headers();
   for (var i = items.length - 1; i >= 0 ; i--) {
     if ('content-type' === items[i].name.toLowerCase()) {
-      return 'application/json' === items[i].value.toLowerCase();
+      return items[i].value.toLowerCase().indexOf('application/json') === 0;
     }
   }
   return false;
