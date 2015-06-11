@@ -112,6 +112,17 @@ describe('AjaxTransport', function () {
     this.requests[0].respond(200);
   });
 
+  it('should response success with status code 204', function (done) {
+    var transport = new AjaxTransport();
+    var clientRequest = new ClientRequest();
+    clientRequest.url('/url');
+    transport.send(clientRequest).then(function(response) {
+      assert.strictEqual(204, response.statusCode());
+      done();
+    });
+    this.requests[0].respond(204);
+  });
+
   it('should response success with status code 304', function (done) {
     var transport = new AjaxTransport();
     var clientRequest = new ClientRequest();

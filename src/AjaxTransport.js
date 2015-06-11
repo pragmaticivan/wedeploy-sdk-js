@@ -50,7 +50,7 @@ class AjaxTransport extends Transport {
 
     var promise = new Promise(function(resolve, reject) {
       request.onload = function() {
-        if (request.status === 200 || request.status === 304) {
+        if (request.status === 200 || request.status === 204 || request.status === 304) {
           resolve(request);
           return;
         }
