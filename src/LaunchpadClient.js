@@ -222,4 +222,8 @@ LaunchpadClient.TEMP_isContentTypeJson = function(clientMessage) {
   return false;
 };
 
+if (typeof window !== undefined) {
+  window.LaunchpadClient = LaunchpadClient;
+}
+
 export default LaunchpadClient;
