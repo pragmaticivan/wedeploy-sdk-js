@@ -26,7 +26,7 @@ describe('LaunchpadClient', function () {
   it('should socket.io use path from client url', function(done) {
     window.io = function(url, opts) {
       assert.strictEqual('domain:8080', url);
-      assert.deepEqual({ path: '/path' }, opts);
+      assert.deepEqual({ path: '/path/' }, opts);
       done();
     }
     LaunchpadClient.url('http://domain:8080/path').connect();
@@ -36,7 +36,7 @@ describe('LaunchpadClient', function () {
   it('should socket.io use path from client url and ignore from options', function(done) {
     window.io = function(url, opts) {
       assert.strictEqual('domain:8080', url);
-      assert.deepEqual({ path: '/path' }, opts);
+      assert.deepEqual({ path: '/path/' }, opts);
       done();
     }
     LaunchpadClient.url('http://domain:8080/path').connect({ path: '/ignore' });
@@ -50,6 +50,12 @@ describe('LaunchpadClient', function () {
     assert.ok(client instanceof LaunchpadClient);
   });
 
+  it('should change full url', function() {
+    var transport = new Transport();
+    var parent = LaunchpadClient.url('http://other:123').use(transport);
+    assert.strictEqual('http://other:123/', parent.url());
+  });
+
   it('should inherit parent transport', function() {
     var transport = new Transport();
     var parent = LaunchpadClient.url().use(transport);
@@ -59,7 +65,7 @@ describe('LaunchpadClient', function () {
 
   it('should send DELETE request', function(done) {
     LaunchpadClient.url('/url').delete().then(function(response) {
-      assert.strictEqual('/url', response.request().url());
+      assert.strictEqual('/url/', response.request().url());
       assert.strictEqual('DELETE', response.request().method());
       assert.ok(!response.request().body());
       done();
@@ -69,7 +75,7 @@ describe('LaunchpadClient', function () {
 
   it('should send GET request', function(done) {
     LaunchpadClient.url('/url').get().then(function(response) {
-      assert.strictEqual('/url', response.request().url());
+      assert.strictEqual('/url/', response.request().url());
       assert.strictEqual('GET', response.request().method());
       assert.ok(!response.request().body());
       done();
@@ -79,7 +85,7 @@ describe('LaunchpadClient', function () {
 
   it('should send POST request with body', function(done) {
     LaunchpadClient.url('/url').post('body').then(function(response) {
-      assert.strictEqual('/url', response.request().url());
+      assert.strictEqual('/url/', response.request().url());
       assert.strictEqual('POST', response.request().method());
       assert.strictEqual('"body"', response.request().body());
       done();
@@ -89,7 +95,7 @@ describe('LaunchpadClient', function () {
 
   it('should send PUT request with body', function(done) {
     LaunchpadClient.url('/url').put('body').then(function(response) {
-      assert.strictEqual('/url', response.request().url());
+      assert.strictEqual('/url/', response.request().url());
       assert.strictEqual('PUT', response.request().method());
       assert.strictEqual('"body"', response.request().body());
       done();
@@ -99,7 +105,7 @@ describe('LaunchpadClient', function () {
 
   it('should send PATCH request with body', function(done) {
     LaunchpadClient.url('/url').patch('body').then(function(response) {
-      assert.strictEqual('/url', response.request().url());
+      assert.strictEqual('/url/', response.request().url());
       assert.strictEqual('PATCH', response.request().method());
       assert.strictEqual('"body"', response.request().body());
       done();
@@ -111,13 +117,13 @@ describe('LaunchpadClient', function () {
     var books = LaunchpadClient.url('/books');
     var book1 = books.path('/1');
     assert.notStrictEqual(book1, books);
-    assert.strictEqual('/books', books.url());
+    assert.strictEqual('/books/', books.url());
     assert.strictEqual('/books/1', book1.url());
   });
 
   it('should send request to url without path', function(done) {
     LaunchpadClient.url('/url').get().then(function(response) {
-      assert.strictEqual('/url', response.request().url());
+      assert.strictEqual('/url/', response.request().url());
       done();
     });
     this.requests[0].respond(200);
@@ -125,7 +131,7 @@ describe('LaunchpadClient', function () {
 
   it('should send request to url with path', function(done) {
     LaunchpadClient.url('/url/a').get().then(function(response) {
-      assert.strictEqual('/url/a', response.request().url());
+      assert.strictEqual('/url/a/', response.request().url());
       done();
     });
     this.requests[0].respond(200);

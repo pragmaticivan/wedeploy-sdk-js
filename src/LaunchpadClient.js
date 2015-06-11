@@ -13,10 +13,7 @@ class LaunchpadClient {
       throw new Error('Invalid arguments, try `new LaunchpadClient(baseUrl, url)`');
     }
 
-    var baseUrl = (arguments.length > 1) ? arguments[0] : '';
-    var url = arguments[arguments.length - 1] || '';
-    this.url_ = Util.joinPaths(baseUrl, url);
-
+    this.url_ = Util.joinPaths(arguments[0] || '', arguments[1] || '');
     this.headers_ = [];
     this.queries_ = [];
 
