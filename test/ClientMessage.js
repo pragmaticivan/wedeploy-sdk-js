@@ -12,15 +12,15 @@ describe('ClientMessage', function () {
 
   it('should set/get header', function() {
     var clientMessage = new ClientMessage();
+    clientMessage.header('name', '');
     clientMessage.header('name', 'value');
-    clientMessage.header('name', 'value');
-    assert.deepEqual([{name: 'name', value: 'value'}, {name: 'name', value: 'value'}], clientMessage.headers());
+    assert.strictEqual('{"name":["value"]}', clientMessage.headers().toString());
   });
 
   it('should set/get headers', function() {
     var clientMessage = new ClientMessage();
-    clientMessage.headers([{name: 'name', value: 'value'}, {name: 'name', value: 'value'}]);
-    assert.deepEqual([{name: 'name', value: 'value'}, {name: 'name', value: 'value'}], clientMessage.headers());
+    clientMessage.headers({'name':['value','value']});
+    assert.strictEqual('{"name":["value","value"]}', clientMessage.headers().toString());
   });
 
   it('should throws exception for invalid header arguments', function() {

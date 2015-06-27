@@ -1,11 +1,12 @@
 import core from 'bower:metal/src/core';
+import MultiMap from './MultiMap';
 
 /**
  */
 class ClientMessage {
 
   constructor() {
-    this.headers_ = [];
+    this.headers_ = new MultiMap();
   }
 
   /**
@@ -33,26 +34,25 @@ class ClientMessage {
     if (arguments.length !== 2) {
       throw new Error('Invalid arguments');
     }
-
-    this.headers_.push({
-      name: name,
-      value: value
-    });
+    this.headers_.set(name, value);
     return this;
   }
 
   /**
    * Fluent getter and setter for request headers.
-   * @param {array.<object.<string, string>>} opt_queries Request headers
-   *     list to be set.
-   * @return {array.<object.<string, string>>} Returns request headers
-   *     list.
-   * @chainable Chainable when used for setter.
+   * @param {array.<object.<string, string>>} opt_queries Request headers list
+   *   to be set.
+   * @return {MultiMap} Returns map of request headers.
    */
   headers(opt_headers) {
     if (core.isDef(opt_headers)) {
-      this.headers_ = opt_headers;
-      return this;
+      if (opt_headers instanceof MultiMap) {
+        this.headers_ = opt_headers;
+      }
+      else {
+        this.headers_.values = opt_headers;
+      }
+      return opt_headers;
     }
     return this.headers_;
   }

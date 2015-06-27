@@ -1,6 +1,7 @@
 import TransportFactory from './TransportFactory';
 import ClientRequest from './ClientRequest';
 import Util from './Util';
+import MultiMap from './MultiMap';
 
 /**
  * Base client contains code that is same for all transports.
@@ -14,7 +15,7 @@ class LaunchpadClient {
     }
 
     this.url_ = Util.joinPaths(arguments[0] || '', arguments[1] || '');
-    this.headers_ = [];
+    this.headers_ = new MultiMap();
     this.queries_ = [];
 
     this.header('Content-Type', 'application/json');
@@ -114,17 +115,13 @@ class LaunchpadClient {
     if (arguments.length !== 2) {
       throw new Error('Invalid arguments');
     }
-
-    this.headers_.push({
-      name: name,
-      value: value
-    });
+    this.headers_.set(name, value);
     return this;
   }
 
   /**
    * Gets the headers.
-   * @return {array.<object.<string, string>>}
+   * @return {MultiMap}
    */
   headers() {
     return this.headers_;
@@ -190,7 +187,7 @@ class LaunchpadClient {
    * @return {ClientRequest}
    */
   encode(clientRequest) {
-    if (LaunchpadClient.TEMP_isContentTypeJson(clientRequest)) {
+    if (LaunchpadClient.isContentTypeJson(clientRequest)) {
       clientRequest.body(JSON.stringify(clientRequest.body()));
     }
     return clientRequest;
@@ -202,7 +199,7 @@ class LaunchpadClient {
    * @return {ClientResponse}
    */
   decode(clientResponse) {
-    if (LaunchpadClient.TEMP_isContentTypeJson(clientResponse)) {
+    if (LaunchpadClient.isContentTypeJson(clientResponse)) {
       try {
         clientResponse.body(JSON.parse(clientResponse.body()));
       } catch(err) {}
@@ -212,14 +209,9 @@ class LaunchpadClient {
 
 }
 
-LaunchpadClient.TEMP_isContentTypeJson = function(clientMessage) {
-  var items = clientMessage.headers();
-  for (var i = items.length - 1; i >= 0 ; i--) {
-    if ('content-type' === items[i].name.toLowerCase()) {
-      return items[i].value.toLowerCase().indexOf('application/json') === 0;
-    }
-  }
-  return false;
+LaunchpadClient.isContentTypeJson = function(clientMessage) {
+  var contentType = clientMessage.headers().get('content-type') || '';
+  return contentType.indexOf('application/json') === 0;
 };
 
 if (typeof window !== undefined) {

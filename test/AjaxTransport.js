@@ -69,9 +69,9 @@ describe('AjaxTransport', function () {
     var transport = new AjaxTransport();
     var clientRequest = new ClientRequest();
     clientRequest.url('/url');
-    clientRequest.header('Content-Type', 'application/json');
+    clientRequest.header('content-type', 'application/json');
     transport.send(clientRequest).then(function(response) {
-      assert.deepEqual([{name: 'Content-Type', value: 'application/json'}], response.request().headers());
+      assert.strictEqual('{"content-type":["application/json"]}', response.request().headers().toString());
       done();
     });
     this.requests[0].respond(200);
@@ -81,10 +81,11 @@ describe('AjaxTransport', function () {
     var transport = new AjaxTransport();
     var clientRequest = new ClientRequest();
     clientRequest.url('/url');
-    clientRequest.header('Content-Type', 'application/json');
-    clientRequest.header('Content-Type', 'text/html');
+    var headers = clientRequest.headers();
+    headers.add('content-type', 'application/json');
+    headers.add('content-type', 'text/html');
     transport.send(clientRequest).then(function(response) {
-      assert.deepEqual([{name: 'Content-Type', value: 'application/json'}, {name: 'Content-Type', value: 'text/html'}], response.request().headers());
+      assert.strictEqual('{"content-type":["application/json","text/html"]}', response.request().headers().toString());
       done();
     });
     this.requests[0].respond(200);
@@ -95,10 +96,10 @@ describe('AjaxTransport', function () {
     var clientRequest = new ClientRequest();
     clientRequest.url('/url');
     transport.send(clientRequest).then(function(response) {
-      assert.deepEqual([{name: 'Content-Type', value: 'application/json'}], response.headers());
+      assert.strictEqual('{"content-type":["application/json"]}', response.headers().toString());
       done();
     });
-    this.requests[0].respond(200, { 'Content-Type': 'application/json' });
+    this.requests[0].respond(200, { 'content-type': 'application/json' });
   });
 
   it('should response success with status code 200', function (done) {

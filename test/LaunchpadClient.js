@@ -153,7 +153,7 @@ describe('LaunchpadClient', function () {
       .header('header', 1)
       .get()
       .then(function(response) {
-        assert.deepEqual([{name: 'Content-Type', value: 'application/json'}, {name: 'header', value: 1}], response.request().headers());
+        assert.strictEqual('{"content-type":["application/json"],"header":[1]}', response.request().headers().toString());
         done();
       });
     this.requests[0].respond(200);
@@ -165,14 +165,14 @@ describe('LaunchpadClient', function () {
       .header('header', 2)
       .get()
       .then(function(response) {
-        assert.deepEqual([{name: 'Content-Type', value: 'application/json'}, {name: 'header', value: 1}, {name: 'header', value: 2}], response.request().headers());
+        assert.strictEqual('{"content-type":["application/json"],"header":[2]}', response.request().headers().toString());
         done();
       });
     this.requests[0].respond(200);
   });
 
   it('should serialize body of json requests', function(done) {
-    LaunchpadClient.url('/url').header('Content-Type', 'application/json').post({ foo: 1 }).then(function(response) {
+    LaunchpadClient.url('/url').header('content-type', 'application/json').post({ foo: 1 }).then(function(response) {
       assert.strictEqual('{"foo":1}', response.request().body());
       done();
     });
@@ -184,7 +184,7 @@ describe('LaunchpadClient', function () {
       assert.deepEqual({ foo: 1 }, response.body());
       done();
     });
-    this.requests[0].respond(200, { 'Content-Type': 'application/json' }, '{"foo": 1}');
+    this.requests[0].respond(200, { 'content-type': 'application/json' }, '{"foo": 1}');
   });
 
   it('should throws exception for invalid constructor', function() {

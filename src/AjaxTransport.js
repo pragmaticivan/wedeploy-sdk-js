@@ -28,7 +28,9 @@ class AjaxTransport extends Transport {
       var clientResponse = new ClientResponse(clientRequest);
       clientResponse.body(response.responseText);
       clientResponse.statusCode(response.status);
-      clientResponse.headers(Util.parseResponseHeaders(response.getAllResponseHeaders()));
+      Util.parseResponseHeaders(response.getAllResponseHeaders()).forEach(function(header) {
+        clientResponse.header(header.name, header.value);
+      });
       return clientResponse;
     });
   }
@@ -83,9 +85,8 @@ class AjaxTransport extends Transport {
 
     if (opt_headers) {
       var headers = {};
-      opt_headers.forEach(function(header) {
-        headers[header.name] = (headers[header.name] ? headers[header.name] + ',' : '') + header.value;
-        request.setRequestHeader(header.name, headers[header.name]);
+      opt_headers.names().forEach(function(name) {
+        request.setRequestHeader(name, opt_headers.getAll(name).join(', '));
       });
     }
 
