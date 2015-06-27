@@ -153,7 +153,7 @@ describe('LaunchpadClient', function () {
       .header('header', 1)
       .get()
       .then(function(response) {
-        assert.strictEqual('{"content-type":["application/json"],"header":[1]}', response.request().headers().toString());
+        assert.strictEqual('{"content-type":["application/json"],"x-pjax":["true"],"x-requested-with":["XMLHttpRequest"],"header":[1]}', response.request().headers().toString());
         done();
       });
     this.requests[0].respond(200);
@@ -165,7 +165,7 @@ describe('LaunchpadClient', function () {
       .header('header', 2)
       .get()
       .then(function(response) {
-        assert.strictEqual('{"content-type":["application/json"],"header":[2]}', response.request().headers().toString());
+        assert.strictEqual('{"content-type":["application/json"],"x-pjax":["true"],"x-requested-with":["XMLHttpRequest"],"header":[2]}', response.request().headers().toString());
         done();
       });
     this.requests[0].respond(200);

@@ -20,6 +20,8 @@ class LaunchpadClient {
     this.queries_ = new MultiMap();
 
     this.header('Content-Type', 'application/json');
+    this.header('X-PJAX', 'true');
+    this.header('X-Requested-With', 'XMLHttpRequest');
   }
 
   /**
