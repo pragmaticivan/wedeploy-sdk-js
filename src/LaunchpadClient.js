@@ -16,7 +16,7 @@ class LaunchpadClient {
 
     this.url_ = Util.joinPaths(arguments[0] || '', arguments[1] || '');
     this.headers_ = new MultiMap();
-    this.queries_ = [];
+    this.queries_ = new MultiMap();
 
     this.header('Content-Type', 'application/json');
   }
@@ -135,17 +135,13 @@ class LaunchpadClient {
     if (arguments.length !== 2) {
       throw new Error('Invalid arguments');
     }
-
-    this.queries_.push({
-      name: name,
-      value: value
-    });
+    this.queries_.set(name, value);
     return this;
   }
 
   /**
-   * Gets the query strings.
-   * @return {array.<object.<string, string>>}
+   * Gets the query strings map.
+   * @return {MultiMap}
    */
   queries() {
     return this.queries_;

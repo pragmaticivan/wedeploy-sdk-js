@@ -1,5 +1,6 @@
 import core from 'bower:metal/src/core';
 import ClientMessage from './ClientMessage';
+import MultiMap from './MultiMap';
 
 /**
  */
@@ -7,7 +8,7 @@ class ClientRequest extends ClientMessage {
 
   constructor() {
     super();
-    this.queries_ = [];
+    this.queries_ = new MultiMap();
   }
 
   /**
@@ -35,26 +36,24 @@ class ClientRequest extends ClientMessage {
     if (arguments.length !== 2) {
       throw new Error('Invalid arguments');
     }
-
-    this.queries_.push({
-      name: name,
-      value: value
-    });
+    this.queries_.set(name, value);
     return this;
   }
 
   /**
-   * Fluent getter and setter for request query string.
-   * @param {array.<object.<string, string>>} opt_queries Request query string
-   *     list to be set.
-   * @return {array.<object.<string, string>>} Returns request query string
-   *     list.
-   * @chainable Chainable when used for setter.
+   * Fluent getter and setter for request querystring.
+   * @param {MultiMap|object} opt_queries Request querystring map to be set.
+   * @return {MultiMap} Returns map of request querystring.
    */
   queries(opt_queries) {
     if (core.isDef(opt_queries)) {
-      this.queries_ = opt_queries;
-      return this;
+      if (opt_queries instanceof MultiMap) {
+        this.queries_ = opt_queries;
+      }
+      else {
+        this.queries_.values = opt_queries;
+      }
+      return opt_queries;
     }
     return this.queries_;
   }

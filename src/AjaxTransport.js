@@ -71,8 +71,10 @@ class AjaxTransport extends Transport {
 
     if (opt_queries) {
       var querystring = '';
-      opt_queries.forEach(function(query) {
-        querystring += query.name + '=' + encodeURIComponent(query.value) + '&';
+      opt_queries.names().forEach(function(name) {
+        opt_queries.getAll(name).forEach(function(value) {
+          querystring += name + '=' + encodeURIComponent(value) + '&';
+        });
       });
       querystring = querystring.slice(0, -1);
       if (querystring) {

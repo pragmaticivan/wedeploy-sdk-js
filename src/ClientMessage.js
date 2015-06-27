@@ -40,7 +40,7 @@ class ClientMessage {
 
   /**
    * Fluent getter and setter for request headers.
-   * @param {array.<object.<string, string>>} opt_queries Request headers list
+   * @param {MultiMap|object} opt_queries Request headers list
    *   to be set.
    * @return {MultiMap} Returns map of request headers.
    */

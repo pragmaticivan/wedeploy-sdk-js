@@ -55,13 +55,13 @@ describe('ClientRequest', function () {
     var clientRequest = new ClientRequest();
     clientRequest.query('name', 'value');
     clientRequest.query('name', 'value');
-    assert.deepEqual([{name: 'name', value: 'value'}, {name: 'name', value: 'value'}], clientRequest.queries());
+    assert.strictEqual('{"name":["value"]}', clientRequest.queries().toString());
   });
 
   it('should set/get headers', function() {
     var clientRequest = new ClientRequest();
-    clientRequest.queries([{name: 'name', value: 'value'}, {name: 'name', value: 'value'}]);
-    assert.deepEqual([{name: 'name', value: 'value'}, {name: 'name', value: 'value'}], clientRequest.queries());
+    clientRequest.queries({'name':['value','value']});
+    assert.strictEqual('{"name":["value","value"]}', clientRequest.queries().toString());
   });
 
   it('should throws exception for invalid query arguments', function() {

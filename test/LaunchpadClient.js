@@ -142,7 +142,7 @@ describe('LaunchpadClient', function () {
       .query('query', 1)
       .get()
       .then(function(response) {
-        assert.deepEqual([{name: 'query', value: 1}], response.request().queries());
+        assert.strictEqual('{"query":[1]}', response.request().queries().toString());
         done();
       });
     this.requests[0].respond(200);

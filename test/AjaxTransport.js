@@ -59,7 +59,7 @@ describe('AjaxTransport', function () {
     clientRequest.url('/url');
     clientRequest.query('query', 1);
     transport.send(clientRequest).then(function(response) {
-      assert.deepEqual([{name: 'query', value: 1}], response.request().queries());
+      assert.strictEqual('{"query":[1]}', response.request().queries().toString());
       done();
     });
     this.requests[0].respond(200);
@@ -150,8 +150,8 @@ describe('AjaxTransport', function () {
     var transport = new AjaxTransport();
     var clientRequest = new ClientRequest();
     clientRequest.url('/url?foo=1');
-    clientRequest.query('query', 1);
-    clientRequest.query('query', ' ');
+    clientRequest.queries().add('query', 1);
+    clientRequest.queries().add('query', ' ');
     transport.request(
           clientRequest.url(), clientRequest.method(), null, null,
           clientRequest.queries(), null, false).then(function(xhrResponse) {
