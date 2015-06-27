@@ -1,3 +1,4 @@
+import core from 'bower:metal/src/core';
 import TransportFactory from './TransportFactory';
 import ClientRequest from './ClientRequest';
 import Util from './Util';
@@ -183,7 +184,17 @@ class LaunchpadClient {
    * @return {ClientRequest}
    */
   encode(clientRequest) {
-    if (LaunchpadClient.isContentTypeJson(clientRequest)) {
+    var body = clientRequest.body();
+
+    if (core.isElement(body)) {
+      body = new FormData(body);
+      clientRequest.body(body);
+    }
+
+    if (body instanceof FormData) {
+      clientRequest.headers().remove('content-type');
+    }
+    else if (LaunchpadClient.isContentTypeJson(clientRequest)) {
       clientRequest.body(JSON.stringify(clientRequest.body()));
     }
     return clientRequest;

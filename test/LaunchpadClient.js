@@ -187,6 +187,25 @@ describe('LaunchpadClient', function () {
     this.requests[0].respond(200, { 'content-type': 'application/json' }, '{"foo": 1}');
   });
 
+  it('should support FormData as request body', function(done) {
+    var formData = new FormData();
+    LaunchpadClient.url('/url').post(formData).then(function(response) {
+      assert.strictEqual(formData, response.request().body());
+      assert.strictEqual(undefined, response.request().headers().get('content-type'));
+      done();
+    });
+    this.requests[0].respond(200);
+  });
+
+  it('should wrap dom element request body as form data', function(done) {
+    var form = document.createElement('form');
+    LaunchpadClient.url('/url').post(form).then(function(response) {
+      assert.ok(response.request().body() instanceof FormData);
+      done();
+    });
+    this.requests[0].respond(200);
+  });
+
   it('should throws exception for invalid constructor', function() {
     assert.throws(function() {
       new LaunchpadClient();
