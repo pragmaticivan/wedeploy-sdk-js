@@ -4,12 +4,12 @@
  */
 class Transport {
 
-  /**
-   * Sends a message for the specified client.
-   * @param {ClientRequest} clientRequest
-   * @return {Promise} Deferred request.
-   */
-  send(clientRequest) {}
+	/**
+	 * Sends a message for the specified client.
+	 * @param {ClientRequest} clientRequest
+	 * @return {Promise} Deferred request.
+	 */
+	send(clientRequest) {}
 
 }
 

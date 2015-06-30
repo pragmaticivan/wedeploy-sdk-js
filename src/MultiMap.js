@@ -6,117 +6,117 @@ import Disposable from "bower:metal/src/disposable/Disposable";
  */
 class MultiMap extends Disposable {
 
-  constructor() {
-    super();
-    this.values = {};
-  }
+	constructor() {
+		super();
+		this.values = {};
+	}
 
-  /**
-   * Adds value to a key name.
-   * @param {string} name
-   * @param {*} value
-   * @chainable
-   */
-  add(name, value) {
-    this.values[name.toLowerCase()] = this.values[name.toLowerCase()] || [];
-    this.values[name.toLowerCase()].push(value);
-    return this;
-  }
+	/**
+	 * Adds value to a key name.
+	 * @param {string} name
+	 * @param {*} value
+	 * @chainable
+	 */
+	add(name, value) {
+		this.values[name.toLowerCase()] = this.values[name.toLowerCase()] || [];
+		this.values[name.toLowerCase()].push(value);
+		return this;
+	}
 
-  /**
-   * Clears map names and values.
-   * @chainable
-   */
-  clear() {
-    this.values = {};
-    return this;
-  }
+	/**
+	 * Clears map names and values.
+	 * @chainable
+	 */
+	clear() {
+		this.values = {};
+		return this;
+	}
 
-  /**
-   * Checks if map contains a value to the key name.
-   * @param {string} name
-   * @chainable
-   */
-  contains(name) {
-    return name.toLowerCase() in this.values;
-  }
+	/**
+	 * Checks if map contains a value to the key name.
+	 * @param {string} name
+	 * @chainable
+	 */
+	contains(name) {
+		return name.toLowerCase() in this.values;
+	}
 
-  /**
-   * @inheritDoc
-   */
-  disposeInternal() {
-    this.values = null;
-  }
+	/**
+	 * @inheritDoc
+	 */
+	disposeInternal() {
+		this.values = null;
+	}
 
-  /**
-   * Gets the first added value from a key name.
-   * @param {string} name
-   * @chainable
-   */
-  get(name) {
-    var values = this.values[name.toLowerCase()];
-    if (values) {
-      return values[0];
-    }
-  }
+	/**
+	 * Gets the first added value from a key name.
+	 * @param {string} name
+	 * @chainable
+	 */
+	get(name) {
+		var values = this.values[name.toLowerCase()];
+		if (values) {
+			return values[0];
+		}
+	}
 
-  /**
-   * Gets all values from a key name.
-   * @param {string} name
-   * @return {array.<string>}
-   */
-  getAll(name) {
-    return this.values[name.toLowerCase()];
-  }
+	/**
+	 * Gets all values from a key name.
+	 * @param {string} name
+	 * @return {array.<string>}
+	 */
+	getAll(name) {
+		return this.values[name.toLowerCase()];
+	}
 
-  /**
-   * Returns true if the map is empty, false otherwise.
-   * @return {boolean}
-   */
-  isEmpty() {
-    return this.size() === 0;
-  }
+	/**
+	 * Returns true if the map is empty, false otherwise.
+	 * @return {boolean}
+	 */
+	isEmpty() {
+		return this.size() === 0;
+	}
 
-  /**
-   * Gets array of key names.
-   * @return {array.<string>}
-   */
-  names() {
-    return Object.keys(this.values);
-  }
+	/**
+	 * Gets array of key names.
+	 * @return {array.<string>}
+	 */
+	names() {
+		return Object.keys(this.values);
+	}
 
-  /**
-   * Removes all values from a key name.
-   * @param {string} name
-   * @chainable
-   */
-  remove(name) {
-    delete this.values[name.toLowerCase()];
-    return this;
-  }
+	/**
+	 * Removes all values from a key name.
+	 * @param {string} name
+	 * @chainable
+	 */
+	remove(name) {
+		delete this.values[name.toLowerCase()];
+		return this;
+	}
 
-  /**
-   * Sets the value of a key name. Relevant to replace the current values with
-   * a new one.
-   * @param {string} name  [description]
-   * @chainable
-   */
-  set(name, value) {
-    this.values[name.toLowerCase()] = [value];
-    return this;
-  }
+	/**
+	 * Sets the value of a key name. Relevant to replace the current values with
+	 * a new one.
+	 * @param {string} name  [description]
+	 * @chainable
+	 */
+	set(name, value) {
+		this.values[name.toLowerCase()] = [value];
+		return this;
+	}
 
-  /**
-   * Gets the size of the map key names.
-   * @return {number}
-   */
-  size() {
-    return this.names().length;
-  }
+	/**
+	 * Gets the size of the map key names.
+	 * @return {number}
+	 */
+	size() {
+		return this.names().length;
+	}
 
-  toString() {
-    return JSON.stringify(this.values);
-  }
+	toString() {
+		return JSON.stringify(this.values);
+	}
 
 }
 
