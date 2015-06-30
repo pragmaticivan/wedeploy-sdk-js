@@ -341,10 +341,10 @@ this.launchpadNamed = {};
 
 			/**
     * Sends a message for the specified client.
-    * @param {ClientRequest} clientRequest
+    * @param {Request} request
     * @return {Promise} Deferred request.
     */
-			value: function send(clientRequest) {}
+			value: function send(request) {}
 		}]);
 		return Transport;
 	})();
@@ -737,14 +737,14 @@ this.launchpadNamed = {};
   */
 
 	var Response = (function (_ClientMessage) {
-		function Response(clientRequest) {
+		function Response(request) {
 			babelHelpers.classCallCheck(this, Response);
 
 			babelHelpers.get(Object.getPrototypeOf(Response.prototype), 'constructor', this).call(this);
-			if (!clientRequest) {
+			if (!request) {
 				throw new Error('Can\'t create response without request');
 			}
-			this.clientRequest_ = clientRequest;
+			this.request_ = request;
 		}
 
 		babelHelpers.inherits(Response, _ClientMessage);
@@ -756,7 +756,7 @@ this.launchpadNamed = {};
     * @return {ClientRequest}
     */
 			value: function request() {
-				return this.clientRequest_;
+				return this.request_;
 			}
 		}, {
 			key: 'statusCode',
@@ -1947,14 +1947,14 @@ this.launchpadNamed = {};
 
 				var deferred = this.request(request.url(), request.method(), request.body(), request.headers(), request.queries(), null, false);
 
-				return deferred.then(function (response) {
-					var clientResponse = new Response(request);
-					clientResponse.body(response.responseText);
-					clientResponse.statusCode(response.status);
-					Util.parseResponseHeaders(response.getAllResponseHeaders()).forEach(function (header) {
-						clientResponse.header(header.name, header.value);
+				return deferred.then(function (xhr) {
+					var response = new Response(request);
+					response.body(xhr.responseText);
+					response.statusCode(xhr.status);
+					Util.parseResponseHeaders(xhr.getAllResponseHeaders()).forEach(function (header) {
+						response.header(header.name, header.value);
 					});
-					return clientResponse;
+					return response;
 				});
 			}
 		}, {
@@ -2425,17 +2425,17 @@ this.launchpadNamed = {};
 			key: 'decode',
 
 			/**
-    * Decodes clientResponse body.
-    * @param {ClientResponse} clientResponse
-    * @return {ClientResponse}
+    * Decodes response body.
+    * @param {Response} response
+    * @return {Response}
     */
-			value: function decode(clientResponse) {
-				if (LaunchpadClient.isContentTypeJson(clientResponse)) {
+			value: function decode(response) {
+				if (LaunchpadClient.isContentTypeJson(response)) {
 					try {
-						clientResponse.body(JSON.parse(clientResponse.body()));
+						response.body(JSON.parse(response.body()));
 					} catch (err) {}
 				}
-				return clientResponse;
+				return response;
 			}
 		}], [{
 			key: 'url',
