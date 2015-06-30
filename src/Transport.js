@@ -6,10 +6,10 @@ class Transport {
 
 	/**
 	 * Sends a message for the specified client.
-	 * @param {ClientRequest} clientRequest
+	 * @param {Request} request
 	 * @return {Promise} Deferred request.
 	 */
-	send(clientRequest) {}
+	send(request) {}
 
 }
 

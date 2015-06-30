@@ -24,14 +24,14 @@ class AjaxTransport extends Transport {
 			request.url(), request.method(), request.body(),
 			request.headers(), request.queries(), null, false);
 
-		return deferred.then(function(response) {
-			var clientResponse = new Response(request);
-			clientResponse.body(response.responseText);
-			clientResponse.statusCode(response.status);
-			Util.parseResponseHeaders(response.getAllResponseHeaders()).forEach(function(header) {
-				clientResponse.header(header.name, header.value);
+		return deferred.then(function(xhr) {
+			var response = new Response(request);
+			response.body(xhr.responseText);
+			response.statusCode(xhr.status);
+			Util.parseResponseHeaders(xhr.getAllResponseHeaders()).forEach(function(header) {
+				response.header(header.name, header.value);
 			});
-			return clientResponse;
+			return response;
 		});
 	}
 

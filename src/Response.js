@@ -5,12 +5,12 @@ import ClientMessage from './ClientMessage';
  */
 class Response extends ClientMessage {
 
-	constructor(clientRequest) {
+	constructor(request) {
 		super();
-		if (!clientRequest) {
+		if (!request) {
 			throw new Error('Can\'t create response without request');
 		}
-		this.clientRequest_ = clientRequest;
+		this.request_ = request;
 	}
 
 	/**
@@ -18,7 +18,7 @@ class Response extends ClientMessage {
 	 * @return {ClientRequest}
 	 */
 	request() {
-		return this.clientRequest_;
+		return this.request_;
 	}
 
 	/**

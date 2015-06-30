@@ -202,17 +202,17 @@ class LaunchpadClient {
 	}
 
 	/**
-	 * Decodes clientResponse body.
-	 * @param {ClientResponse} clientResponse
-	 * @return {ClientResponse}
+	 * Decodes response body.
+	 * @param {Response} response
+	 * @return {Response}
 	 */
-	decode(clientResponse) {
-		if (LaunchpadClient.isContentTypeJson(clientResponse)) {
+	decode(response) {
+		if (LaunchpadClient.isContentTypeJson(response)) {
 			try {
-				clientResponse.body(JSON.parse(clientResponse.body()));
+				response.body(JSON.parse(response.body()));
 			} catch (err) {}
 		}
-		return clientResponse;
+		return response;
 	}
 
 }
