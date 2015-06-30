@@ -28,7 +28,7 @@ describe('LaunchpadClient', function () {
       assert.strictEqual('domain:8080', url);
       assert.deepEqual({ path: '/path/' }, opts);
       done();
-    }
+    };
     LaunchpadClient.url('http://domain:8080/path').connect();
     delete window.io;
   });
@@ -38,7 +38,7 @@ describe('LaunchpadClient', function () {
       assert.strictEqual('domain:8080', url);
       assert.deepEqual({ path: '/path/' }, opts);
       done();
-    }
+    };
     LaunchpadClient.url('http://domain:8080/path').connect({ path: '/ignore' });
     delete window.io;
   });

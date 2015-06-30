@@ -23,7 +23,7 @@ class TransportFactory {
   get(implementationName) {
     var transportClass = this.transports[implementationName];
 
-    if (transportClass == null) {
+    if (transportClass === null) {
       throw new Error('Invalid transport name: ' + implementationName);
     }
 

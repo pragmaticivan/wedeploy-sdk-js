@@ -8,7 +8,7 @@ describe('TransportFactory', function () {
   });
 
   it('should throws exception for error on creating transport', function() {
-    TransportFactory.instance().transports['willThrowError'] = function() {
+    TransportFactory.instance().transports.willThrowError = function() {
       throw new Error();
     };
     assert.throws(function() {
