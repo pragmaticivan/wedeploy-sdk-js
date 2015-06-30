@@ -325,242 +325,459 @@ this.launchpadNamed = {};
 	this.launchpad.core = core;
 }).call(this);
 (function () {
-  /**
-   * Provides a convenient interface for data transport.
-   * @interface
-   */
-  "use strict";
+	/**
+  * Provides a convenient interface for data transport.
+  * @interface
+  */
+	"use strict";
 
-  var Transport = (function () {
-    function Transport() {
-      babelHelpers.classCallCheck(this, Transport);
-    }
+	var Transport = (function () {
+		function Transport() {
+			babelHelpers.classCallCheck(this, Transport);
+		}
 
-    babelHelpers.createClass(Transport, [{
-      key: "send",
+		babelHelpers.createClass(Transport, [{
+			key: "send",
 
-      /**
-       * Sends a message for the specified client.
-       * @param {ClientRequest} clientRequest
-       * @return {Promise} Deferred request.
-       */
-      value: function send(clientRequest) {}
-    }]);
-    return Transport;
-  })();
+			/**
+    * Sends a message for the specified client.
+    * @param {ClientRequest} clientRequest
+    * @return {Promise} Deferred request.
+    */
+			value: function send(clientRequest) {}
+		}]);
+		return Transport;
+	})();
 
-  this.launchpad.Transport = Transport;
+	this.launchpad.Transport = Transport;
 }).call(this);
 (function () {
-  /**
-   * Provides a convenient interface for data transport.
-   * @interface
-   */
-  'use strict';
+	/**
+  * Provides a convenient interface for data transport.
+  * @interface
+  */
+	'use strict';
 
-  var Util = (function () {
-    function Util() {
-      babelHelpers.classCallCheck(this, Util);
-    }
+	var Util = (function () {
+		function Util() {
+			babelHelpers.classCallCheck(this, Util);
+		}
 
-    babelHelpers.createClass(Util, null, [{
-      key: 'parseUrl',
+		babelHelpers.createClass(Util, null, [{
+			key: 'parseUrl',
 
-      /**
-       * Parses the url separating the domain and port from the path.
-       * @param {string} url
-       * @return {array} Array containing the url domain and path.
-       * @protected
-       */
-      value: function parseUrl(url) {
-        var base;
-        var path;
-        var domainAt = url.indexOf('//');
-        if (domainAt > -1) {
-          url = url.substring(domainAt + 2);
-        }
-        base = url.substring(0, url.indexOf('/'));
-        path = url.substring(url.indexOf('/'));
-        return [base, path];
-      }
-    }, {
-      key: 'joinPaths',
+			/**
+    * Parses the url separating the domain and port from the path.
+    * @param {string} url
+    * @return {array} Array containing the url domain and path.
+    * @protected
+    */
+			value: function parseUrl(url) {
+				var base;
+				var path;
+				var domainAt = url.indexOf('//');
+				if (domainAt > -1) {
+					url = url.substring(domainAt + 2);
+				}
+				base = url.substring(0, url.indexOf('/'));
+				path = url.substring(url.indexOf('/'));
+				return [base, path];
+			}
+		}, {
+			key: 'joinPaths',
 
-      /**
-       * Joins two paths.
-       * @param {string} basePath
-       * @param {string} path
-       */
-      value: function joinPaths(basePath, path) {
-        if (basePath.charAt(basePath.length - 1) === '/') {
-          basePath = basePath.substring(0, basePath.length - 1);
-        }
-        if (path.charAt(0) === '/') {
-          path = path.substring(1);
-        }
-        return [basePath, path].join('/');
-      }
-    }, {
-      key: 'parseResponseHeaders',
+			/**
+    * Joins two paths.
+    * @param {string} basePath
+    * @param {string} path
+    */
+			value: function joinPaths(basePath, path) {
+				if (basePath.charAt(basePath.length - 1) === '/') {
+					basePath = basePath.substring(0, basePath.length - 1);
+				}
+				if (path.charAt(0) === '/') {
+					path = path.substring(1);
+				}
+				return [basePath, path].join('/');
+			}
+		}, {
+			key: 'parseResponseHeaders',
 
-      /**
-       * XmlHttpRequest's getAllResponseHeaders() method returns a string of
-       * response headers according to the format described on the spec:
-       * http://www.w3.org/TR/XMLHttpRequest/#the-getallresponseheaders-method
-       * This method parses that string into a user-friendly name/value pair
-       * object.
-       * @param {string} allHeaders All headers as string.
-       * @return {array.<object<string, string>>=}
-       */
-      value: function parseResponseHeaders(allHeaders) {
-        var headers = [];
-        if (!allHeaders) {
-          return headers;
-        }
-        var pairs = allHeaders.split('\r\n');
-        for (var i = 0; i < pairs.length; i++) {
-          var index = pairs[i].indexOf(': ');
-          if (index > 0) {
-            var name = pairs[i].substring(0, index);
-            var value = pairs[i].substring(index + 2);
-            headers.push({ name: name, value: value });
-          }
-        }
-        return headers;
-      }
-    }]);
-    return Util;
-  })();
+			/**
+    * XmlHttpRequest's getAllResponseHeaders() method returns a string of
+    * response headers according to the format described on the spec:
+    * http://www.w3.org/TR/XMLHttpRequest/#the-getallresponseheaders-method
+    * This method parses that string into a user-friendly name/value pair
+    * object.
+    * @param {string} allHeaders All headers as string.
+    * @return {array.<object<string, string>>=}
+    */
+			value: function parseResponseHeaders(allHeaders) {
+				var headers = [];
+				if (!allHeaders) {
+					return headers;
+				}
+				var pairs = allHeaders.split('\r\n');
+				for (var i = 0; i < pairs.length; i++) {
+					var index = pairs[i].indexOf(': ');
+					if (index > 0) {
+						var name = pairs[i].substring(0, index);
+						var value = pairs[i].substring(index + 2);
+						headers.push({
+							name: name,
+							value: value
+						});
+					}
+				}
+				return headers;
+			}
+		}]);
+		return Util;
+	})();
 
-  this.launchpad.Util = Util;
+	this.launchpad.Util = Util;
 }).call(this);
 (function () {
-  'use strict';
+	'use strict';
 
-  var core = this.launchpad.core;
+	/**
+  * Disposable utility. When inherited provides the `dispose` function to its
+  * subclass, which is responsible for disposing of any object references
+  * when an instance won't be used anymore. Subclasses should override
+  * `disposeInternal` to implement any specific disposing logic.
+  * @constructor
+  */
 
-  /**
-   */
+	var Disposable = (function () {
+		function Disposable() {
+			babelHelpers.classCallCheck(this, Disposable);
 
-  var ClientMessage = (function () {
-    function ClientMessage() {
-      babelHelpers.classCallCheck(this, ClientMessage);
+			/**
+    * Flag indicating if this instance has already been disposed.
+    * @type {boolean}
+    * @protected
+    */
+			this.disposed_ = false;
+		}
 
-      this.headers_ = [];
-    }
+		babelHelpers.createClass(Disposable, [{
+			key: 'dispose',
 
-    babelHelpers.createClass(ClientMessage, [{
-      key: 'body',
+			/**
+    * Disposes of this instance's object references. Calls `disposeInternal`.
+    */
+			value: function dispose() {
+				if (!this.disposed_) {
+					this.disposeInternal();
+					this.disposed_ = true;
+				}
+			}
+		}, {
+			key: 'disposeInternal',
 
-      /**
-       * Fluent getter and setter for request body.
-       * @param {string} opt_body Request body to be set.
-       * @return {string} Returns request body.
-       * @chainable Chainable when used for setter.
-       */
-      value: function body(opt_body) {
-        if (core.isDef(opt_body)) {
-          this.body_ = opt_body;
-          return this;
-        }
-        return this.body_;
-      }
-    }, {
-      key: 'header',
+			/**
+    * Subclasses should override this method to implement any specific
+    * disposing logic (like clearing references and calling `dispose` on other
+    * disposables).
+    */
+			value: function disposeInternal() {}
+		}, {
+			key: 'isDisposed',
 
-      /**
-       * Adds a header. If the header with the same name already exists, it will
-       * not be overwritten, but new value will be stored. The order is preserved.
-       * @param {string} name
-       * @param {string} value
-       * @chainable
-       */
-      value: function header(name, value) {
-        if (arguments.length !== 2) {
-          throw new Error('Invalid arguments');
-        }
+			/**
+    * Checks if this instance has already been disposed.
+    * @return {boolean}
+    */
+			value: function isDisposed() {
+				return this.disposed_;
+			}
+		}]);
+		return Disposable;
+	})();
 
-        this.headers_.push({
-          name: name,
-          value: value
-        });
-        return this;
-      }
-    }, {
-      key: 'headers',
-
-      /**
-       * Fluent getter and setter for request headers.
-       * @param {array.<object.<string, string>>} opt_queries Request headers
-       *     list to be set.
-       * @return {array.<object.<string, string>>} Returns request headers
-       *     list.
-       * @chainable Chainable when used for setter.
-       */
-      value: function headers(opt_headers) {
-        if (core.isDef(opt_headers)) {
-          this.headers_ = opt_headers;
-          return this;
-        }
-        return this.headers_;
-      }
-    }]);
-    return ClientMessage;
-  })();
-
-  this.launchpad.ClientMessage = ClientMessage;
+	this.launchpad.Disposable = Disposable;
 }).call(this);
 (function () {
-  'use strict';
+	"use strict";
 
-  var core = this.launchpad.core;
-  var ClientMessage = this.launchpad.ClientMessage;
+	var Disposable = this.launchpad.Disposable;
 
-  /**
-   */
+	/**
+  * Case insensitive string Multimap implementation. Allows multiple values for
+  * the same key name.
+  */
 
-  var ClientResponse = (function (_ClientMessage) {
-    function ClientResponse(clientRequest) {
-      babelHelpers.classCallCheck(this, ClientResponse);
+	var MultiMap = (function (_Disposable) {
+		function MultiMap() {
+			babelHelpers.classCallCheck(this, MultiMap);
 
-      babelHelpers.get(Object.getPrototypeOf(ClientResponse.prototype), 'constructor', this).call(this);
-      if (!clientRequest) {
-        throw new Error('Can\'t create response without request');
-      }
-      this.clientRequest_ = clientRequest;
-    }
+			babelHelpers.get(Object.getPrototypeOf(MultiMap.prototype), "constructor", this).call(this);
+			this.values = {};
+		}
 
-    babelHelpers.inherits(ClientResponse, _ClientMessage);
-    babelHelpers.createClass(ClientResponse, [{
-      key: 'request',
+		babelHelpers.inherits(MultiMap, _Disposable);
+		babelHelpers.createClass(MultiMap, [{
+			key: "add",
 
-      /**
-       * Returns request that created this response.
-       * @return {ClientRequest}
-       */
-      value: function request() {
-        return this.clientRequest_;
-      }
-    }, {
-      key: 'statusCode',
+			/**
+    * Adds value to a key name.
+    * @param {string} name
+    * @param {*} value
+    * @chainable
+    */
+			value: function add(name, value) {
+				this.values[name.toLowerCase()] = this.values[name.toLowerCase()] || [];
+				this.values[name.toLowerCase()].push(value);
+				return this;
+			}
+		}, {
+			key: "clear",
 
-      /**
-       * Fluent getter and setter for response status code.
-       * @param {number} opt_statusCode Request status code to be set.
-       * @return {number} Returns response status code.
-       */
-      value: function statusCode(opt_statusCode) {
-        if (core.isDef(opt_statusCode)) {
-          this.statusCode_ = opt_statusCode;
-          return this;
-        }
-        return this.statusCode_;
-      }
-    }]);
-    return ClientResponse;
-  })(ClientMessage);
+			/**
+    * Clears map names and values.
+    * @chainable
+    */
+			value: function clear() {
+				this.values = {};
+				return this;
+			}
+		}, {
+			key: "contains",
 
-  this.launchpad.ClientResponse = ClientResponse;
+			/**
+    * Checks if map contains a value to the key name.
+    * @param {string} name
+    * @chainable
+    */
+			value: function contains(name) {
+				return name.toLowerCase() in this.values;
+			}
+		}, {
+			key: "disposeInternal",
+
+			/**
+    * @inheritDoc
+    */
+			value: function disposeInternal() {
+				this.values = null;
+			}
+		}, {
+			key: "get",
+
+			/**
+    * Gets the first added value from a key name.
+    * @param {string} name
+    * @chainable
+    */
+			value: function get(name) {
+				var values = this.values[name.toLowerCase()];
+				if (values) {
+					return values[0];
+				}
+			}
+		}, {
+			key: "getAll",
+
+			/**
+    * Gets all values from a key name.
+    * @param {string} name
+    * @return {array.<string>}
+    */
+			value: function getAll(name) {
+				return this.values[name.toLowerCase()];
+			}
+		}, {
+			key: "isEmpty",
+
+			/**
+    * Returns true if the map is empty, false otherwise.
+    * @return {boolean}
+    */
+			value: function isEmpty() {
+				return this.size() === 0;
+			}
+		}, {
+			key: "names",
+
+			/**
+    * Gets array of key names.
+    * @return {array.<string>}
+    */
+			value: function names() {
+				return Object.keys(this.values);
+			}
+		}, {
+			key: "remove",
+
+			/**
+    * Removes all values from a key name.
+    * @param {string} name
+    * @chainable
+    */
+			value: function remove(name) {
+				delete this.values[name.toLowerCase()];
+				return this;
+			}
+		}, {
+			key: "set",
+
+			/**
+    * Sets the value of a key name. Relevant to replace the current values with
+    * a new one.
+    * @param {string} name  [description]
+    * @chainable
+    */
+			value: function set(name, value) {
+				this.values[name.toLowerCase()] = [value];
+				return this;
+			}
+		}, {
+			key: "size",
+
+			/**
+    * Gets the size of the map key names.
+    * @return {number}
+    */
+			value: function size() {
+				return this.names().length;
+			}
+		}, {
+			key: "toString",
+			value: function toString() {
+				return JSON.stringify(this.values);
+			}
+		}]);
+		return MultiMap;
+	})(Disposable);
+
+	this.launchpad.MultiMap = MultiMap;
+}).call(this);
+(function () {
+	'use strict';
+
+	var core = this.launchpad.core;
+	var MultiMap = this.launchpad.MultiMap;
+
+	/**
+  */
+
+	var ClientMessage = (function () {
+		function ClientMessage() {
+			babelHelpers.classCallCheck(this, ClientMessage);
+
+			this.headers_ = new MultiMap();
+		}
+
+		babelHelpers.createClass(ClientMessage, [{
+			key: 'body',
+
+			/**
+    * Fluent getter and setter for request body.
+    * @param {string} opt_body Request body to be set.
+    * @return {string} Returns request body.
+    * @chainable Chainable when used for setter.
+    */
+			value: function body(opt_body) {
+				if (core.isDef(opt_body)) {
+					this.body_ = opt_body;
+					return this;
+				}
+				return this.body_;
+			}
+		}, {
+			key: 'header',
+
+			/**
+    * Adds a header. If the header with the same name already exists, it will
+    * not be overwritten, but new value will be stored. The order is preserved.
+    * @param {string} name
+    * @param {string} value
+    * @chainable
+    */
+			value: function header(name, value) {
+				if (arguments.length !== 2) {
+					throw new Error('Invalid arguments');
+				}
+				this.headers_.set(name, value);
+				return this;
+			}
+		}, {
+			key: 'headers',
+
+			/**
+    * Fluent getter and setter for request headers.
+    * @param {MultiMap|object} opt_queries Request headers list
+    *   to be set.
+    * @return {MultiMap} Returns map of request headers.
+    */
+			value: function headers(opt_headers) {
+				if (core.isDef(opt_headers)) {
+					if (opt_headers instanceof MultiMap) {
+						this.headers_ = opt_headers;
+					} else {
+						this.headers_.values = opt_headers;
+					}
+					return opt_headers;
+				}
+				return this.headers_;
+			}
+		}]);
+		return ClientMessage;
+	})();
+
+	this.launchpad.ClientMessage = ClientMessage;
+}).call(this);
+(function () {
+	'use strict';
+
+	var core = this.launchpad.core;
+	var ClientMessage = this.launchpad.ClientMessage;
+
+	/**
+  */
+
+	var Response = (function (_ClientMessage) {
+		function Response(clientRequest) {
+			babelHelpers.classCallCheck(this, Response);
+
+			babelHelpers.get(Object.getPrototypeOf(Response.prototype), 'constructor', this).call(this);
+			if (!clientRequest) {
+				throw new Error('Can\'t create response without request');
+			}
+			this.clientRequest_ = clientRequest;
+		}
+
+		babelHelpers.inherits(Response, _ClientMessage);
+		babelHelpers.createClass(Response, [{
+			key: 'request',
+
+			/**
+    * Returns request that created this response.
+    * @return {ClientRequest}
+    */
+			value: function request() {
+				return this.clientRequest_;
+			}
+		}, {
+			key: 'statusCode',
+
+			/**
+    * Fluent getter and setter for response status code.
+    * @param {number} opt_statusCode Request status code to be set.
+    * @return {number} Returns response status code.
+    */
+			value: function statusCode(opt_statusCode) {
+				if (core.isDef(opt_statusCode)) {
+					this.statusCode_ = opt_statusCode;
+					return this;
+				}
+				return this.statusCode_;
+			}
+		}]);
+		return Response;
+	})(ClientMessage);
+
+	this.launchpad.Response = Response;
 }).call(this);
 (function () {
   /*!
@@ -1698,549 +1915,550 @@ this.launchpadNamed = {};
 
 /** @type {CancellablePromise.CallbackEntry_} */ /** @type {!Thenable} */
 (function () {
-  'use strict';
+	'use strict';
 
-  var core = this.launchpad.core;
-  var Transport = this.launchpad.Transport;
-  var Util = this.launchpad.Util;
-  var ClientResponse = this.launchpad.ClientResponse;
-  var Promise = this.launchpadNamed.Promise.CancellablePromise;
+	var core = this.launchpad.core;
+	var Transport = this.launchpad.Transport;
+	var Util = this.launchpad.Util;
+	var Response = this.launchpad.Response;
+	var Promise = this.launchpadNamed.Promise.CancellablePromise;
 
-  /**
-   * Provides a convenient interface for data transport.
-   * @interface
-   */
+	/**
+  * Provides a convenient interface for data transport.
+  * @interface
+  */
 
-  var AjaxTransport = (function (_Transport) {
-    function AjaxTransport() {
-      babelHelpers.classCallCheck(this, AjaxTransport);
+	var AjaxTransport = (function (_Transport) {
+		function AjaxTransport() {
+			babelHelpers.classCallCheck(this, AjaxTransport);
 
-      babelHelpers.get(Object.getPrototypeOf(AjaxTransport.prototype), 'constructor', this).call(this);
-    }
+			babelHelpers.get(Object.getPrototypeOf(AjaxTransport.prototype), 'constructor', this).call(this);
+		}
 
-    babelHelpers.inherits(AjaxTransport, _Transport);
-    babelHelpers.createClass(AjaxTransport, [{
-      key: 'send',
+		babelHelpers.inherits(AjaxTransport, _Transport);
+		babelHelpers.createClass(AjaxTransport, [{
+			key: 'send',
 
-      /**
-       * @inheritDoc
-       */
-      value: function send(clientRequest) {
-        var self = this;
+			/**
+    * @inheritDoc
+    */
+			value: function send(request) {
+				var self = this;
 
-        var deferred = this.request(clientRequest.url(), clientRequest.method(), clientRequest.body(), clientRequest.headers(), clientRequest.queries(), null, false);
+				var deferred = this.request(request.url(), request.method(), request.body(), request.headers(), request.queries(), null, false);
 
-        return deferred.then(function (response) {
-          var clientResponse = new ClientResponse(clientRequest);
-          clientResponse.body(response.responseText);
-          clientResponse.statusCode(response.status);
-          clientResponse.headers(Util.parseResponseHeaders(response.getAllResponseHeaders()));
-          return clientResponse;
-        });
-      }
-    }, {
-      key: 'request',
+				return deferred.then(function (response) {
+					var clientResponse = new Response(request);
+					clientResponse.body(response.responseText);
+					clientResponse.statusCode(response.status);
+					Util.parseResponseHeaders(response.getAllResponseHeaders()).forEach(function (header) {
+						clientResponse.header(header.name, header.value);
+					});
+					return clientResponse;
+				});
+			}
+		}, {
+			key: 'request',
 
-      /**
-       * Requests the url using XMLHttpRequest.
-       * @param {!string} url
-       * @param {!string} method
-       * @param {?string} body
-       * @param {array.<object<string, string>>=} opt_headers
-       * @param {array.<object<string, string>>=} opt_queries
-       * @param {number=} opt_timeout
-       * @param {boolean=} opt_sync
-       * @return {Promise} Deferred ajax request.
-       * @protected
-       */
-      value: function request(url, method, body, opt_headers, opt_queries, opt_timeout, opt_sync) {
-        var request = new XMLHttpRequest();
+			/**
+    * Requests the url using XMLHttpRequest.
+    * @param {!string} url
+    * @param {!string} method
+    * @param {?string} body
+    * @param {array.<object<string, string>>=} opt_headers
+    * @param {array.<object<string, string>>=} opt_queries
+    * @param {number=} opt_timeout
+    * @param {boolean=} opt_sync
+    * @return {Promise} Deferred ajax request.
+    * @protected
+    */
+			value: function request(url, method, body, opt_headers, opt_queries, opt_timeout, opt_sync) {
+				var request = new XMLHttpRequest();
 
-        var promise = new Promise(function (resolve, reject) {
-          request.onload = function () {
-            if (request.status === 200 || request.status === 204 || request.status === 304) {
-              resolve(request);
-              return;
-            }
-            request.onerror();
-          };
-          request.onerror = function () {
-            var error = new Error('Request error');
-            error.request = request;
-            reject(error);
-          };
-        }).thenCatch(function (reason) {
-          throw reason;
-        }).thenAlways(function () {
-          clearTimeout(timeout);
-        });
+				var promise = new Promise(function (resolve, reject) {
+					request.onload = function () {
+						if (request.status === 200 || request.status === 204 || request.status === 304) {
+							resolve(request);
+							return;
+						}
+						request.onerror();
+					};
+					request.onerror = function () {
+						var error = new Error('Request error');
+						error.request = request;
+						reject(error);
+					};
+				}).thenCatch(function (reason) {
+					throw reason;
+				}).thenAlways(function () {
+					clearTimeout(timeout);
+				});
 
-        if (opt_queries) {
-          var querystring = '';
-          opt_queries.forEach(function (query) {
-            querystring += query.name + '=' + encodeURIComponent(query.value) + '&';
-          });
-          querystring = querystring.slice(0, -1);
-          if (querystring) {
-            url += url.indexOf('?') > -1 ? '&' : '?';
-            url += querystring;
-          }
-        }
+				if (opt_queries) {
+					var querystring = '';
+					opt_queries.names().forEach(function (name) {
+						opt_queries.getAll(name).forEach(function (value) {
+							querystring += name + '=' + encodeURIComponent(value) + '&';
+						});
+					});
+					querystring = querystring.slice(0, -1);
+					if (querystring) {
+						url += url.indexOf('?') > -1 ? '&' : '?';
+						url += querystring;
+					}
+				}
 
-        request.open(method, url, !opt_sync);
+				request.open(method, url, !opt_sync);
 
-        if (opt_headers) {
-          var headers = {};
-          opt_headers.forEach(function (header) {
-            headers[header.name] = (headers[header.name] ? headers[header.name] + ',' : '') + header.value;
-            request.setRequestHeader(header.name, headers[header.name]);
-          });
-        }
+				if (opt_headers) {
+					var headers = {};
+					opt_headers.names().forEach(function (name) {
+						request.setRequestHeader(name, opt_headers.getAll(name).join(', '));
+					});
+				}
 
-        request.send(core.isDef(body) ? body : null);
+				request.send(core.isDef(body) ? body : null);
 
-        if (core.isDefAndNotNull(opt_timeout)) {
-          var timeout = setTimeout(function () {
-            promise.cancel('Request timeout');
-          }, opt_timeout);
-        }
+				if (core.isDefAndNotNull(opt_timeout)) {
+					var timeout = setTimeout(function () {
+						promise.cancel('Request timeout');
+					}, opt_timeout);
+				}
 
-        return promise;
-      }
-    }]);
-    return AjaxTransport;
-  })(Transport);
+				return promise;
+			}
+		}]);
+		return AjaxTransport;
+	})(Transport);
 
-  this.launchpad.AjaxTransport = AjaxTransport;
+	this.launchpad.AjaxTransport = AjaxTransport;
 }).call(this);
 (function () {
-  'use strict';
+	'use strict';
 
-  var core = this.launchpad.core;
-  var ClientMessage = this.launchpad.ClientMessage;
+	var AjaxTransport = this.launchpad.AjaxTransport;
 
-  /**
-   */
+	/**
+  * Provides a factory for data transport.
+  */
 
-  var ClientRequest = (function (_ClientMessage) {
-    function ClientRequest() {
-      babelHelpers.classCallCheck(this, ClientRequest);
+	var TransportFactory = (function () {
+		function TransportFactory() {
+			babelHelpers.classCallCheck(this, TransportFactory);
 
-      babelHelpers.get(Object.getPrototypeOf(ClientRequest.prototype), 'constructor', this).call(this);
-      this.queries_ = [];
-    }
+			this.transports = {};
+			this.transports[TransportFactory.DEFAULT_TRANSPORT_NAME] = AjaxTransport;
+		}
 
-    babelHelpers.inherits(ClientRequest, _ClientMessage);
-    babelHelpers.createClass(ClientRequest, [{
-      key: 'method',
+		babelHelpers.createClass(TransportFactory, [{
+			key: 'get',
+			value: function get(implementationName) {
+				var transportClass = this.transports[implementationName];
 
-      /**
-       * Fluent getter and setter for request method.
-       * @param {string} opt_method Request method to be set.
-       * @return {string} Returns request method.
-       * @chainable Chainable when used for setter.
-       */
-      value: function method(opt_method) {
-        if (core.isDef(opt_method)) {
-          this.method_ = opt_method;
-          return this;
-        }
-        return this.method_ || ClientRequest.DEFAULT_METHOD;
-      }
-    }, {
-      key: 'query',
+				if (transportClass === null) {
+					throw new Error('Invalid transport name: ' + implementationName);
+				}
 
-      /**
-       * Adds a query. If the query with the same name already exists, it will not
-       * be overwritten, but new value will be stored. The order is preserved.
-       * @param {string} name
-       * @param {string} value
-       * @chainable
-       */
-      value: function query(name, value) {
-        if (arguments.length !== 2) {
-          throw new Error('Invalid arguments');
-        }
+				try {
+					return new transportClass();
+				} catch (err) {
+					throw new Error('Can\'t create transport', err);
+				}
+			}
+		}, {
+			key: 'getDefault',
 
-        this.queries_.push({
-          name: name,
-          value: value
-        });
-        return this;
-      }
-    }, {
-      key: 'queries',
+			/**
+    * Returns default transport.
+    */
+			value: function getDefault() {
+				return this.get(TransportFactory.DEFAULT_TRANSPORT_NAME);
+			}
+		}], [{
+			key: 'instance',
 
-      /**
-       * Fluent getter and setter for request query string.
-       * @param {array.<object.<string, string>>} opt_queries Request query string
-       *     list to be set.
-       * @return {array.<object.<string, string>>} Returns request query string
-       *     list.
-       * @chainable Chainable when used for setter.
-       */
-      value: function queries(opt_queries) {
-        if (core.isDef(opt_queries)) {
-          this.queries_ = opt_queries;
-          return this;
-        }
-        return this.queries_;
-      }
-    }, {
-      key: 'url',
+			/**
+    * Returns {@code TransportFactory} instance.
+    */
+			value: function instance() {
+				if (!TransportFactory.instance_) {
+					TransportFactory.instance_ = new TransportFactory();
+				}
+				return TransportFactory.instance_;
+			}
+		}]);
+		return TransportFactory;
+	})();
 
-      /**
-       * Fluent getter and setter for request url.
-       * @param {string} opt_url Request url to be set.
-       * @return {string} Returns request url.
-       * @chainable Chainable when used for setter.
-       * TODO: Renames on api.java as well.
-       */
-      value: function url(opt_url) {
-        if (core.isDef(opt_url)) {
-          this.url_ = opt_url;
-          return this;
-        }
-        return this.url_;
-      }
-    }]);
-    return ClientRequest;
-  })(ClientMessage);
+	TransportFactory.DEFAULT_TRANSPORT_NAME = 'default';
 
-  ClientRequest.DEFAULT_METHOD = 'GET';
-
-  this.launchpad.ClientRequest = ClientRequest;
+	this.launchpad.TransportFactory = TransportFactory;
 }).call(this);
 (function () {
-  'use strict';
+	'use strict';
 
-  var AjaxTransport = this.launchpad.AjaxTransport;
+	var core = this.launchpad.core;
+	var ClientMessage = this.launchpad.ClientMessage;
+	var MultiMap = this.launchpad.MultiMap;
 
-  /**
-   * Provides a factory for data transport.
-   */
+	/**
+  */
 
-  var TransportFactory = (function () {
-    function TransportFactory() {
-      babelHelpers.classCallCheck(this, TransportFactory);
+	var Request = (function (_ClientMessage) {
+		function Request() {
+			babelHelpers.classCallCheck(this, Request);
 
-      this.transports = {};
-      this.transports[TransportFactory.DEFAULT_TRANSPORT_NAME] = AjaxTransport;
-    }
+			babelHelpers.get(Object.getPrototypeOf(Request.prototype), 'constructor', this).call(this);
+			this.queries_ = new MultiMap();
+		}
 
-    babelHelpers.createClass(TransportFactory, [{
-      key: 'get',
-      value: function get(implementationName) {
-        var transportClass = this.transports[implementationName];
+		babelHelpers.inherits(Request, _ClientMessage);
+		babelHelpers.createClass(Request, [{
+			key: 'method',
 
-        if (transportClass == null) {
-          throw new Error('Invalid transport name: ' + implementationName);
-        }
+			/**
+    * Fluent getter and setter for request method.
+    * @param {string} opt_method Request method to be set.
+    * @return {string} Returns request method.
+    * @chainable Chainable when used for setter.
+    */
+			value: function method(opt_method) {
+				if (core.isDef(opt_method)) {
+					this.method_ = opt_method;
+					return this;
+				}
+				return this.method_ || Request.DEFAULT_METHOD;
+			}
+		}, {
+			key: 'query',
 
-        try {
-          return new transportClass();
-        } catch (err) {
-          throw new Error('Can\'t create transport', err);
-        }
-      }
-    }, {
-      key: 'getDefault',
+			/**
+    * Adds a query. If the query with the same name already exists, it will not
+    * be overwritten, but new value will be stored. The order is preserved.
+    * @param {string} name
+    * @param {string} value
+    * @chainable
+    */
+			value: function query(name, value) {
+				if (arguments.length !== 2) {
+					throw new Error('Invalid arguments');
+				}
+				this.queries_.set(name, value);
+				return this;
+			}
+		}, {
+			key: 'queries',
 
-      /**
-       * Returns default transport.
-       */
-      value: function getDefault() {
-        return this.get(TransportFactory.DEFAULT_TRANSPORT_NAME);
-      }
-    }], [{
-      key: 'instance',
+			/**
+    * Fluent getter and setter for request querystring.
+    * @param {MultiMap|object} opt_queries Request querystring map to be set.
+    * @return {MultiMap} Returns map of request querystring.
+    */
+			value: function queries(opt_queries) {
+				if (core.isDef(opt_queries)) {
+					if (opt_queries instanceof MultiMap) {
+						this.queries_ = opt_queries;
+					} else {
+						this.queries_.values = opt_queries;
+					}
+					return opt_queries;
+				}
+				return this.queries_;
+			}
+		}, {
+			key: 'url',
 
-      /**
-       * Returns {@code TransportFactory} instance.
-       */
-      value: function instance() {
-        if (!TransportFactory.instance_) {
-          TransportFactory.instance_ = new TransportFactory();
-        }
-        return TransportFactory.instance_;
-      }
-    }]);
-    return TransportFactory;
-  })();
+			/**
+    * Fluent getter and setter for request url.
+    * @param {string} opt_url Request url to be set.
+    * @return {string} Returns request url.
+    * @chainable Chainable when used for setter.
+    * TODO: Renames on api.java as well.
+    */
+			value: function url(opt_url) {
+				if (core.isDef(opt_url)) {
+					this.url_ = opt_url;
+					return this;
+				}
+				return this.url_;
+			}
+		}]);
+		return Request;
+	})(ClientMessage);
 
-  TransportFactory.DEFAULT_TRANSPORT_NAME = 'default';
+	Request.DEFAULT_METHOD = 'GET';
 
-  this.launchpad.TransportFactory = TransportFactory;
+	this.launchpad.Request = Request;
 }).call(this);
 (function () {
-  'use strict';
+	'use strict';
 
-  var TransportFactory = this.launchpad.TransportFactory;
-  var ClientRequest = this.launchpad.ClientRequest;
-  var Util = this.launchpad.Util;
+	var core = this.launchpad.core;
+	var TransportFactory = this.launchpad.TransportFactory;
+	var Request = this.launchpad.Request;
+	var Util = this.launchpad.Util;
+	var MultiMap = this.launchpad.MultiMap;
 
-  /**
-   * Base client contains code that is same for all transports.
-   * @interface
-   */
+	/**
+  * Base client contains code that is same for all transports.
+  * @interface
+  */
 
-  var LaunchpadClient = (function () {
-    function LaunchpadClient() {
-      babelHelpers.classCallCheck(this, LaunchpadClient);
+	var LaunchpadClient = (function () {
+		function LaunchpadClient() {
+			babelHelpers.classCallCheck(this, LaunchpadClient);
 
-      if (arguments.length === 0) {
-        throw new Error('Invalid arguments, try `new LaunchpadClient(baseUrl, url)`');
-      }
+			if (arguments.length === 0) {
+				throw new Error('Invalid arguments, try `new LaunchpadClient(baseUrl, url)`');
+			}
 
-      this.url_ = Util.joinPaths(arguments[0] || '', arguments[1] || '');
-      this.headers_ = [];
-      this.queries_ = [];
+			this.url_ = Util.joinPaths(arguments[0] || '', arguments[1] || '');
+			this.headers_ = new MultiMap();
+			this.queries_ = new MultiMap();
 
-      this.header('Content-Type', 'application/json');
-    }
+			this.header('Content-Type', 'application/json');
+			this.header('X-PJAX', 'true');
+			this.header('X-Requested-With', 'XMLHttpRequest');
+		}
 
-    babelHelpers.createClass(LaunchpadClient, [{
-      key: 'use',
+		babelHelpers.createClass(LaunchpadClient, [{
+			key: 'use',
 
-      /**
-       * Specifies {@link Transport} implementation.
-       */
-      value: function use(transport) {
-        this.customTransport_ = transport;
-        return this;
-      }
-    }, {
-      key: 'connect',
+			/**
+    * Specifies {@link Transport} implementation.
+    */
+			value: function use(transport) {
+				this.customTransport_ = transport;
+				return this;
+			}
+		}, {
+			key: 'connect',
 
-      /**
-       * Creates new socket.io instance. The parameters passed to socket.io
-       * constructor will be provided:
-       *
-       *   LaunchpadClient.url('http://domain:8080/path').connect({ foo: true });
-       *     -> io('domain:8080', { path: '/path', foo: true });
-       *
-       * @param {object} opt_options
-       */
-      value: function connect(opt_options) {
-        if (typeof io === 'undefined') {
-          throw new Error('Socket.io client not loaded');
-        }
+			/**
+    * Creates new socket.io instance. The parameters passed to socket.io
+    * constructor will be provided:
+    *
+    *   LaunchpadClient.url('http://domain:8080/path').connect({ foo: true });
+    *     -> io('domain:8080', { path: '/path', foo: true });
+    *
+    * @param {object} opt_options
+    */
+			value: function connect(opt_options) {
+				if (typeof io === 'undefined') {
+					throw new Error('Socket.io client not loaded');
+				}
 
-        var url = Util.parseUrl(this.url());
-        opt_options = opt_options || {};
-        opt_options.path = url[1];
+				var url = Util.parseUrl(this.url());
+				opt_options = opt_options || {};
+				opt_options.path = url[1];
 
-        return io(url[0], opt_options);
-      }
-    }, {
-      key: 'path',
+				return io(url[0], opt_options);
+			}
+		}, {
+			key: 'path',
 
-      /**
-       * Creates new {@link LaunchpadBaseClient}.
-       */
-      value: function path(_path) {
-        return new LaunchpadClient(this.url(), _path).use(this.customTransport_);
-      }
-    }, {
-      key: 'delete',
+			/**
+    * Creates new {@link LaunchpadBaseClient}.
+    */
+			value: function path(_path) {
+				return new LaunchpadClient(this.url(), _path).use(this.customTransport_);
+			}
+		}, {
+			key: 'delete',
 
-      /**
-       * Sends message with DELETE http verb.
-       * @return {Promise}
-       */
-      value: function _delete() {
-        return this.sendAsync('DELETE');
-      }
-    }, {
-      key: 'get',
+			/**
+    * Sends message with DELETE http verb.
+    * @return {Promise}
+    */
+			value: function _delete() {
+				return this.sendAsync('DELETE');
+			}
+		}, {
+			key: 'get',
 
-      /**
-       * Sends message with GET http verb.
-       * @return {Promise}
-       */
-      value: function get() {
-        return this.sendAsync('GET');
-      }
-    }, {
-      key: 'patch',
+			/**
+    * Sends message with GET http verb.
+    * @return {Promise}
+    */
+			value: function get() {
+				return this.sendAsync('GET');
+			}
+		}, {
+			key: 'patch',
 
-      /**
-       * Sends message with PATCH http verb.
-       * @param {string} opt_body
-       * @return {Promise}
-       */
-      value: function patch(opt_body) {
-        return this.sendAsync('PATCH', opt_body);
-      }
-    }, {
-      key: 'post',
+			/**
+    * Sends message with PATCH http verb.
+    * @param {string} opt_body
+    * @return {Promise}
+    */
+			value: function patch(opt_body) {
+				return this.sendAsync('PATCH', opt_body);
+			}
+		}, {
+			key: 'post',
 
-      /**
-       * Sends message with POST http verb.
-       * @param {string} opt_body
-       * @return {Promise}
-       */
-      value: function post(opt_body) {
-        return this.sendAsync('POST', opt_body);
-      }
-    }, {
-      key: 'put',
+			/**
+    * Sends message with POST http verb.
+    * @param {string} opt_body
+    * @return {Promise}
+    */
+			value: function post(opt_body) {
+				return this.sendAsync('POST', opt_body);
+			}
+		}, {
+			key: 'put',
 
-      /**
-       * Sends message with PUT http verb.
-       * @param {string} opt_body
-       * @return {Promise}
-       */
-      value: function put(opt_body) {
-        return this.sendAsync('PUT', opt_body);
-      }
-    }, {
-      key: 'header',
+			/**
+    * Sends message with PUT http verb.
+    * @param {string} opt_body
+    * @return {Promise}
+    */
+			value: function put(opt_body) {
+				return this.sendAsync('PUT', opt_body);
+			}
+		}, {
+			key: 'header',
 
-      /**
-       * Adds a header. If the header with the same name already exists, it will
-       * not be overwritten, but new value will be stored. The order is preserved.
-       */
-      value: function header(name, value) {
-        if (arguments.length !== 2) {
-          throw new Error('Invalid arguments');
-        }
+			/**
+    * Adds a header. If the header with the same name already exists, it will
+    * not be overwritten, but new value will be stored. The order is preserved.
+    */
+			value: function header(name, value) {
+				if (arguments.length !== 2) {
+					throw new Error('Invalid arguments');
+				}
+				this.headers_.set(name, value);
+				return this;
+			}
+		}, {
+			key: 'headers',
 
-        this.headers_.push({
-          name: name,
-          value: value
-        });
-        return this;
-      }
-    }, {
-      key: 'headers',
+			/**
+    * Gets the headers.
+    * @return {MultiMap}
+    */
+			value: function headers() {
+				return this.headers_;
+			}
+		}, {
+			key: 'query',
 
-      /**
-       * Gets the headers.
-       * @return {array.<object.<string, string>>}
-       */
-      value: function headers() {
-        return this.headers_;
-      }
-    }, {
-      key: 'query',
+			/**
+    * Adds a query. If the query with the same name already exists, it will not
+    * be overwritten, but new value will be stored. The order is preserved.
+    */
+			value: function query(name, value) {
+				if (arguments.length !== 2) {
+					throw new Error('Invalid arguments');
+				}
+				this.queries_.set(name, value);
+				return this;
+			}
+		}, {
+			key: 'queries',
 
-      /**
-       * Adds a query. If the query with the same name already exists, it will not
-       * be overwritten, but new value will be stored. The order is preserved.
-       */
-      value: function query(name, value) {
-        if (arguments.length !== 2) {
-          throw new Error('Invalid arguments');
-        }
+			/**
+    * Gets the query strings map.
+    * @return {MultiMap}
+    */
+			value: function queries() {
+				return this.queries_;
+			}
+		}, {
+			key: 'url',
 
-        this.queries_.push({
-          name: name,
-          value: value
-        });
-        return this;
-      }
-    }, {
-      key: 'queries',
+			/**
+    * Returns the URL.
+    * TODO: Renames on api.java as well.
+    */
+			value: function url() {
+				return this.url_;
+			}
+		}, {
+			key: 'sendAsync',
 
-      /**
-       * Gets the query strings.
-       * @return {array.<object.<string, string>>}
-       */
-      value: function queries() {
-        return this.queries_;
-      }
-    }, {
-      key: 'url',
+			/**
+    * Uses transport to send request with given method name and body
+    * asynchronously.
+    * @param {string} method The HTTP method to be used when sending data.
+    * @param {string} body
+    * @return {Promise} Deferred request.
+    */
+			value: function sendAsync(method, body) {
+				var transport = this.customTransport_ || TransportFactory.instance().getDefault();
 
-      /**
-       * Returns the URL.
-       * TODO: Renames on api.java as well.
-       */
-      value: function url() {
-        return this.url_;
-      }
-    }, {
-      key: 'sendAsync',
+				var request = new Request();
+				request.body(body);
+				request.method(method);
+				request.headers(this.headers());
+				request.queries(this.queries());
+				request.url(this.url());
 
-      /**
-       * Uses transport to send request with given method name and body
-       * asynchronously.
-       * @param {string} method The HTTP method to be used when sending data.
-       * @param {string} body
-       * @return {Promise} Deferred request.
-       */
-      value: function sendAsync(method, body) {
-        var transport = this.customTransport_ || TransportFactory.instance().getDefault();
+				this.encode(request);
 
-        var clientRequest = new ClientRequest();
-        clientRequest.body(body);
-        clientRequest.method(method);
-        clientRequest.headers(this.headers());
-        clientRequest.queries(this.queries());
-        clientRequest.url(this.url());
+				return transport.send(request).then(this.decode);
+			}
+		}, {
+			key: 'encode',
 
-        this.encode(clientRequest);
+			/**
+    * Encodes request body.
+    * @param {Request} request
+    * @return {Request}
+    */
+			value: function encode(request) {
+				var body = request.body();
 
-        return transport.send(clientRequest).then(this.decode);
-      }
-    }, {
-      key: 'encode',
+				if (core.isElement(body)) {
+					body = new FormData(body);
+					request.body(body);
+				}
 
-      /**
-       * Encodes clientRequest body.
-       * @param {ClientRequest} clientRequest
-       * @return {ClientRequest}
-       */
-      value: function encode(clientRequest) {
-        if (LaunchpadClient.TEMP_isContentTypeJson(clientRequest)) {
-          clientRequest.body(JSON.stringify(clientRequest.body()));
-        }
-        return clientRequest;
-      }
-    }, {
-      key: 'decode',
+				if (body instanceof FormData) {
+					request.headers().remove('content-type');
+				} else if (LaunchpadClient.isContentTypeJson(request)) {
+					request.body(JSON.stringify(request.body()));
+				}
+				return request;
+			}
+		}, {
+			key: 'decode',
 
-      /**
-       * Decodes clientResponse body.
-       * @param {ClientResponse} clientResponse
-       * @return {ClientResponse}
-       */
-      value: function decode(clientResponse) {
-        if (LaunchpadClient.TEMP_isContentTypeJson(clientResponse)) {
-          try {
-            clientResponse.body(JSON.parse(clientResponse.body()));
-          } catch (err) {}
-        }
-        return clientResponse;
-      }
-    }], [{
-      key: 'url',
+			/**
+    * Decodes clientResponse body.
+    * @param {ClientResponse} clientResponse
+    * @return {ClientResponse}
+    */
+			value: function decode(clientResponse) {
+				if (LaunchpadClient.isContentTypeJson(clientResponse)) {
+					try {
+						clientResponse.body(JSON.parse(clientResponse.body()));
+					} catch (err) {}
+				}
+				return clientResponse;
+			}
+		}], [{
+			key: 'url',
 
-      /**
-       * Static factory for creating launchpad client.
-       */
-      value: function url(_url) {
-        return new LaunchpadClient(_url).use(this.customTransport_);
-      }
-    }]);
-    return LaunchpadClient;
-  })();
+			/**
+    * Static factory for creating launchpad client.
+    */
+			value: function url(_url) {
+				return new LaunchpadClient(_url).use(this.customTransport_);
+			}
+		}]);
+		return LaunchpadClient;
+	})();
 
-  LaunchpadClient.TEMP_isContentTypeJson = function (clientMessage) {
-    var items = clientMessage.headers();
-    for (var i = items.length - 1; i >= 0; i--) {
-      if ('content-type' === items[i].name.toLowerCase()) {
-        return items[i].value.toLowerCase().indexOf('application/json') === 0;
-      }
-    }
-    return false;
-  };
+	LaunchpadClient.isContentTypeJson = function (clientMessage) {
+		var contentType = clientMessage.headers().get('content-type') || '';
+		return contentType.indexOf('application/json') === 0;
+	};
 
-  if (typeof window !== undefined) {
-    window.LaunchpadClient = LaunchpadClient;
-  }
+	if (typeof window !== undefined) {
+		window.LaunchpadClient = LaunchpadClient;
+	}
 
-  this.launchpad.LaunchpadClient = LaunchpadClient;
+	this.launchpad.LaunchpadClient = LaunchpadClient;
 }).call(this);
 //# sourceMappingURL=api.js.map
