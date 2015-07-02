@@ -706,7 +706,7 @@ this.launchpadNamed = {};
 
 			/**
     * Fluent getter and setter for request headers.
-    * @param {MultiMap|object} opt_queries Request headers list
+    * @param {MultiMap|object} opt_params Request headers list
     *   to be set.
     * @return {MultiMap} Returns map of request headers.
     */
@@ -1945,7 +1945,7 @@ this.launchpadNamed = {};
 			value: function send(clientRequest) {
 				var self = this;
 
-				var deferred = this.request(clientRequest.url(), clientRequest.method(), clientRequest.body(), clientRequest.headers(), clientRequest.queries(), null, false);
+				var deferred = this.request(clientRequest.url(), clientRequest.method(), clientRequest.body(), clientRequest.headers(), clientRequest.params(), null, false);
 
 				return deferred.then(function (response) {
 					var clientResponse = new ClientResponse(clientRequest);
@@ -1966,13 +1966,13 @@ this.launchpadNamed = {};
     * @param {!string} method
     * @param {?string} body
     * @param {array.<object<string, string>>=} opt_headers
-    * @param {array.<object<string, string>>=} opt_queries
+    * @param {array.<object<string, string>>=} opt_params
     * @param {number=} opt_timeout
     * @param {boolean=} opt_sync
     * @return {Promise} Deferred ajax request.
     * @protected
     */
-			value: function request(url, method, body, opt_headers, opt_queries, opt_timeout, opt_sync) {
+			value: function request(url, method, body, opt_headers, opt_params, opt_timeout, opt_sync) {
 				var request = new XMLHttpRequest();
 
 				var promise = new Promise(function (resolve, reject) {
@@ -1994,10 +1994,10 @@ this.launchpadNamed = {};
 					clearTimeout(timeout);
 				});
 
-				if (opt_queries) {
+				if (opt_params) {
 					var querystring = '';
-					opt_queries.names().forEach(function (name) {
-						opt_queries.getAll(name).forEach(function (value) {
+					opt_params.names().forEach(function (name) {
+						opt_params.getAll(name).forEach(function (value) {
 							querystring += name + '=' + encodeURIComponent(value) + '&';
 						});
 					});
@@ -2048,7 +2048,7 @@ this.launchpadNamed = {};
 			babelHelpers.classCallCheck(this, ClientRequest);
 
 			babelHelpers.get(Object.getPrototypeOf(ClientRequest.prototype), 'constructor', this).call(this);
-			this.queries_ = new MultiMap();
+			this.params_ = new MultiMap();
 		}
 
 		babelHelpers.inherits(ClientRequest, _ClientMessage);
@@ -2069,7 +2069,7 @@ this.launchpadNamed = {};
 				return this.method_ || ClientRequest.DEFAULT_METHOD;
 			}
 		}, {
-			key: 'query',
+			key: 'param',
 
 			/**
     * Adds a query. If the query with the same name already exists, it will not
@@ -2078,31 +2078,31 @@ this.launchpadNamed = {};
     * @param {string} value
     * @chainable
     */
-			value: function query(name, value) {
+			value: function param(name, value) {
 				if (arguments.length !== 2) {
 					throw new Error('Invalid arguments');
 				}
-				this.queries_.set(name, value);
+				this.params_.set(name, value);
 				return this;
 			}
 		}, {
-			key: 'queries',
+			key: 'params',
 
 			/**
     * Fluent getter and setter for request querystring.
-    * @param {MultiMap|object} opt_queries Request querystring map to be set.
+    * @param {MultiMap|object} opt_params Request querystring map to be set.
     * @return {MultiMap} Returns map of request querystring.
     */
-			value: function queries(opt_queries) {
-				if (core.isDef(opt_queries)) {
-					if (opt_queries instanceof MultiMap) {
-						this.queries_ = opt_queries;
+			value: function params(opt_params) {
+				if (core.isDef(opt_params)) {
+					if (opt_params instanceof MultiMap) {
+						this.params_ = opt_params;
 					} else {
-						this.queries_.values = opt_queries;
+						this.params_.values = opt_params;
 					}
-					return opt_queries;
+					return opt_params;
 				}
-				return this.queries_;
+				return this.params_;
 			}
 		}, {
 			key: 'url',
@@ -2214,7 +2214,7 @@ this.launchpadNamed = {};
 
 			this.url_ = Util.joinPaths(arguments[0] || '', arguments[1] || '');
 			this.headers_ = new MultiMap();
-			this.queries_ = new MultiMap();
+			this.params_ = new MultiMap();
 
 			this.header('Content-Type', 'application/json');
 			this.header('X-PJAX', 'true');
@@ -2341,28 +2341,28 @@ this.launchpadNamed = {};
 				return this.headers_;
 			}
 		}, {
-			key: 'query',
+			key: 'param',
 
 			/**
     * Adds a query. If the query with the same name already exists, it will not
     * be overwritten, but new value will be stored. The order is preserved.
     */
-			value: function query(name, value) {
+			value: function param(name, value) {
 				if (arguments.length !== 2) {
 					throw new Error('Invalid arguments');
 				}
-				this.queries_.set(name, value);
+				this.params_.set(name, value);
 				return this;
 			}
 		}, {
-			key: 'queries',
+			key: 'params',
 
 			/**
     * Gets the query strings map.
     * @return {MultiMap}
     */
-			value: function queries() {
-				return this.queries_;
+			value: function params() {
+				return this.params_;
 			}
 		}, {
 			key: 'url',
@@ -2391,7 +2391,7 @@ this.launchpadNamed = {};
 				clientRequest.body(body);
 				clientRequest.method(method);
 				clientRequest.headers(this.headers());
-				clientRequest.queries(this.queries());
+				clientRequest.params(this.params());
 				clientRequest.url(this.url());
 
 				this.encode(clientRequest);
