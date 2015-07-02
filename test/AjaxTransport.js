@@ -57,9 +57,9 @@ describe('AjaxTransport', function() {
 		var transport = new AjaxTransport();
 		var clientRequest = new ClientRequest();
 		clientRequest.url('/url');
-		clientRequest.query('query', 1);
+		clientRequest.param('query', 1);
 		transport.send(clientRequest).then(function(response) {
-			assert.strictEqual('{"query":[1]}', response.request().queries().toString());
+			assert.strictEqual('{"query":[1]}', response.request().params().toString());
 			done();
 		});
 		this.requests[0].respond(200);
@@ -152,11 +152,11 @@ describe('AjaxTransport', function() {
 		var transport = new AjaxTransport();
 		var clientRequest = new ClientRequest();
 		clientRequest.url('/url?foo=1');
-		clientRequest.queries().add('query', 1);
-		clientRequest.queries().add('query', ' ');
+		clientRequest.params().add('query', 1);
+		clientRequest.params().add('query', ' ');
 		transport.request(
 			clientRequest.url(), clientRequest.method(), null, null,
-			clientRequest.queries(), null, false).then(function(xhrResponse) {
+			clientRequest.params(), null, false).then(function(xhrResponse) {
 			assert.strictEqual('/url?foo=1&query=1&query=%20', xhrResponse.url);
 			done();
 		});

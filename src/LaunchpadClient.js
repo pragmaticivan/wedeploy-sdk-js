@@ -17,7 +17,7 @@ class LaunchpadClient {
 
 		this.url_ = Util.joinPaths(arguments[0] || '', arguments[1] || '');
 		this.headers_ = new MultiMap();
-		this.queries_ = new MultiMap();
+		this.params_ = new MultiMap();
 
 		this.header('Content-Type', 'application/json');
 		this.header('X-PJAX', 'true');
@@ -134,11 +134,11 @@ class LaunchpadClient {
 	 * Adds a query. If the query with the same name already exists, it will not
 	 * be overwritten, but new value will be stored. The order is preserved.
 	 */
-	query(name, value) {
+	param(name, value) {
 		if (arguments.length !== 2) {
 			throw new Error('Invalid arguments');
 		}
-		this.queries_.set(name, value);
+		this.params_.set(name, value);
 		return this;
 	}
 
@@ -146,8 +146,8 @@ class LaunchpadClient {
 	 * Gets the query strings map.
 	 * @return {MultiMap}
 	 */
-	queries() {
-		return this.queries_;
+	params() {
+		return this.params_;
 	}
 
 	/**
@@ -172,7 +172,7 @@ class LaunchpadClient {
 		clientRequest.body(body);
 		clientRequest.method(method);
 		clientRequest.headers(this.headers());
-		clientRequest.queries(this.queries());
+		clientRequest.params(this.params());
 		clientRequest.url(this.url());
 
 		this.encode(clientRequest);

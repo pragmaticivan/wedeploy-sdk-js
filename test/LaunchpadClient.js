@@ -145,10 +145,10 @@ describe('LaunchpadClient', function() {
 
 	it('should send request with query string', function(done) {
 		LaunchpadClient.url('/url/a')
-			.query('query', 1)
+			.param('query', 1)
 			.get()
 			.then(function(response) {
-				assert.strictEqual('{"query":[1]}', response.request().queries().toString());
+				assert.strictEqual('{"query":[1]}', response.request().params().toString());
 				done();
 			});
 		this.requests[0].respond(200);
@@ -226,11 +226,11 @@ describe('LaunchpadClient', function() {
 
 	it('should throws exception for invalid query arguments', function() {
 		assert.throws(function() {
-			LaunchpadClient.url('/url').query();
+			LaunchpadClient.url('/url').param();
 		}, Error);
 
 		assert.throws(function() {
-			LaunchpadClient.url('/url').query('name');
+			LaunchpadClient.url('/url').param('name');
 		}, Error);
 	});
 

@@ -55,28 +55,28 @@ describe('ClientRequest', function() {
 
 	it('should set/get query', function() {
 		var clientRequest = new ClientRequest();
-		clientRequest.query('name', 'value');
-		clientRequest.query('name', 'value');
-		assert.strictEqual('{"name":["value"]}', clientRequest.queries().toString());
+		clientRequest.param('name', 'value');
+		clientRequest.param('name', 'value');
+		assert.strictEqual('{"name":["value"]}', clientRequest.params().toString());
 	});
 
 	it('should set/get headers', function() {
 		var clientRequest = new ClientRequest();
-		clientRequest.queries({
+		clientRequest.params({
 			'name': ['value', 'value']
 		});
-		assert.strictEqual('{"name":["value","value"]}', clientRequest.queries().toString());
+		assert.strictEqual('{"name":["value","value"]}', clientRequest.params().toString());
 	});
 
 	it('should throws exception for invalid query arguments', function() {
 		assert.throws(function() {
 			var clientRequest = new ClientRequest();
-			clientRequest.query();
+			clientRequest.param();
 		}, Error);
 
 		assert.throws(function() {
 			var clientRequest = new ClientRequest();
-			clientRequest.query('name');
+			clientRequest.param('name');
 		}, Error);
 	});
 });

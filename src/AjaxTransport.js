@@ -22,7 +22,7 @@ class AjaxTransport extends Transport {
 
 		var deferred = this.request(
 			clientRequest.url(), clientRequest.method(), clientRequest.body(),
-			clientRequest.headers(), clientRequest.queries(), null, false);
+			clientRequest.headers(), clientRequest.params(), null, false);
 
 		return deferred.then(function(response) {
 			var clientResponse = new ClientResponse(clientRequest);
@@ -41,13 +41,13 @@ class AjaxTransport extends Transport {
 	 * @param {!string} method
 	 * @param {?string} body
 	 * @param {array.<object<string, string>>=} opt_headers
-	 * @param {array.<object<string, string>>=} opt_queries
+	 * @param {array.<object<string, string>>=} opt_params
 	 * @param {number=} opt_timeout
 	 * @param {boolean=} opt_sync
 	 * @return {Promise} Deferred ajax request.
 	 * @protected
 	 */
-	request(url, method, body, opt_headers, opt_queries, opt_timeout, opt_sync) {
+	request(url, method, body, opt_headers, opt_params, opt_timeout, opt_sync) {
 		var request = new XMLHttpRequest();
 
 		var promise = new Promise(function(resolve, reject) {
@@ -69,10 +69,10 @@ class AjaxTransport extends Transport {
 			clearTimeout(timeout);
 		});
 
-		if (opt_queries) {
+		if (opt_params) {
 			var querystring = '';
-			opt_queries.names().forEach(function(name) {
-				opt_queries.getAll(name).forEach(function(value) {
+			opt_params.names().forEach(function(name) {
+				opt_params.getAll(name).forEach(function(value) {
 					querystring += name + '=' + encodeURIComponent(value) + '&';
 				});
 			});

@@ -8,7 +8,7 @@ class ClientRequest extends ClientMessage {
 
 	constructor() {
 		super();
-		this.queries_ = new MultiMap();
+		this.params_ = new MultiMap();
 	}
 
 	/**
@@ -32,29 +32,29 @@ class ClientRequest extends ClientMessage {
 	 * @param {string} value
 	 * @chainable
 	 */
-	query(name, value) {
+	param(name, value) {
 		if (arguments.length !== 2) {
 			throw new Error('Invalid arguments');
 		}
-		this.queries_.set(name, value);
+		this.params_.set(name, value);
 		return this;
 	}
 
 	/**
 	 * Fluent getter and setter for request querystring.
-	 * @param {MultiMap|object} opt_queries Request querystring map to be set.
+	 * @param {MultiMap|object} opt_params Request querystring map to be set.
 	 * @return {MultiMap} Returns map of request querystring.
 	 */
-	queries(opt_queries) {
-		if (core.isDef(opt_queries)) {
-			if (opt_queries instanceof MultiMap) {
-				this.queries_ = opt_queries;
+	params(opt_params) {
+		if (core.isDef(opt_params)) {
+			if (opt_params instanceof MultiMap) {
+				this.params_ = opt_params;
 			} else {
-				this.queries_.values = opt_queries;
+				this.params_.values = opt_params;
 			}
-			return opt_queries;
+			return opt_params;
 		}
-		return this.queries_;
+		return this.params_;
 	}
 
 	/**
