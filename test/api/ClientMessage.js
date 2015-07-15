@@ -1,6 +1,6 @@
-import ClientMessage from '../src/ClientMessage';
-import ClientRequest from '../src/ClientRequest';
-import ClientResponse from '../src/ClientResponse';
+import ClientMessage from '../../src/api/ClientMessage';
+import ClientRequest from '../../src/api/ClientRequest';
+import ClientResponse from '../../src/api/ClientResponse';
 
 describe('ClientMessage', function() {
 	it('should set/get body', function() {

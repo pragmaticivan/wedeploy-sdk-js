@@ -1,4 +1,4 @@
-import TransportFactory from '../src/TransportFactory';
+import TransportFactory from '../../src/api/TransportFactory';
 
 describe('TransportFactory', function() {
 

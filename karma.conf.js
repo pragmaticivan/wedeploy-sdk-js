@@ -11,15 +11,18 @@ module.exports = function (config) {
     frameworks: ['mocha', 'chai', 'sinon', 'source-map-support', 'commonjs'],
 
     files: [
-      'bower_components/**/*.js',
-      'src/*.js',
-      'test/*.js'
+      'bower_components/metal/**/*.js',
+      'bower_components/metal-promise/**/*.js',
+      'bower_components/soyutils/soyutils.js',
+      'src/**/*.js',
+      'test/**/*.js'
     ],
 
     preprocessors: {
-      'bower_components/**/*.js': ['babel', 'commonjs'],
-      'src/*.js': ['coverage', 'commonjs'],
-      'test/*.js': ['babel', 'commonjs']
+      'bower_components/metal/**/*.js': ['babel', 'commonjs'],
+      'bower_components/metal-promise/**/*.js': ['babel', 'commonjs'],
+      'src/**/*.js': ['coverage', 'commonjs'],
+      'test/**/*.js': ['babel', 'commonjs']
     },
 
     browsers: ['Chrome'],

@@ -1,4 +1,4 @@
-import Util from '../src/Util';
+import Util from '../../src/api/Util';
 
 describe('Util', function() {
 

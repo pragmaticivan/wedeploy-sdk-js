@@ -1,5 +1,5 @@
-import LaunchpadClient from '../src/LaunchpadClient';
-import Transport from '../src/Transport';
+import LaunchpadClient from '../../src/api/LaunchpadClient';
+import Transport from '../../src/api/Transport';
 
 describe('LaunchpadClient', function() {
 

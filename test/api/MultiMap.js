@@ -1,4 +1,4 @@
-import MultiMap from '../src/MultiMap';
+import MultiMap from '../../src/api/MultiMap';
 
 describe('MultiMap', function() {
 

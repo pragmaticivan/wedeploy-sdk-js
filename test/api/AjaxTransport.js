@@ -1,5 +1,5 @@
-import AjaxTransport from '../src/AjaxTransport';
-import ClientRequest from '../src/ClientRequest';
+import AjaxTransport from '../../src/api/AjaxTransport';
+import ClientRequest from '../../src/api/ClientRequest';
 
 describe('AjaxTransport', function() {
 
