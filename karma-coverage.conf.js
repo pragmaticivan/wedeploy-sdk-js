@@ -1,3 +1,4 @@
+var isparta = require('isparta');
 var metal = require('gulp-metal');
 
 var babelOptions = {
@@ -20,12 +21,25 @@ module.exports = function (config) {
     preprocessors: {
       'bower_components/metal/**/*.js': ['babel', 'commonjs'],
       'bower_components/metal-promise/**/*.js': ['babel', 'commonjs'],
-      'src/**/*.js': ['babel', 'commonjs'],
+      'src/**/*.js': ['coverage', 'commonjs'],
       'test/**/*.js': ['babel', 'commonjs']
     },
 
     browsers: ['Chrome'],
 
-    babelPreprocessor: {options: babelOptions}
+    reporters: ['coverage', 'progress'],
+
+    babelPreprocessor: {options: babelOptions},
+
+    coverageReporter: {
+      instrumenters: {isparta : isparta},
+      instrumenter: {'**/*.js': 'isparta'},
+      instrumenterOptions: {isparta: {babel: babelOptions}},
+      reporters: [
+        {type: 'html'},
+        {type: 'lcov', subdir: 'lcov'},
+        {type: 'text-summary'}
+      ]
+    }
   });
 };
