@@ -1,3 +1,5 @@
+'use strict';
+
 import core from 'bower:metal/src/core';
 import Transport from './Transport';
 import Util from './Util';
@@ -18,8 +20,6 @@ class AjaxTransport extends Transport {
 	 * @inheritDoc
 	 */
 	send(clientRequest) {
-		var self = this;
-
 		var deferred = this.request(
 			clientRequest.url(), clientRequest.method(), clientRequest.body(),
 			clientRequest.headers(), clientRequest.params(), null, false);
@@ -86,7 +86,6 @@ class AjaxTransport extends Transport {
 		request.open(method, url, !opt_sync);
 
 		if (opt_headers) {
-			var headers = {};
 			opt_headers.names().forEach(function(name) {
 				request.setRequestHeader(name, opt_headers.getAll(name).join(', '));
 			});

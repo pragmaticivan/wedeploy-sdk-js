@@ -1,3 +1,5 @@
+'use strict';
+
 import MultiMap from '../../src/api/MultiMap';
 
 describe('MultiMap', function() {

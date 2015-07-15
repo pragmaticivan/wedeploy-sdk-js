@@ -1,3 +1,5 @@
+'use strict';
+
 import TransportFactory from '../../src/api/TransportFactory';
 
 describe('TransportFactory', function() {

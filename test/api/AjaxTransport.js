@@ -1,3 +1,5 @@
+'use strict';
+
 import AjaxTransport from '../../src/api/AjaxTransport';
 import ClientRequest from '../../src/api/ClientRequest';
 

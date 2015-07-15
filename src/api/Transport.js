@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Provides a convenient interface for data transport.
  * @interface
@@ -9,7 +11,7 @@ class Transport {
 	 * @param {ClientRequest} clientRequest
 	 * @return {Promise} Deferred request.
 	 */
-	send(clientRequest) {}
+	send() {}
 
 }
 

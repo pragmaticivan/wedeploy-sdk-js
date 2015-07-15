@@ -1,4 +1,6 @@
-import Disposable from "bower:metal/src/disposable/Disposable";
+'use strict';
+
+import Disposable from 'bower:metal/src/disposable/Disposable';
 
 /**
  * Case insensitive string Multimap implementation. Allows multiple values for

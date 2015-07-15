@@ -1,3 +1,5 @@
+'use strict';
+
 import Util from '../../src/api/Util';
 
 describe('Util', function() {
@@ -25,7 +27,7 @@ describe('Util', function() {
 	});
 
 	it('should do what...', function() {
-		var headers = "Name\u003a\u0020Value\u000d\u000aName\u003a\u0020Value";
+		var headers = 'Name\u003a\u0020Value\u000d\u000aName\u003a\u0020Value';
 		assert.deepEqual([{
 			name: 'Name',
 			value: 'Value'

@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Provides a convenient interface for data transport.
  * @interface

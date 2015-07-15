@@ -1,3 +1,5 @@
+'use strict';
+
 import AjaxTransport from './AjaxTransport';
 
 /**
@@ -21,14 +23,14 @@ class TransportFactory {
 	}
 
 	get(implementationName) {
-		var transportClass = this.transports[implementationName];
+		var TransportClass = this.transports[implementationName];
 
-		if (transportClass === null) {
+		if (TransportClass === null) {
 			throw new Error('Invalid transport name: ' + implementationName);
 		}
 
 		try {
-			return new (transportClass)();
+			return new (TransportClass)();
 		} catch (err) {
 			throw new Error('Can\'t create transport', err);
 		}

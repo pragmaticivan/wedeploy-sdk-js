@@ -1,3 +1,5 @@
+'use strict';
+
 import ClientMessage from '../../src/api/ClientMessage';
 import ClientRequest from '../../src/api/ClientRequest';
 import ClientResponse from '../../src/api/ClientResponse';
