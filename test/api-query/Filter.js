@@ -149,4 +149,42 @@ describe('Filter', function() {
 			assert.strictEqual('{"age":{"operator":"!=","value":12}}', filter.toString());
 		});
 	});
+
+	describe('Filter.andOf', function() {
+		it('should compose filters with the "and" operator', function() {
+			var filter = Filter.andOf(
+				Filter.gt('age', 12),
+				Filter.lt('age', 15),
+				Filter.equal('name', 'foo')
+			);
+			var body = {
+				and: [
+					{
+						age: {
+							operator: '>',
+							value: 12
+						}
+					},
+					{
+						age: {
+							operator: '<',
+							value: 15
+						}
+					},
+					{
+						name: {
+							operator: '=',
+							value: 'foo'
+						}
+					}
+				]
+			};
+			assert.deepEqual(body, filter.body());
+
+			var bodyStr = '{"and":[{"age":{"operator":">","value":12}},' +
+				'{"age":{"operator":"<","value":15}},' +
+				'{"name":{"operator":"=","value":"foo"}}]}';
+			assert.strictEqual(bodyStr, filter.toString());
+		});
+	});
 });

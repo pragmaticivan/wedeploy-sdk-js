@@ -25,6 +25,38 @@ class Filter {
 	}
 
 	/**
+	 * Adds a filter to be composed with this filter through the given operator.
+	 * @param {string} operator
+	 * @param {!BaseFilter} filter
+	 * @chainnable
+	 */
+	add(operator, filter) {
+		if (!(this.body_[operator] instanceof Array)) {
+			var filterBody = this.body_;
+			this.body_ = {};
+			this.body_[operator] = [filterBody];
+		}
+		this.body_[operator].push(filter.body());
+		return this;
+	}
+
+	/**
+	 * Returns a Filter instance that uses the "in" operator.
+	 * @param {...*} filters A variable amount of filters to be composed
+	 *   with the "and" operator.
+	 * @return {!Filter}
+	 * @static
+	 */
+	static andOf(...filters) {
+		var filter = filters[0];
+		for (var i = 1; i < filters.length; i++) {
+			filter.add('and', filters[i]);
+		}
+		;
+		return filter;
+	}
+
+	/**
 	 * Gets the json object that represents this filter.
 	 * @return {!Object}
 	 */
