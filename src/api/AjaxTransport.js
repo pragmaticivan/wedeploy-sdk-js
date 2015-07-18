@@ -52,11 +52,11 @@ class AjaxTransport extends Transport {
 
 		var promise = new Promise(function(resolve, reject) {
 			request.onload = function() {
-				if (request.status === 200 || request.status === 204 || request.status === 304) {
-					resolve(request);
+				if (request.aborted) {
+					request.onerror();
 					return;
 				}
-				request.onerror();
+				resolve(request);
 			};
 			request.onerror = function() {
 				var error = new Error('Request error');

@@ -106,40 +106,18 @@ describe('AjaxTransport', function() {
 		});
 	});
 
-	it('should response success with status code 200', function(done) {
+	it('should response success with any status code', function(done) {
 		var transport = new AjaxTransport();
 		var clientRequest = new ClientRequest();
 		clientRequest.url('/url');
 		transport.send(clientRequest).then(function(response) {
-			assert.strictEqual(200, response.statusCode());
+			assert.strictEqual(500, response.statusCode());
 			done();
 		});
-		this.requests[0].respond(200);
+		this.requests[0].respond(500);
 	});
 
-	it('should response success with status code 204', function(done) {
-		var transport = new AjaxTransport();
-		var clientRequest = new ClientRequest();
-		clientRequest.url('/url');
-		transport.send(clientRequest).then(function(response) {
-			assert.strictEqual(204, response.statusCode());
-			done();
-		});
-		this.requests[0].respond(204);
-	});
-
-	it('should response success with status code 304', function(done) {
-		var transport = new AjaxTransport();
-		var clientRequest = new ClientRequest();
-		clientRequest.url('/url');
-		transport.send(clientRequest).then(function(response) {
-			assert.strictEqual(304, response.statusCode());
-			done();
-		});
-		this.requests[0].respond(304);
-	});
-
-	it('should error with any other status code than 200 or 304', function(done) {
+	it('should fail on transport error', function(done) {
 		var transport = new AjaxTransport();
 		var clientRequest = new ClientRequest();
 		clientRequest.url('/url');
@@ -147,7 +125,7 @@ describe('AjaxTransport', function() {
 			assert.ok(reason instanceof Error);
 			done();
 		});
-		this.requests[0].respond(500);
+		this.requests[0].abort();
 	});
 
 	it('should parse request query string', function(done) {

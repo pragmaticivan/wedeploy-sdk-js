@@ -220,6 +220,38 @@ describe('LaunchpadClient', function() {
 		this.requests[0].respond(200);
 	});
 
+	it('should response succeeded for status codes 2xx', function(done) {
+		LaunchpadClient.url('/url').get().then(function(response) {
+			assert.ok(response.succeeded());
+			done();
+		});
+		this.requests[0].respond(200);
+	});
+
+	it('should response succeeded for status codes 3xx', function(done) {
+		LaunchpadClient.url('/url').get().then(function(response) {
+			assert.ok(response.succeeded());
+			done();
+		});
+		this.requests[0].respond(200);
+	});
+
+	it('should response not succeeded for status codes 4xx', function(done) {
+		LaunchpadClient.url('/url').get().then(function(response) {
+			assert.ok(!response.succeeded());
+			done();
+		});
+		this.requests[0].respond(400);
+	});
+
+	it('should response not succeeded for status codes 5xx', function(done) {
+		LaunchpadClient.url('/url').get().then(function(response) {
+			assert.ok(!response.succeeded());
+			done();
+		});
+		this.requests[0].respond(500);
+	});
+
 	it('should throws exception for invalid constructor', function() {
 		assert.throws(function() {
 			new LaunchpadClient();
