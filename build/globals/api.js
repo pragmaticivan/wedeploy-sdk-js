@@ -38,6 +38,7 @@ this.launchpadNamed = {};
   })();
 
   babelHelpers.get = function get(object, property, receiver) {
+    if (object === null) object = Function.prototype;
     var desc = Object.getOwnPropertyDescriptor(object, property);
 
     if (desc === undefined) {
@@ -313,7 +314,7 @@ this.launchpadNamed = {};
   * @type {String}
   * @protected
   */
-	core.UID_PROPERTY = 'core_' + (Math.random() * 1000000000 >>> 0);
+	core.UID_PROPERTY = 'core_' + (Math.random() * 1e9 >>> 0);
 
 	/**
   * Counter for unique id.
@@ -325,11 +326,230 @@ this.launchpadNamed = {};
 	this.launchpad.core = core;
 }).call(this);
 (function () {
+	'use strict';
+
+	var core = this.launchpad.core;
+
+	/**
+  * Class responsible for building filters.
+  */
+
+	var Filter = (function () {
+		/**
+   * Constructs a Filter instance.
+   * @param {string} field The name of the field to filter by.
+   * @param {*} operatorOrValue If a third param is given, this should
+   *   be the filter's operator (like ">="). Otherwise, this will be
+   *   used as the filter's value, and the filter's operator will be "=".
+   * @param {*} opt_value The filter's value.
+   * @constructor
+   */
+
+		function Filter(field, operatorOrValue, opt_value) {
+			babelHelpers.classCallCheck(this, Filter);
+
+			var valueIsDef = core.isDef(opt_value);
+			this.body_ = {};
+			this.body_[field] = {
+				operator: valueIsDef ? operatorOrValue : '=',
+				value: valueIsDef ? opt_value : operatorOrValue
+			};
+		}
+
+		babelHelpers.createClass(Filter, [{
+			key: 'add',
+
+			/**
+    * Adds a filter to be composed with this filter through the given operator.
+    * @param {string} operator
+    * @param {!BaseFilter} filter
+    * @chainnable
+    */
+			value: function add(operator, filter) {
+				if (!(this.body_[operator] instanceof Array)) {
+					var filterBody = this.body_;
+					this.body_ = {};
+					this.body_[operator] = [filterBody];
+				}
+				this.body_[operator].push(filter.body());
+				return this;
+			}
+		}, {
+			key: 'body',
+
+			/**
+    * Gets the json object that represents this filter.
+    * @return {!Object}
+    */
+			value: function body() {
+				return this.body_;
+			}
+		}, {
+			key: 'toString',
+
+			/**
+    * Gets the json string that represents this filter.
+    * @return {string}
+    */
+			value: function toString() {
+				return JSON.stringify(this.body());
+			}
+		}], [{
+			key: 'andOf',
+
+			/**
+    * Returns a Filter instance that uses the "in" operator.
+    * @param {...*} filters A variable amount of filters to be composed
+    *   with the "and" operator.
+    * @return {!Filter}
+    * @static
+    */
+			value: function andOf() {
+				for (var _len = arguments.length, filters = Array(_len), _key = 0; _key < _len; _key++) {
+					filters[_key] = arguments[_key];
+				}
+
+				var filter = filters[0];
+				for (var i = 1; i < filters.length; i++) {
+					filter.add('and', filters[i]);
+				}
+				;
+				return filter;
+			}
+		}, {
+			key: 'equal',
+
+			/**
+    * Returns a Filter instance that uses the "=" operator.
+    * @param {string} field The name of the field to filter by.
+    * @param {*} value The filter's value.
+    * @return {!Filter}
+     * @static
+    */
+			value: function equal(field, value) {
+				return new Filter(field, '=', value);
+			}
+		}, {
+			key: 'gt',
+
+			/**
+    * Returns a Filter instance that uses the ">" operator.
+    * @param {string} field The name of the field to filter by.
+    * @param {*} value The filter's value.
+    * @return {!Filter}
+     * @static
+    */
+			value: function gt(field, value) {
+				return new Filter(field, '>', value);
+			}
+		}, {
+			key: 'gte',
+
+			/**
+    * Returns a Filter instance that uses the ">=" operator.
+    * @param {string} field The name of the field to filter by.
+    * @param {*} value The filter's value.
+    * @return {!Filter}
+     * @static
+    */
+			value: function gte(field, value) {
+				return new Filter(field, '>=', value);
+			}
+		}, {
+			key: 'in',
+
+			/**
+    * Returns a Filter instance that uses the "in" operator.
+    * @param {string} field The name of the field to filter by.
+    * @param {...*} value A variable amount of values to be used with
+    *   the "in" operator.
+    * @return {!Filter}
+     * @static
+    */
+			value: function _in(field) {
+				return new Filter(field, 'in', Array.prototype.slice.call(arguments, 1));
+			}
+		}, {
+			key: 'like',
+
+			/**
+    * Returns a Filter instance that uses the "like" operator.
+    * @param {string} field The name of the field to filter by.
+    * @param {*} value The filter's value.
+    * @return {!Filter}
+     * @static
+    */
+			value: function like(field, value) {
+				return new Filter(field, 'like', value);
+			}
+		}, {
+			key: 'lt',
+
+			/**
+    * Returns a Filter instance that uses the "<" operator.
+    * @param {string} field The name of the field to filter by.
+    * @param {*} value The filter's value.
+    * @return {!Filter}
+     * @static
+    */
+			value: function lt(field, value) {
+				return new Filter(field, '<', value);
+			}
+		}, {
+			key: 'lte',
+
+			/**
+    * Returns a Filter instance that uses the "<=" operator.
+    * @param {string} field The name of the field to filter by.
+    * @param {*} value The filter's value.
+    * @return {!Filter}
+     * @static
+    */
+			value: function lte(field, value) {
+				return new Filter(field, '<=', value);
+			}
+		}, {
+			key: 'notEqual',
+
+			/**
+    * Returns a Filter instance that uses the "!=" operator.
+    * @param {string} field The name of the field to filter by.
+    * @param {*} value The filter's value.
+    * @return {!Filter}
+     * @static
+    */
+			value: function notEqual(field, value) {
+				return new Filter(field, '!=', value);
+			}
+		}, {
+			key: 'of',
+
+			/**
+    * Returns a Filter instance.
+    * @param {string} field The name of the field to filter by.
+    * @param {*} operatorOrValue If a third param is given, this should
+    *   be the filter's operator (like ">="). Otherwise, this will be
+    *   used as the filter's value, and the filter's operator will be "=".
+    * @param {*} opt_value The filter's value.
+    * @return {!Filter}
+     * @static
+    */
+			value: function of(field, operatorOrValue, opt_value) {
+				return new Filter(field, operatorOrValue, opt_value);
+			}
+		}]);
+		return Filter;
+	})();
+
+	this.launchpad.Filter = Filter;
+}).call(this);
+(function () {
+	'use strict';
+
 	/**
   * Provides a convenient interface for data transport.
   * @interface
   */
-	"use strict";
 
 	var Transport = (function () {
 		function Transport() {
@@ -337,14 +557,14 @@ this.launchpadNamed = {};
 		}
 
 		babelHelpers.createClass(Transport, [{
-			key: "send",
+			key: 'send',
 
 			/**
     * Sends a message for the specified client.
     * @param {ClientRequest} clientRequest
     * @return {Promise} Deferred request.
     */
-			value: function send(clientRequest) {}
+			value: function send() {}
 		}]);
 		return Transport;
 	})();
@@ -352,11 +572,12 @@ this.launchpadNamed = {};
 	this.launchpad.Transport = Transport;
 }).call(this);
 (function () {
+	'use strict';
+
 	/**
   * Provides a convenient interface for data transport.
   * @interface
   */
-	'use strict';
 
 	var Util = (function () {
 		function Util() {
@@ -498,7 +719,7 @@ this.launchpadNamed = {};
 	this.launchpad.Disposable = Disposable;
 }).call(this);
 (function () {
-	"use strict";
+	'use strict';
 
 	var Disposable = this.launchpad.Disposable;
 
@@ -508,16 +729,17 @@ this.launchpadNamed = {};
   */
 
 	var MultiMap = (function (_Disposable) {
+		babelHelpers.inherits(MultiMap, _Disposable);
+
 		function MultiMap() {
 			babelHelpers.classCallCheck(this, MultiMap);
 
-			babelHelpers.get(Object.getPrototypeOf(MultiMap.prototype), "constructor", this).call(this);
+			babelHelpers.get(Object.getPrototypeOf(MultiMap.prototype), 'constructor', this).call(this);
 			this.values = {};
 		}
 
-		babelHelpers.inherits(MultiMap, _Disposable);
 		babelHelpers.createClass(MultiMap, [{
-			key: "add",
+			key: 'add',
 
 			/**
     * Adds value to a key name.
@@ -531,7 +753,7 @@ this.launchpadNamed = {};
 				return this;
 			}
 		}, {
-			key: "clear",
+			key: 'clear',
 
 			/**
     * Clears map names and values.
@@ -542,7 +764,7 @@ this.launchpadNamed = {};
 				return this;
 			}
 		}, {
-			key: "contains",
+			key: 'contains',
 
 			/**
     * Checks if map contains a value to the key name.
@@ -553,7 +775,7 @@ this.launchpadNamed = {};
 				return name.toLowerCase() in this.values;
 			}
 		}, {
-			key: "disposeInternal",
+			key: 'disposeInternal',
 
 			/**
     * @inheritDoc
@@ -562,7 +784,7 @@ this.launchpadNamed = {};
 				this.values = null;
 			}
 		}, {
-			key: "get",
+			key: 'get',
 
 			/**
     * Gets the first added value from a key name.
@@ -576,7 +798,7 @@ this.launchpadNamed = {};
 				}
 			}
 		}, {
-			key: "getAll",
+			key: 'getAll',
 
 			/**
     * Gets all values from a key name.
@@ -587,7 +809,7 @@ this.launchpadNamed = {};
 				return this.values[name.toLowerCase()];
 			}
 		}, {
-			key: "isEmpty",
+			key: 'isEmpty',
 
 			/**
     * Returns true if the map is empty, false otherwise.
@@ -597,7 +819,7 @@ this.launchpadNamed = {};
 				return this.size() === 0;
 			}
 		}, {
-			key: "names",
+			key: 'names',
 
 			/**
     * Gets array of key names.
@@ -607,7 +829,7 @@ this.launchpadNamed = {};
 				return Object.keys(this.values);
 			}
 		}, {
-			key: "remove",
+			key: 'remove',
 
 			/**
     * Removes all values from a key name.
@@ -619,7 +841,7 @@ this.launchpadNamed = {};
 				return this;
 			}
 		}, {
-			key: "set",
+			key: 'set',
 
 			/**
     * Sets the value of a key name. Relevant to replace the current values with
@@ -632,7 +854,7 @@ this.launchpadNamed = {};
 				return this;
 			}
 		}, {
-			key: "size",
+			key: 'size',
 
 			/**
     * Gets the size of the map key names.
@@ -642,7 +864,7 @@ this.launchpadNamed = {};
 				return this.names().length;
 			}
 		}, {
-			key: "toString",
+			key: 'toString',
 			value: function toString() {
 				return JSON.stringify(this.values);
 			}
@@ -737,6 +959,8 @@ this.launchpadNamed = {};
   */
 
 	var ClientResponse = (function (_ClientMessage) {
+		babelHelpers.inherits(ClientResponse, _ClientMessage);
+
 		function ClientResponse(clientRequest) {
 			babelHelpers.classCallCheck(this, ClientResponse);
 
@@ -747,7 +971,6 @@ this.launchpadNamed = {};
 			this.clientRequest_ = clientRequest;
 		}
 
-		babelHelpers.inherits(ClientResponse, _ClientMessage);
 		babelHelpers.createClass(ClientResponse, [{
 			key: 'request',
 
@@ -772,6 +995,17 @@ this.launchpadNamed = {};
 					return this;
 				}
 				return this.statusCode_;
+			}
+		}, {
+			key: 'succeeded',
+
+			/**
+    * Checks if response succeeded. Any status code 2xx or 3xx is considered
+    * valid.
+    * @return {boolean}
+    */
+			value: function succeeded() {
+				return this.statusCode() >= 200 && this.statusCode() <= 399;
 			}
 		}]);
 		return ClientResponse;
@@ -1887,7 +2121,9 @@ this.launchpadNamed = {};
    * @final
    */
   CancellablePromise.CancellationError = (function (_Error) {
-    var _class = function (opt_message) {
+    babelHelpers.inherits(_class, _Error);
+
+    function _class(opt_message) {
       babelHelpers.classCallCheck(this, _class);
 
       babelHelpers.get(Object.getPrototypeOf(_class.prototype), 'constructor', this).call(this, opt_message);
@@ -1895,9 +2131,8 @@ this.launchpadNamed = {};
       if (opt_message) {
         this.message = opt_message;
       }
-    };
+    }
 
-    babelHelpers.inherits(_class, _Error);
     return _class;
   })(Error);
 
@@ -1929,13 +2164,14 @@ this.launchpadNamed = {};
   */
 
 	var AjaxTransport = (function (_Transport) {
+		babelHelpers.inherits(AjaxTransport, _Transport);
+
 		function AjaxTransport() {
 			babelHelpers.classCallCheck(this, AjaxTransport);
 
 			babelHelpers.get(Object.getPrototypeOf(AjaxTransport.prototype), 'constructor', this).call(this);
 		}
 
-		babelHelpers.inherits(AjaxTransport, _Transport);
 		babelHelpers.createClass(AjaxTransport, [{
 			key: 'send',
 
@@ -1943,8 +2179,6 @@ this.launchpadNamed = {};
     * @inheritDoc
     */
 			value: function send(clientRequest) {
-				var self = this;
-
 				var deferred = this.request(clientRequest.url(), clientRequest.method(), clientRequest.body(), clientRequest.headers(), clientRequest.params(), null, false);
 
 				return deferred.then(function (response) {
@@ -2011,7 +2245,6 @@ this.launchpadNamed = {};
 				request.open(method, url, !opt_sync);
 
 				if (opt_headers) {
-					var headers = {};
 					opt_headers.names().forEach(function (name) {
 						request.setRequestHeader(name, opt_headers.getAll(name).join(', '));
 					});
@@ -2044,6 +2277,8 @@ this.launchpadNamed = {};
   */
 
 	var ClientRequest = (function (_ClientMessage) {
+		babelHelpers.inherits(ClientRequest, _ClientMessage);
+
 		function ClientRequest() {
 			babelHelpers.classCallCheck(this, ClientRequest);
 
@@ -2051,7 +2286,6 @@ this.launchpadNamed = {};
 			this.params_ = new MultiMap();
 		}
 
-		babelHelpers.inherits(ClientRequest, _ClientMessage);
 		babelHelpers.createClass(ClientRequest, [{
 			key: 'method',
 
@@ -2149,14 +2383,14 @@ this.launchpadNamed = {};
 		babelHelpers.createClass(TransportFactory, [{
 			key: 'get',
 			value: function get(implementationName) {
-				var transportClass = this.transports[implementationName];
+				var TransportClass = this.transports[implementationName];
 
-				if (transportClass === null) {
+				if (TransportClass === null) {
 					throw new Error('Invalid transport name: ' + implementationName);
 				}
 
 				try {
-					return new transportClass();
+					return new TransportClass();
 				} catch (err) {
 					throw new Error('Can\'t create transport', err);
 				}
