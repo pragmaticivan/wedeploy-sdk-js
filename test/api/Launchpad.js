@@ -1,9 +1,9 @@
 'use strict';
 
-import LaunchpadClient from '../../src/api/LaunchpadClient';
+import Launchpad from '../../src/api/Launchpad';
 import Transport from '../../src/api/Transport';
 
-describe('LaunchpadClient', function() {
+describe('Launchpad', function() {
 
 	beforeEach(function() {
 		this.xhr = sinon.useFakeXMLHttpRequest();
@@ -21,7 +21,7 @@ describe('LaunchpadClient', function() {
 
 	it('should throws exception when socket.io is not loaded', function() {
 		assert.throws(function() {
-			LaunchpadClient.url('/url').connect();
+			Launchpad.url('/url').connect();
 		}, Error);
 	});
 
@@ -33,7 +33,7 @@ describe('LaunchpadClient', function() {
 			}, opts);
 			done();
 		};
-		LaunchpadClient.url('http://domain:8080/path').connect();
+		Launchpad.url('http://domain:8080/path').connect();
 		delete window.io;
 	});
 
@@ -45,7 +45,7 @@ describe('LaunchpadClient', function() {
 			}, opts);
 			done();
 		};
-		LaunchpadClient.url('http://domain:8080/path').connect({
+		Launchpad.url('http://domain:8080/path').connect({
 			path: '/ignore'
 		});
 		delete window.io;
@@ -53,26 +53,26 @@ describe('LaunchpadClient', function() {
 
 	it('should use different transport', function() {
 		var transport = new Transport();
-		var client = LaunchpadClient.url().use(transport);
+		var client = Launchpad.url().use(transport);
 		assert.strictEqual(transport, client.customTransport_);
-		assert.ok(client instanceof LaunchpadClient);
+		assert.ok(client instanceof Launchpad);
 	});
 
 	it('should change full url', function() {
 		var transport = new Transport();
-		var parent = LaunchpadClient.url('http://other:123').use(transport);
+		var parent = Launchpad.url('http://other:123').use(transport);
 		assert.strictEqual('http://other:123/', parent.url());
 	});
 
 	it('should inherit parent transport', function() {
 		var transport = new Transport();
-		var parent = LaunchpadClient.url().use(transport);
+		var parent = Launchpad.url().use(transport);
 		var child = parent.path('/path');
 		assert.strictEqual(parent.customTransport_, child.customTransport_);
 	});
 
 	it('should send DELETE request', function(done) {
-		LaunchpadClient.url('/url').delete().then(function(response) {
+		Launchpad.url('/url').delete().then(function(response) {
 			assert.strictEqual('/url/', response.request().url());
 			assert.strictEqual('DELETE', response.request().method());
 			assert.ok(!response.request().body());
@@ -82,7 +82,7 @@ describe('LaunchpadClient', function() {
 	});
 
 	it('should send GET request', function(done) {
-		LaunchpadClient.url('/url').get().then(function(response) {
+		Launchpad.url('/url').get().then(function(response) {
 			assert.strictEqual('/url/', response.request().url());
 			assert.strictEqual('GET', response.request().method());
 			assert.ok(!response.request().body());
@@ -92,7 +92,7 @@ describe('LaunchpadClient', function() {
 	});
 
 	it('should send POST request with body', function(done) {
-		LaunchpadClient.url('/url').post('body').then(function(response) {
+		Launchpad.url('/url').post('body').then(function(response) {
 			assert.strictEqual('/url/', response.request().url());
 			assert.strictEqual('POST', response.request().method());
 			assert.strictEqual('"body"', response.request().body());
@@ -102,7 +102,7 @@ describe('LaunchpadClient', function() {
 	});
 
 	it('should send PUT request with body', function(done) {
-		LaunchpadClient.url('/url').put('body').then(function(response) {
+		Launchpad.url('/url').put('body').then(function(response) {
 			assert.strictEqual('/url/', response.request().url());
 			assert.strictEqual('PUT', response.request().method());
 			assert.strictEqual('"body"', response.request().body());
@@ -112,7 +112,7 @@ describe('LaunchpadClient', function() {
 	});
 
 	it('should send PATCH request with body', function(done) {
-		LaunchpadClient.url('/url').patch('body').then(function(response) {
+		Launchpad.url('/url').patch('body').then(function(response) {
 			assert.strictEqual('/url/', response.request().url());
 			assert.strictEqual('PATCH', response.request().method());
 			assert.strictEqual('"body"', response.request().body());
@@ -122,7 +122,7 @@ describe('LaunchpadClient', function() {
 	});
 
 	it('should create new client instance based on parent client', function() {
-		var books = LaunchpadClient.url('/books');
+		var books = Launchpad.url('/books');
 		var book1 = books.path('/1');
 		assert.notStrictEqual(book1, books);
 		assert.strictEqual('/books/', books.url());
@@ -130,7 +130,7 @@ describe('LaunchpadClient', function() {
 	});
 
 	it('should send request to url without path', function(done) {
-		LaunchpadClient.url('/url').get().then(function(response) {
+		Launchpad.url('/url').get().then(function(response) {
 			assert.strictEqual('/url/', response.request().url());
 			done();
 		});
@@ -138,7 +138,7 @@ describe('LaunchpadClient', function() {
 	});
 
 	it('should send request to url with path', function(done) {
-		LaunchpadClient.url('/url/a').get().then(function(response) {
+		Launchpad.url('/url/a').get().then(function(response) {
 			assert.strictEqual('/url/a/', response.request().url());
 			done();
 		});
@@ -146,7 +146,7 @@ describe('LaunchpadClient', function() {
 	});
 
 	it('should send request with query string', function(done) {
-		LaunchpadClient.url('/url/a')
+		Launchpad.url('/url/a')
 			.param('query', 1)
 			.get()
 			.then(function(response) {
@@ -157,7 +157,7 @@ describe('LaunchpadClient', function() {
 	});
 
 	it('should send request with header string', function(done) {
-		LaunchpadClient.url('/url/a')
+		Launchpad.url('/url/a')
 			.header('header', 1)
 			.get()
 			.then(function(response) {
@@ -168,7 +168,7 @@ describe('LaunchpadClient', function() {
 	});
 
 	it('should send request with multiple header of same name', function(done) {
-		LaunchpadClient.url('/url/a')
+		Launchpad.url('/url/a')
 			.header('header', 1)
 			.header('header', 2)
 			.get()
@@ -180,7 +180,7 @@ describe('LaunchpadClient', function() {
 	});
 
 	it('should serialize body of json requests', function(done) {
-		LaunchpadClient.url('/url').header('content-type', 'application/json').post({
+		Launchpad.url('/url').header('content-type', 'application/json').post({
 			foo: 1
 		}).then(function(response) {
 			assert.strictEqual('{"foo":1}', response.request().body());
@@ -190,7 +190,7 @@ describe('LaunchpadClient', function() {
 	});
 
 	it('should deserialize body of json responses', function(done) {
-		LaunchpadClient.url('/url').get().then(function(response) {
+		Launchpad.url('/url').get().then(function(response) {
 			assert.deepEqual({
 				foo: 1
 			}, response.body());
@@ -203,7 +203,7 @@ describe('LaunchpadClient', function() {
 
 	it('should support FormData as request body', function(done) {
 		var formData = new FormData();
-		LaunchpadClient.url('/url').post(formData).then(function(response) {
+		Launchpad.url('/url').post(formData).then(function(response) {
 			assert.strictEqual(formData, response.request().body());
 			assert.strictEqual(undefined, response.request().headers().get('content-type'));
 			done();
@@ -213,7 +213,7 @@ describe('LaunchpadClient', function() {
 
 	it('should wrap dom element request body as form data', function(done) {
 		var form = document.createElement('form');
-		LaunchpadClient.url('/url').post(form).then(function(response) {
+		Launchpad.url('/url').post(form).then(function(response) {
 			assert.ok(response.request().body() instanceof FormData);
 			done();
 		});
@@ -221,7 +221,7 @@ describe('LaunchpadClient', function() {
 	});
 
 	it('should response succeeded for status codes 2xx', function(done) {
-		LaunchpadClient.url('/url').get().then(function(response) {
+		Launchpad.url('/url').get().then(function(response) {
 			assert.ok(response.succeeded());
 			done();
 		});
@@ -229,7 +229,7 @@ describe('LaunchpadClient', function() {
 	});
 
 	it('should response succeeded for status codes 3xx', function(done) {
-		LaunchpadClient.url('/url').get().then(function(response) {
+		Launchpad.url('/url').get().then(function(response) {
 			assert.ok(response.succeeded());
 			done();
 		});
@@ -237,7 +237,7 @@ describe('LaunchpadClient', function() {
 	});
 
 	it('should response not succeeded for status codes 4xx', function(done) {
-		LaunchpadClient.url('/url').get().then(function(response) {
+		Launchpad.url('/url').get().then(function(response) {
 			assert.ok(!response.succeeded());
 			done();
 		});
@@ -245,7 +245,7 @@ describe('LaunchpadClient', function() {
 	});
 
 	it('should response not succeeded for status codes 5xx', function(done) {
-		LaunchpadClient.url('/url').get().then(function(response) {
+		Launchpad.url('/url').get().then(function(response) {
 			assert.ok(!response.succeeded());
 			done();
 		});
@@ -254,37 +254,37 @@ describe('LaunchpadClient', function() {
 
 	it('should throws exception for invalid constructor', function() {
 		assert.throws(function() {
-			new LaunchpadClient();
+			new Launchpad();
 		}, Error);
 	});
 
 	it('should throws exception for invalid query arguments', function() {
 		assert.throws(function() {
-			LaunchpadClient.url('/url').param();
+			Launchpad.url('/url').param();
 		}, Error);
 
 		assert.throws(function() {
-			LaunchpadClient.url('/url').param('name');
-		}, Error);
-	});
-
-	it('should throws exception for invalid header arguments', function() {
-		assert.throws(function() {
-			LaunchpadClient.url('/url').header();
-		}, Error);
-
-		assert.throws(function() {
-			LaunchpadClient.url('/url').header('name');
+			Launchpad.url('/url').param('name');
 		}, Error);
 	});
 
 	it('should throws exception for invalid header arguments', function() {
 		assert.throws(function() {
-			LaunchpadClient.url('/url').header();
+			Launchpad.url('/url').header();
 		}, Error);
 
 		assert.throws(function() {
-			LaunchpadClient.url('/url').header('name');
+			Launchpad.url('/url').header('name');
+		}, Error);
+	});
+
+	it('should throws exception for invalid header arguments', function() {
+		assert.throws(function() {
+			Launchpad.url('/url').header();
+		}, Error);
+
+		assert.throws(function() {
+			Launchpad.url('/url').header('name');
 		}, Error);
 	});
 });

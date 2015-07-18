@@ -2211,11 +2211,11 @@ this.launchpadNamed = {};
 
 				var promise = new Promise(function (resolve, reject) {
 					request.onload = function () {
-						if (request.status === 200 || request.status === 204 || request.status === 304) {
-							resolve(request);
+						if (request.aborted) {
+							request.onerror();
 							return;
 						}
-						request.onerror();
+						resolve(request);
 					};
 					request.onerror = function () {
 						var error = new Error('Request error');
@@ -2438,12 +2438,12 @@ this.launchpadNamed = {};
   * @interface
   */
 
-	var LaunchpadClient = (function () {
-		function LaunchpadClient() {
-			babelHelpers.classCallCheck(this, LaunchpadClient);
+	var Launchpad = (function () {
+		function Launchpad() {
+			babelHelpers.classCallCheck(this, Launchpad);
 
 			if (arguments.length === 0) {
-				throw new Error('Invalid arguments, try `new LaunchpadClient(baseUrl, url)`');
+				throw new Error('Invalid arguments, try `new Launchpad(baseUrl, url)`');
 			}
 
 			this.url_ = Util.joinPaths(arguments[0] || '', arguments[1] || '');
@@ -2455,7 +2455,7 @@ this.launchpadNamed = {};
 			this.header('X-Requested-With', 'XMLHttpRequest');
 		}
 
-		babelHelpers.createClass(LaunchpadClient, [{
+		babelHelpers.createClass(Launchpad, [{
 			key: 'use',
 
 			/**
@@ -2472,7 +2472,7 @@ this.launchpadNamed = {};
     * Creates new socket.io instance. The parameters passed to socket.io
     * constructor will be provided:
     *
-    *   LaunchpadClient.url('http://domain:8080/path').connect({ foo: true });
+    *   Launchpad.url('http://domain:8080/path').connect({ foo: true });
     *     -> io('domain:8080', { path: '/path', foo: true });
     *
     * @param {object} opt_options
@@ -2495,7 +2495,7 @@ this.launchpadNamed = {};
     * Creates new {@link LaunchpadBaseClient}.
     */
 			value: function path(_path) {
-				return new LaunchpadClient(this.url(), _path).use(this.customTransport_);
+				return new Launchpad(this.url(), _path).use(this.customTransport_);
 			}
 		}, {
 			key: 'delete',
@@ -2650,7 +2650,7 @@ this.launchpadNamed = {};
 
 				if (body instanceof FormData) {
 					clientRequest.headers().remove('content-type');
-				} else if (LaunchpadClient.isContentTypeJson(clientRequest)) {
+				} else if (Launchpad.isContentTypeJson(clientRequest)) {
 					clientRequest.body(JSON.stringify(clientRequest.body()));
 				}
 				return clientRequest;
@@ -2664,7 +2664,7 @@ this.launchpadNamed = {};
     * @return {ClientResponse}
     */
 			value: function decode(clientResponse) {
-				if (LaunchpadClient.isContentTypeJson(clientResponse)) {
+				if (Launchpad.isContentTypeJson(clientResponse)) {
 					try {
 						clientResponse.body(JSON.parse(clientResponse.body()));
 					} catch (err) {}
@@ -2678,21 +2678,21 @@ this.launchpadNamed = {};
     * Static factory for creating launchpad client.
     */
 			value: function url(_url) {
-				return new LaunchpadClient(_url).use(this.customTransport_);
+				return new Launchpad(_url).use(this.customTransport_);
 			}
 		}]);
-		return LaunchpadClient;
+		return Launchpad;
 	})();
 
-	LaunchpadClient.isContentTypeJson = function (clientMessage) {
+	Launchpad.isContentTypeJson = function (clientMessage) {
 		var contentType = clientMessage.headers().get('content-type') || '';
 		return contentType.indexOf('application/json') === 0;
 	};
 
 	if (typeof window !== undefined) {
-		window.LaunchpadClient = LaunchpadClient;
+		window.Launchpad = Launchpad;
 	}
 
-	this.launchpad.LaunchpadClient = LaunchpadClient;
+	this.launchpad.Launchpad = Launchpad;
 }).call(this);
 //# sourceMappingURL=api.js.map

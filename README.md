@@ -6,7 +6,7 @@ Launchpad api client for JavaScript
 Post
 
 ```javascript
-LaunchpadClient
+Launchpad
     .url('/data/tasks')
     .post({ desc: 'Buy milk' });
 ```
@@ -14,7 +14,7 @@ LaunchpadClient
 Get
 
 ```javascript
-LaunchpadClient
+Launchpad
    .url('/data/tasks')
    .get()
    .then(function(clientResponse) {

@@ -10,11 +10,11 @@ import MultiMap from './MultiMap';
  * Base client contains code that is same for all transports.
  * @interface
  */
-class LaunchpadClient {
+class Launchpad {
 
 	constructor() {
 		if (arguments.length === 0) {
-			throw new Error('Invalid arguments, try `new LaunchpadClient(baseUrl, url)`');
+			throw new Error('Invalid arguments, try `new Launchpad(baseUrl, url)`');
 		}
 
 		this.url_ = Util.joinPaths(arguments[0] || '', arguments[1] || '');
@@ -30,7 +30,7 @@ class LaunchpadClient {
 	 * Static factory for creating launchpad client.
 	 */
 	static url(url) {
-		return new LaunchpadClient(url).use(this.customTransport_);
+		return new Launchpad(url).use(this.customTransport_);
 	}
 
 	/**
@@ -45,7 +45,7 @@ class LaunchpadClient {
 	 * Creates new socket.io instance. The parameters passed to socket.io
 	 * constructor will be provided:
 	 *
-	 *   LaunchpadClient.url('http://domain:8080/path').connect({ foo: true });
+	 *   Launchpad.url('http://domain:8080/path').connect({ foo: true });
 	 *     -> io('domain:8080', { path: '/path', foo: true });
 	 *
 	 * @param {object} opt_options
@@ -66,7 +66,7 @@ class LaunchpadClient {
 	 * Creates new {@link LaunchpadBaseClient}.
 	 */
 	path(path) {
-		return new LaunchpadClient(this.url(), path).use(this.customTransport_);
+		return new Launchpad(this.url(), path).use(this.customTransport_);
 	}
 
 	/**
@@ -197,7 +197,7 @@ class LaunchpadClient {
 
 		if (body instanceof FormData) {
 			clientRequest.headers().remove('content-type');
-		} else if (LaunchpadClient.isContentTypeJson(clientRequest)) {
+		} else if (Launchpad.isContentTypeJson(clientRequest)) {
 			clientRequest.body(JSON.stringify(clientRequest.body()));
 		}
 		return clientRequest;
@@ -209,7 +209,7 @@ class LaunchpadClient {
 	 * @return {ClientResponse}
 	 */
 	decode(clientResponse) {
-		if (LaunchpadClient.isContentTypeJson(clientResponse)) {
+		if (Launchpad.isContentTypeJson(clientResponse)) {
 			try {
 				clientResponse.body(JSON.parse(clientResponse.body()));
 			} catch (err) {}
@@ -219,13 +219,13 @@ class LaunchpadClient {
 
 }
 
-LaunchpadClient.isContentTypeJson = function(clientMessage) {
+Launchpad.isContentTypeJson = function(clientMessage) {
 	var contentType = clientMessage.headers().get('content-type') || '';
 	return contentType.indexOf('application/json') === 0;
 };
 
 if (typeof window !== undefined) {
-	window.LaunchpadClient = LaunchpadClient;
+	window.Launchpad = Launchpad;
 }
 
-export default LaunchpadClient;
+export default Launchpad;
