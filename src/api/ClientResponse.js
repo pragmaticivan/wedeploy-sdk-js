@@ -36,6 +36,15 @@ class ClientResponse extends ClientMessage {
 		return this.statusCode_;
 	}
 
+	/**
+	 * Checks if response succeeded. Any status code 2xx or 3xx is considered
+	 * valid.
+	 * @return {boolean}
+	 */
+	succeeded() {
+		return this.statusCode() >= 200 && this.statusCode() <= 399;
+	}
+
 }
 
 export default ClientResponse;

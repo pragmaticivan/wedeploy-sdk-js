@@ -102,4 +102,17 @@ describe('ClientResponse', function() {
 			new ClientResponse();
 		}, Error);
 	});
+
+	it('should check response succeeded', function() {
+		var clientRequest = new ClientRequest();
+		var clientResponse = new ClientResponse(clientRequest);
+		clientResponse.statusCode(0);
+		assert.ok(!clientResponse.succeeded());
+		clientResponse.statusCode(200);
+		assert.ok(clientResponse.succeeded());
+		clientResponse.statusCode(399);
+		assert.ok(clientResponse.succeeded());
+		clientResponse.statusCode(400);
+		assert.ok(!clientResponse.succeeded());
+	});
 });
