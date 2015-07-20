@@ -187,4 +187,42 @@ describe('Filter', function() {
 			assert.strictEqual(bodyStr, filter.toString());
 		});
 	});
+
+	describe('and', function() {
+		var body;
+		var bodyStr;
+
+		before(function() {
+			body = {
+				and: [
+					{
+						age: {
+							operator: '>',
+							value: 12
+						}
+					},
+					{
+						age: {
+							operator: '<',
+							value: 15
+						}
+					}
+				]
+			};
+			bodyStr = '{"and":[{"age":{"operator":">","value":12}},' +
+				'{"age":{"operator":"<","value":15}}]}';
+		});
+
+		it('should compose current filter with another using the "and" operator', function() {
+			var filter = Filter.gt('age', 12).and(Filter.lt('age', 15));
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual(bodyStr, filter.toString());
+		});
+
+		it('should compose current filter with filter data using the "and" operator', function() {
+			var filter = Filter.gt('age', 12).and('age', '<', 15);
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual(bodyStr, filter.toString());
+		});
+	});
 });

@@ -20,6 +20,24 @@ class Filter {
 	}
 
 	/**
+	 * Adds a filter to be composed with this filter using the given operator.
+	 * @param {string} operator
+	 * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
+	 *   name of the field to filter by.
+	 * @param {*} operatorOrValue Either the field's operator or its value.
+	 * @param {*} opt_value The filter's value.
+	 * @chainnable
+	 */
+	add(operator, fieldOrFilter, opt_operatorOrValue, opt_value) {
+		var filter = fieldOrFilter;
+		if (!(fieldOrFilter instanceof Filter)) {
+			filter = Filter.of(fieldOrFilter, opt_operatorOrValue, opt_value);
+		}
+		this.body_.add(operator, filter);
+		return this;
+	}
+
+	/**
 	 * Adds filters to be composed with this filter using the given operator.
 	 * @param {string} operator
 	 * @param {...*} filters A variable amount of filters to be composed.
@@ -28,6 +46,18 @@ class Filter {
 	addMany(operator, ...filters) {
 		this.body_.addMany(operator, ...filters);
 		return this;
+	}
+
+	/**
+	 * Adds a filter to be composed with this filter using the "and" operator.
+	 * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
+	 *   name of the field to filter by.
+	 * @param {*} operatorOrValue Either the field's operator or its value.
+	 * @param {*} opt_value The filter's value.
+	 * @chainnable
+	 */
+	and(fieldOrFilter, opt_operatorOrValue, opt_value) {
+		return this.add('and', fieldOrFilter, opt_operatorOrValue, opt_value);
 	}
 
 	/**

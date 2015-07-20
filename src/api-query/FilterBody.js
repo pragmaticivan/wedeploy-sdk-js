@@ -46,7 +46,7 @@ class FilterBody {
 	 */
 	addMany(operator, ...filters) {
 		for (var i = 0; i < filters.length; i++) {
-			this.add('and', filters[i]);
+			this.add(operator, filters[i]);
 		}
 	}
 
