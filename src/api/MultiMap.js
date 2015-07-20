@@ -10,6 +10,7 @@ class MultiMap extends Disposable {
 
 	constructor() {
 		super();
+		this.keys = {};
 		this.values = {};
 	}
 
@@ -20,6 +21,7 @@ class MultiMap extends Disposable {
 	 * @chainable
 	 */
 	add(name, value) {
+		this.keys[name.toLowerCase()] = name;
 		this.values[name.toLowerCase()] = this.values[name.toLowerCase()] || [];
 		this.values[name.toLowerCase()].push(value);
 		return this;
@@ -30,6 +32,7 @@ class MultiMap extends Disposable {
 	 * @chainable
 	 */
 	clear() {
+		this.keys = {};
 		this.values = {};
 		return this;
 	}
@@ -84,7 +87,9 @@ class MultiMap extends Disposable {
 	 * @return {array.<string>}
 	 */
 	names() {
-		return Object.keys(this.values);
+		return Object.keys(this.values).map(function(key) {
+			return this.keys[key];
+		}.bind(this));
 	}
 
 	/**
@@ -93,6 +98,7 @@ class MultiMap extends Disposable {
 	 * @chainable
 	 */
 	remove(name) {
+		delete this.keys[name.toLowerCase()];
 		delete this.values[name.toLowerCase()];
 		return this;
 	}
@@ -104,6 +110,7 @@ class MultiMap extends Disposable {
 	 * @chainable
 	 */
 	set(name, value) {
+		this.keys[name.toLowerCase()] = name;
 		this.values[name.toLowerCase()] = [value];
 		return this;
 	}

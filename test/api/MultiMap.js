@@ -99,4 +99,10 @@ describe('MultiMap', function() {
 		assert.strictEqual(2, map.get('KEY2'));
 	});
 
+	it('should preserve key case', function() {
+		var map = new MultiMap();
+		map.add('KEY1', 1);
+		assert.deepEqual(['KEY1'], map.names());
+	});
+
 });
