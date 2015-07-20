@@ -284,78 +284,31 @@ describe('Filter', function() {
 		});
 	});
 
-	describe('and', function() {
-		var body;
-		var bodyStr;
-
-		before(function() {
-			body = {
-				and: [
-					{
-						age: {
-							operator: '>',
-							value: 12
-						}
-					},
-					{
-						age: {
-							operator: '<',
-							value: 15
-						}
-					}
-				]
-			};
-			bodyStr = '{"and":[{"age":{"operator":">","value":12}},' +
-				'{"age":{"operator":"<","value":15}}]}';
-		});
-
+	describe('Composition', function() {
 		it('should compose current filter with another using the "and" operator', function() {
 			var filter = Filter.gt('age', 12).and(Filter.lt('age', 15));
-			assert.deepEqual(body, filter.body());
-			assert.strictEqual(bodyStr, filter.toString());
-		});
-
-		it('should compose current filter with filter data using the "and" operator', function() {
-			var filter = Filter.gt('age', 12).and('age', '<', 15);
-			assert.deepEqual(body, filter.body());
-			assert.strictEqual(bodyStr, filter.toString());
-		});
-	});
-
-	describe('or', function() {
-		var body;
-		var bodyStr;
-
-		before(function() {
-			body = {
-				or: [
-					{
-						age: {
-							operator: '>',
-							value: 12
-						}
-					},
-					{
-						age: {
-							operator: '<',
-							value: 15
-						}
-					}
-				]
-			};
-			bodyStr = '{"or":[{"age":{"operator":">","value":12}},' +
+			var bodyStr = '{"and":[{"age":{"operator":">","value":12}},' +
 				'{"age":{"operator":"<","value":15}}]}';
+			assert.strictEqual(bodyStr, filter.toString());
+
+			filter = Filter.gt('age', 12).and('age', '<', 15);
+			assert.strictEqual(bodyStr, filter.toString());
 		});
 
 		it('should compose current filter with another using the "or" operator', function() {
 			var filter = Filter.gt('age', 12).or(Filter.lt('age', 15));
-			assert.deepEqual(body, filter.body());
+			var bodyStr = '{"or":[{"age":{"operator":">","value":12}},' +
+				'{"age":{"operator":"<","value":15}}]}';
+			assert.strictEqual(bodyStr, filter.toString());
+
+			filter = Filter.gt('age', 12).or('age', '<', 15);
 			assert.strictEqual(bodyStr, filter.toString());
 		});
 
-		it('should compose current filter with filter data using the "or" operator', function() {
-			var filter = Filter.gt('age', 12).or('age', '<', 15);
-			assert.deepEqual(body, filter.body());
+		it('should compose current filter with others using different operators', function() {
+			var filter = Filter.gt('age', 12).or('age', '<', 15).and('name', 'Foo');
+			var bodyStr = '{"and":[{"or":[{"age":{"operator":">","value":12}},' +
+				'{"age":{"operator":"<","value":15}}]},{"name":{"operator":"=","value":"Foo"}}]}';
 			assert.strictEqual(bodyStr, filter.toString());
 		});
 	});
