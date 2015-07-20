@@ -1,6 +1,6 @@
 'use strict';
 
-import core from 'bower:metal/src/core';
+import FilterBody from './FilterBody';
 
 /**
  * Class responsible for building filters.
@@ -16,44 +16,28 @@ class Filter {
 	 * @constructor
 	 */
 	constructor(field, operatorOrValue, opt_value) {
-		var valueIsDef = core.isDef(opt_value);
-		this.body_ = {};
-		this.body_[field] = {
-			operator: valueIsDef ? operatorOrValue : '=',
-			value: valueIsDef ? opt_value : operatorOrValue
-		};
+		this.body_ = new FilterBody(field, operatorOrValue, opt_value);
 	}
 
 	/**
-	 * Adds a filter to be composed with this filter through the given operator.
+	 * Adds filters to be composed with this filter using the given operator.
 	 * @param {string} operator
-	 * @param {!BaseFilter} filter
+	 * @param {...*} filters A variable amount of filters to be composed.
 	 * @chainnable
 	 */
-	add(operator, filter) {
-		if (!(this.body_[operator] instanceof Array)) {
-			var filterBody = this.body_;
-			this.body_ = {};
-			this.body_[operator] = [filterBody];
-		}
-		this.body_[operator].push(filter.body());
+	addMany(operator, ...filters) {
+		this.body_.addMany(operator, ...filters);
 		return this;
 	}
 
 	/**
-	 * Returns a Filter instance that uses the "in" operator.
-	 * @param {...*} filters A variable amount of filters to be composed
-	 *   with the "and" operator.
+	 * Composes all the given Filter instances with the "and" operator.
+	 * @param {...*} filters A variable amount of filters to be composed.
 	 * @return {!Filter}
 	 * @static
 	 */
 	static andOf(...filters) {
-		var filter = filters[0];
-		for (var i = 1; i < filters.length; i++) {
-			filter.add('and', filters[i]);
-		}
-		;
-		return filter;
+		return filters[0].addMany.apply(filters[0], ['and'].concat(filters.slice(1)));
 	}
 
 	/**
@@ -61,7 +45,7 @@ class Filter {
 	 * @return {!Object}
 	 */
 	body() {
-		return this.body_;
+		return this.body_.getObject();
 	}
 
 	/**
