@@ -305,10 +305,25 @@ describe('Filter', function() {
 			assert.strictEqual(bodyStr, filter.toString());
 		});
 
+		it('should compose current filter with another using the "disMax" operator', function() {
+			var filter = Filter.gt('age', 12).disMax(Filter.lt('age', 15));
+			var bodyStr = '{"disMax":[{"age":{"operator":">","value":12}},' +
+				'{"age":{"operator":"<","value":15}}]}';
+			assert.strictEqual(bodyStr, filter.toString());
+
+			filter = Filter.gt('age', 12).disMax('age', '<', 15);
+			assert.strictEqual(bodyStr, filter.toString());
+		});
+
 		it('should compose current filter with others using different operators', function() {
-			var filter = Filter.gt('age', 12).or('age', '<', 15).and('name', 'Foo');
-			var bodyStr = '{"and":[{"or":[{"age":{"operator":">","value":12}},' +
-				'{"age":{"operator":"<","value":15}}]},{"name":{"operator":"=","value":"Foo"}}]}';
+			var filter = Filter.gt('age', 12)
+				.or('age', '<', 15)
+				.and('name', 'Foo')
+				.disMax('name', 'Bar');
+			var bodyStr = '{"disMax":[{"and":[{"or":[{"age":{"operator":">","value":12}},' +
+				'{"age":{"operator":"<","value":15}}]},' +
+				'{"name":{"operator":"=","value":"Foo"}}]},' +
+				'{"name":{"operator":"=","value":"Bar"}}]}';
 			assert.strictEqual(bodyStr, filter.toString());
 		});
 	});
