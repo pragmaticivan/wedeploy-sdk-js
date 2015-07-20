@@ -204,6 +204,28 @@ class Filter {
 	}
 
 	/**
+	 * Adds a filter to be composed with this filter using the "or" operator.
+	 * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
+	 *   name of the field to filter by.
+	 * @param {*} operatorOrValue Either the field's operator or its value.
+	 * @param {*} opt_value The filter's value.
+	 * @chainnable
+	 */
+	or(fieldOrFilter, opt_operatorOrValue, opt_value) {
+		return this.add('or', fieldOrFilter, opt_operatorOrValue, opt_value);
+	}
+
+	/**
+	 * Composes all the given Filter instances with the "or" operator.
+	 * @param {...*} filters A variable amount of filters to be composed.
+	 * @return {!Filter}
+	 * @static
+	 */
+	static orOf(...filters) {
+		return filters[0].addMany.apply(filters[0], ['or'].concat(filters.slice(1)));
+	}
+
+	/**
 	 * Gets the json string that represents this filter.
 	 * @return {string}
 	 */

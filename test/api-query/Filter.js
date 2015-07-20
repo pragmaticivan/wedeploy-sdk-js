@@ -202,6 +202,44 @@ describe('Filter', function() {
 		});
 	});
 
+	describe('Filter.orOf', function() {
+		it('should compose filters with the "or" operator', function() {
+			var filter = Filter.orOf(
+				Filter.gt('age', 12),
+				Filter.lt('age', 15),
+				Filter.equal('name', 'foo')
+			);
+			var body = {
+				or: [
+					{
+						age: {
+							operator: '>',
+							value: 12
+						}
+					},
+					{
+						age: {
+							operator: '<',
+							value: 15
+						}
+					},
+					{
+						name: {
+							operator: '=',
+							value: 'foo'
+						}
+					}
+				]
+			};
+			assert.deepEqual(body, filter.body());
+
+			var bodyStr = '{"or":[{"age":{"operator":">","value":12}},' +
+				'{"age":{"operator":"<","value":15}},' +
+				'{"name":{"operator":"=","value":"foo"}}]}';
+			assert.strictEqual(bodyStr, filter.toString());
+		});
+	});
+
 	describe('Filter.notOf', function() {
 		it('should negate an existing filter', function() {
 			var filter = Filter.notOf(Filter.of('age', '>', 12));
@@ -279,6 +317,44 @@ describe('Filter', function() {
 
 		it('should compose current filter with filter data using the "and" operator', function() {
 			var filter = Filter.gt('age', 12).and('age', '<', 15);
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual(bodyStr, filter.toString());
+		});
+	});
+
+	describe('or', function() {
+		var body;
+		var bodyStr;
+
+		before(function() {
+			body = {
+				or: [
+					{
+						age: {
+							operator: '>',
+							value: 12
+						}
+					},
+					{
+						age: {
+							operator: '<',
+							value: 15
+						}
+					}
+				]
+			};
+			bodyStr = '{"or":[{"age":{"operator":">","value":12}},' +
+				'{"age":{"operator":"<","value":15}}]}';
+		});
+
+		it('should compose current filter with another using the "or" operator', function() {
+			var filter = Filter.gt('age', 12).or(Filter.lt('age', 15));
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual(bodyStr, filter.toString());
+		});
+
+		it('should compose current filter with filter data using the "or" operator', function() {
+			var filter = Filter.gt('age', 12).or('age', '<', 15);
 			assert.deepEqual(body, filter.body());
 			assert.strictEqual(bodyStr, filter.toString());
 		});
