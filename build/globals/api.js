@@ -331,6 +331,114 @@ this.launchpadNamed = {};
 	var core = this.launchpad.core;
 
 	/**
+  * Class responsible for storing and handling the body contents
+  * of a Filter instance.
+  */
+
+	var FilterBody = (function () {
+		/**
+   * Constructs a FilterBody instance.
+   * @param {string} field The name of the field to filter by.
+   * @param {*} operatorOrValue If a third param is given, this should
+   *   be the filter's operator (like ">="). Otherwise, this will be
+   *   used as the filter's value, and the filter's operator will be "=".
+   * @param {*} opt_value The filter's value.
+   * @constructor
+   */
+
+		function FilterBody(field, operatorOrValue, opt_value) {
+			babelHelpers.classCallCheck(this, FilterBody);
+
+			var valueIsDef = core.isDef(opt_value);
+			this.createBody_(field, {
+				operator: valueIsDef ? operatorOrValue : '=',
+				value: valueIsDef ? opt_value : operatorOrValue
+			});
+		}
+
+		babelHelpers.createClass(FilterBody, [{
+			key: 'add',
+
+			/**
+    * Composes the current filter with the given operator.
+    * @param {string} operator
+    * @param {Filter} opt_filter Another filter to compose this filter with,
+    *   if the operator is not unary.
+    */
+			value: function add(operator, opt_filter) {
+				if (opt_filter) {
+					this.addArrayOperator_(operator, opt_filter);
+				} else {
+					this.createBody_(operator, this.body_);
+				}
+			}
+		}, {
+			key: 'addArrayOperator_',
+
+			/**
+    * Composes the current filter with an operator that stores its values in an array.
+    * @param {string} operator
+    * @param {!Filter} filter
+    * @protected
+    */
+			value: function addArrayOperator_(operator, filter) {
+				if (!(this.body_[operator] instanceof Array)) {
+					this.createBody_(operator, [this.body_]);
+				}
+				this.body_[operator].push(filter.body());
+			}
+		}, {
+			key: 'addMany',
+
+			/**
+    * Adds filters to be composed with this filter body using the given operator.
+    * @param {string} operator
+    * @param {...*} filters A variable amount of filters to be composed.
+    */
+			value: function addMany(operator) {
+				for (var _len = arguments.length, filters = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+					filters[_key - 1] = arguments[_key];
+				}
+
+				for (var i = 0; i < filters.length; i++) {
+					this.add(operator, filters[i]);
+				}
+			}
+		}, {
+			key: 'createBody_',
+
+			/**
+    * Creates a new body object, setting the requestd key to the given value.
+    * @param {string} key The key to set in the new body object
+    * @param {*} value The value the requested key should have in the new body object.
+    * @protected
+    */
+			value: function createBody_(key, value) {
+				this.body_ = {};
+				this.body_[key] = value;
+			}
+		}, {
+			key: 'getObject',
+
+			/**
+    * Gets the json object that represents this filter's body.
+    * @return {!Object}
+    */
+			value: function getObject() {
+				return this.body_;
+			}
+		}]);
+		return FilterBody;
+	})();
+
+	this.launchpad.FilterBody = FilterBody;
+}).call(this);
+(function () {
+	'use strict';
+
+	var FilterBody = this.launchpad.FilterBody;
+
+	/**
   * Class responsible for building filters.
   */
 
@@ -348,31 +456,58 @@ this.launchpadNamed = {};
 		function Filter(field, operatorOrValue, opt_value) {
 			babelHelpers.classCallCheck(this, Filter);
 
-			var valueIsDef = core.isDef(opt_value);
-			this.body_ = {};
-			this.body_[field] = {
-				operator: valueIsDef ? operatorOrValue : '=',
-				value: valueIsDef ? opt_value : operatorOrValue
-			};
+			this.body_ = new FilterBody(field, operatorOrValue, opt_value);
 		}
 
 		babelHelpers.createClass(Filter, [{
 			key: 'add',
 
 			/**
-    * Adds a filter to be composed with this filter through the given operator.
+    * Adds a filter to be composed with this filter using the given operator.
     * @param {string} operator
-    * @param {!BaseFilter} filter
+    * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
+    *   name of the field to filter by.
+    * @param {*} operatorOrValue Either the field's operator or its value.
+    * @param {*} opt_value The filter's value.
     * @chainnable
     */
-			value: function add(operator, filter) {
-				if (!(this.body_[operator] instanceof Array)) {
-					var filterBody = this.body_;
-					this.body_ = {};
-					this.body_[operator] = [filterBody];
-				}
-				this.body_[operator].push(filter.body());
+			value: function add(operator, fieldOrFilter, opt_operatorOrValue, opt_value) {
+				var filter = fieldOrFilter ? Filter.toFilter(fieldOrFilter, opt_operatorOrValue, opt_value) : null;
+				this.body_.add(operator, filter);
 				return this;
+			}
+		}, {
+			key: 'addMany',
+
+			/**
+    * Adds filters to be composed with this filter using the given operator.
+    * @param {string} operator
+    * @param {...*} filters A variable amount of filters to be composed.
+    * @chainnable
+    */
+			value: function addMany(operator) {
+				var _body_;
+
+				for (var _len = arguments.length, filters = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+					filters[_key - 1] = arguments[_key];
+				}
+
+				(_body_ = this.body_).addMany.apply(_body_, [operator].concat(filters));
+				return this;
+			}
+		}, {
+			key: 'and',
+
+			/**
+    * Adds a filter to be composed with this filter using the "and" operator.
+    * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
+    *   name of the field to filter by.
+    * @param {*} operatorOrValue Either the field's operator or its value.
+    * @param {*} opt_value The filter's value.
+    * @chainnable
+    */
+			value: function and(fieldOrFilter, opt_operatorOrValue, opt_value) {
+				return this.add('and', fieldOrFilter, opt_operatorOrValue, opt_value);
 			}
 		}, {
 			key: 'body',
@@ -382,7 +517,35 @@ this.launchpadNamed = {};
     * @return {!Object}
     */
 			value: function body() {
-				return this.body_;
+				return this.body_.getObject();
+			}
+		}, {
+			key: 'disMax',
+
+			/**
+    * Adds a filter to be composed with this filter using the "disMax" operator.
+    * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
+    *   name of the field to filter by.
+    * @param {*} operatorOrValue Either the field's operator or its value.
+    * @param {*} opt_value The filter's value.
+    * @chainnable
+    */
+			value: function disMax(fieldOrFilter, opt_operatorOrValue, opt_value) {
+				return this.add('disMax', fieldOrFilter, opt_operatorOrValue, opt_value);
+			}
+		}, {
+			key: 'or',
+
+			/**
+    * Adds a filter to be composed with this filter using the "or" operator.
+    * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
+    *   name of the field to filter by.
+    * @param {*} operatorOrValue Either the field's operator or its value.
+    * @param {*} opt_value The filter's value.
+    * @chainnable
+    */
+			value: function or(fieldOrFilter, opt_operatorOrValue, opt_value) {
+				return this.add('or', fieldOrFilter, opt_operatorOrValue, opt_value);
 			}
 		}, {
 			key: 'toString',
@@ -398,23 +561,17 @@ this.launchpadNamed = {};
 			key: 'andOf',
 
 			/**
-    * Returns a Filter instance that uses the "in" operator.
-    * @param {...*} filters A variable amount of filters to be composed
-    *   with the "and" operator.
+    * Composes all the given Filter instances with the "and" operator.
+    * @param {...*} filters A variable amount of filters to be composed.
     * @return {!Filter}
     * @static
     */
 			value: function andOf() {
-				for (var _len = arguments.length, filters = Array(_len), _key = 0; _key < _len; _key++) {
-					filters[_key] = arguments[_key];
+				for (var _len2 = arguments.length, filters = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+					filters[_key2] = arguments[_key2];
 				}
 
-				var filter = filters[0];
-				for (var i = 1; i < filters.length; i++) {
-					filter.add('and', filters[i]);
-				}
-				;
-				return filter;
+				return filters[0].addMany.apply(filters[0], ['and'].concat(filters.slice(1)));
 			}
 		}, {
 			key: 'equal',
@@ -522,6 +679,35 @@ this.launchpadNamed = {};
 				return new Filter(field, '!=', value);
 			}
 		}, {
+			key: 'notIn',
+
+			/**
+    * Returns a Filter instance that uses the "nin" operator.
+    * @param {string} field The name of the field to filter by.
+    * @param {...*} value A variable amount of values to be used with
+    *   the "nin" operator.
+    * @return {!Filter}
+    * @static
+    */
+			value: function notIn(field) {
+				return new Filter(field, 'nin', Array.prototype.slice.call(arguments, 1));
+			}
+		}, {
+			key: 'notOf',
+
+			/**
+    * Returns a Filter instance that uses the "not" operator.
+    * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
+    *   name of the field to filter by.
+    * @param {*} operatorOrValue Either the field's operator or its value.
+    * @param {*} opt_value The filter's value.
+    * @return {!Filter}
+    * @static
+    */
+			value: function notOf(fieldOrFilter, opt_operatorOrValue, opt_value) {
+				return Filter.toFilter(fieldOrFilter, opt_operatorOrValue, opt_value).add('not');
+			}
+		}, {
 			key: 'of',
 
 			/**
@@ -536,6 +722,40 @@ this.launchpadNamed = {};
     */
 			value: function of(field, operatorOrValue, opt_value) {
 				return new Filter(field, operatorOrValue, opt_value);
+			}
+		}, {
+			key: 'orOf',
+
+			/**
+    * Composes all the given Filter instances with the "or" operator.
+    * @param {...*} filters A variable amount of filters to be composed.
+    * @return {!Filter}
+    * @static
+    */
+			value: function orOf() {
+				for (var _len3 = arguments.length, filters = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+					filters[_key3] = arguments[_key3];
+				}
+
+				return filters[0].addMany.apply(filters[0], ['or'].concat(filters.slice(1)));
+			}
+		}, {
+			key: 'toFilter',
+
+			/**
+    * Converts the given arguments into a Filter instance.
+    * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
+    *   name of the field to filter by.
+    * @param {*} operatorOrValue Either the field's operator or its value.
+    * @param {*} opt_value The filter's value.
+    * @return {!Filter}
+    */
+			value: function toFilter(fieldOrFilter, opt_operatorOrValue, opt_value) {
+				var filter = fieldOrFilter;
+				if (!(filter instanceof Filter)) {
+					filter = Filter.of(fieldOrFilter, opt_operatorOrValue, opt_value);
+				}
+				return filter;
 			}
 		}]);
 		return Filter;
@@ -735,6 +955,7 @@ this.launchpadNamed = {};
 			babelHelpers.classCallCheck(this, MultiMap);
 
 			babelHelpers.get(Object.getPrototypeOf(MultiMap.prototype), 'constructor', this).call(this);
+			this.keys = {};
 			this.values = {};
 		}
 
@@ -748,6 +969,7 @@ this.launchpadNamed = {};
     * @chainable
     */
 			value: function add(name, value) {
+				this.keys[name.toLowerCase()] = name;
 				this.values[name.toLowerCase()] = this.values[name.toLowerCase()] || [];
 				this.values[name.toLowerCase()].push(value);
 				return this;
@@ -760,6 +982,7 @@ this.launchpadNamed = {};
     * @chainable
     */
 			value: function clear() {
+				this.keys = {};
 				this.values = {};
 				return this;
 			}
@@ -826,7 +1049,9 @@ this.launchpadNamed = {};
     * @return {array.<string>}
     */
 			value: function names() {
-				return Object.keys(this.values);
+				return Object.keys(this.values).map((function (key) {
+					return this.keys[key];
+				}).bind(this));
 			}
 		}, {
 			key: 'remove',
@@ -837,6 +1062,7 @@ this.launchpadNamed = {};
     * @chainable
     */
 			value: function remove(name) {
+				delete this.keys[name.toLowerCase()];
 				delete this.values[name.toLowerCase()];
 				return this;
 			}
@@ -850,6 +1076,7 @@ this.launchpadNamed = {};
     * @chainable
     */
 			value: function set(name, value) {
+				this.keys[name.toLowerCase()] = name;
 				this.values[name.toLowerCase()] = [value];
 				return this;
 			}
