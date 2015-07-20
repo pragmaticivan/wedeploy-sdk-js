@@ -18,23 +18,35 @@ class FilterBody {
 	 */
 	constructor(field, operatorOrValue, opt_value) {
 		var valueIsDef = core.isDef(opt_value);
-		this.body_ = {};
-		this.body_[field] = {
+		this.createBody_(field, {
 			operator: valueIsDef ? operatorOrValue : '=',
 			value: valueIsDef ? opt_value : operatorOrValue
-		};
+		});
 	}
 
 	/**
-	 * Adds a filter to be composed with this filter body using the given operator.
+	 * Composes the current filter with the given operator.
 	 * @param {string} operator
-	 * @param {!BaseFilter} filter
+	 * @param {Filter} opt_filter Another filter to compose this filter with,
+	 *   if the operator is not unary.
 	 */
-	add(operator, filter) {
+	add(operator, opt_filter) {
+		if (opt_filter) {
+			this.addArrayOperator_(operator, opt_filter);
+		} else {
+			this.createBody_(operator, this.body_);
+		}
+	}
+
+	/**
+	 * Composes the current filter with an operator that stores its values in an array.
+	 * @param {string} operator
+	 * @param {!Filter} filter
+	 * @protected
+	 */
+	addArrayOperator_(operator, filter) {
 		if (!(this.body_[operator] instanceof Array)) {
-			var filterBody = this.body_;
-			this.body_ = {};
-			this.body_[operator] = [filterBody];
+			this.createBody_(operator, [this.body_]);
 		}
 		this.body_[operator].push(filter.body());
 	}
@@ -48,6 +60,17 @@ class FilterBody {
 		for (var i = 0; i < filters.length; i++) {
 			this.add(operator, filters[i]);
 		}
+	}
+
+	/**
+	 * Creates a new body object, setting the requestd key to the given value.
+	 * @param {string} key The key to set in the new body object
+	 * @param {*} value The value the requested key should have in the new body object.
+	 * @protected
+	 */
+	createBody_(key, value) {
+		this.body_ = {};
+		this.body_[key] = value;
 	}
 
 	/**

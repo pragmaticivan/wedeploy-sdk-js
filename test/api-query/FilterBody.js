@@ -77,4 +77,18 @@ describe('FilterBody', function() {
 			assert.deepEqual(body, filterBody.getObject());
 		});
 	});
+
+	it('should compose filter with a unary operator', function() {
+		var filterBody = new FilterBody('age', '>', 12);
+		filterBody.add('not');
+		var body = {
+			not: {
+				age: {
+					operator: '>',
+					value: 12
+				}
+			}
+		};
+		assert.deepEqual(body, filterBody.getObject());
+	});
 });

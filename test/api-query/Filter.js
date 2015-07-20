@@ -188,6 +188,50 @@ describe('Filter', function() {
 		});
 	});
 
+	describe('Filter.notOf', function() {
+		it('should negate an existing filter', function() {
+			var filter = Filter.notOf(Filter.of('age', '>', 12));
+			var body = {
+				not: {
+					age: {
+						operator: '>',
+						value: 12
+					}
+				}
+			};
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual('{"not":{"age":{"operator":">","value":12}}}', filter.toString());
+		});
+
+		it('should negate a filter created from field/operator/value params', function() {
+			var filter = Filter.notOf('age', '>', 12);
+			var body = {
+				not: {
+					age: {
+						operator: '>',
+						value: 12
+					}
+				}
+			};
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual('{"not":{"age":{"operator":">","value":12}}}', filter.toString());
+		});
+
+		it('should negate a filter created from field/value params', function() {
+			var filter = Filter.notOf('age', 12);
+			var body = {
+				not: {
+					age: {
+						operator: '=',
+						value: 12
+					}
+				}
+			};
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual('{"not":{"age":{"operator":"=","value":12}}}', filter.toString());
+		});
+	});
+
 	describe('and', function() {
 		var body;
 		var bodyStr;

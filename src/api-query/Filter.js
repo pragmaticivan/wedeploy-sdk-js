@@ -29,10 +29,7 @@ class Filter {
 	 * @chainnable
 	 */
 	add(operator, fieldOrFilter, opt_operatorOrValue, opt_value) {
-		var filter = fieldOrFilter;
-		if (!(fieldOrFilter instanceof Filter)) {
-			filter = Filter.of(fieldOrFilter, opt_operatorOrValue, opt_value);
-		}
+		var filter = fieldOrFilter ? Filter.toFilter(fieldOrFilter, opt_operatorOrValue, opt_value) : null;
 		this.body_.add(operator, filter);
 		return this;
 	}
@@ -168,6 +165,19 @@ class Filter {
 	}
 
 	/**
+	 * Returns a Filter instance that uses the "not" operator.
+	 * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
+	 *   name of the field to filter by.
+	 * @param {*} operatorOrValue Either the field's operator or its value.
+	 * @param {*} opt_value The filter's value.
+	 * @return {!Filter}
+	 * @static
+	 */
+	static notOf(fieldOrFilter, opt_operatorOrValue, opt_value) {
+		return Filter.toFilter(fieldOrFilter, opt_operatorOrValue, opt_value).add('not');
+	}
+
+	/**
 	 * Returns a Filter instance.
 	 * @param {string} field The name of the field to filter by.
 	 * @param {*} operatorOrValue If a third param is given, this should
@@ -187,6 +197,22 @@ class Filter {
 	 */
 	toString() {
 		return JSON.stringify(this.body());
+	}
+
+	/**
+	 * Converts the given arguments into a Filter instance.
+	 * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
+	 *   name of the field to filter by.
+	 * @param {*} operatorOrValue Either the field's operator or its value.
+	 * @param {*} opt_value The filter's value.
+	 * @return {!Filter}
+	 */
+	static toFilter(fieldOrFilter, opt_operatorOrValue, opt_value) {
+		var filter = fieldOrFilter;
+		if (!(filter instanceof Filter)) {
+			filter = Filter.of(fieldOrFilter, opt_operatorOrValue, opt_value);
+		}
+		return filter;
 	}
 }
 
