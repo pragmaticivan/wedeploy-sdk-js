@@ -165,6 +165,18 @@ class Filter {
 	}
 
 	/**
+	 * Returns a Filter instance that uses the "nin" operator.
+	 * @param {string} field The name of the field to filter by.
+	 * @param {...*} value A variable amount of values to be used with
+	 *   the "nin" operator.
+	 * @return {!Filter}
+	 * @static
+	 */
+	static notIn(field) {
+		return new Filter(field, 'nin', Array.prototype.slice.call(arguments, 1));
+	}
+
+	/**
 	 * Returns a Filter instance that uses the "not" operator.
 	 * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
 	 *   name of the field to filter by.

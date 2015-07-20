@@ -150,6 +150,20 @@ describe('Filter', function() {
 		});
 	});
 
+	describe('Filter.notIn', function() {
+		it('should create Filter for "nin" operator', function() {
+			var filter = Filter.notIn('age', 12, 21, 25);
+			var body = {
+				age: {
+					operator: 'nin',
+					value: [12, 21, 25]
+				}
+			};
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual('{"age":{"operator":"nin","value":[12,21,25]}}', filter.toString());
+		});
+	});
+
 	describe('Filter.andOf', function() {
 		it('should compose filters with the "and" operator', function() {
 			var filter = Filter.andOf(
