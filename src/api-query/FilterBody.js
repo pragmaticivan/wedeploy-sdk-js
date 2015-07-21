@@ -1,6 +1,7 @@
 'use strict';
 
 import core from 'bower:metal/src/core';
+import Embodied from './Embodied';
 
 /**
  * Class responsible for storing and handling the body contents
@@ -22,6 +23,9 @@ class FilterBody {
 		};
 		var value = core.isDef(opt_value) ? opt_value : operatorOrValue;
 		if (core.isDefAndNotNull(value)) {
+			if (value instanceof Embodied) {
+				value = value.body();
+			}
 			obj.value = value;
 		}
 		this.createBody_(field, obj);

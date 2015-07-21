@@ -1,6 +1,7 @@
 'use strict';
 
 import Filter from './Filter';
+import Range from './Range';
 
 /**
  * Class responsible for building search filters.
@@ -49,6 +50,22 @@ class SearchFilter extends Filter {
 		var field = opt_query ? fieldOrQuery : SearchFilter.ALL;
 		var query = opt_query ? opt_query : fieldOrQuery;
 		return Filter.of(field, 'pre', query);
+	}
+
+	/**
+	 * Returns a SearchFilter instance that uses the "range" operator.
+	 * @param {string} field The field's name.
+	 * @param {*} rangeOrMin Either a `Range` instance or a the range's min value.
+	 * @param {*} opt_max The range's max value.
+	 * @return {!Filter}
+	 * @static
+	 */
+	static range(field, rangeOrMin, opt_max) {
+		var range = rangeOrMin;
+		if (!(range instanceof Range)) {
+			range = Range.range(rangeOrMin, opt_max);
+		}
+		return Filter.of(field, 'range', range);
 	}
 }
 

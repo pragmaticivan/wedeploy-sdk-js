@@ -1,6 +1,7 @@
 'use strict';
 
 import Filter from '../../src/api-query/SearchFilter';
+import Range from '../../src/api-query/Range';
 import SearchFilter from '../../src/api-query/SearchFilter';
 
 describe('SearchFilter', function() {
@@ -53,6 +54,38 @@ describe('SearchFilter', function() {
 			};
 			assert.deepEqual(body, filter.body());
 			assert.strictEqual('{"name":{"operator":"pre","value":"myPrefix"}}', filter.toString());
+		});
+	});
+
+	describe('SearchFilter.range', function() {
+		it('should create SearchFilter with "range" operator', function() {
+			var filter = SearchFilter.range('age', 12, 15);
+			var body = {
+				'age': {
+					operator: 'range',
+					value: {
+						from: 12,
+						to: 15
+					}
+				}
+			};
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual('{"age":{"operator":"range","value":{"from":12,"to":15}}}', filter.toString());
+		});
+
+		it('should create SearchFilter with "range" operator through Range instance', function() {
+			var filter = SearchFilter.range('age', Range.range(12, 15));
+			var body = {
+				'age': {
+					operator: 'range',
+					value: {
+						from: 12,
+						to: 15
+					}
+				}
+			};
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual('{"age":{"operator":"range","value":{"from":12,"to":15}}}', filter.toString());
 		});
 	});
 

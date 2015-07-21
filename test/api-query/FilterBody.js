@@ -1,5 +1,6 @@
 'use strict';
 
+import Embodied from '../../src/api-query/Embodied';
 import Filter from '../../src/api-query/Filter';
 import FilterBody from '../../src/api-query/FilterBody';
 
@@ -31,6 +32,25 @@ describe('FilterBody', function() {
 		var body = {
 			age: {
 				operator: '='
+			}
+		};
+		assert.deepEqual(body, filterBody.getObject());
+	});
+
+	it('should use return value of "body()" function of Embodied value', function() {
+		class Test extends Embodied {
+			constructor() {
+				super();
+				this.body_.foo = 'foo';
+			}
+		}
+		var filterBody = new FilterBody('age', new Test());
+		var body = {
+			age: {
+				operator: '=',
+				value: {
+					foo: 'foo'
+				}
 			}
 		};
 		assert.deepEqual(body, filterBody.getObject());
@@ -86,19 +106,19 @@ describe('FilterBody', function() {
 			};
 			assert.deepEqual(body, filterBody.getObject());
 		});
-	});
 
-	it('should compose filter with a unary operator', function() {
-		var filterBody = new FilterBody('age', '>', 12);
-		filterBody.add('not');
-		var body = {
-			not: {
-				age: {
-					operator: '>',
-					value: 12
+		it('should compose filter with a unary operator', function() {
+			var filterBody = new FilterBody('age', '>', 12);
+			filterBody.add('not');
+			var body = {
+				not: {
+					age: {
+						operator: '>',
+						value: 12
+					}
 				}
-			}
-		};
-		assert.deepEqual(body, filterBody.getObject());
+			};
+			assert.deepEqual(body, filterBody.getObject());
+		});
 	});
 });
