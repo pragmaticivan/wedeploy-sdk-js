@@ -5,11 +5,80 @@ import Range from '../../src/api-query/Range';
 import SearchFilter from '../../src/api-query/SearchFilter';
 
 describe('SearchFilter', function() {
+	describe('SearchFilter.common', function() {
+		it('should create SearchFilter with "common" operator from just the query', function() {
+			var filter = SearchFilter.common('foo');
+			var body = {
+				'*': {
+					operator: 'common',
+					value: {
+						query: 'foo'
+					}
+				}
+			};
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual('{"*":{"operator":"common","value":{"query":"foo"}}}', filter.toString());
+		});
+
+		it('should create SearchFilter with "common" operator from both field and query', function() {
+			var filter = SearchFilter.common('name', 'foo');
+			var body = {
+				'name': {
+					operator: 'common',
+					value: {
+						query: 'foo'
+					}
+				}
+			};
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual(
+				'{"name":{"operator":"common","value":{"query":"foo"}}}',
+				filter.toString()
+			);
+		});
+
+		it('should create SearchFilter with "common" operator from query and threshold', function() {
+			var filter = SearchFilter.common('foo', 0.8);
+			var body = {
+				'*': {
+					operator: 'common',
+					value: {
+						query: 'foo',
+						threshold: 0.8
+					}
+				}
+			};
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual(
+				'{"*":{"operator":"common","value":{"query":"foo","threshold":0.8}}}',
+				filter.toString()
+			);
+		});
+
+		it('should create SearchFilter with "common" operator from field, query and threshold', function() {
+			var filter = SearchFilter.common('name', 'foo', 0.8);
+			var body = {
+				'name': {
+					operator: 'common',
+					value: {
+						query: 'foo',
+						threshold: 0.8
+					}
+				}
+			};
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual(
+				'{"name":{"operator":"common","value":{"query":"foo","threshold":0.8}}}',
+				filter.toString()
+			);
+		});
+	});
+
 	describe('SearchFilter.exists', function() {
 		it('should create SearchFilter with "exists" operator', function() {
 			var filter = SearchFilter.exists('age');
 			var body = {
-				'age': {
+				age: {
 					operator: 'exists',
 				}
 			};
@@ -22,7 +91,7 @@ describe('SearchFilter', function() {
 		it('should create SearchFilter with "missing" operator', function() {
 			var filter = SearchFilter.missing('age');
 			var body = {
-				'age': {
+				age: {
 					operator: 'missing',
 				}
 			};
@@ -61,7 +130,7 @@ describe('SearchFilter', function() {
 		it('should create SearchFilter with "range" operator', function() {
 			var filter = SearchFilter.range('age', 12, 15);
 			var body = {
-				'age': {
+				age: {
 					operator: 'range',
 					value: {
 						from: 12,
@@ -76,7 +145,7 @@ describe('SearchFilter', function() {
 		it('should create SearchFilter with "range" operator through Range instance', function() {
 			var filter = SearchFilter.range('age', Range.range(12, 15));
 			var body = {
-				'age': {
+				age: {
 					operator: 'range',
 					value: {
 						from: 12,
