@@ -1,27 +1,12 @@
 'use strict';
 
+import Embodied from './Embodied';
 import Filter from './Filter';
 
 /**
  * Class responsible for building queries.
  */
-class Query {
-	/**
-	 * Constructs a Query instance.
-	 * @constructor
-	 */
-	constructor() {
-		this.body_ = {};
-	}
-
-	/**
-	 * Gets the json object that represents this query.
-	 * @return {!Object}
-	 */
-	body() {
-		return this.body_;
-	}
-
+class Query extends Embodied {
 	/**
 	 * Creates a new `Query` instance.
 	 * @return {!Query}
@@ -109,14 +94,6 @@ class Query {
 		sortEntry[field] = opt_direction || 'asc';
 		this.body_.sort.push(sortEntry);
 		return this;
-	}
-
-	/**
-	 * Gets the json string that represents this filter.
-	 * @return {string}
-	 */
-	toString() {
-		return JSON.stringify(this.body());
 	}
 
 	/**

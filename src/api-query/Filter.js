@@ -1,11 +1,12 @@
 'use strict';
 
+import Embodied from './Embodied';
 import FilterBody from './FilterBody';
 
 /**
  * Class responsible for building filters.
  */
-class Filter {
+class Filter extends Embodied {
 	/**
 	 * Constructs a Filter instance.
 	 * @param {string} field The name of the field to filter by.
@@ -16,6 +17,7 @@ class Filter {
 	 * @constructor
 	 */
 	constructor(field, operatorOrValue, opt_value) {
+		super();
 		this.body_ = new FilterBody(field, operatorOrValue, opt_value);
 	}
 
@@ -235,14 +237,6 @@ class Filter {
 	 */
 	static orOf(...filters) {
 		return filters[0].addMany.apply(filters[0], ['or'].concat(filters.slice(1)));
-	}
-
-	/**
-	 * Gets the json string that represents this filter.
-	 * @return {string}
-	 */
-	toString() {
-		return JSON.stringify(this.body());
 	}
 
 	/**
