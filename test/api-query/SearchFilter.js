@@ -225,6 +225,36 @@ describe('SearchFilter', function() {
 		});
 	});
 
+	describe('SearchFilter.match', function() {
+		it('should create SearchFilter with "match" operator from just the query', function() {
+			var filter = SearchFilter.match('foo');
+			var body = {
+				'*': {
+					operator: 'match',
+					value: {
+						query: 'foo'
+					}
+				}
+			};
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual('{"*":{"operator":"match","value":{"query":"foo"}}}', filter.toString());
+		});
+
+		it('should create SearchFilter with "match" operator from field and query', function() {
+			var filter = SearchFilter.match('name', 'foo');
+			var body = {
+				name: {
+					operator: 'match',
+					value: {
+						query: 'foo'
+					}
+				}
+			};
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual('{"name":{"operator":"match","value":{"query":"foo"}}}', filter.toString());
+		});
+	});
+
 	describe('SearchFilter.missing', function() {
 		it('should create SearchFilter with "missing" operator', function() {
 			var filter = SearchFilter.missing('age');
@@ -235,6 +265,82 @@ describe('SearchFilter', function() {
 			};
 			assert.deepEqual(body, filter.body());
 			assert.strictEqual('{"age":{"operator":"missing"}}', filter.toString());
+		});
+	});
+
+	describe('SearchFilter.phrase', function() {
+		it('should create SearchFilter with phrase "match" operator from just the query', function() {
+			var filter = SearchFilter.phrase('foo');
+			var body = {
+				'*': {
+					operator: 'match',
+					value: {
+						query: 'foo',
+						type: 'phrase'
+					}
+				}
+			};
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual(
+				'{"*":{"operator":"match","value":{"query":"foo","type":"phrase"}}}',
+				filter.toString()
+			);
+		});
+
+		it('should create SearchFilter with phrase "match" operator from field and query', function() {
+			var filter = SearchFilter.phrase('name', 'foo');
+			var body = {
+				name: {
+					operator: 'match',
+					value: {
+						query: 'foo',
+						type: 'phrase'
+					}
+				}
+			};
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual(
+				'{"name":{"operator":"match","value":{"query":"foo","type":"phrase"}}}',
+				filter.toString()
+			);
+		});
+	});
+
+	describe('SearchFilter.phrasePrefix', function() {
+		it('should create SearchFilter with phrase_prefix "match" operator from just the query', function() {
+			var filter = SearchFilter.phrasePrefix('foo');
+			var body = {
+				'*': {
+					operator: 'match',
+					value: {
+						query: 'foo',
+						type: 'phrase_prefix'
+					}
+				}
+			};
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual(
+				'{"*":{"operator":"match","value":{"query":"foo","type":"phrase_prefix"}}}',
+				filter.toString()
+			);
+		});
+
+		it('should create SearchFilter with phrase_prefix "match" operator from field and query', function() {
+			var filter = SearchFilter.phrasePrefix('name', 'foo');
+			var body = {
+				name: {
+					operator: 'match',
+					value: {
+						query: 'foo',
+						type: 'phrase_prefix'
+					}
+				}
+			};
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual(
+				'{"name":{"operator":"match","value":{"query":"foo","type":"phrase_prefix"}}}',
+				filter.toString()
+			);
 		});
 	});
 

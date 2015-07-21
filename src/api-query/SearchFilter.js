@@ -115,6 +115,41 @@ class SearchFilter extends Filter {
 	}
 
 	/**
+	 * Returns a SearchFilter instance that uses the "match" operator.
+	 * @param {string} fieldOrQuery If no second string argument is given, this
+	 *   should be the query string, in which case all fields will be matched.
+	 *   Otherwise, this should be the name of the field to match.
+	 * @param {string} opt_query The query string.
+	 * @return {!Filter}
+	 * @static
+	 */
+	static match(fieldOrQuery, opt_query) {
+		return SearchFilter.matchInternal_(fieldOrQuery, opt_query);
+	}
+
+	/**
+	 * Returns a SearchFilter instance that uses the "match" operator.
+	 * @param {string} fieldOrQuery If no second string argument is given, this
+	 *   should be the query string, in which case all fields will be matched.
+	 *   Otherwise, this should be the name of the field to match.
+	 * @param {?string} opt_query The query string.
+	 * @param {string=} opt_type The match type.
+	 * @return {!Filter}
+	 * @protected
+	 * @static
+	 */
+	static matchInternal_(fieldOrQuery, query, opt_type) {
+		var field = core.isString(query) ? fieldOrQuery : SearchFilter.ALL;
+		var value = {
+			query: core.isString(query) ? query : fieldOrQuery
+		};
+		if (opt_type) {
+			value.type = opt_type;
+		}
+		return Filter.of(field, 'match', value);
+	}
+
+	/**
 	 * Returns a SearchFilter instance that uses the "missing" operator.
 	 * @param {string} field The field's name.
 	 * @return {!Filter}
@@ -122,6 +157,32 @@ class SearchFilter extends Filter {
 	 */
 	static missing(field) {
 		return Filter.of(field, 'missing', null);
+	}
+
+	/**
+	 * Returns a SearchFilter instance that uses the "phrase" operator.
+	 * @param {string} fieldOrQuery If no second string argument is given, this
+	 *   should be the query string, in which case all fields will be matched.
+	 *   Otherwise, this should be the name of the field to match.
+	 * @param {string} opt_query The query string.
+	 * @return {!Filter}
+	 * @static
+	 */
+	static phrase(fieldOrQuery, opt_query) {
+		return SearchFilter.matchInternal_(fieldOrQuery, opt_query, 'phrase');
+	}
+
+	/**
+	 * Returns a SearchFilter instance that uses the "phrase-prefix" operator.
+	 * @param {string} fieldOrQuery If no second string argument is given, this
+	 *   should be the query string, in which case all fields will be matched.
+	 *   Otherwise, this should be the name of the field to match.
+	 * @param {string} opt_query The query string.
+	 * @return {!Filter}
+	 * @static
+	 */
+	static phrasePrefix(fieldOrQuery, opt_query) {
+		return SearchFilter.matchInternal_(fieldOrQuery, opt_query, 'phrase_prefix');
 	}
 
 	/**
