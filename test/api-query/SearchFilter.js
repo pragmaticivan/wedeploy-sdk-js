@@ -374,6 +374,37 @@ describe('SearchFilter', function() {
 		});
 	});
 
+	describe('SearchFilter.polygon', function() {
+		it('should create SearchFilter with "gp" operator', function() {
+			var points = [
+				{
+					x: 10,
+					y: 0
+				},
+				{
+					x: 20,
+					y: 0
+				},
+				{
+					x: 15,
+					y: 10
+				}
+			];
+			var filter = SearchFilter.polygon('shape', points[0], points[1], points[2]);
+			var body = {
+				shape: {
+					operator: 'gp',
+					value: points
+				}
+			};
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual(
+				'{"shape":{"operator":"gp","value":[{"x":10,"y":0},{"x":20,"y":0},{"x":15,"y":10}]}}',
+				filter.toString()
+			);
+		});
+	});
+
 	describe('SearchFilter.prefix', function() {
 		it('should create SearchFilter with "pre" operator on all fields for given query', function() {
 			var filter = SearchFilter.prefix('myPrefix');

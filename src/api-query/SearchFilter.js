@@ -203,13 +203,24 @@ class SearchFilter extends Filter {
 	}
 
 	/**
+	 * Returns a SearchFilter instance that uses the "gp" operator.
+	 * @param {string} field The name of the field.
+	 * @param {...!Object} points Objects representing points in the polygon.
+	 * @return {!Filter}
+	 * @static
+	 */
+	static polygon(field, ...points) {
+		return Filter.of(field, 'gp', points);
+	}
+
+	/**
 	 * Returns a SearchFilter instance that uses the "pre" operator.
 	 * @param {string} fieldOrQuery If no second argument is given, this should
 	 *   be the query string, in which case all fields will be matched. Otherwise,
 	 *   this should be the name of the field to match.
 	 * @param {string=} opt_query The query string.
 	 * @return {!Filter}
-   * @static
+	 * @static
 	 */
 	static prefix(fieldOrQuery, opt_query) {
 		var field = opt_query ? fieldOrQuery : SearchFilter.ALL;
