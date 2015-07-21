@@ -463,6 +463,34 @@ describe('SearchFilter', function() {
 		});
 	});
 
+	describe('SearchFilter.shape', function() {
+		it('should create SearchFilter with "gs" operator', function() {
+			var shapes = [
+				{
+					name: 'Circle'
+				},
+				{
+					name: 'Square'
+				}
+			];
+			var filter = SearchFilter.shape('shape', shapes[0], shapes[1]);
+			var body = {
+				shape: {
+					operator: 'gs',
+					value: {
+						type: 'geometrycollection',
+						geometries: shapes
+					}
+				}
+			};
+			assert.deepEqual(body, filter.body());
+
+			var bodyStr = '{"shape":{"operator":"gs","value":{"type":"geometrycollection",' +
+				'"geometries":[{"name":"Circle"},{"name":"Square"}]}}}';
+			assert.strictEqual(bodyStr, filter.toString());
+		});
+	});
+
 	describe('SearchFilter.disMaxOf', function() {
 		it('should compose filters with the "disMax" operator', function() {
 			var filter = SearchFilter.disMaxOf(

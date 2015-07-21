@@ -243,6 +243,21 @@ class SearchFilter extends Filter {
 		}
 		return Filter.of(field, 'range', range);
 	}
+
+	/**
+	 * Returns a SearchFilter instance that uses the "gs" operator.
+	 * @param {string} field The field's name.
+	 * @param {...!Object} shapes Objects representing shapes.
+	 * @return {!Filter}
+	 * @static
+	 */
+	static shape(field, ...shapes) {
+		var value = {
+			type: 'geometrycollection',
+			geometries: shapes
+		};
+		return Filter.of(field, 'gs', value);
+	}
 }
 
 /**
