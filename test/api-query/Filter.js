@@ -94,17 +94,17 @@ describe('Filter', function() {
 		});
 	});
 
-	describe('Filter.like', function() {
-		it('should create Filter for "like" operator', function() {
-			var filter = Filter.like('age', 12);
+	describe('Filter.regex', function() {
+		it('should create Filter for "~" operator', function() {
+			var filter = Filter.regex('age', 12);
 			var body = {
 				age: {
-					operator: 'like',
+					operator: '~',
 					value: 12
 				}
 			};
 			assert.deepEqual(body, filter.body());
-			assert.strictEqual('{"age":{"operator":"like","value":12}}', filter.toString());
+			assert.strictEqual('{"age":{"operator":"~","value":12}}', filter.toString());
 		});
 	});
 

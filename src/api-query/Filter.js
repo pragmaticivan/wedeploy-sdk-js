@@ -135,14 +135,14 @@ class Filter extends Embodied {
 	}
 
 	/**
-	 * Returns a Filter instance that uses the "like" operator.
+	 * Returns a Filter instance that uses the "~" operator.
 	 * @param {string} field The name of the field to filter by.
 	 * @param {*} value The filter's value.
 	 * @return {!Filter}
    * @static
 	 */
-	static like(field, value) {
-		return new Filter(field, 'like', value);
+	static regex(field, value) {
+		return new Filter(field, '~', value);
 	}
 
 	/**
