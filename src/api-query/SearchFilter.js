@@ -55,6 +55,32 @@ class SearchFilter extends Filter {
 	}
 
 	/**
+	 * Returns a SearchFilter instance that uses the "fuzzy" operator.
+	 * @param {string} fieldOrQuery If no second string argument is given, this
+	 *   should be the query string, in which case all fields will be matched.
+	 *   Otherwise, this should be the name of the field to match.
+	 * @param {string|number=} opt_queryOrFuzziness If this is a string, it should
+	 *   be the query, otherwise it should be the fuzziness value.
+	 * @param {number=} opt_fuzziness The fuzziness value.
+	 * @return {!Filter}
+	 * @static
+	 */
+	static fuzzy(fieldOrQuery, opt_queryOrFuzziness, opt_fuzziness) {
+		var arg2IsString = core.isString(opt_queryOrFuzziness);
+
+		var value = {
+			query: arg2IsString ? opt_queryOrFuzziness : fieldOrQuery
+		};
+		var fuzziness = arg2IsString ? opt_fuzziness : opt_queryOrFuzziness;
+		if (fuzziness) {
+			value.fuzziness = fuzziness;
+		}
+
+		var field = arg2IsString ? fieldOrQuery : SearchFilter.ALL;
+		return Filter.of(field, 'fuzzy', value);
+	}
+
+	/**
 	 * Returns a SearchFilter instance that uses the "missing" operator.
 	 * @param {string} field The field's name.
 	 * @return {!Filter}

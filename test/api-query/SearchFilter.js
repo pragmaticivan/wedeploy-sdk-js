@@ -87,6 +87,75 @@ describe('SearchFilter', function() {
 		});
 	});
 
+	describe('SearchFilter.fuzzy', function() {
+		it('should create SearchFilter with "fuzzy" operator from just the query', function() {
+			var filter = SearchFilter.fuzzy('foo');
+			var body = {
+				'*': {
+					operator: 'fuzzy',
+					value: {
+						query: 'foo'
+					}
+				}
+			};
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual('{"*":{"operator":"fuzzy","value":{"query":"foo"}}}', filter.toString());
+		});
+
+		it('should create SearchFilter with "fuzzy" operator from both field and query', function() {
+			var filter = SearchFilter.fuzzy('name', 'foo');
+			var body = {
+				'name': {
+					operator: 'fuzzy',
+					value: {
+						query: 'foo'
+					}
+				}
+			};
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual(
+				'{"name":{"operator":"fuzzy","value":{"query":"foo"}}}',
+				filter.toString()
+			);
+		});
+
+		it('should create SearchFilter with "fuzzy" operator from query and fuzziness', function() {
+			var filter = SearchFilter.fuzzy('foo', 0.8);
+			var body = {
+				'*': {
+					operator: 'fuzzy',
+					value: {
+						query: 'foo',
+						fuzziness: 0.8
+					}
+				}
+			};
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual(
+				'{"*":{"operator":"fuzzy","value":{"query":"foo","fuzziness":0.8}}}',
+				filter.toString()
+			);
+		});
+
+		it('should create SearchFilter with "fuzzy" operator from field, query and fuzziness', function() {
+			var filter = SearchFilter.fuzzy('name', 'foo', 0.8);
+			var body = {
+				'name': {
+					operator: 'fuzzy',
+					value: {
+						query: 'foo',
+						fuzziness: 0.8
+					}
+				}
+			};
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual(
+				'{"name":{"operator":"fuzzy","value":{"query":"foo","fuzziness":0.8}}}',
+				filter.toString()
+			);
+		});
+	});
+
 	describe('SearchFilter.missing', function() {
 		it('should create SearchFilter with "missing" operator', function() {
 			var filter = SearchFilter.missing('age');
