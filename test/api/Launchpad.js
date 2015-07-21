@@ -1,5 +1,6 @@
 'use strict';
 
+import Embodied from '../../src/api-query/Embodied';
 import Launchpad from '../../src/api/Launchpad';
 import Transport from '../../src/api/Transport';
 
@@ -206,6 +207,22 @@ describe('Launchpad', function() {
 		Launchpad.url('/url').post(formData).then(function(response) {
 			assert.strictEqual(formData, response.request().body());
 			assert.strictEqual(undefined, response.request().headers().get('content-type'));
+			done();
+		});
+		this.requests[0].respond(200);
+	});
+
+	it('should support Embodied as request body', function(done) {
+		class TestBody extends Embodied {
+			constructor() {
+				super();
+				this.body_ = {
+					foo: 'foo'
+				};
+			}
+		}
+		Launchpad.url('/url').post(new TestBody()).then(function(response) {
+			assert.strictEqual('{"foo":"foo"}', response.request().body());
 			done();
 		});
 		this.requests[0].respond(200);

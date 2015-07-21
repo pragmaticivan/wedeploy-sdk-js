@@ -1,6 +1,7 @@
 'use strict';
 
 import core from 'bower:metal/src/core';
+import Embodied from '../api-query/Embodied';
 import TransportFactory from './TransportFactory';
 import ClientRequest from './ClientRequest';
 import Util from './Util';
@@ -197,6 +198,8 @@ class Launchpad {
 
 		if (body instanceof FormData) {
 			clientRequest.headers().remove('content-type');
+		} else if (body instanceof Embodied) {
+			clientRequest.body(body.toString());
 		} else if (Launchpad.isContentTypeJson(clientRequest)) {
 			clientRequest.body(JSON.stringify(clientRequest.body()));
 		}
