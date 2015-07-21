@@ -24,7 +24,7 @@ class Filter {
 	 * @param {string} operator
 	 * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
 	 *   name of the field to filter by.
-	 * @param {*} operatorOrValue Either the field's operator or its value.
+	 * @param {*} opt_operatorOrValue Either the field's operator or its value.
 	 * @param {*} opt_value The filter's value.
 	 * @chainnable
 	 */
@@ -49,7 +49,7 @@ class Filter {
 	 * Adds a filter to be composed with this filter using the "and" operator.
 	 * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
 	 *   name of the field to filter by.
-	 * @param {*} operatorOrValue Either the field's operator or its value.
+	 * @param {*} opt_operatorOrValue Either the field's operator or its value.
 	 * @param {*} opt_value The filter's value.
 	 * @chainnable
 	 */
@@ -79,7 +79,7 @@ class Filter {
 	 * Adds a filter to be composed with this filter using the "disMax" operator.
 	 * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
 	 *   name of the field to filter by.
-	 * @param {*} operatorOrValue Either the field's operator or its value.
+	 * @param {*} opt_operatorOrValue Either the field's operator or its value.
 	 * @param {*} opt_value The filter's value.
 	 * @chainnable
 	 */
@@ -192,7 +192,7 @@ class Filter {
 	 * Returns a Filter instance that uses the "not" operator.
 	 * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
 	 *   name of the field to filter by.
-	 * @param {*} operatorOrValue Either the field's operator or its value.
+	 * @param {*} opt_operatorOrValue Either the field's operator or its value.
 	 * @param {*} opt_value The filter's value.
 	 * @return {!Filter}
 	 * @static
@@ -219,7 +219,7 @@ class Filter {
 	 * Adds a filter to be composed with this filter using the "or" operator.
 	 * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
 	 *   name of the field to filter by.
-	 * @param {*} operatorOrValue Either the field's operator or its value.
+	 * @param {*} opt_operatorOrValue Either the field's operator or its value.
 	 * @param {*} opt_value The filter's value.
 	 * @chainnable
 	 */
@@ -249,7 +249,7 @@ class Filter {
 	 * Converts the given arguments into a Filter instance.
 	 * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
 	 *   name of the field to filter by.
-	 * @param {*} operatorOrValue Either the field's operator or its value.
+	 * @param {*} opt_operatorOrValue Either the field's operator or its value.
 	 * @param {*} opt_value The filter's value.
 	 * @return {!Filter}
 	 */
