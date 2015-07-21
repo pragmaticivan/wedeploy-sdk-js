@@ -81,9 +81,15 @@ class Launchpad {
 
 	/**
 	 * Sends message with GET http verb.
+	 * @param {Object=} opt_params Optional object with params to be
+	 *   added to the query url.
 	 * @return {Promise}
 	 */
-	get() {
+	get(opt_params) {
+		var paramNames = Object.keys(opt_params || {});
+		for (var i = 0; i < paramNames.length; i++) {
+			this.param(paramNames[i], opt_params[paramNames[i]]);
+		}
 		return this.sendAsync('GET');
 	}
 

@@ -92,6 +92,21 @@ describe('Launchpad', function() {
 		this.requests[0].respond(200);
 	});
 
+	it('should send GET request with params', function(done) {
+		var params = {
+			foo: 'foo',
+			bar: 'bar'
+		};
+		Launchpad.url('/url').get(params).then(function(response) {
+			assert.strictEqual('/url/', response.request().url());
+			assert.strictEqual('GET', response.request().method());
+			assert.ok(!response.request().body());
+			assert.strictEqual('{"foo":["foo"],"bar":["bar"]}', response.request().params().toString());
+			done();
+		});
+		this.requests[0].respond(200);
+	});
+
 	it('should send POST request with body', function(done) {
 		Launchpad.url('/url').post('body').then(function(response) {
 			assert.strictEqual('/url/', response.request().url());
