@@ -73,10 +73,10 @@ describe('Launchpad', function() {
 	});
 
 	it('should send DELETE request', function(done) {
-		Launchpad.url('/url').delete().then(function(response) {
+		Launchpad.url('/url').delete('body').then(function(response) {
 			assert.strictEqual('/url/', response.request().url());
 			assert.strictEqual('DELETE', response.request().method());
-			assert.ok(!response.request().body());
+			assert.strictEqual('"body"', response.request().body());
 			done();
 		});
 		this.requests[0].respond(200);

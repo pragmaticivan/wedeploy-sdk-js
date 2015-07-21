@@ -72,10 +72,11 @@ class Launchpad {
 
 	/**
 	 * Sends message with DELETE http verb.
+	 * @param {string} opt_body
 	 * @return {Promise}
 	 */
-	delete() {
-		return this.sendAsync('DELETE');
+	delete(opt_body) {
+		return this.sendAsync('DELETE', opt_body);
 	}
 
 	/**
