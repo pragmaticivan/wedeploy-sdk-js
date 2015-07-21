@@ -1049,9 +1049,11 @@ this.launchpadNamed = {};
     * @return {array.<string>}
     */
 			value: function names() {
-				return Object.keys(this.values).map((function (key) {
-					return this.keys[key];
-				}).bind(this));
+				var _this = this;
+
+				return Object.keys(this.values).map(function (key) {
+					return _this.keys[key];
+				});
 			}
 		}, {
 			key: 'remove',
