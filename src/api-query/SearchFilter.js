@@ -160,6 +160,23 @@ class SearchFilter extends Filter {
 	}
 
 	/**
+	 * Returns a SearchFilter instance that uses the "mlt" operator.
+	 * @param {string} fieldOrQuery If no second string argument is given, this
+	 *   should be the query string, in which case all fields will be matched.
+	 *   Otherwise, this should be the name of the field to match.
+	 * @param {?string} opt_query The query string.
+	 * @return {!Filter}
+	 * @static
+	 */
+	static moreLikeThis(fieldOrQuery, query) {
+		var field = core.isString(query) ? fieldOrQuery : SearchFilter.ALL;
+		var value = {
+			query: core.isString(query) ? query : fieldOrQuery
+		};
+		return Filter.of(field, 'mlt', value);
+	}
+
+	/**
 	 * Returns a SearchFilter instance that uses the "phrase" operator.
 	 * @param {string} fieldOrQuery If no second string argument is given, this
 	 *   should be the query string, in which case all fields will be matched.

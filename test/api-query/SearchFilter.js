@@ -268,6 +268,36 @@ describe('SearchFilter', function() {
 		});
 	});
 
+	describe('SearchFilter.moreLikeThis', function() {
+		it('should create SearchFilter with "mlt" operator from just the query', function() {
+			var filter = SearchFilter.moreLikeThis('foo');
+			var body = {
+				'*': {
+					operator: 'mlt',
+					value: {
+						query: 'foo'
+					}
+				}
+			};
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual('{"*":{"operator":"mlt","value":{"query":"foo"}}}', filter.toString());
+		});
+
+		it('should create SearchFilter with "mlt" operator from field and query', function() {
+			var filter = SearchFilter.moreLikeThis('name', 'foo');
+			var body = {
+				name: {
+					operator: 'mlt',
+					value: {
+						query: 'foo'
+					}
+				}
+			};
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual('{"name":{"operator":"mlt","value":{"query":"foo"}}}', filter.toString());
+		});
+	});
+
 	describe('SearchFilter.phrase', function() {
 		it('should create SearchFilter with phrase "match" operator from just the query', function() {
 			var filter = SearchFilter.phrase('foo');
