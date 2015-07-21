@@ -26,6 +26,16 @@ describe('FilterBody', function() {
 		assert.deepEqual(body, filterBody.getObject());
 	});
 
+	it('should not set "value" key if null is given', function() {
+		var filterBody = new FilterBody('age', null);
+		var body = {
+			age: {
+				operator: '='
+			}
+		};
+		assert.deepEqual(body, filterBody.getObject());
+	});
+
 	describe('Composition', function() {
 		it('should compose filter with another with the given operator', function() {
 			var filterBody = new FilterBody('age', '>', 12);

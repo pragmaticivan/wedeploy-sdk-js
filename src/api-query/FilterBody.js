@@ -17,11 +17,14 @@ class FilterBody {
 	 * @constructor
 	 */
 	constructor(field, operatorOrValue, opt_value) {
-		var valueIsDef = core.isDef(opt_value);
-		this.createBody_(field, {
-			operator: valueIsDef ? operatorOrValue : '=',
-			value: valueIsDef ? opt_value : operatorOrValue
-		});
+		var obj = {
+			operator: core.isDef(opt_value) ? operatorOrValue : '='
+		};
+		var value = core.isDef(opt_value) ? opt_value : operatorOrValue;
+		if (core.isDefAndNotNull(value)) {
+			obj.value = value;
+		}
+		this.createBody_(field, obj);
 	}
 
 	/**
