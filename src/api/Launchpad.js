@@ -152,6 +152,9 @@ class Launchpad {
 		if (arguments.length !== 2) {
 			throw new Error('Invalid arguments');
 		}
+		if (value instanceof Embodied) {
+			value = value.toString();
+		}
 		this.params_.set(name, value);
 		return this;
 	}

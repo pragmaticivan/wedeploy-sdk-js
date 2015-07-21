@@ -201,6 +201,23 @@ describe('Launchpad', function() {
 		this.requests[0].respond(200);
 	});
 
+	it('should send request with query as Embodied', function(done) {
+		class TestParam extends Embodied {
+			constructor() {
+				super();
+				this.body_.foo = 'foo';
+			}
+		}
+		Launchpad.url('/url/a')
+			.param('query', new TestParam())
+			.get()
+			.then(function(response) {
+				assert.strictEqual('{"query":["{\\"foo\\":\\"foo\\"}"]}', response.request().params().toString());
+				done();
+			});
+		this.requests[0].respond(200);
+	});
+
 	it('should send request with header string', function(done) {
 		Launchpad.url('/url/a')
 			.header('header', 1)
