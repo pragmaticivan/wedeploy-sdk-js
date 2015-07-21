@@ -87,9 +87,7 @@ class MultiMap extends Disposable {
 	 * @return {array.<string>}
 	 */
 	names() {
-		return Object.keys(this.values).map(function(key) {
-			return this.keys[key];
-		}.bind(this));
+		return Object.keys(this.values).map((key) => this.keys[key]);
 	}
 
 	/**
