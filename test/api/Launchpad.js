@@ -92,7 +92,7 @@ describe('Launchpad', function() {
 		this.requests[0].respond(200);
 	});
 
-	it('should send GET request with params', function(done) {
+	it('should send GET request with params as object', function(done) {
 		var params = {
 			foo: 'foo',
 			bar: 'bar'
@@ -102,6 +102,35 @@ describe('Launchpad', function() {
 			assert.strictEqual('GET', response.request().method());
 			assert.ok(!response.request().body());
 			assert.strictEqual('{"foo":["foo"],"bar":["bar"]}', response.request().params().toString());
+			done();
+		});
+		this.requests[0].respond(200);
+	});
+
+	it('should send GET request with params as Embodied', function(done) {
+		class TestParams extends Embodied {
+			constructor() {
+				super();
+				this.body_.foo = 'foo';
+				this.body_.bar = 'bar';
+			}
+		}
+		Launchpad.url('/url').get(new TestParams()).then(function(response) {
+			assert.strictEqual('/url/', response.request().url());
+			assert.strictEqual('GET', response.request().method());
+			assert.ok(!response.request().body());
+			assert.strictEqual('{"foo":["foo"],"bar":["bar"]}', response.request().params().toString());
+			done();
+		});
+		this.requests[0].respond(200);
+	});
+
+	it('should send GET request with params as string', function(done) {
+		Launchpad.url('/url').get('strBody').then(function(response) {
+			assert.strictEqual('/url/', response.request().url());
+			assert.strictEqual('GET', response.request().method());
+			assert.ok(!response.request().body());
+			assert.strictEqual('{"body":["strBody"]}', response.request().params().toString());
 			done();
 		});
 		this.requests[0].respond(200);
