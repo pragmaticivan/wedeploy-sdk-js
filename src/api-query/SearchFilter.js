@@ -66,6 +66,40 @@ class SearchFilter extends Filter {
 	 * @static
 	 */
 	static fuzzy(fieldOrQuery, opt_queryOrFuzziness, opt_fuzziness) {
+		return SearchFilter.fuzzyInternal_('fuzzy', fieldOrQuery, opt_queryOrFuzziness, opt_fuzziness);
+	}
+
+	/**
+	 * Returns a SearchFilter instance that uses the "flt" operator.
+	 * @param {string} fieldOrQuery If no second string argument is given, this
+	 *   should be the query string, in which case all fields will be matched.
+	 *   Otherwise, this should be the name of the field to match.
+	 * @param {string|number=} opt_queryOrFuzziness If this is a string, it should
+	 *   be the query, otherwise it should be the fuzziness value.
+	 * @param {number=} opt_fuzziness The fuzziness value.
+	 * @return {!Filter}
+	 * @static
+	 */
+	static fuzzyLikeThis(fieldOrQuery, opt_queryOrFuzziness, opt_fuzziness) {
+		return SearchFilter.fuzzyInternal_('flt', fieldOrQuery, opt_queryOrFuzziness, opt_fuzziness);
+	}
+
+	/**
+	 * Returns a SearchFilter instance that uses the given fuzzy operator. This
+	 * is an internal implementation used by both the `SearchFilter.fuzzy` and
+	 * the `SearchFilter.fuzzyLikeThis` methods.
+	 * @param {string} operator The fuzzy operator.
+	 * @param {string} fieldOrQuery If no second string argument is given, this
+	 *   should be the query string, in which case all fields will be matched.
+	 *   Otherwise, this should be the name of the field to match.
+	 * @param {string|number=} opt_queryOrFuzziness If this is a string, it should
+	 *   be the query, otherwise it should be the fuzziness value.
+	 * @param {number=} opt_fuzziness The fuzziness value.
+	 * @return {!Filter}
+	 * @protected
+	 * @static
+	 */
+	static fuzzyInternal_(operator, fieldOrQuery, opt_queryOrFuzziness, opt_fuzziness) {
 		var arg2IsString = core.isString(opt_queryOrFuzziness);
 
 		var value = {
@@ -77,7 +111,7 @@ class SearchFilter extends Filter {
 		}
 
 		var field = arg2IsString ? fieldOrQuery : SearchFilter.ALL;
-		return Filter.of(field, 'fuzzy', value);
+		return Filter.of(field, operator, value);
 	}
 
 	/**

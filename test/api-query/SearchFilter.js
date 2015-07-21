@@ -156,6 +156,75 @@ describe('SearchFilter', function() {
 		});
 	});
 
+	describe('SearchFilter.fuzzyLikeThis', function() {
+		it('should create SearchFilter with "flt" operator from just the query', function() {
+			var filter = SearchFilter.fuzzyLikeThis('foo');
+			var body = {
+				'*': {
+					operator: 'flt',
+					value: {
+						query: 'foo'
+					}
+				}
+			};
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual('{"*":{"operator":"flt","value":{"query":"foo"}}}', filter.toString());
+		});
+
+		it('should create SearchFilter with "flt" operator from both field and query', function() {
+			var filter = SearchFilter.fuzzyLikeThis('name', 'foo');
+			var body = {
+				'name': {
+					operator: 'flt',
+					value: {
+						query: 'foo'
+					}
+				}
+			};
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual(
+				'{"name":{"operator":"flt","value":{"query":"foo"}}}',
+				filter.toString()
+			);
+		});
+
+		it('should create SearchFilter with "flt" operator from query and fuzziness', function() {
+			var filter = SearchFilter.fuzzyLikeThis('foo', 0.8);
+			var body = {
+				'*': {
+					operator: 'flt',
+					value: {
+						query: 'foo',
+						fuzziness: 0.8
+					}
+				}
+			};
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual(
+				'{"*":{"operator":"flt","value":{"query":"foo","fuzziness":0.8}}}',
+				filter.toString()
+			);
+		});
+
+		it('should create SearchFilter with "flt" operator from field, query and fuzziness', function() {
+			var filter = SearchFilter.fuzzyLikeThis('name', 'foo', 0.8);
+			var body = {
+				'name': {
+					operator: 'flt',
+					value: {
+						query: 'foo',
+						fuzziness: 0.8
+					}
+				}
+			};
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual(
+				'{"name":{"operator":"flt","value":{"query":"foo","fuzziness":0.8}}}',
+				filter.toString()
+			);
+		});
+	});
+
 	describe('SearchFilter.missing', function() {
 		it('should create SearchFilter with "missing" operator', function() {
 			var filter = SearchFilter.missing('age');
