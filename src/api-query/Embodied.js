@@ -22,6 +22,18 @@ class Embodied {
 	}
 
 	/**
+	 * If the given object is an instance of Embodied, this will
+	 * return its body content. Otherwise this will return the
+	 * original object.
+	 * @param  {*} obj
+	 * @return {*}
+	 * @static
+	 */
+	static toBody(obj) {
+		return (obj instanceof Embodied) ? obj.body() : obj;
+	}
+
+	/**
 	 * Gets the json string that represents this instance.
 	 * @return {string}
 	 */
