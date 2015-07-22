@@ -1,5 +1,7 @@
 'use strict';
 
+import core from 'bower:metal/src/core';
+import Aggregation from './Aggregation';
 import Embodied from './Embodied';
 import Filter from './Filter';
 import SearchFilter from './SearchFilter';
@@ -8,6 +10,37 @@ import SearchFilter from './SearchFilter';
  * Class responsible for building search queries.
  */
 class Search extends Embodied {
+	/**
+	 * Adds an aggregation to this `Search` instance.
+	 * @param {string} name The aggregation name.
+	 * @param {!Aggregation|string} aggregationOrField Either an
+	 *   `Aggregation` instance or the name of the aggregation field.
+	 * @param {string} opt_operator The aggregation operator.
+	 * @chainnable
+	 */
+	aggregate(name, aggregationOrField, opt_operator) {
+		var aggregation = aggregationOrField;
+		if (!(aggregation instanceof Aggregation)) {
+			aggregation = Aggregation.of(aggregationOrField, opt_operator);
+		}
+
+		var field = aggregation.getField();
+		var value = {};
+		value[field] = {
+			name: name,
+			operator: aggregation.getOperator()
+		};
+		if (core.isDefAndNotNull(aggregation.getValue())) {
+			value[field].value = aggregation.getValue();
+		}
+
+		if (!this.body_.aggregation) {
+			this.body_.aggregation = [];
+		}
+		this.body_.aggregation.push(value);
+		return this;
+	}
+
 	/**
 	 * Creates a new `Search` instance.
 	 * @return {!Search}

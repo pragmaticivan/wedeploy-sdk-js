@@ -1,5 +1,6 @@
 'use strict';
 
+import Aggregation from '../../src/api-query/Aggregation';
 import Filter from '../../src/api-query/Filter';
 import Search from '../../src/api-query/Search';
 
@@ -14,6 +15,36 @@ describe('Search', function() {
 			var search = Search.builder();
 			assert.deepEqual({}, search.body());
 			assert.strictEqual('{}', search.toString());
+		});
+	});
+
+	describe('aggregate', function() {
+		it('should be chainnable', function() {
+			var search = Search.builder();
+			assert.strictEqual(search, search.aggregate('aggr', 'name', 'count'));
+		});
+
+		it('should add an existing aggregation', function() {
+			var search = Search.builder().aggregate('aggr', Aggregation.histogram('age', 100));
+			var bodyStr = '{"aggregation":[{"age":{"name":"aggr","operator":"histogram","value":100}}]}';
+			assert.strictEqual(bodyStr, search.toString());
+		});
+
+		it('should add an aggregation from the given field and operator', function() {
+			var search = Search.builder().aggregate('aggr', 'foo', 'count');
+			var bodyStr = '{"aggregation":[{"foo":{"name":"aggr","operator":"count"}}]}';
+			assert.strictEqual(bodyStr, search.toString());
+		});
+
+		it('should add multiple aggregations', function() {
+			var search = Search.builder()
+				.aggregate('aggr', Aggregation.histogram('age', 100))
+				.aggregate('aggr', 'foo', 'count');
+			var bodyStr = '{"aggregation":[' +
+				'{"age":{"name":"aggr","operator":"histogram","value":100}},' +
+				'{"foo":{"name":"aggr","operator":"count"}}' +
+				']}';
+			assert.strictEqual(bodyStr, search.toString());
 		});
 	});
 
