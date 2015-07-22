@@ -2,6 +2,7 @@
 
 import Filter from '../../src/api-query/Filter';
 import Query from '../../src/api-query/Query';
+import Search from '../../src/api-query/Search';
 
 describe('Query', function() {
 	describe('Query.builder()', function() {
@@ -74,6 +75,100 @@ describe('Query', function() {
 			var bodyStr = '{"filter":[{"age":{"operator":">","value":12}},' +
 				'{"age":{"operator":"<","value":15}},' +
 				'{"name":{"operator":"=","value":"Foo"}}]}';
+			assert.strictEqual(bodyStr, query.toString());
+		});
+	});
+
+	describe('search', function() {
+		it('should be chainnable', function() {
+			var query = Query.builder();
+			assert.strictEqual(query, query.search(Search.builder()));
+		});
+
+		it('should set the search entry to an existing Search instance', function() {
+			var query = Query.builder().search(Search.builder().cursor('name'));
+			var body = {
+				search: {
+					cursor: 'name'
+				}
+			};
+			assert.deepEqual(body, query.body());
+			assert.strictEqual('{"search":{"cursor":"name"}}', query.toString());
+		});
+
+		it('should set the search entry from an existing Filter instance', function() {
+			var query = Query.builder().search(Filter.gt('age', 12));
+			var body = {
+				search: {
+					query: [{
+						age: {
+							operator: '>',
+							value: 12
+						}
+					}]
+				}
+			};
+			assert.deepEqual(body, query.body());
+
+			var bodyStr = '{"search":{"query":[{"age":{"operator":">","value":12}}]}}';
+			assert.strictEqual(bodyStr, query.toString());
+		});
+
+		it('should set the search entry from text', function() {
+			var query = Query.builder().search('foo');
+			var body = {
+				search: {
+					query: [{
+						'*': {
+							operator: 'match',
+							value: {
+								query: 'foo'
+							}
+						}
+					}]
+				}
+			};
+			assert.deepEqual(body, query.body());
+
+			var bodyStr = '{"search":{"query":[{"*":{"operator":"match","value":{"query":"foo"}}}]}}';
+			assert.strictEqual(bodyStr, query.toString());
+		});
+
+		it('should set the search entry from field and text', function() {
+			var query = Query.builder().search('name', 'foo');
+			var body = {
+				search: {
+					query: [{
+						name: {
+							operator: 'match',
+							value: {
+								query: 'foo'
+							}
+						}
+					}]
+				}
+			};
+			assert.deepEqual(body, query.body());
+
+			var bodyStr = '{"search":{"query":[{"name":{"operator":"match","value":{"query":"foo"}}}]}}';
+			assert.strictEqual(bodyStr, query.toString());
+		});
+
+		it('should set the search entry from field, operator and text', function() {
+			var query = Query.builder().search('age', '<', 12);
+			var body = {
+				search: {
+					query: [{
+						age: {
+							operator: '<',
+							value: 12
+						}
+					}]
+				}
+			};
+			assert.deepEqual(body, query.body());
+
+			var bodyStr = '{"search":{"query":[{"age":{"operator":"<","value":12}}]}}';
 			assert.strictEqual(bodyStr, query.toString());
 		});
 	});

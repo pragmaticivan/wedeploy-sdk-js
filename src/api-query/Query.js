@@ -2,6 +2,7 @@
 
 import Embodied from './Embodied';
 import Filter from './Filter';
+import Search from './Search';
 
 /**
  * Class responsible for building queries.
@@ -76,6 +77,29 @@ class Query extends Embodied {
 	 */
 	scan() {
 		return this.type('scan');
+	}
+
+	/**
+	 * Adds a search entry to this `Query`.
+	 * @param {!Search|!Filter|string} searchOrFilterOrTextOrField If no other
+	 *   arguments are passed to this function, this should be either a `Search`
+	 *   or `Filter` instance or a text to be used in a match filter. In the
+	 *   last two cases the filter will be applied to all fields. Another option
+	 *   is to pass this as a field name instead, together with other arguments
+	 *   so the filter can be created.
+	 * @param {string} opt_textOrOperator Either a text to be used in a
+	 *   match filter, or the operator that should be used.
+	 * @param {*} opt_value The value to be used by the filter. Should
+	 *   only be passed if an operator was passed as the second argument.
+	 * @chainnable
+	 */
+	search(searchOrFilterOrTextOrField, opt_textOrOperator, opt_value) {
+		var search = searchOrFilterOrTextOrField;
+		if (!(search instanceof Search)) {
+			search = Search.builder().query(searchOrFilterOrTextOrField, opt_textOrOperator, opt_value);
+		}
+		this.body_.search = search.body();
+		return this;
 	}
 
 	/**
