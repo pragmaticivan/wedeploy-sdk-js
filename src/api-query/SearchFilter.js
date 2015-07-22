@@ -1,6 +1,7 @@
 'use strict';
 
 import core from 'bower:metal/src/core';
+import Embodied from './Embodied';
 import Filter from './Filter';
 import Range from './Range';
 
@@ -210,6 +211,7 @@ class SearchFilter extends Filter {
 	 * @static
 	 */
 	static polygon(field, ...points) {
+		points = points.map(point => Embodied.toBody(point));
 		return Filter.of(field, 'gp', points);
 	}
 
@@ -252,6 +254,7 @@ class SearchFilter extends Filter {
 	 * @static
 	 */
 	static shape(field, ...shapes) {
+		shapes = shapes.map(shape => Embodied.toBody(shape));
 		var value = {
 			type: 'geometrycollection',
 			geometries: shapes

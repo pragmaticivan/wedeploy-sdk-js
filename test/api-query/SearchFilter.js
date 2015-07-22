@@ -1,6 +1,7 @@
 'use strict';
 
 import Filter from '../../src/api-query/SearchFilter';
+import Geo from '../../src/api-query/Geo';
 import Range from '../../src/api-query/Range';
 import SearchFilter from '../../src/api-query/SearchFilter';
 
@@ -376,30 +377,16 @@ describe('SearchFilter', function() {
 
 	describe('SearchFilter.polygon', function() {
 		it('should create SearchFilter with "gp" operator', function() {
-			var points = [
-				{
-					x: 10,
-					y: 0
-				},
-				{
-					x: 20,
-					y: 0
-				},
-				{
-					x: 15,
-					y: 10
-				}
-			];
-			var filter = SearchFilter.polygon('shape', points[0], points[1], points[2]);
+			var filter = SearchFilter.polygon('shape', '10,0', [20, 0], Geo.point(15, 10));
 			var body = {
 				shape: {
 					operator: 'gp',
-					value: points
+					value: ['10,0', [20, 0], [15, 10]]
 				}
 			};
 			assert.deepEqual(body, filter.body());
 			assert.strictEqual(
-				'{"shape":{"operator":"gp","value":[{"x":10,"y":0},{"x":20,"y":0},{"x":15,"y":10}]}}',
+				'{"shape":{"operator":"gp","value":["10,0",[20,0],[15,10]]}}',
 				filter.toString()
 			);
 		});
@@ -465,28 +452,35 @@ describe('SearchFilter', function() {
 
 	describe('SearchFilter.shape', function() {
 		it('should create SearchFilter with "gs" operator', function() {
-			var shapes = [
-				{
-					name: 'Circle'
-				},
-				{
-					name: 'Square'
-				}
-			];
-			var filter = SearchFilter.shape('shape', shapes[0], shapes[1]);
+			var filter = SearchFilter.shape(
+				'shape',
+				Geo.circle([0, 0], '2km'),
+				Geo.bbox([20, 0], [0, 20])
+			);
 			var body = {
 				shape: {
 					operator: 'gs',
 					value: {
 						type: 'geometrycollection',
-						geometries: shapes
+						geometries: [
+							{
+								type: 'circle',
+								coordinates: [0, 0],
+								radius: '2km'
+							},
+							{
+								type: 'envelope',
+								coordinates: [[20, 0], [0, 20]]
+							}
+						]
 					}
 				}
 			};
 			assert.deepEqual(body, filter.body());
 
 			var bodyStr = '{"shape":{"operator":"gs","value":{"type":"geometrycollection",' +
-				'"geometries":[{"name":"Circle"},{"name":"Square"}]}}}';
+				'"geometries":[{"type":"circle","coordinates":[0,0],"radius":"2km"},' +
+				'{"type":"envelope","coordinates":[[20,0],[0,20]]}]}}}';
 			assert.strictEqual(bodyStr, filter.toString());
 		});
 	});
