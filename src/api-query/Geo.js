@@ -114,6 +114,14 @@ class BoundingBox extends Embodied {
 			coordinates: [Embodied.toBody(upperLeft), Embodied.toBody(lowerRight)]
 		};
 	}
+
+	/**
+	 * Gets this bounding box's points.
+	 * @return {!Array}
+	 */
+	getPoints() {
+		return this.body_.coordinates;
+	}
 }
 Geo.BoundingBox = BoundingBox;
 

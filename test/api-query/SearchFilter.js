@@ -6,6 +6,38 @@ import Range from '../../src/api-query/Range';
 import SearchFilter from '../../src/api-query/SearchFilter';
 
 describe('SearchFilter', function() {
+	describe('SearchFilter.bbox', function() {
+		it('should create SearchFilter with "gp" operator for bounding box', function() {
+			var filter = SearchFilter.bbox('shape', Geo.bbox('20,0', [0, 20]));
+			var body = {
+				shape: {
+					operator: 'gp',
+					value: ['20,0', [0, 20]]
+				}
+			};
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual(
+				'{"shape":{"operator":"gp","value":["20,0",[0,20]]}}',
+				filter.toString()
+			);
+		});
+
+		it('should create SearchFilter with "gp" operator for bounding box points', function() {
+			var filter = SearchFilter.bbox('shape', '20,0', Geo.point(0, 20));
+			var body = {
+				shape: {
+					operator: 'gp',
+					value: ['20,0', [0, 20]]
+				}
+			};
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual(
+				'{"shape":{"operator":"gp","value":["20,0",[0,20]]}}',
+				filter.toString()
+			);
+		});
+	});
+
 	describe('SearchFilter.common', function() {
 		it('should create SearchFilter with "common" operator from just the query', function() {
 			var filter = SearchFilter.common('foo');

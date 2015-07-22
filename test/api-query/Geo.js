@@ -32,6 +32,7 @@ describe('Geo', function() {
 		it('should create a Geo.BoundingBox instance', function() {
 			var bbox = Geo.bbox('0,20', Geo.point(20, 0));
 			assert.ok(bbox instanceof Geo.BoundingBox);
+			assert.deepEqual(['0,20', [20, 0]], bbox.getPoints());
 
 			var body = {
 				type: 'envelope',

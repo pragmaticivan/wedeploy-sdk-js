@@ -3,12 +3,32 @@
 import core from 'bower:metal/src/core';
 import Embodied from './Embodied';
 import Filter from './Filter';
+import Geo from './Geo';
 import Range from './Range';
 
 /**
  * Class responsible for building search filters.
  */
 class SearchFilter extends Filter {
+	/**
+	 * Returns a SearchFilter instance that uses the "gp" operator.
+	 * This is a special use case of `SearchFilter.polygon` for bounding
+	 * boxes.
+	 * @param {string} field The field's name.
+	 * @param {*} boxOrUpperLeft Either a `Geo.BoundingBox` instance, or
+	 *   a bounding box's upper left coordinate.
+	 * @param {*} opt_lowerRight A bounding box's lower right coordinate.
+	 * @return {!Filter}
+	 * @static
+	 */
+	static bbox(field, boxOrUpperLeft, opt_lowerRight) {
+		if (boxOrUpperLeft instanceof Geo.BoundingBox) {
+			return SearchFilter.polygon(field, ...boxOrUpperLeft.getPoints());
+		} else {
+			return SearchFilter.polygon(field, boxOrUpperLeft, opt_lowerRight);
+		}
+	}
+
 	/**
 	 * Returns a SearchFilter instance that uses the "common" operator.
 	 * @param {string} fieldOrQuery If no second string argument is given, this
