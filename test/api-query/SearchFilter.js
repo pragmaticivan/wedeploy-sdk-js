@@ -107,6 +107,81 @@ describe('SearchFilter', function() {
 		});
 	});
 
+	describe('SearchFilter.distance', function() {
+		it('should create SearchFilter with "gp" operator from Circle', function() {
+			var filter = SearchFilter.distance('point', Geo.circle([0, 0], 2));
+
+			var body = {
+				point: {
+					operator: 'gp',
+					value: {
+						location: [0, 0],
+						max: 2
+					}
+				}
+			};
+			assert.deepEqual(body, filter.body());
+
+			var bodyStr = '{"point":{"operator":"gp","value":{"location":[0,0],"max":2}}}';
+			assert.strictEqual(bodyStr, filter.toString());
+		});
+
+		it('should create SearchFilter with "gp" operator from location and distance', function() {
+			var filter = SearchFilter.distance('point', Geo.point(0, 0), 2);
+
+			var body = {
+				point: {
+					operator: 'gp',
+					value: {
+						location: [0, 0],
+						max: 2
+					}
+				}
+			};
+			assert.deepEqual(body, filter.body());
+
+			var bodyStr = '{"point":{"operator":"gp","value":{"location":[0,0],"max":2}}}';
+			assert.strictEqual(bodyStr, filter.toString());
+		});
+
+		it('should create SearchFilter with "gp" operator from location and full range', function() {
+			var filter = SearchFilter.distance('point', [0, 0], Range.range(1, 2));
+
+			var body = {
+				point: {
+					operator: 'gp',
+					value: {
+						location: [0, 0],
+						min: 1,
+						max: 2
+					}
+				}
+			};
+			assert.deepEqual(body, filter.body());
+
+			var bodyStr = '{"point":{"operator":"gp","value":{"location":[0,0],"min":1,"max":2}}}';
+			assert.strictEqual(bodyStr, filter.toString());
+		});
+
+		it('should create SearchFilter with "gp" operator from location and min range', function() {
+			var filter = SearchFilter.distance('point', [0, 0], Range.from(1));
+
+			var body = {
+				point: {
+					operator: 'gp',
+					value: {
+						location: [0, 0],
+						min: 1
+					}
+				}
+			};
+			assert.deepEqual(body, filter.body());
+
+			var bodyStr = '{"point":{"operator":"gp","value":{"location":[0,0],"min":1}}}';
+			assert.strictEqual(bodyStr, filter.toString());
+		});
+	});
+
 	describe('SearchFilter.exists', function() {
 		it('should create SearchFilter with "exists" operator', function() {
 			var filter = SearchFilter.exists('age');

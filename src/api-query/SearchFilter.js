@@ -66,6 +66,51 @@ class SearchFilter extends Filter {
 	}
 
 	/**
+	 * Returns a SearchFilter instance that uses the "gd" operator.
+	 * @param {string} field The field's name.
+	 * @param {*} locationOrCircle Either a `Geo.Circle` instance or a coordinate.
+	 * @param {Range|string=} opt_rangeOrDistance Either a `Range` instance or
+	 *   the distance value.
+	 * @return {!Filter}
+	 * @static
+	 */
+	static distance(field, locationOrCircle, opt_rangeOrDistance) {
+		var location = locationOrCircle;
+		var range = opt_rangeOrDistance;
+		if (locationOrCircle instanceof Geo.Circle) {
+			location = locationOrCircle.getCenter();
+			range = Range.to(locationOrCircle.getRadius());
+		} else if (!(opt_rangeOrDistance instanceof Range)) {
+			range = Range.to(opt_rangeOrDistance);
+		}
+		return SearchFilter.distanceInternal_(field, location, range);
+	}
+
+	/**
+	 * Returns a SearchFilter instance that uses the "gd" operator. This
+	 * is just an internal helper used by `SearchFilter.distance`.
+	 * @param {string} field The field's name.
+	 * @param {*} location A location coordinate.
+	 * @param {Range} range A `Range` instance.
+	 * @return {!Filter}
+	 * @protected
+	 * @static
+	 */
+	static distanceInternal_(field, location, range) {
+		var value = {
+			location: Embodied.toBody(location)
+		};
+		range = range.body();
+		if (range.from) {
+			value.min = range.from;
+		}
+		if (range.to) {
+			value.max = range.to;
+		}
+		return Filter.of(field, 'gp', value);
+	}
+
+	/**
 	 * Returns a SearchFilter instance that uses the "exists" operator.
 	 * @param {string} field The field's name.
 	 * @return {!Filter}
