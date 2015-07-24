@@ -154,6 +154,8 @@ class Launchpad {
 		}
 		if (value instanceof Embodied) {
 			value = value.toString();
+		} else if (core.isObject(value) || (value instanceof Array)) {
+			value = JSON.stringify(value);
 		}
 		this.params_.set(name, value);
 		return this;

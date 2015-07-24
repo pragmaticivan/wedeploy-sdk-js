@@ -112,14 +112,14 @@ describe('Launchpad', function() {
 			constructor() {
 				super();
 				this.body_.foo = 'foo';
-				this.body_.bar = 'bar';
+				this.body_.bar = ['bar1', 'bar2'];
 			}
 		}
 		Launchpad.url('/url').get(new TestParams()).then(function(response) {
 			assert.strictEqual('/url/', response.request().url());
 			assert.strictEqual('GET', response.request().method());
 			assert.ok(!response.request().body());
-			assert.strictEqual('{"foo":["foo"],"bar":["bar"]}', response.request().params().toString());
+			assert.strictEqual('{"foo":["foo"],"bar":["[\\"bar1\\",\\"bar2\\"]"]}', response.request().params().toString());
 			done();
 		});
 		this.requests[0].respond(200);
