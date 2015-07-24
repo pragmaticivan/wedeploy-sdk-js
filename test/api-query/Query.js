@@ -121,16 +121,14 @@ describe('Query', function() {
 					query: [{
 						'*': {
 							operator: 'match',
-							value: {
-								query: 'foo'
-							}
+							value: 'foo'
 						}
 					}]
 				}
 			};
 			assert.deepEqual(body, query.body());
 
-			var bodyStr = '{"search":{"query":[{"*":{"operator":"match","value":{"query":"foo"}}}]}}';
+			var bodyStr = '{"search":{"query":[{"*":{"operator":"match","value":"foo"}}]}}';
 			assert.strictEqual(bodyStr, query.toString());
 		});
 
@@ -141,16 +139,14 @@ describe('Query', function() {
 					query: [{
 						name: {
 							operator: 'match',
-							value: {
-								query: 'foo'
-							}
+							value: 'foo'
 						}
 					}]
 				}
 			};
 			assert.deepEqual(body, query.body());
 
-			var bodyStr = '{"search":{"query":[{"name":{"operator":"match","value":{"query":"foo"}}}]}}';
+			var bodyStr = '{"search":{"query":[{"name":{"operator":"match","value":"foo"}}]}}';
 			assert.strictEqual(bodyStr, query.toString());
 		});
 

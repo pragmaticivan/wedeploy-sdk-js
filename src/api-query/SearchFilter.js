@@ -190,29 +190,9 @@ class SearchFilter extends Filter {
 	 * @static
 	 */
 	static match(fieldOrQuery, opt_query) {
-		return SearchFilter.matchInternal_(fieldOrQuery, opt_query);
-	}
-
-	/**
-	 * Returns a SearchFilter instance that uses the "match" operator.
-	 * @param {string} fieldOrQuery If no second string argument is given, this
-	 *   should be the query string, in which case all fields will be matched.
-	 *   Otherwise, this should be the name of the field to match.
-	 * @param {?string} opt_query The query string.
-	 * @param {string=} opt_type The match type.
-	 * @return {!Filter}
-	 * @protected
-	 * @static
-	 */
-	static matchInternal_(fieldOrQuery, query, opt_type) {
-		var field = core.isString(query) ? fieldOrQuery : SearchFilter.ALL;
-		var value = {
-			query: core.isString(query) ? query : fieldOrQuery
-		};
-		if (opt_type) {
-			value.type = opt_type;
-		}
-		return Filter.of(field, 'match', value);
+		var field = core.isString(opt_query) ? fieldOrQuery : SearchFilter.ALL;
+		var query = core.isString(opt_query) ? opt_query : fieldOrQuery;
+		return Filter.of(field, 'match', query);
 	}
 
 	/**
@@ -252,7 +232,9 @@ class SearchFilter extends Filter {
 	 * @static
 	 */
 	static phrase(fieldOrQuery, opt_query) {
-		return SearchFilter.matchInternal_(fieldOrQuery, opt_query, 'phrase');
+		var field = core.isString(opt_query) ? fieldOrQuery : SearchFilter.ALL;
+		var query = core.isString(opt_query) ? opt_query : fieldOrQuery;
+		return Filter.of(field, 'phrase', query);
 	}
 
 	/**
@@ -265,7 +247,9 @@ class SearchFilter extends Filter {
 	 * @static
 	 */
 	static phrasePrefix(fieldOrQuery, opt_query) {
-		return SearchFilter.matchInternal_(fieldOrQuery, opt_query, 'phrasePrefix');
+		var field = core.isString(opt_query) ? fieldOrQuery : SearchFilter.ALL;
+		var query = core.isString(opt_query) ? opt_query : fieldOrQuery;
+		return Filter.of(field, 'phrasePrefix', query);
 	}
 
 	/**
