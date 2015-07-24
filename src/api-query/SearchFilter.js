@@ -62,7 +62,7 @@ class SearchFilter extends Filter {
 	 * @static
 	 */
 	static disMaxOf(...filters) {
-		return filters[0].addMany.apply(filters[0], ['disMax'].concat(filters.slice(1)));
+		return filters[0].addMany.apply(filters[0], ['dis_max'].concat(filters.slice(1)));
 	}
 
 	/**

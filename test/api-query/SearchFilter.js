@@ -599,7 +599,7 @@ describe('SearchFilter', function() {
 				Filter.lt('age', 15)
 			);
 			var body = {
-				disMax: [
+				dis_max: [
 					{
 						age: {
 							operator: '>',
@@ -616,7 +616,7 @@ describe('SearchFilter', function() {
 			};
 			assert.deepEqual(body, filter.body());
 
-			var bodyStr = '{"disMax":[{"age":{"operator":">","value":12}},' +
+			var bodyStr = '{"dis_max":[{"age":{"operator":">","value":12}},' +
 				'{"age":{"operator":"<","value":15}}]}';
 			assert.strictEqual(bodyStr, filter.toString());
 		});

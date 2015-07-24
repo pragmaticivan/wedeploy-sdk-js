@@ -307,7 +307,7 @@ describe('Filter', function() {
 
 		it('should compose current filter with another using the "disMax" operator', function() {
 			var filter = Filter.gt('age', 12).disMax(Filter.lt('age', 15));
-			var bodyStr = '{"disMax":[{"age":{"operator":">","value":12}},' +
+			var bodyStr = '{"dis_max":[{"age":{"operator":">","value":12}},' +
 				'{"age":{"operator":"<","value":15}}]}';
 			assert.strictEqual(bodyStr, filter.toString());
 
@@ -320,7 +320,7 @@ describe('Filter', function() {
 				.or('age', '<', 15)
 				.and('name', 'Foo')
 				.disMax('name', 'Bar');
-			var bodyStr = '{"disMax":[{"and":[{"or":[{"age":{"operator":">","value":12}},' +
+			var bodyStr = '{"dis_max":[{"and":[{"or":[{"age":{"operator":">","value":12}},' +
 				'{"age":{"operator":"<","value":15}}]},' +
 				'{"name":{"operator":"=","value":"Foo"}}]},' +
 				'{"name":{"operator":"=","value":"Bar"}}]}';
