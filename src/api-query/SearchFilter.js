@@ -62,7 +62,7 @@ class SearchFilter extends Filter {
 	 * @static
 	 */
 	static disMaxOf(...filters) {
-		return filters[0].addMany.apply(filters[0], ['dis_max'].concat(filters.slice(1)));
+		return filters[0].addMany.apply(filters[0], ['disMax'].concat(filters.slice(1)));
 	}
 
 	/**
@@ -265,7 +265,7 @@ class SearchFilter extends Filter {
 	 * @static
 	 */
 	static phrasePrefix(fieldOrQuery, opt_query) {
-		return SearchFilter.matchInternal_(fieldOrQuery, opt_query, 'phrase_prefix');
+		return SearchFilter.matchInternal_(fieldOrQuery, opt_query, 'phrasePrefix');
 	}
 
 	/**

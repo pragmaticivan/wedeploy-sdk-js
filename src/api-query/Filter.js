@@ -98,7 +98,7 @@ class Filter extends Embodied {
 	 * @chainnable
 	 */
 	disMax(fieldOrFilter, opt_operatorOrValue, opt_value) {
-		return this.add('dis_max', fieldOrFilter, opt_operatorOrValue, opt_value);
+		return this.add('disMax', fieldOrFilter, opt_operatorOrValue, opt_value);
 	}
 
 	/**

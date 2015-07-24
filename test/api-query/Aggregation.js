@@ -31,7 +31,7 @@ describe('Aggregation', function() {
 	});
 
 	describe('Aggregation.distance', function() {
-		it('should create an aggregation with the "geo_distance" operator from location and ranges', function() {
+		it('should create an aggregation with the "geoDistance" operator from location and ranges', function() {
 			var aggregation = Aggregation.distance(
 				'myField',
 				Geo.point(10, 10),
@@ -40,7 +40,7 @@ describe('Aggregation', function() {
 			);
 
 			assert.strictEqual('myField', aggregation.getField());
-			assert.strictEqual('geo_distance', aggregation.getOperator());
+			assert.strictEqual('geoDistance', aggregation.getOperator());
 
 			var value = {
 				location: [10, 10],
@@ -67,7 +67,7 @@ describe('Aggregation', function() {
 				.range(-200, -100);
 
 			assert.strictEqual('myField', aggregation.getField());
-			assert.strictEqual('geo_distance', aggregation.getOperator());
+			assert.strictEqual('geoDistance', aggregation.getOperator());
 
 			var value = {
 				location: [10, 10],
@@ -97,7 +97,7 @@ describe('Aggregation', function() {
 			aggregation.unit('km');
 
 			assert.strictEqual('myField', aggregation.getField());
-			assert.strictEqual('geo_distance', aggregation.getOperator());
+			assert.strictEqual('geoDistance', aggregation.getOperator());
 
 			var value = {
 				location: [10, 10],
@@ -112,10 +112,10 @@ describe('Aggregation', function() {
 	});
 
 	describe('Aggregation.extendedStats', function() {
-		it('should create an aggregation with the "extended_stats" operator', function() {
+		it('should create an aggregation with the "extendedStats" operator', function() {
 			var aggregation = Aggregation.extendedStats('myField');
 			assert.strictEqual('myField', aggregation.getField());
-			assert.strictEqual('extended_stats', aggregation.getOperator());
+			assert.strictEqual('extendedStats', aggregation.getOperator());
 			assert.ok(!aggregation.getValue());
 		});
 	});

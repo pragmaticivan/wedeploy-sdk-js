@@ -99,25 +99,25 @@ describe('Search', function() {
 
 		it('should add an existing filter', function() {
 			var search = Search.builder().postFilter(Filter.gt('age', 12));
-			var bodyStr = '{"post_filter":[{"age":{"operator":">","value":12}}]}';
+			var bodyStr = '{"postFilter":[{"age":{"operator":">","value":12}}]}';
 			assert.strictEqual(bodyStr, search.toString());
 		});
 
 		it('should add filter from text', function() {
 			var search = Search.builder().postFilter('foo');
-			var bodyStr = '{"post_filter":[{"*":{"operator":"match","value":{"query":"foo"}}}]}';
+			var bodyStr = '{"postFilter":[{"*":{"operator":"match","value":{"query":"foo"}}}]}';
 			assert.strictEqual(bodyStr, search.toString());
 		});
 
 		it('should add filter from field and text', function() {
 			var search = Search.builder().postFilter('name', 'foo');
-			var bodyStr = '{"post_filter":[{"name":{"operator":"match","value":{"query":"foo"}}}]}';
+			var bodyStr = '{"postFilter":[{"name":{"operator":"match","value":{"query":"foo"}}}]}';
 			assert.strictEqual(bodyStr, search.toString());
 		});
 
 		it('should add filter from field, operator and text', function() {
 			var search = Search.builder().postFilter('age', '<', 12);
-			var bodyStr = '{"post_filter":[{"age":{"operator":"<","value":12}}]}';
+			var bodyStr = '{"postFilter":[{"age":{"operator":"<","value":12}}]}';
 			assert.strictEqual(bodyStr, search.toString());
 		});
 
@@ -128,7 +128,7 @@ describe('Search', function() {
 				.postFilter('name', 'foo')
 				.postFilter('age', '<', 12);
 
-			var bodyStr = '{"post_filter":[' +
+			var bodyStr = '{"postFilter":[' +
 				'{"age":{"operator":">","value":12}},' +
 				'{"*":{"operator":"match","value":{"query":"foo"}}},' +
 				'{"name":{"operator":"match","value":{"query":"foo"}}},' +
@@ -146,25 +146,25 @@ describe('Search', function() {
 
 		it('should add an existing filter', function() {
 			var search = Search.builder().preFilter(Filter.gt('age', 12));
-			var bodyStr = '{"pre_filter":[{"age":{"operator":">","value":12}}]}';
+			var bodyStr = '{"preFilter":[{"age":{"operator":">","value":12}}]}';
 			assert.strictEqual(bodyStr, search.toString());
 		});
 
 		it('should add filter from text', function() {
 			var search = Search.builder().preFilter('foo');
-			var bodyStr = '{"pre_filter":[{"*":{"operator":"match","value":{"query":"foo"}}}]}';
+			var bodyStr = '{"preFilter":[{"*":{"operator":"match","value":{"query":"foo"}}}]}';
 			assert.strictEqual(bodyStr, search.toString());
 		});
 
 		it('should add filter from field and text', function() {
 			var search = Search.builder().preFilter('name', 'foo');
-			var bodyStr = '{"pre_filter":[{"name":{"operator":"match","value":{"query":"foo"}}}]}';
+			var bodyStr = '{"preFilter":[{"name":{"operator":"match","value":{"query":"foo"}}}]}';
 			assert.strictEqual(bodyStr, search.toString());
 		});
 
 		it('should add filter from field, operator and text', function() {
 			var search = Search.builder().preFilter('age', '<', 12);
-			var bodyStr = '{"pre_filter":[{"age":{"operator":"<","value":12}}]}';
+			var bodyStr = '{"preFilter":[{"age":{"operator":"<","value":12}}]}';
 			assert.strictEqual(bodyStr, search.toString());
 		});
 
@@ -175,7 +175,7 @@ describe('Search', function() {
 				.preFilter('name', 'foo')
 				.preFilter('age', '<', 12);
 
-			var bodyStr = '{"pre_filter":[' +
+			var bodyStr = '{"preFilter":[' +
 				'{"age":{"operator":">","value":12}},' +
 				'{"*":{"operator":"match","value":{"query":"foo"}}},' +
 				'{"name":{"operator":"match","value":{"query":"foo"}}},' +

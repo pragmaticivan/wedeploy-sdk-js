@@ -64,12 +64,12 @@ class Search extends Embodied {
 	 * Adds a pre filter to this `Search` instance. Internal helper used by
 	 * the `filter_` function.
 	 * @param {!Filter} filter
-	 * @param {string=} opt_filterType Type of the filter being added ('pre_filter',
-	 *   'post_filter' or 'query'). Defaults to 'pre_filter'.
+	 * @param {string=} opt_filterType Type of the filter being added ('preFilter',
+	 *   'postFilter' or 'query'). Defaults to 'preFilter'.
 	 * @protected
 	 */
 	addFilter_(filter, opt_filterType) {
-		var filterType = opt_filterType || 'pre_filter';
+		var filterType = opt_filterType || 'preFilter';
 		if (!this.body_[filterType]) {
 			this.body_[filterType] = [];
 		}
@@ -88,8 +88,8 @@ class Search extends Embodied {
 	 *   match filter, or the operator that should be used.
 	 * @param {*} opt_value The value to be used by the filter. Should
 	 *   only be passed if an operator was passed as the second argument.
-	 * @param {string=} opt_filterType Type of the filter being added ('pre_filter',
-	 *   'post_filter' or 'query'). Defaults to 'pre_filter'.
+	 * @param {string=} opt_filterType Type of the filter being added ('preFilter',
+	 *   'postFilter' or 'query'). Defaults to 'preFilter'.
 	 * @protected
 	 * @chainnable
 	 */
@@ -143,7 +143,7 @@ class Search extends Embodied {
 	 * @chainnable
 	 */
 	postFilter(filterOrTextOrField, opt_textOrOperator, opt_value) {
-		return this.filter_(filterOrTextOrField, opt_textOrOperator, opt_value, 'post_filter');
+		return this.filter_(filterOrTextOrField, opt_textOrOperator, opt_value, 'postFilter');
 	}
 
 	/**

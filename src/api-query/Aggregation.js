@@ -41,7 +41,7 @@ class Aggregation {
 	}
 
 	/**
-	 * Creates an `Aggregation.DistanceAggregation` instance with the "geo_distance" operator.
+	 * Creates an `Aggregation.DistanceAggregation` instance with the "geoDistance" operator.
 	 * @param {string} field The aggregation field.
 	 * @param {*} location The aggregation location.
 	 * @param {...!Range} ranges The aggregation ranges.
@@ -53,13 +53,13 @@ class Aggregation {
 	}
 
 	/**
-	 * Creates an `Aggregation` instance with the "extended_stats" operator.
+	 * Creates an `Aggregation` instance with the "extendedStats" operator.
 	 * @param {string} field The aggregation field.
 	 * @return {!Aggregation}
 	 * @static
 	 */
 	static extendedStats(field) {
-		return Aggregation.of(field, 'extended_stats');
+		return Aggregation.of(field, 'extendedStats');
 	}
 
 	/**
@@ -192,7 +192,7 @@ class DistanceAggregation extends Aggregation {
 	 * @constructor
 	 */
 	constructor(field, location, ...ranges) {
-		super(field, 'geo_distance', {});
+		super(field, 'geoDistance', {});
 		this.value_.location = Embodied.toBody(location);
 		this.value_.ranges = ranges.map(range => range.body());
 	}

@@ -445,38 +445,38 @@ describe('SearchFilter', function() {
 	});
 
 	describe('SearchFilter.phrasePrefix', function() {
-		it('should create SearchFilter with phrase_prefix "match" operator from just the query', function() {
+		it('should create SearchFilter with phrasePrefix "match" operator from just the query', function() {
 			var filter = SearchFilter.phrasePrefix('foo');
 			var body = {
 				'*': {
 					operator: 'match',
 					value: {
 						query: 'foo',
-						type: 'phrase_prefix'
+						type: 'phrasePrefix'
 					}
 				}
 			};
 			assert.deepEqual(body, filter.body());
 			assert.strictEqual(
-				'{"*":{"operator":"match","value":{"query":"foo","type":"phrase_prefix"}}}',
+				'{"*":{"operator":"match","value":{"query":"foo","type":"phrasePrefix"}}}',
 				filter.toString()
 			);
 		});
 
-		it('should create SearchFilter with phrase_prefix "match" operator from field and query', function() {
+		it('should create SearchFilter with phrasePrefix "match" operator from field and query', function() {
 			var filter = SearchFilter.phrasePrefix('name', 'foo');
 			var body = {
 				name: {
 					operator: 'match',
 					value: {
 						query: 'foo',
-						type: 'phrase_prefix'
+						type: 'phrasePrefix'
 					}
 				}
 			};
 			assert.deepEqual(body, filter.body());
 			assert.strictEqual(
-				'{"name":{"operator":"match","value":{"query":"foo","type":"phrase_prefix"}}}',
+				'{"name":{"operator":"match","value":{"query":"foo","type":"phrasePrefix"}}}',
 				filter.toString()
 			);
 		});
@@ -599,7 +599,7 @@ describe('SearchFilter', function() {
 				Filter.lt('age', 15)
 			);
 			var body = {
-				dis_max: [
+				disMax: [
 					{
 						age: {
 							operator: '>',
@@ -616,7 +616,7 @@ describe('SearchFilter', function() {
 			};
 			assert.deepEqual(body, filter.body());
 
-			var bodyStr = '{"dis_max":[{"age":{"operator":">","value":12}},' +
+			var bodyStr = '{"disMax":[{"age":{"operator":">","value":12}},' +
 				'{"age":{"operator":"<","value":15}}]}';
 			assert.strictEqual(bodyStr, filter.toString());
 		});
