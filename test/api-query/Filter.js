@@ -38,6 +38,20 @@ describe('Filter', function() {
 		});
 	});
 
+	describe('Filter.any', function() {
+		it('should create Filter for "any" operator', function() {
+			var filter = Filter.any('age', 12, 21, 25);
+			var body = {
+				age: {
+					operator: 'any',
+					value: [12, 21, 25]
+				}
+			};
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual('{"age":{"operator":"any","value":[12,21,25]}}', filter.toString());
+		});
+	});
+
 	describe('Filter.equal', function() {
 		it('should create Filter for "=" operator', function() {
 			var filter = Filter.equal('age', 12);
@@ -77,20 +91,6 @@ describe('Filter', function() {
 			};
 			assert.deepEqual(body, filter.body());
 			assert.strictEqual('{"age":{"operator":">=","value":12}}', filter.toString());
-		});
-	});
-
-	describe('Filter.in', function() {
-		it('should create Filter for "in" operator', function() {
-			var filter = Filter.in('age', 12, 21, 25);
-			var body = {
-				age: {
-					operator: 'in',
-					value: [12, 21, 25]
-				}
-			};
-			assert.deepEqual(body, filter.body());
-			assert.strictEqual('{"age":{"operator":"in","value":[12,21,25]}}', filter.toString());
 		});
 	});
 
@@ -136,6 +136,20 @@ describe('Filter', function() {
 		});
 	});
 
+	describe('Filter.none', function() {
+		it('should create Filter for "none" operator', function() {
+			var filter = Filter.none('age', 12, 21, 25);
+			var body = {
+				age: {
+					operator: 'none',
+					value: [12, 21, 25]
+				}
+			};
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual('{"age":{"operator":"none","value":[12,21,25]}}', filter.toString());
+		});
+	});
+
 	describe('Filter.notEqual', function() {
 		it('should create Filter for "!=" operator', function() {
 			var filter = Filter.notEqual('age', 12);
@@ -147,20 +161,6 @@ describe('Filter', function() {
 			};
 			assert.deepEqual(body, filter.body());
 			assert.strictEqual('{"age":{"operator":"!=","value":12}}', filter.toString());
-		});
-	});
-
-	describe('Filter.notIn', function() {
-		it('should create Filter for "nin" operator', function() {
-			var filter = Filter.notIn('age', 12, 21, 25);
-			var body = {
-				age: {
-					operator: 'nin',
-					value: [12, 21, 25]
-				}
-			};
-			assert.deepEqual(body, filter.body());
-			assert.strictEqual('{"age":{"operator":"nin","value":[12,21,25]}}', filter.toString());
 		});
 	});
 

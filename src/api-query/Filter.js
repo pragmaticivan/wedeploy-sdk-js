@@ -70,6 +70,18 @@ class Filter extends Embodied {
 	}
 
 	/**
+	 * Returns a Filter instance that uses the "any" operator.
+	 * @param {string} field The name of the field to filter by.
+	 * @param {...*} value A variable amount of values to be used with
+	 *   the "any" operator.
+	 * @return {!Filter}
+	 * @static
+	 */
+	static any(field) {
+		return new Filter(field, 'any', Array.prototype.slice.call(arguments, 1));
+	}
+
+	/**
 	 * Gets the json object that represents this filter.
 	 * @return {!Object}
 	 */
@@ -123,18 +135,6 @@ class Filter extends Embodied {
 	}
 
 	/**
-	 * Returns a Filter instance that uses the "in" operator.
-	 * @param {string} field The name of the field to filter by.
-	 * @param {...*} value A variable amount of values to be used with
-	 *   the "in" operator.
-	 * @return {!Filter}
-   * @static
-	 */
-	static in(field) {
-		return new Filter(field, 'in', Array.prototype.slice.call(arguments, 1));
-	}
-
-	/**
 	 * Returns a Filter instance that uses the "~" operator.
 	 * @param {string} field The name of the field to filter by.
 	 * @param {*} value The filter's value.
@@ -168,26 +168,26 @@ class Filter extends Embodied {
 	}
 
 	/**
+	 * Returns a Filter instance that uses the "none" operator.
+	 * @param {string} field The name of the field to filter by.
+	 * @param {...*} value A variable amount of values to be used with
+	 *   the "none" operator.
+	 * @return {!Filter}
+	 * @static
+	 */
+	static none(field) {
+		return new Filter(field, 'none', Array.prototype.slice.call(arguments, 1));
+	}
+
+	/**
 	 * Returns a Filter instance that uses the "!=" operator.
 	 * @param {string} field The name of the field to filter by.
 	 * @param {*} value The filter's value.
 	 * @return {!Filter}
-   * @static
+	 * @static
 	 */
 	static notEqual(field, value) {
 		return new Filter(field, '!=', value);
-	}
-
-	/**
-	 * Returns a Filter instance that uses the "nin" operator.
-	 * @param {string} field The name of the field to filter by.
-	 * @param {...*} value A variable amount of values to be used with
-	 *   the "nin" operator.
-	 * @return {!Filter}
-	 * @static
-	 */
-	static notIn(field) {
-		return new Filter(field, 'nin', Array.prototype.slice.call(arguments, 1));
 	}
 
 	/**
