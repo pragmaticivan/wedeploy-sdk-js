@@ -164,9 +164,9 @@ describe('Filter', function() {
 		});
 	});
 
-	describe('Filter.andOf', function() {
+	describe('Filter.and', function() {
 		it('should compose filters with the "and" operator', function() {
-			var filter = Filter.andOf(
+			var filter = Filter.and(
 				Filter.gt('age', 12),
 				Filter.lt('age', 15),
 				Filter.equal('name', 'foo')
@@ -202,9 +202,9 @@ describe('Filter', function() {
 		});
 	});
 
-	describe('Filter.orOf', function() {
+	describe('Filter.or', function() {
 		it('should compose filters with the "or" operator', function() {
-			var filter = Filter.orOf(
+			var filter = Filter.or(
 				Filter.gt('age', 12),
 				Filter.lt('age', 15),
 				Filter.equal('name', 'foo')
@@ -240,9 +240,9 @@ describe('Filter', function() {
 		});
 	});
 
-	describe('Filter.notOf', function() {
+	describe('Filter.not', function() {
 		it('should negate an existing filter', function() {
-			var filter = Filter.notOf(Filter.of('age', '>', 12));
+			var filter = Filter.not(Filter.of('age', '>', 12));
 			var body = {
 				not: {
 					age: {
@@ -256,7 +256,7 @@ describe('Filter', function() {
 		});
 
 		it('should negate a filter created from field/operator/value params', function() {
-			var filter = Filter.notOf('age', '>', 12);
+			var filter = Filter.not('age', '>', 12);
 			var body = {
 				not: {
 					age: {
@@ -270,7 +270,7 @@ describe('Filter', function() {
 		});
 
 		it('should negate a filter created from field/value params', function() {
-			var filter = Filter.notOf('age', 12);
+			var filter = Filter.not('age', 12);
 			var body = {
 				not: {
 					age: {

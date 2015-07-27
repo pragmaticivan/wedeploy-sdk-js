@@ -576,9 +576,9 @@ describe('SearchFilter', function() {
 		});
 	});
 
-	describe('SearchFilter.disMaxOf', function() {
+	describe('SearchFilter.disMax', function() {
 		it('should compose filters with the "disMax" operator', function() {
-			var filter = SearchFilter.disMaxOf(
+			var filter = SearchFilter.disMax(
 				Filter.gt('age', 12),
 				Filter.lt('age', 15)
 			);

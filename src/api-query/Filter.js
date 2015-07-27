@@ -65,7 +65,7 @@ class Filter extends Embodied {
 	 * @return {!Filter}
 	 * @static
 	 */
-	static andOf(...filters) {
+	static and(...filters) {
 		return filters[0].addMany.apply(filters[0], ['and'].concat(filters.slice(1)));
 	}
 
@@ -199,7 +199,7 @@ class Filter extends Embodied {
 	 * @return {!Filter}
 	 * @static
 	 */
-	static notOf(fieldOrFilter, opt_operatorOrValue, opt_value) {
+	static not(fieldOrFilter, opt_operatorOrValue, opt_value) {
 		return Filter.toFilter(fieldOrFilter, opt_operatorOrValue, opt_value).add('not');
 	}
 
@@ -235,7 +235,7 @@ class Filter extends Embodied {
 	 * @return {!Filter}
 	 * @static
 	 */
-	static orOf(...filters) {
+	static or(...filters) {
 		return filters[0].addMany.apply(filters[0], ['or'].concat(filters.slice(1)));
 	}
 
