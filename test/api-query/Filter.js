@@ -39,8 +39,20 @@ describe('Filter', function() {
 	});
 
 	describe('Filter.any', function() {
-		it('should create Filter for "any" operator', function() {
+		it('should create Filter for "any" operator form multiple params', function() {
 			var filter = Filter.any('age', 12, 21, 25);
+			var body = {
+				age: {
+					operator: 'any',
+					value: [12, 21, 25]
+				}
+			};
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual('{"age":{"operator":"any","value":[12,21,25]}}', filter.toString());
+		});
+
+		it('should create Filter for "any" operator from array', function() {
+			var filter = Filter.any('age', [12, 21, 25]);
 			var body = {
 				age: {
 					operator: 'any',
@@ -137,8 +149,20 @@ describe('Filter', function() {
 	});
 
 	describe('Filter.none', function() {
-		it('should create Filter for "none" operator', function() {
+		it('should create Filter for "none" operator from multiple values', function() {
 			var filter = Filter.none('age', 12, 21, 25);
+			var body = {
+				age: {
+					operator: 'none',
+					value: [12, 21, 25]
+				}
+			};
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual('{"age":{"operator":"none","value":[12,21,25]}}', filter.toString());
+		});
+
+		it('should create Filter for "none" operator from array', function() {
+			var filter = Filter.none('age', [12, 21, 25]);
 			var body = {
 				age: {
 					operator: 'none',

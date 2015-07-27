@@ -72,13 +72,18 @@ class Filter extends Embodied {
 	/**
 	 * Returns a Filter instance that uses the "any" operator.
 	 * @param {string} field The name of the field to filter by.
-	 * @param {...*} value A variable amount of values to be used with
-	 *   the "any" operator.
+	 * @param {!Array|(...*)} value A variable amount of values to be used with
+	 *   the "none" operator. Can be passed either as a single array or as
+	 *   separate params.
 	 * @return {!Filter}
 	 * @static
 	 */
 	static any(field) {
-		return new Filter(field, 'any', Array.prototype.slice.call(arguments, 1));
+		var values = Array.prototype.slice.call(arguments, 1);
+		if (values.length === 1 && values[0] instanceof Array) {
+			values = values[0];
+		}
+		return new Filter(field, 'any', values);
 	}
 
 	/**
@@ -170,13 +175,18 @@ class Filter extends Embodied {
 	/**
 	 * Returns a Filter instance that uses the "none" operator.
 	 * @param {string} field The name of the field to filter by.
-	 * @param {...*} value A variable amount of values to be used with
-	 *   the "none" operator.
+	 * @param {!Array|(...*)} value A variable amount of values to be used with
+	 *   the "none" operator. Can be passed either as a single array or as
+	 *   separate params.
 	 * @return {!Filter}
 	 * @static
 	 */
 	static none(field) {
-		return new Filter(field, 'none', Array.prototype.slice.call(arguments, 1));
+		var values = Array.prototype.slice.call(arguments, 1);
+		if (values.length === 1 && values[0] instanceof Array) {
+			values = values[0];
+		}
+		return new Filter(field, 'none', values);
 	}
 
 	/**
