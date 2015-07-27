@@ -2,6 +2,8 @@
 
 import core from 'bower:metal/src/core';
 import Embodied from '../api-query/Embodied';
+import Filter from '../api-query/Filter';
+import Query from '../api-query/Query';
 import TransportFactory from './TransportFactory';
 import ClientRequest from './ClientRequest';
 import Util from './Util';
@@ -91,7 +93,7 @@ class Launchpad {
 				body: params
 			};
 		} else if (params instanceof Embodied) {
-			params = params.body();
+			params = this.wrapWithQuery_(params).body();
 		}
 		Object.keys(params).forEach(name => this.param(name, params[name]));
 		return this.sendAsync('GET');
@@ -200,6 +202,19 @@ class Launchpad {
 	}
 
 	/**
+	 * Wraps the given `Embodied` instance with a `Query` instance if needed.
+	 * @param {Embodied} embodied
+	 * @return {Embodied}
+	 * @protected
+	 */
+	wrapWithQuery_(embodied) {
+		if (embodied instanceof Filter) {
+			embodied = Query.builder().filter(embodied);
+		}
+		return embodied;
+	}
+
+	/**
 	 * Encodes clientRequest body.
 	 * @param {ClientRequest} clientRequest
 	 * @return {ClientRequest}
@@ -215,7 +230,7 @@ class Launchpad {
 		if (body instanceof FormData) {
 			clientRequest.headers().remove('content-type');
 		} else if (body instanceof Embodied) {
-			clientRequest.body(body.toString());
+			clientRequest.body(this.wrapWithQuery_(body).toString());
 		} else if (Launchpad.isContentTypeJson(clientRequest)) {
 			clientRequest.body(JSON.stringify(clientRequest.body()));
 		}

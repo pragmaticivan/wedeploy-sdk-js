@@ -1,6 +1,7 @@
 'use strict';
 
 import Embodied from '../../src/api-query/Embodied';
+import Filter from '../../src/api-query/Filter';
 import Launchpad from '../../src/api/Launchpad';
 import Transport from '../../src/api/Transport';
 
@@ -120,6 +121,18 @@ describe('Launchpad', function() {
 			assert.strictEqual('GET', response.request().method());
 			assert.ok(!response.request().body());
 			assert.strictEqual('{"foo":["foo"],"bar":["[\\"bar1\\",\\"bar2\\"]"]}', response.request().params().toString());
+			done();
+		});
+		this.requests[0].respond(200);
+	});
+
+	it('should transform Filter into Query when sending via GET', function(done) {
+		Launchpad.url('/url').get(Filter.of('name', 'foo')).then(function(response) {
+			assert.strictEqual('/url/', response.request().url());
+			assert.strictEqual('GET', response.request().method());
+			assert.ok(!response.request().body());
+			var paramsStr = '{"filter":["[{\\"name\\":{\\"operator\\":\\"=\\",\\"value\\":\\"foo\\"}}]"]}';
+			assert.strictEqual(paramsStr, response.request().params().toString());
 			done();
 		});
 		this.requests[0].respond(200);
@@ -284,6 +297,15 @@ describe('Launchpad', function() {
 		}
 		Launchpad.url('/url').post(new TestBody()).then(function(response) {
 			assert.strictEqual('{"foo":"foo"}', response.request().body());
+			done();
+		});
+		this.requests[0].respond(200);
+	});
+
+	it('should wrap Filter in query when passed as request body', function(done) {
+		Launchpad.url('/url').post(Filter.of('name', 'foo')).then(function(response) {
+			var bodyStr = '{"filter":[{"name":{"operator":"=","value":"foo"}}]}';
+			assert.strictEqual(bodyStr, response.request().body());
 			done();
 		});
 		this.requests[0].respond(200);
