@@ -12,6 +12,13 @@ describe('ClientMessage', function() {
 		assert.strictEqual('body', clientMessage.body());
 	});
 
+	it('should remove body', function() {
+		var clientMessage = new ClientMessage();
+		clientMessage.body('body');
+		clientMessage.removeBody();
+		assert.strictEqual(undefined, clientMessage.body());
+	});
+
 	it('should set/get header', function() {
 		var clientMessage = new ClientMessage();
 		clientMessage.header('name', '');

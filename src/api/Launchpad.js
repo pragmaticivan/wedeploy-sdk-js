@@ -87,16 +87,7 @@ class Launchpad {
 	 * @return {Promise}
 	 */
 	get(opt_params) {
-		var params = opt_params || {};
-		if (core.isString(params)) {
-			params = {
-				body: params
-			};
-		} else if (params instanceof Embodied) {
-			params = this.wrapWithQuery_(params).body();
-		}
-		Object.keys(params).forEach(name => this.param(name, params[name]));
-		return this.sendAsync('GET');
+		return this.sendAsync('GET', opt_params);
 	}
 
 	/**
@@ -154,11 +145,6 @@ class Launchpad {
 		if (arguments.length !== 2) {
 			throw new Error('Invalid arguments');
 		}
-		if (value instanceof Embodied) {
-			value = value.toString();
-		} else if (core.isObject(value) || (value instanceof Array)) {
-			value = JSON.stringify(value);
-		}
 		this.params_.set(name, value);
 		return this;
 	}
@@ -202,6 +188,23 @@ class Launchpad {
 	}
 
 	/**
+	 * Converts the given body object to query params.
+	 * @param {!ClientRequest} clientRequest
+	 * @param {*} body
+	 * @protected
+	 */
+	convertBodyToParams_(clientRequest, body) {
+		if (core.isString(body)) {
+			body = {
+				body: body
+			};
+		} else if (body instanceof Embodied) {
+			body = body.body();
+		}
+		Object.keys(body || {}).forEach(name => clientRequest.param(name, body[name]));
+	}
+
+	/**
 	 * Wraps the given `Embodied` instance with a `Query` instance if needed.
 	 * @param {Embodied} embodied
 	 * @return {Embodied}
@@ -227,14 +230,44 @@ class Launchpad {
 			clientRequest.body(body);
 		}
 
+		body = this.wrapWithQuery_(body);
+		if (clientRequest.method() === 'GET') {
+			this.convertBodyToParams_(clientRequest, body);
+			clientRequest.removeBody();
+			body = null;
+		}
+
 		if (body instanceof FormData) {
 			clientRequest.headers().remove('content-type');
 		} else if (body instanceof Embodied) {
-			clientRequest.body(this.wrapWithQuery_(body).toString());
+			clientRequest.body(body.toString());
 		} else if (Launchpad.isContentTypeJson(clientRequest)) {
 			clientRequest.body(JSON.stringify(clientRequest.body()));
 		}
+
+		this.encodeParams_(clientRequest);
+
 		return clientRequest;
+	}
+
+	/**
+	 * Encodes the params for the given request, according to their types.
+	 * @param {!ClientRequest} clientRequest
+	 * @protected
+	 */
+	encodeParams_(clientRequest) {
+		var params = clientRequest.params();
+		params.names().forEach(function(name) {
+			var values = params.getAll(name);
+			values.forEach(function(value, index) {
+				if (value instanceof Embodied) {
+					value = value.toString();
+				} else if (core.isObject(value) || (value instanceof Array)) {
+					value = JSON.stringify(value);
+				}
+				values[index] = value;
+			});
+		});
 	}
 
 	/**

@@ -58,6 +58,12 @@ class ClientMessage {
 		return this.headers_;
 	}
 
+	/**
+	 * Removes the body.
+	 */
+	removeBody() {
+		this.body_ = undefined;
+	}
 }
 
 export default ClientMessage;
