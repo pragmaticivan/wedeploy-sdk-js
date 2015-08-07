@@ -291,8 +291,4 @@ Launchpad.isContentTypeJson = function(clientMessage) {
 	return contentType.indexOf('application/json') === 0;
 };
 
-if (typeof window !== undefined) {
-	window.Launchpad = Launchpad;
-}
-
 export default Launchpad;
