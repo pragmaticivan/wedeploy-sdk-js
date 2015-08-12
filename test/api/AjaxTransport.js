@@ -30,6 +30,22 @@ describe('AjaxTransport', function() {
 		this.requests[0].respond(200);
 	});
 
+	it('should cancel send request to an url', function(done) {
+		var self = this;
+		var transport = new AjaxTransport();
+		var clientRequest = new ClientRequest();
+		clientRequest.url('/url');
+		transport.send(clientRequest)
+			.then(function() {
+				assert.fail();
+			})
+			.catch(function() {
+				assert.ok(self.requests[0].aborted);
+				done();
+			})
+			.cancel();
+	});
+
 	it('should send request with different http method', function(done) {
 		var transport = new AjaxTransport();
 		var clientRequest = new ClientRequest();

@@ -64,6 +64,7 @@ class AjaxTransport extends Transport {
 				reject(error);
 			};
 		}).thenCatch(function(reason) {
+			request.abort();
 			throw reason;
 		}).thenAlways(function() {
 			clearTimeout(timeout);
