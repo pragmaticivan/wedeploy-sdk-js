@@ -37,6 +37,19 @@ class ClientResponse extends ClientMessage {
 	}
 
 	/**
+	 * Fluent getter and setter for response status text.
+	 * @param {string} opt_statusText Request status text to be set.
+	 * @return {string} Returns response status text.
+	 */
+	statusText(opt_statusText) {
+		if (core.isDef(opt_statusText)) {
+			this.statusText_ = opt_statusText;
+			return this;
+		}
+		return this.statusText_;
+	}
+
+	/**
 	 * Checks if response succeeded. Any status code 2xx or 3xx is considered
 	 * valid.
 	 * @return {boolean}

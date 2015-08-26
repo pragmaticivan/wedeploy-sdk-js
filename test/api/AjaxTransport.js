@@ -128,6 +128,7 @@ describe('AjaxTransport', function() {
 		clientRequest.url('/url');
 		transport.send(clientRequest).then(function(response) {
 			assert.strictEqual(500, response.statusCode());
+			assert.strictEqual('Internal Server Error', response.statusText());
 			done();
 		});
 		this.requests[0].respond(500);

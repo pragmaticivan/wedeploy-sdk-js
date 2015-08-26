@@ -28,6 +28,7 @@ class AjaxTransport extends Transport {
 			var clientResponse = new ClientResponse(clientRequest);
 			clientResponse.body(response.responseText);
 			clientResponse.statusCode(response.status);
+			clientResponse.statusText(response.statusText);
 			Util.parseResponseHeaders(response.getAllResponseHeaders()).forEach(function(header) {
 				clientResponse.header(header.name, header.value);
 			});
