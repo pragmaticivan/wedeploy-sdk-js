@@ -30,6 +30,20 @@ class Util {
 	}
 
 	/**
+	 * Parses the url context path, e.g. "http://localhost/foo/bar" returns "/foo".
+	 * @param {string} url
+	 * @return {string} The context path.
+	 * @protected
+	 */
+	static parseUrlContextPath(url) {
+		var contextPath = this.parseUrl(url)[1];
+		if (contextPath) {
+			contextPath = contextPath.split('/').splice(0, 2).join('/');
+		}
+		return contextPath;
+	}
+
+	/**
 	 * Joins two paths.
 	 * @param {string} basePath
 	 * @param {string} path

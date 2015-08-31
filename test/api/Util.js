@@ -12,6 +12,13 @@ describe('Util', function() {
 		assert.deepEqual(['localhost:8080', '/'], Util.parseUrl('localhost:8080'));
 		assert.deepEqual(['localhost:8080', '/'], Util.parseUrl('localhost:8080/'));
 	});
+
+	it('should url context path', function() {
+		assert.strictEqual('/path', Util.parseUrlContextPath('http://localhost:8080/path'));
+		assert.strictEqual('/path', Util.parseUrlContextPath('//localhost:8080/path/a'));
+		assert.strictEqual('/path', Util.parseUrlContextPath('localhost:8080/path/a/b'));
+		assert.strictEqual('/', Util.parseUrlContextPath('localhost:8080/'));
+		assert.strictEqual('/', Util.parseUrlContextPath('localhost:8080'));
 	});
 
 	it('should join paths', function() {
