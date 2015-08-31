@@ -9,6 +9,9 @@ describe('Util', function() {
 		assert.deepEqual(['localhost:8080', '/path/a'], Util.parseUrl('//localhost:8080/path/a'));
 		assert.deepEqual(['localhost:8080', '/path/a'], Util.parseUrl('localhost:8080/path/a'));
 		assert.deepEqual(['', '/path/a'], Util.parseUrl('/path/a'));
+		assert.deepEqual(['localhost:8080', '/'], Util.parseUrl('localhost:8080'));
+		assert.deepEqual(['localhost:8080', '/'], Util.parseUrl('localhost:8080/'));
+	});
 	});
 
 	it('should join paths', function() {
@@ -26,7 +29,7 @@ describe('Util', function() {
 		assert.strictEqual('http://localhost:123/', Util.joinPaths('http://localhost:123', ''));
 	});
 
-	it('should do what...', function() {
+	it('should parse response headers', function() {
 		var headers = 'Name\u003a\u0020Value\u000d\u000aName\u003a\u0020Value';
 		assert.deepEqual([{
 			name: 'Name',

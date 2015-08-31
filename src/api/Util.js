@@ -19,8 +19,13 @@ class Util {
 		if (domainAt > -1) {
 			url = url.substring(domainAt + 2);
 		}
-		base = url.substring(0, url.indexOf('/'));
-		path = url.substring(url.indexOf('/'));
+		var pathAt = url.indexOf('/');
+		if (pathAt === -1) {
+			url += '/';
+			pathAt = url.length - 1;
+		}
+		base = url.substring(0, pathAt);
+		path = url.substring(pathAt);
 		return [base, path];
 	}
 
