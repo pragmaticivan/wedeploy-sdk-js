@@ -29,25 +29,25 @@ describe('Launchpad', function() {
 
 	it('should socket.io use path from client url', function(done) {
 		window.io = function(url, opts) {
-			assert.strictEqual('domain:8080', url);
+			assert.strictEqual('domain:8080/path/a/', url);
 			assert.deepEqual({
-				path: '/path/'
+				path: '/path'
 			}, opts);
 			done();
 		};
-		Launchpad.url('http://domain:8080/path').connect();
+		Launchpad.url('http://domain:8080/path/a').connect();
 		delete window.io;
 	});
 
 	it('should socket.io use path from client url and ignore from options', function(done) {
 		window.io = function(url, opts) {
-			assert.strictEqual('domain:8080', url);
+			assert.strictEqual('domain:8080/path/a/', url);
 			assert.deepEqual({
-				path: '/path/'
+				path: '/path'
 			}, opts);
 			done();
 		};
-		Launchpad.url('http://domain:8080/path').connect({
+		Launchpad.url('http://domain:8080/path/a').connect({
 			path: '/ignore'
 		});
 		delete window.io;

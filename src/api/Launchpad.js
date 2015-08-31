@@ -48,8 +48,8 @@ class Launchpad {
 	 * Creates new socket.io instance. The parameters passed to socket.io
 	 * constructor will be provided:
 	 *
-	 *   Launchpad.url('http://domain:8080/path').connect({ foo: true });
-	 *     -> io('domain:8080', { path: '/path', foo: true });
+	 *   Launchpad.url('http://domain:8080/path/a').connect({ foo: true });
+	 *     -> io('domain:8080/path/a', { path: '/path', foo: true });
 	 *
 	 * @param {object} opt_options
 	 */
@@ -60,9 +60,9 @@ class Launchpad {
 
 		var url = Util.parseUrl(this.url());
 		opt_options = opt_options || {};
-		opt_options.path = url[1];
+		opt_options.path = Util.parseUrlContextPath(url[1]);
 
-		return io(url[0], opt_options);
+		return io(url[0] + url[1], opt_options);
 	}
 
 	/**
