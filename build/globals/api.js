@@ -413,10 +413,9 @@ this.launchpadNamed = {};
 		}, {
 			key: 'parseUrlContextPath',
 			value: function parseUrlContextPath(url) {
-				var contextPath = '/';
-				var path = this.parseUrl(url)[1];
-				if (path) {
-					contextPath = path.split('/').splice(0, 2).join('/');
+				var contextPath = this.parseUrl(url)[1];
+				if (contextPath) {
+					contextPath = contextPath.split('/').splice(0, 2).join('/');
 				}
 				return contextPath;
 			}
@@ -4314,8 +4313,8 @@ this.launchpadNamed = {};
     * Creates new socket.io instance. The parameters passed to socket.io
     * constructor will be provided:
     *
-    *   Launchpad.url('http://domain:8080/path').connect({ foo: true });
-    *     -> io('domain:8080', { path: '/path', foo: true });
+    *   Launchpad.url('http://domain:8080/path/a').connect({ foo: true });
+    *     -> io('domain:8080/path/a', { path: '/path', foo: true });
     *
     * @param {object} opt_options
     */
@@ -4328,9 +4327,9 @@ this.launchpadNamed = {};
 
 				var url = Util.parseUrl(this.url());
 				opt_options = opt_options || {};
-				opt_options.path = url[1];
+				opt_options.path = Util.parseUrlContextPath(url[1]);
 
-				return io(url[0], opt_options);
+				return io(url[0] + url[1], opt_options);
 			}
 
 			/**
