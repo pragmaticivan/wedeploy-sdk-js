@@ -434,7 +434,7 @@ this.launchpadNamed = {};
 				if (path.charAt(0) === '/') {
 					path = path.substring(1);
 				}
-				return [basePath, path].join('/');
+				return [basePath, path].join('/').replace(/\/$/, '');
 			}
 
 			/**
