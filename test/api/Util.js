@@ -22,10 +22,10 @@ describe('Util', function() {
 	});
 
 	it('should join paths', function() {
-		assert.strictEqual('foo/', Util.joinPaths('foo', ''));
+		assert.strictEqual('foo', Util.joinPaths('foo', ''));
 		assert.strictEqual('/foo', Util.joinPaths('', 'foo'));
-		assert.strictEqual('foo/', Util.joinPaths('foo/', ''));
-		assert.strictEqual('/foo/', Util.joinPaths('', 'foo/'));
+		assert.strictEqual('foo', Util.joinPaths('foo/', ''));
+		assert.strictEqual('/foo', Util.joinPaths('', 'foo/'));
 		assert.strictEqual('foo/bar', Util.joinPaths('foo/', '/bar'));
 		assert.strictEqual('foo/bar', Util.joinPaths('foo/', 'bar'));
 		assert.strictEqual('foo/bar', Util.joinPaths('foo', 'bar'));
@@ -33,7 +33,7 @@ describe('Util', function() {
 	});
 
 	it('should join paths with full urls', function() {
-		assert.strictEqual('http://localhost:123/', Util.joinPaths('http://localhost:123', ''));
+		assert.strictEqual('http://localhost:123', Util.joinPaths('http://localhost:123', ''));
 	});
 
 	it('should parse response headers', function() {
