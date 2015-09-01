@@ -4614,12 +4614,20 @@ this.launchpadNamed = {};
 (function () {
 	'use strict';
 
-	var Query = this.launchpad.Query;
 	var Filter = this.launchpad.Filter;
+	var Geo = this.launchpad.Geo;
+	var Query = this.launchpad.Query;
+	var Range = this.launchpad.Range;
+	var Search = this.launchpad.Search;
+	var SearchFilter = this.launchpad.SearchFilter;
 
 	if (typeof window !== undefined) {
-		window.Query = Query;
 		window.Filter = Filter;
+		window.Geo = Geo;
+		window.Query = Query;
+		window.Range = Range;
+		window.Search = Search;
+		window.SearchFilter = SearchFilter;
 	}
 }).call(this);
 //# sourceMappingURL=api.js.map
