@@ -1,5 +1,5 @@
-this.launchpad = {};
-this.launchpadNamed = {};
+this.launchpad = this.launchpad || {};
+this.launchpadNamed = this.launchpadNamed || {};
 (function (global) {
   var babelHelpers = global.babelHelpers = {};
 
@@ -379,7 +379,30 @@ this.launchpadNamed = {};
 		}
 
 		babelHelpers.createClass(Util, null, [{
-			key: 'parseUrl',
+			key: 'addParametersToUrlQueryString',
+
+			/**
+    * Adds parameters into the url querystring.
+    * @param {string} url
+    * @param {MultiMap} opt_params
+    * @return {string} Url containting parameters as querystring.
+    * @protected
+    */
+			value: function addParametersToUrlQueryString(url, opt_params) {
+				var querystring = '';
+				opt_params.names().forEach(function (name) {
+					opt_params.getAll(name).forEach(function (value) {
+						querystring += name + '=' + encodeURIComponent(value) + '&';
+					});
+				});
+				querystring = querystring.slice(0, -1);
+				if (querystring) {
+					url += url.indexOf('?') > -1 ? '&' : '?';
+					url += querystring;
+				}
+
+				return url;
+			}
 
 			/**
     * Parses the url separating the domain and port from the path.
@@ -387,6 +410,8 @@ this.launchpadNamed = {};
     * @return {array} Array containing the url domain and path.
     * @protected
     */
+		}, {
+			key: 'parseUrl',
 			value: function parseUrl(url) {
 				var base;
 				var path;
@@ -2040,8 +2065,8 @@ this.launchpadNamed = {};
     * @param {!string} url
     * @param {!string} method
     * @param {?string} body
-    * @param {array.<object<string, string>>=} opt_headers
-    * @param {array.<object<string, string>>=} opt_params
+    * @param {MultiMap} opt_headers
+    * @param {MultiMap} opt_params
     * @param {number=} opt_timeout
     * @param {boolean=} opt_sync
     * @return {Promise} Deferred ajax request.
@@ -2073,17 +2098,7 @@ this.launchpadNamed = {};
 				});
 
 				if (opt_params) {
-					var querystring = '';
-					opt_params.names().forEach(function (name) {
-						opt_params.getAll(name).forEach(function (value) {
-							querystring += name + '=' + encodeURIComponent(value) + '&';
-						});
-					});
-					querystring = querystring.slice(0, -1);
-					if (querystring) {
-						url += url.indexOf('?') > -1 ? '&' : '?';
-						url += querystring;
-					}
+					url = Util.addParametersToUrlQueryString(url, opt_params);
 				}
 
 				request.open(method, url, !opt_sync);
@@ -4316,20 +4331,24 @@ this.launchpadNamed = {};
     *   Launchpad.url('http://domain:8080/path/a').connect({ foo: true });
     *     -> io('domain:8080/path/a', { path: '/path', foo: true });
     *
+    * @param {MultiMap} opt_params
     * @param {object} opt_options
     */
 		}, {
-			key: 'connect',
-			value: function connect(opt_options) {
+			key: 'watch',
+			value: function watch(opt_params, opt_options) {
 				if (typeof io === 'undefined') {
 					throw new Error('Socket.io client not loaded');
 				}
 
-				var url = Util.parseUrl(this.url());
-				opt_options = opt_options || {};
-				opt_options.path = Util.parseUrlContextPath(url[1]);
+				var clientRequest = this.createClientRequest_('GET', opt_params);
 
-				return io(url[0] + url[1], opt_options);
+				var url = Util.parseUrl(Util.addParametersToUrlQueryString(clientRequest.url(), clientRequest.params()));
+
+				opt_options = opt_options || {};
+				opt_options.path = opt_options.path || Util.parseUrlContextPath(url[1]);
+
+				return io(url[0] + '?url=' + encodeURIComponent(url[1]), opt_options);
 			}
 
 			/**
@@ -4466,14 +4485,7 @@ this.launchpadNamed = {};
 			value: function sendAsync(method, body) {
 				var transport = this.customTransport_ || TransportFactory.instance().getDefault();
 
-				var clientRequest = new ClientRequest();
-				clientRequest.body(body);
-				clientRequest.method(method);
-				clientRequest.headers(this.headers());
-				clientRequest.params(this.params());
-				clientRequest.url(this.url());
-
-				this.encode(clientRequest);
+				var clientRequest = this.createClientRequest_(method, body);
 
 				return transport.send(clientRequest).then(this.decode);
 			}
@@ -4497,6 +4509,28 @@ this.launchpadNamed = {};
 				Object.keys(body || {}).forEach(function (name) {
 					return clientRequest.param(name, body[name]);
 				});
+			}
+
+			/**
+    * Creates client request and encode.
+    * @param {string} method
+    * @param {*} body
+    * @return {!ClientRequest} clientRequest
+    * @protected
+    */
+		}, {
+			key: 'createClientRequest_',
+			value: function createClientRequest_(method, body) {
+				var clientRequest = new ClientRequest();
+				clientRequest.body(body);
+				clientRequest.method(method);
+				clientRequest.headers(this.headers());
+				clientRequest.params(this.params());
+				clientRequest.url(this.url());
+
+				this.encode(clientRequest);
+
+				return clientRequest;
 			}
 
 			/**
