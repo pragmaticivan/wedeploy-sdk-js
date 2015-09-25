@@ -51,18 +51,23 @@ class Launchpad {
 	 *   Launchpad.url('http://domain:8080/path/a').connect({ foo: true });
 	 *     -> io('domain:8080/path/a', { path: '/path', foo: true });
 	 *
+	 * @param {MultiMap} opt_params
 	 * @param {object} opt_options
 	 */
-	connect(opt_options) {
+	watch(opt_params, opt_options) {
 		if (typeof io === 'undefined') {
 			throw new Error('Socket.io client not loaded');
 		}
 
-		var url = Util.parseUrl(this.url());
-		opt_options = opt_options || {};
-		opt_options.path = Util.parseUrlContextPath(url[1]);
+		var clientRequest = this.createClientRequest_('GET', opt_params);
 
-		return io(url[0] + url[1], opt_options);
+		var url = Util.parseUrl(
+			Util.addParametersToUrlQueryString(clientRequest.url(), clientRequest.params()));
+
+		opt_options = opt_options || {};
+		opt_options.path = opt_options.path || Util.parseUrlContextPath(url[1]);
+
+		return io(url[0] + '?url=' + encodeURIComponent(url[1]), opt_options);
 	}
 
 	/**
@@ -175,14 +180,7 @@ class Launchpad {
 	sendAsync(method, body) {
 		var transport = this.customTransport_ || TransportFactory.instance().getDefault();
 
-		var clientRequest = new ClientRequest();
-		clientRequest.body(body);
-		clientRequest.method(method);
-		clientRequest.headers(this.headers());
-		clientRequest.params(this.params());
-		clientRequest.url(this.url());
-
-		this.encode(clientRequest);
+		var clientRequest = this.createClientRequest_(method, body);
 
 		return transport.send(clientRequest).then(this.decode);
 	}
@@ -202,6 +200,26 @@ class Launchpad {
 			body = body.body();
 		}
 		Object.keys(body || {}).forEach(name => clientRequest.param(name, body[name]));
+	}
+
+	/**
+	 * Creates client request and encode.
+	 * @param {string} method
+	 * @param {*} body
+	 * @return {!ClientRequest} clientRequest
+	 * @protected
+	 */
+	createClientRequest_(method, body) {
+		var clientRequest = new ClientRequest();
+		clientRequest.body(body);
+		clientRequest.method(method);
+		clientRequest.headers(this.headers());
+		clientRequest.params(this.params());
+		clientRequest.url(this.url());
+
+		this.encode(clientRequest);
+
+		return clientRequest;
 	}
 
 	/**

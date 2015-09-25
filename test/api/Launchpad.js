@@ -23,32 +23,32 @@ describe('Launchpad', function() {
 
 	it('should throws exception when socket.io is not loaded', function() {
 		assert.throws(function() {
-			Launchpad.url('/url').connect();
+			Launchpad.url('/url').watch();
 		}, Error);
 	});
 
 	it('should socket.io use path from client url', function(done) {
 		window.io = function(url, opts) {
-			assert.strictEqual('domain:8080/path/a', url);
+			assert.strictEqual('domain:8080?url=%2Fpath%2Fa', url);
 			assert.deepEqual({
 				path: '/path'
 			}, opts);
 			done();
 		};
-		Launchpad.url('http://domain:8080/path/a').connect();
+		Launchpad.url('http://domain:8080/path/a').watch();
 		delete window.io;
 	});
 
-	it('should socket.io use path from client url and ignore from options', function(done) {
+	it('should socket.io ignore path from client url and use from options', function(done) {
 		window.io = function(url, opts) {
-			assert.strictEqual('domain:8080/path/a', url);
+			assert.strictEqual('domain:8080?url=%2Fpath%2Fa', url);
 			assert.deepEqual({
-				path: '/path'
+				path: '/new'
 			}, opts);
 			done();
 		};
-		Launchpad.url('http://domain:8080/path/a').connect({
-			path: '/ignore'
+		Launchpad.url('http://domain:8080/path/a').watch(null, {
+			path: '/new'
 		});
 		delete window.io;
 	});
