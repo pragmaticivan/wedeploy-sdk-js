@@ -41,8 +41,8 @@ class AjaxTransport extends Transport {
 	 * @param {!string} url
 	 * @param {!string} method
 	 * @param {?string} body
-	 * @param {array.<object<string, string>>=} opt_headers
-	 * @param {array.<object<string, string>>=} opt_params
+	 * @param {MultiMap} opt_headers
+	 * @param {MultiMap} opt_params
 	 * @param {number=} opt_timeout
 	 * @param {boolean=} opt_sync
 	 * @return {Promise} Deferred ajax request.
@@ -72,17 +72,7 @@ class AjaxTransport extends Transport {
 		});
 
 		if (opt_params) {
-			var querystring = '';
-			opt_params.names().forEach(function(name) {
-				opt_params.getAll(name).forEach(function(value) {
-					querystring += name + '=' + encodeURIComponent(value) + '&';
-				});
-			});
-			querystring = querystring.slice(0, -1);
-			if (querystring) {
-				url += (url.indexOf('?') > -1) ? '&' : '?';
-				url += querystring;
-			}
+			url = Util.addParametersToUrlQueryString(url, opt_params);
 		}
 
 		request.open(method, url, !opt_sync);

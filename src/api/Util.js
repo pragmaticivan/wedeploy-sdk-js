@@ -7,6 +7,29 @@
 class Util {
 
 	/**
+	 * Adds parameters into the url querystring.
+	 * @param {string} url
+	 * @param {MultiMap} opt_params
+	 * @return {string} Url containting parameters as querystring.
+	 * @protected
+	 */
+	static addParametersToUrlQueryString(url, opt_params) {
+		var querystring = '';
+		opt_params.names().forEach(function(name) {
+			opt_params.getAll(name).forEach(function(value) {
+				querystring += name + '=' + encodeURIComponent(value) + '&';
+			});
+		});
+		querystring = querystring.slice(0, -1);
+		if (querystring) {
+			url += (url.indexOf('?') > -1) ? '&' : '?';
+			url += querystring;
+		}
+
+		return url;
+	}
+
+	/**
 	 * Parses the url separating the domain and port from the path.
 	 * @param {string} url
 	 * @return {array} Array containing the url domain and path.
