@@ -38,32 +38,32 @@ class Util {
 	static parseUrl(url) {
 		var base;
 		var path;
+		var qs;
+
 		var domainAt = url.indexOf('//');
 		if (domainAt > -1) {
 			url = url.substring(domainAt + 2);
 		}
+
 		var pathAt = url.indexOf('/');
 		if (pathAt === -1) {
 			url += '/';
 			pathAt = url.length - 1;
 		}
+
 		base = url.substring(0, pathAt);
 		path = url.substring(pathAt);
-		return [base, path];
-	}
 
-	/**
-	 * Parses the url context path, e.g. "http://localhost/foo/bar" returns "/foo".
-	 * @param {string} url
-	 * @return {string} The context path.
-	 * @protected
-	 */
-	static parseUrlContextPath(url) {
-		var contextPath = this.parseUrl(url)[1];
-		if (contextPath) {
-			contextPath = contextPath.split('/').splice(0, 2).join('/');
+		var qsAt = path.indexOf('?');
+		if (qsAt > -1) {
+			qs = path.substring(qsAt, path.length);
+			path = path.substring(0, qsAt);
 		}
-		return contextPath;
+		else {
+			qs = '';
+		}
+
+		return [base, path, qs];
 	}
 
 	/**
