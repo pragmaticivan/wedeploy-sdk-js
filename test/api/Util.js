@@ -9,6 +9,7 @@ describe('Util', function() {
 		assert.deepEqual(['localhost:8080', '/path/a'], Util.parseUrl('//localhost:8080/path/a'));
 		assert.deepEqual(['localhost:8080', '/path/a'], Util.parseUrl('localhost:8080/path/a'));
 		assert.deepEqual(['', '/path/a'], Util.parseUrl('/path/a'));
+		assert.deepEqual(['', '/path/a?foo=1'], Util.parseUrl('/path/a?foo=1'));
 		assert.deepEqual(['localhost:8080', '/'], Util.parseUrl('localhost:8080'));
 		assert.deepEqual(['localhost:8080', '/'], Util.parseUrl('localhost:8080/'));
 	});
