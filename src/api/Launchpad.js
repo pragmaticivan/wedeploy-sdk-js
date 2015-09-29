@@ -64,7 +64,9 @@ class Launchpad {
 		var url = Util.parseUrl(
 			Util.addParametersToUrlQueryString(clientRequest.url(), clientRequest.params()));
 
-		opt_options = opt_options || {};
+		opt_options = opt_options || {
+			forceNew: true
+		};
 		opt_options.path = opt_options.path || url[1];
 
 		return io(url[0] + '?url=' + encodeURIComponent(url[1] + url[2]), opt_options);
