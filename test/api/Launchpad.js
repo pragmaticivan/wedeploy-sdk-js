@@ -31,6 +31,7 @@ describe('Launchpad', function() {
 		window.io = function(url, opts) {
 			assert.strictEqual('domain:8080?url=%2Fpath%2Fa%3Ffoo%3D1', url);
 			assert.deepEqual({
+				forceNew: true,
 				path: '/path/a'
 			}, opts);
 			done();
