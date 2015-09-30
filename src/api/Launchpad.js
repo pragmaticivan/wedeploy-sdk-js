@@ -1,6 +1,7 @@
 'use strict';
 
 import core from 'bower:metal/src/core';
+import object from 'bower:metal/src/object/object';
 import Embodied from '../api-query/Embodied';
 import Filter from '../api-query/Filter';
 import Query from '../api-query/Query';
@@ -189,12 +190,39 @@ class Launchpad {
 	}
 
 	/**
+	 * Adds the given object to the current body.
+	 * @param {!Object} obj
+	 * @protected
+	 */
+	addToBody_(obj) {
+		if (core.isDefAndNotNull(this.body_) && !core.isObject(this.body_)) {
+			this.body_ = {
+				body: this.body_
+			};
+		}
+		this.body_ = object.mixin(this.body_ || {}, obj);
+	}
+
+	/**
 	 * Sets the body that will be sent with this request.
 	 * @param {*} body
 	 * @chainable
 	 */
 	body(body) {
 		this.body_ = body;
+		return this;
+	}
+
+	/**
+	 * Adds a sort query to this request's body.
+	 * @param {string} field The field that the query should be sorted by.
+	 * @param {string} opt_direction The direction the sort operation should use.
+	 *   If none is given, "asc" is used by default.
+	 * @chainnable
+	 */
+	sort(field, opt_direction) {
+		var query = Query.builder().sort(field, opt_direction);
+		this.addToBody_(query.body());
 		return this;
 	}
 
@@ -314,7 +342,6 @@ class Launchpad {
 		}
 		return clientResponse;
 	}
-
 }
 
 Launchpad.isContentTypeJson = function(clientMessage) {

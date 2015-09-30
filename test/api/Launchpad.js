@@ -200,6 +200,39 @@ describe('Launchpad', function() {
 		this.requests[0].respond(200);
 	});
 
+	it('should send request with sort query in the body', function(done) {
+		Launchpad.url('/url').sort('id', 'desc').post().then(function(response) {
+			assert.strictEqual('/url', response.request().url());
+			assert.strictEqual('POST', response.request().method());
+			assert.strictEqual('{"sort":[{"id":"desc"}]}', response.request().body());
+			done();
+		});
+		this.requests[0].respond(200);
+	});
+
+	it('should send request with sort query merged into the body', function(done) {
+		var body = {
+			foo: 'bar'
+		};
+		Launchpad.url('/url').body(body).sort('id', 'desc').post().then(function(response) {
+			assert.strictEqual('/url', response.request().url());
+			assert.strictEqual('POST', response.request().method());
+			assert.strictEqual('{"foo":"bar","sort":[{"id":"desc"}]}', response.request().body());
+			done();
+		});
+		this.requests[0].respond(200);
+	});
+
+	it('should send request with sort query merged into the body even when it was not object', function(done) {
+		Launchpad.url('/url').body('prevBody').sort('id', 'desc').post().then(function(response) {
+			assert.strictEqual('/url', response.request().url());
+			assert.strictEqual('POST', response.request().method());
+			assert.strictEqual('{"body":"prevBody","sort":[{"id":"desc"}]}', response.request().body());
+			done();
+		});
+		this.requests[0].respond(200);
+	});
+
 	it('should create new client instance based on parent client', function() {
 		var books = Launchpad.url('/books');
 		var book1 = books.path('/1');
