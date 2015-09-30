@@ -180,6 +180,26 @@ describe('Launchpad', function() {
 		this.requests[0].respond(200);
 	});
 
+	it('should send request with body that was previously set through "body" function', function(done) {
+		Launchpad.url('/url').body('body').post().then(function(response) {
+			assert.strictEqual('/url', response.request().url());
+			assert.strictEqual('POST', response.request().method());
+			assert.strictEqual('"body"', response.request().body());
+			done();
+		});
+		this.requests[0].respond(200);
+	});
+
+	it('should give precedence to body passed to the request call', function(done) {
+		Launchpad.url('/url').body('body').post('postBody').then(function(response) {
+			assert.strictEqual('/url', response.request().url());
+			assert.strictEqual('POST', response.request().method());
+			assert.strictEqual('"postBody"', response.request().body());
+			done();
+		});
+		this.requests[0].respond(200);
+	});
+
 	it('should create new client instance based on parent client', function() {
 		var books = Launchpad.url('/books');
 		var book1 = books.path('/1');

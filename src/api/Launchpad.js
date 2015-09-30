@@ -20,6 +20,7 @@ class Launchpad {
 			throw new Error('Invalid arguments, try `new Launchpad(baseUrl, url)`');
 		}
 
+		this.body_ = null;
 		this.url_ = Util.joinPaths(arguments[0] || '', arguments[1] || '');
 		this.headers_ = new MultiMap();
 		this.params_ = new MultiMap();
@@ -188,6 +189,16 @@ class Launchpad {
 	}
 
 	/**
+	 * Sets the body that will be sent with this request.
+	 * @param {*} body
+	 * @chainable
+	 */
+	body(body) {
+		this.body_ = body;
+		return this;
+	}
+
+	/**
 	 * Converts the given body object to query params.
 	 * @param {!ClientRequest} clientRequest
 	 * @param {*} body
@@ -213,7 +224,7 @@ class Launchpad {
 	 */
 	createClientRequest_(method, body) {
 		var clientRequest = new ClientRequest();
-		clientRequest.body(body);
+		clientRequest.body(body || this.body_);
 		clientRequest.method(method);
 		clientRequest.headers(this.headers());
 		clientRequest.params(this.params());
