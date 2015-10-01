@@ -63,16 +63,6 @@ class Filter extends Embodied {
 	}
 
 	/**
-	 * Composes all the given Filter instances with the "and" operator.
-	 * @param {...*} filters A variable amount of filters to be composed.
-	 * @return {!Filter}
-	 * @static
-	 */
-	static and(...filters) {
-		return filters[0].addMany.apply(filters[0], ['and'].concat(filters.slice(1)));
-	}
-
-	/**
 	 * Returns a Filter instance that uses the "any" operator.
 	 * @param {string} field The name of the field to filter by.
 	 * @param {!Array|(...*)} value A variable amount of values to be used with
@@ -462,16 +452,6 @@ class Filter extends Embodied {
 	 */
 	or(fieldOrFilter, opt_operatorOrValue, opt_value) {
 		return this.add('or', fieldOrFilter, opt_operatorOrValue, opt_value);
-	}
-
-	/**
-	 * Composes all the given Filter instances with the "or" operator.
-	 * @param {...*} filters A variable amount of filters to be composed.
-	 * @return {!Filter}
-	 * @static
-	 */
-	static or(...filters) {
-		return filters[0].addMany.apply(filters[0], ['or'].concat(filters.slice(1)));
 	}
 
 	/**
