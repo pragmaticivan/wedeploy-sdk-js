@@ -575,34 +575,4 @@ describe('SearchFilter', function() {
 			assert.strictEqual(bodyStr, filter.toString());
 		});
 	});
-
-	describe('SearchFilter.disMax', function() {
-		it('should compose filters with the "disMax" operator', function() {
-			var filter = SearchFilter.disMax(
-				Filter.gt('age', 12),
-				Filter.lt('age', 15)
-			);
-			var body = {
-				disMax: [
-					{
-						age: {
-							operator: '>',
-							value: 12
-						}
-					},
-					{
-						age: {
-							operator: '<',
-							value: 15
-						}
-					}
-				]
-			};
-			assert.deepEqual(body, filter.body());
-
-			var bodyStr = '{"disMax":[{"age":{"operator":">","value":12}},' +
-				'{"age":{"operator":"<","value":15}}]}';
-			assert.strictEqual(bodyStr, filter.toString());
-		});
-	});
 });

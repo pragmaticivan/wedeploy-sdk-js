@@ -56,16 +56,6 @@ class SearchFilter extends Filter {
 	}
 
 	/**
-	 * Composes all the given Filter instances with the "disMax" operator.
-	 * @param {...*} filters A variable amount of filters to be composed.
-	 * @return {!Filter}
-	 * @static
-	 */
-	static disMax(...filters) {
-		return filters[0].addMany.apply(filters[0], ['disMax'].concat(filters.slice(1)));
-	}
-
-	/**
 	 * Returns a SearchFilter instance that uses the "gd" operator.
 	 * @param {string} field The field's name.
 	 * @param {*} locationOrCircle Either a `Geo.Circle` instance or a coordinate.

@@ -95,18 +95,6 @@ class Filter extends Embodied {
 	}
 
 	/**
-	 * Adds a filter to be composed with this filter using the "disMax" operator.
-	 * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
-	 *   name of the field to filter by.
-	 * @param {*} opt_operatorOrValue Either the field's operator or its value.
-	 * @param {*} opt_value The filter's value.
-	 * @chainnable
-	 */
-	disMax(fieldOrFilter, opt_operatorOrValue, opt_value) {
-		return this.add('disMax', fieldOrFilter, opt_operatorOrValue, opt_value);
-	}
-
-	/**
 	 * Returns a Filter instance that uses the "=" operator.
 	 * @param {string} field The name of the field to filter by.
 	 * @param {*} value The filter's value.
