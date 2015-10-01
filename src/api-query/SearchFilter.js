@@ -170,7 +170,7 @@ class SearchFilter extends Filter {
 	}
 
 	/**
-	 * Returns a SearchFilter instance that uses the "mlt" operator.
+	 * Returns a SearchFilter instance that uses the "similar" operator.
 	 * @param {string} fieldOrQuery If no second string argument is given, this
 	 *   should be the query string, in which case all fields will be matched.
 	 *   Otherwise, this should be the name of the field to match.
@@ -178,12 +178,12 @@ class SearchFilter extends Filter {
 	 * @return {!Filter}
 	 * @static
 	 */
-	static moreLikeThis(fieldOrQuery, query) {
+	static similar(fieldOrQuery, query) {
 		var field = core.isString(query) ? fieldOrQuery : SearchFilter.ALL;
 		var value = {
 			query: core.isString(query) ? query : fieldOrQuery
 		};
-		return Filter.field(field, 'mlt', value);
+		return Filter.field(field, 'similar', value);
 	}
 
 	/**

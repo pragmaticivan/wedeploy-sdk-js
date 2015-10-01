@@ -303,33 +303,33 @@ describe('SearchFilter', function() {
 		});
 	});
 
-	describe('SearchFilter.moreLikeThis', function() {
-		it('should create SearchFilter with "mlt" operator from just the query', function() {
-			var filter = SearchFilter.moreLikeThis('foo');
+	describe('SearchFilter.similar', function() {
+		it('should create SearchFilter with "similar" operator from just the query', function() {
+			var filter = SearchFilter.similar('foo');
 			var body = {
 				'*': {
-					operator: 'mlt',
+					operator: 'similar',
 					value: {
 						query: 'foo'
 					}
 				}
 			};
 			assert.deepEqual(body, filter.body());
-			assert.strictEqual('{"*":{"operator":"mlt","value":{"query":"foo"}}}', filter.toString());
+			assert.strictEqual('{"*":{"operator":"similar","value":{"query":"foo"}}}', filter.toString());
 		});
 
-		it('should create SearchFilter with "mlt" operator from field and query', function() {
-			var filter = SearchFilter.moreLikeThis('name', 'foo');
+		it('should create SearchFilter with "similar" operator from field and query', function() {
+			var filter = SearchFilter.similar('name', 'foo');
 			var body = {
 				name: {
-					operator: 'mlt',
+					operator: 'similar',
 					value: {
 						query: 'foo'
 					}
 				}
 			};
 			assert.deepEqual(body, filter.body());
-			assert.strictEqual('{"name":{"operator":"mlt","value":{"query":"foo"}}}', filter.toString());
+			assert.strictEqual('{"name":{"operator":"similar","value":{"query":"foo"}}}', filter.toString());
 		});
 	});
 
