@@ -30,32 +30,6 @@ class SearchFilter extends Filter {
 	}
 
 	/**
-	 * Returns a SearchFilter instance that uses the "common" operator.
-	 * @param {string} fieldOrQuery If no second string argument is given, this
-	 *   should be the query string, in which case all fields will be matched.
-	 *   Otherwise, this should be the name of the field to match.
-	 * @param {string|number=} opt_queryOrThreshold If this is a string, it should
-	 *   be the query, otherwise it should be the threshold value.
-	 * @param {number=} opt_threshold The threshold value.
-	 * @return {!Filter}
-	 * @static
-	 */
-	static common(fieldOrQuery, opt_queryOrThreshold, opt_threshold) {
-		var arg2IsString = core.isString(opt_queryOrThreshold);
-
-		var value = {
-			query: arg2IsString ? opt_queryOrThreshold : fieldOrQuery
-		};
-		var threshold = arg2IsString ? opt_threshold : opt_queryOrThreshold;
-		if (threshold) {
-			value.threshold = threshold;
-		}
-
-		var field = arg2IsString ? fieldOrQuery : SearchFilter.ALL;
-		return Filter.field(field, 'common', value);
-	}
-
-	/**
 	 * Returns a SearchFilter instance that uses the "gd" operator.
 	 * @param {string} field The field's name.
 	 * @param {*} locationOrCircle Either a `Geo.Circle` instance or a coordinate.
