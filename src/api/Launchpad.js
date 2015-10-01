@@ -1,7 +1,6 @@
 'use strict';
 
 import core from 'bower:metal/src/core';
-import object from 'bower:metal/src/object/object';
 import Embodied from '../api-query/Embodied';
 import Filter from '../api-query/Filter';
 import Query from '../api-query/Query';
@@ -190,26 +189,74 @@ class Launchpad {
 	}
 
 	/**
-	 * Adds the given object to the current body.
-	 * @param {!Object} obj
-	 * @protected
-	 */
-	addToBody_(obj) {
-		if (core.isDefAndNotNull(this.body_) && !core.isObject(this.body_)) {
-			this.body_ = {
-				body: this.body_
-			};
-		}
-		this.body_ = object.mixin(this.body_ || {}, obj);
-	}
-
-	/**
 	 * Sets the body that will be sent with this request.
 	 * @param {*} body
 	 * @chainable
 	 */
 	body(body) {
 		this.body_ = body;
+		return this;
+	}
+
+	/**
+	 * Sets this query's type to "count".
+	 * @chainnable
+	 */
+	count() {
+		this.getOrCreateQuery_().type('count');
+		return this;
+	}
+
+	/**
+	 * Adds a filter to this Query.
+	 * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
+	 *   name of the field to filter by.
+	 * @param {*} operatorOrValue Either the field's operator or its value.
+	 * @param {*} opt_value The filter's value.
+	 * @chainable
+	 */
+	filter(fieldOrFilter, opt_operatorOrValue, opt_value) {
+		this.getOrCreateQuery_().filter(fieldOrFilter, opt_operatorOrValue, opt_value);
+		return this;
+	}
+
+	/**
+	 * Sets the query offset.
+	 * @param {number} offset The index of the first entry that should be returned
+	 *   by this query.
+	 * @chainable
+	 */
+	offset(offset) {
+		this.getOrCreateQuery_().offset(offset);
+		return this;
+	}
+
+	/**
+	 * Sets the query limit.
+	 * @param {number} limit The max amount of entries that this query should return.
+	 * @chainable
+	 */
+	limit(limit) {
+		this.getOrCreateQuery_().limit(limit);
+		return this;
+	}
+
+	/**
+	 * Adds a search to this `Query` instance.
+	 * @param {!Filter|string} filterOrTextOrField If no other arguments
+	 *   are passed to this function, this should be either a `Filter`
+	 *   instance or a text to be used in a match filter. In both cases
+	 *   the filter will be applied to all fields. Another option is to
+	 *   pass this as a field name instead, together with other arguments
+	 *   so the filter can be created.
+	 * @param {string} opt_textOrOperator Either a text to be used in a
+	 *   match filter, or the operator that should be used.
+	 * @param {*} opt_value The value to be used by the filter. Should
+	 *   only be passed if an operator was passed as the second argument.
+	 * @chainable
+	 */
+	search(filterOrTextOrField, opt_textOrOperator, opt_value) {
+		this.getOrCreateQuery_().search(filterOrTextOrField, opt_textOrOperator, opt_value);
 		return this;
 	}
 
@@ -221,9 +268,15 @@ class Launchpad {
 	 * @chainnable
 	 */
 	sort(field, opt_direction) {
-		var query = Query.sort(field, opt_direction);
-		this.addToBody_(query.body());
+		this.getOrCreateQuery_().sort(field, opt_direction);
 		return this;
+	}
+
+	getOrCreateQuery_() {
+		if (!this.query_) {
+			this.query_ = new Query();
+		}
+		return this.query_;
 	}
 
 	/**
@@ -252,7 +305,15 @@ class Launchpad {
 	 */
 	createClientRequest_(method, body) {
 		var clientRequest = new ClientRequest();
+
 		clientRequest.body(body || this.body_);
+
+		if (!core.isDefAndNotNull(clientRequest.body())) {
+			if (this.query_) {
+				clientRequest.body(this.query_.body());
+			}
+		}
+
 		clientRequest.method(method);
 		clientRequest.headers(this.headers());
 		clientRequest.params(this.params());
