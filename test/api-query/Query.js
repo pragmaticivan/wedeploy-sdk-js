@@ -237,15 +237,6 @@ describe('Query', function() {
 			assert.deepEqual(body, query.body());
 			assert.strictEqual('{"type":"fetch"}', query.toString());
 		});
-
-		it('should set the query type to "scan"', function() {
-			var query = Query.builder().scan();
-			var body = {
-				type: 'scan'
-			};
-			assert.deepEqual(body, query.body());
-			assert.strictEqual('{"type":"scan"}', query.toString());
-		});
 	});
 
 	describe('from', function() {

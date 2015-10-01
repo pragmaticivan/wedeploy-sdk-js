@@ -72,14 +72,6 @@ class Query extends Embodied {
 	}
 
 	/**
-	 * Sets this query's type to "scan".
-	 * @chainnable
-	 */
-	scan() {
-		return this.type('scan');
-	}
-
-	/**
 	 * Adds a search entry to this `Query`.
 	 * @param {!Search|!Filter|string} searchOrFilterOrTextOrField If no other
 	 *   arguments are passed to this function, this should be either a `Search`
@@ -122,7 +114,7 @@ class Query extends Embodied {
 
 	/**
 	 * Sets the query type.
-	 * @param {string} type The query's type. For example: "count", "fetch", "scan".
+	 * @param {string} type The query's type. For example: "count", "fetch".
 	 * @chainnable
 	 */
 	type(type) {
