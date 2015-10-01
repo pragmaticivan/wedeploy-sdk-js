@@ -21,7 +21,7 @@ class SearchFilter extends Filter {
 	 * @return {!Filter}
 	 * @static
 	 */
-	static bbox(field, boxOrUpperLeft, opt_lowerRight) {
+	static boundingBox(field, boxOrUpperLeft, opt_lowerRight) {
 		if (boxOrUpperLeft instanceof Geo.BoundingBox) {
 			return SearchFilter.polygon(field, ...boxOrUpperLeft.getPoints());
 		} else {

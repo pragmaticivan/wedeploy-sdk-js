@@ -14,7 +14,7 @@ class Geo {
 	 * @return {Geo.BoundingBox}
 	 * @static
 	 */
-	static bbox(upperLeft, lowerRight) {
+	static boundingBox(upperLeft, lowerRight) {
 		return new Geo.BoundingBox(upperLeft, lowerRight);
 	}
 

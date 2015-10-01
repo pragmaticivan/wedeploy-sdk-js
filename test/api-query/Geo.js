@@ -28,20 +28,20 @@ describe('Geo', function() {
 		});
 	});
 
-	describe('Geo.bbox', function() {
+	describe('Geo.boundingBox', function() {
 		it('should create a Geo.BoundingBox instance', function() {
-			var bbox = Geo.bbox('0,20', Geo.point(20, 0));
-			assert.ok(bbox instanceof Geo.BoundingBox);
-			assert.deepEqual(['0,20', [20, 0]], bbox.getPoints());
+			var boundingBox = Geo.boundingBox('0,20', Geo.point(20, 0));
+			assert.ok(boundingBox instanceof Geo.BoundingBox);
+			assert.deepEqual(['0,20', [20, 0]], boundingBox.getPoints());
 
 			var body = {
 				type: 'envelope',
 				coordinates: ['0,20', [20, 0]]
 			};
-			assert.deepEqual(body, bbox.body());
+			assert.deepEqual(body, boundingBox.body());
 
 			var bodyStr = '{"type":"envelope","coordinates":["0,20",[20,0]]}';
-			assert.deepEqual(bodyStr, bbox.toString());
+			assert.deepEqual(bodyStr, boundingBox.toString());
 		});
 	});
 

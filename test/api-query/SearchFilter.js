@@ -6,9 +6,9 @@ import Range from '../../src/api-query/Range';
 import SearchFilter from '../../src/api-query/SearchFilter';
 
 describe('SearchFilter', function() {
-	describe('SearchFilter.bbox', function() {
+	describe('SearchFilter.boundingBox', function() {
 		it('should create SearchFilter with "gp" operator for bounding box', function() {
-			var filter = SearchFilter.bbox('shape', Geo.bbox('20,0', [0, 20]));
+			var filter = SearchFilter.boundingBox('shape', Geo.boundingBox('20,0', [0, 20]));
 			var body = {
 				shape: {
 					operator: 'gp',
@@ -23,7 +23,7 @@ describe('SearchFilter', function() {
 		});
 
 		it('should create SearchFilter with "gp" operator for bounding box points', function() {
-			var filter = SearchFilter.bbox('shape', '20,0', Geo.point(0, 20));
+			var filter = SearchFilter.boundingBox('shape', '20,0', Geo.point(0, 20));
 			var body = {
 				shape: {
 					operator: 'gp',
@@ -477,7 +477,7 @@ describe('SearchFilter', function() {
 			var filter = SearchFilter.shape(
 				'shape',
 				Geo.circle([0, 0], '2km'),
-				Geo.bbox([20, 0], [0, 20])
+				Geo.boundingBox([20, 0], [0, 20])
 			);
 			var body = {
 				shape: {
