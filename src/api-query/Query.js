@@ -10,12 +10,112 @@ import Aggregation from './Aggregation';
  */
 class Query extends Embodied {
 	/**
-	 * Creates a new `Query` instance.
-	 * @return {!Query}
+	 * Adds an aggregation to this `Query` instance.
+	 * @param {string} name The aggregation name.
+	 * @param {!Aggregation|string} aggregationOrField Either an
+	 *   `Aggregation` instance or the name of the aggregation field.
+	 * @param {string} opt_operator The aggregation operator.
 	 * @static
 	 */
-	static builder() {
-		return new Query();
+	static aggregate(name, aggregationOrField, opt_operator) {
+		return new Query().aggregate(name, aggregationOrField, opt_operator);
+	}
+
+	/**
+	 * Sets this query's type to "count".
+	 * @static
+	 */
+	static count() {
+		return new Query().type('count');
+	}
+
+	/**
+	 * Sets this query's type to "fetch".
+	 * @static
+	 */
+	static fetch() {
+		return new Query().type('fetch');
+	}
+
+	/**
+	 * Adds a filter to this Query.
+	 * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
+	 *   name of the field to filter by.
+	 * @param {*} operatorOrValue Either the field's operator or its value.
+	 * @param {*} opt_value The filter's value.
+	 * @static
+	 */
+	static filter(fieldOrFilter, opt_operatorOrValue, opt_value) {
+		return new Query().filter(fieldOrFilter, opt_operatorOrValue, opt_value);
+	}
+
+	/**
+	 * Sets the query offset.
+	 * @param {number} offset The index of the first entry that should be returned
+	 *   by this query.
+	 * @static
+	 */
+	static offset(offset) {
+		return new Query().offset(offset);
+	}
+
+	/**
+	 * Adds a highlight entry to this `Query` instance.
+	 * @param {string} field The field's name.
+	 * @param {number} opt_size The highlight size.
+	 * @param {number} opt_count The highlight count.
+	 * @static
+	 */
+	static highlight(field) {
+		return new Query().highlight(field);
+	}
+
+	/**
+	 * Sets the query limit.
+	 * @param {number} limit The max amount of entries that this query should return.
+	 * @static
+	 */
+	static limit(limit) {
+		return new Query().limit(limit);
+	}
+
+	/**
+	 * Adds a search to this `Query` instance.
+	 * @param {!Filter|string} filterOrTextOrField If no other arguments
+	 *   are passed to this function, this should be either a `Filter`
+	 *   instance or a text to be used in a match filter. In both cases
+	 *   the filter will be applied to all fields. Another option is to
+	 *   pass this as a field name instead, together with other arguments
+	 *   so the filter can be created.
+	 * @param {string} opt_textOrOperator Either a text to be used in a
+	 *   match filter, or the operator that should be used.
+	 * @param {*} opt_value The value to be used by the filter. Should
+	 *   only be passed if an operator was passed as the second argument.
+	 * @static
+	 */
+	static search(filterOrTextOrField, opt_textOrOperator, opt_value) {
+		return new Query().search(filterOrTextOrField, opt_textOrOperator, opt_value);
+	}
+
+	/**
+	 * Adds a sort entry to this query, specifying the field this query should be
+	 * sorted by and, optionally, the sort direction.
+	 * @param {string} field The field that the query should be sorted by.
+	 * @param {string} opt_direction The direction the sort operation should use.
+	 *   If none is given, "asc" is used by default.
+	 * @static
+	 */
+	static sort(field, opt_direction) {
+		return new Query().sort(field, opt_direction);
+	}
+
+	/**
+	 * Sets the query type.
+	 * @param {string} type The query's type. For example: "count", "fetch".
+	 * @static
+	 */
+	static type(type) {
+		return new Query().type(type);
 	}
 
 	/**

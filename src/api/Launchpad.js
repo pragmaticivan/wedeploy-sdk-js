@@ -221,7 +221,7 @@ class Launchpad {
 	 * @chainnable
 	 */
 	sort(field, opt_direction) {
-		var query = Query.builder().sort(field, opt_direction);
+		var query = Query.sort(field, opt_direction);
 		this.addToBody_(query.body());
 		return this;
 	}
@@ -271,7 +271,7 @@ class Launchpad {
 	 */
 	wrapWithQuery_(embodied) {
 		if (embodied instanceof Filter) {
-			embodied = Query.builder().filter(embodied);
+			embodied = Query.filter(embodied);
 		}
 		return embodied;
 	}

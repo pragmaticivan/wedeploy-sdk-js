@@ -5,27 +5,14 @@ import Query from '../../src/api-query/Query';
 import Aggregation from '../../src/api-query/Aggregation';
 
 describe('Query', function() {
-	describe('Query.builder()', function() {
-		it('should create Query instance', function() {
-			var query = Query.builder();
-			assert.ok(query instanceof Query);
-		});
-
-		it('should start with an empty body', function() {
-			var query = Query.builder();
-			assert.deepEqual({}, query.body());
-			assert.strictEqual('{}', query.toString());
-		});
-	});
-
 	describe('filter', function() {
 		it('should be chainnable', function() {
-			var query = Query.builder();
+			var query = Query.filter();
 			assert.strictEqual(query, query.filter(Filter.gt('age', 12)));
 		});
 
 		it('should add an existing filter', function() {
-			var query = Query.builder().filter(Filter.gt('age', 12));
+			var query = Query.filter(Filter.gt('age', 12));
 			var body = {
 				filter: [{
 					age: {
@@ -39,7 +26,7 @@ describe('Query', function() {
 		});
 
 		it('should add filter from field/operator/value', function() {
-			var query = Query.builder().filter('age', '>', 12);
+			var query = Query.filter('age', '>', 12);
 			var body = {
 				filter: [{
 					age: {
@@ -53,7 +40,7 @@ describe('Query', function() {
 		});
 
 		it('should add filter from field/value', function() {
-			var query = Query.builder().filter('age', 12);
+			var query = Query.filter('age', 12);
 			var body = {
 				filter: [{
 					age: {
@@ -67,7 +54,7 @@ describe('Query', function() {
 		});
 
 		it('should add multiple filters', function() {
-			var query = Query.builder()
+			var query = Query
 				.filter(Filter.gt('age', 12))
 				.filter('age', '<', 15)
 				.filter('name', 'Foo');
@@ -81,12 +68,12 @@ describe('Query', function() {
 
 	describe('search', function() {
 		it('should be chainnable', function() {
-			var query = Query.builder();
-			assert.strictEqual(query, query.search(Query.builder()));
+			var query = Query.search();
+			assert.strictEqual(query, query.search(Query.search()));
 		});
 
 		it('should set the search entry from text', function() {
-			var query = Query.builder().search('foo');
+			var query = Query.search('foo');
 			var body = {
 				search: [{
 					'*': {
@@ -102,7 +89,7 @@ describe('Query', function() {
 		});
 
 		it('should set the search entry from field and text', function() {
-			var query = Query.builder().search('name', 'foo');
+			var query = Query.search('name', 'foo');
 			var body = {
 				search: [{
 					name: {
@@ -118,7 +105,7 @@ describe('Query', function() {
 		});
 
 		it('should set the search entry from field, operator and text', function() {
-			var query = Query.builder().search('age', '<', 12);
+			var query = Query.search('age', '<', 12);
 			var body = {
 				search: [{
 					age: {
@@ -134,36 +121,36 @@ describe('Query', function() {
 		});
 
 		it('should be chainnable', function() {
-			var query = Query.builder();
+			var query = Query.search();
 			assert.strictEqual(query, query.search(Filter.gt('age', 12)));
 		});
 
 		it('should add an existing filter', function() {
-			var query = Query.builder().search(Filter.gt('age', 12));
+			var query = Query.search(Filter.gt('age', 12));
 			var bodyStr = '{"search":[{"age":{"operator":">","value":12}}]}';
 			assert.strictEqual(bodyStr, query.toString());
 		});
 
 		it('should add filter from text', function() {
-			var query = Query.builder().search('foo');
+			var query = Query.search('foo');
 			var bodyStr = '{"search":[{"*":{"operator":"match","value":"foo"}}]}';
 			assert.strictEqual(bodyStr, query.toString());
 		});
 
 		it('should add filter from field and text', function() {
-			var query = Query.builder().search('name', 'foo');
+			var query = Query.search('name', 'foo');
 			var bodyStr = '{"search":[{"name":{"operator":"match","value":"foo"}}]}';
 			assert.strictEqual(bodyStr, query.toString());
 		});
 
 		it('should add filter from field, operator and text', function() {
-			var query = Query.builder().search('age', '<', 12);
+			var query = Query.search('age', '<', 12);
 			var bodyStr = '{"search":[{"age":{"operator":"<","value":12}}]}';
 			assert.strictEqual(bodyStr, query.toString());
 		});
 
 		it('should add multiple filters', function() {
-			var query = Query.builder()
+			var query = Query
 				.search(Filter.gt('age', 12))
 				.search('foo')
 				.search('name', 'foo')
@@ -181,12 +168,12 @@ describe('Query', function() {
 
 	describe('sort', function() {
 		it('should be chainnable', function() {
-			var query = Query.builder();
+			var query = Query.sort();
 			assert.strictEqual(query, query.sort('age'));
 		});
 
 		it('should add a sort entry for the given field', function() {
-			var query = Query.builder().sort('age');
+			var query = Query.sort('age');
 			var body = {
 				sort: [{
 					age: 'asc'
@@ -197,7 +184,7 @@ describe('Query', function() {
 		});
 
 		it('should add a sort entry for the given field and direction', function() {
-			var query = Query.builder().sort('age', 'desc');
+			var query = Query.sort('age', 'desc');
 			var body = {
 				sort: [{
 					age: 'desc'
@@ -208,7 +195,7 @@ describe('Query', function() {
 		});
 
 		it('should add multiple sort entries', function() {
-			var query = Query.builder()
+			var query = Query
 				.sort('age', 'desc')
 				.sort('name');
 			assert.strictEqual('{"sort":[{"age":"desc"},{"name":"asc"}]}', query.toString());
@@ -217,12 +204,12 @@ describe('Query', function() {
 
 	describe('type', function() {
 		it('should be chainnable', function() {
-			var query = Query.builder();
+			var query = Query.type();
 			assert.strictEqual(query, query.type('count'));
 		});
 
 		it('should set the query type to the given value', function() {
-			var query = Query.builder().type('customType');
+			var query = Query.type('customType');
 			var body = {
 				type: 'customType'
 			};
@@ -231,7 +218,7 @@ describe('Query', function() {
 		});
 
 		it('should set the query type to "count"', function() {
-			var query = Query.builder().count();
+			var query = Query.count();
 			var body = {
 				type: 'count'
 			};
@@ -240,7 +227,7 @@ describe('Query', function() {
 		});
 
 		it('should set the query type to "fetch"', function() {
-			var query = Query.builder().fetch();
+			var query = Query.fetch();
 			var body = {
 				type: 'fetch'
 			};
@@ -251,12 +238,12 @@ describe('Query', function() {
 
 	describe('offset', function() {
 		it('should be chainnable', function() {
-			var query = Query.builder();
+			var query = Query.offset();
 			assert.strictEqual(query, query.offset(10));
 		});
 
 		it('should set the query type to the given value', function() {
-			var query = Query.builder().offset(10);
+			var query = Query.offset(10);
 			var body = {
 				offset: 10
 			};
@@ -267,12 +254,12 @@ describe('Query', function() {
 
 	describe('limit', function() {
 		it('should be chainnable', function() {
-			var query = Query.builder();
+			var query = Query.limit();
 			assert.strictEqual(query, query.limit(10));
 		});
 
 		it('should set the query type to the given value', function() {
-			var query = Query.builder().limit(10);
+			var query = Query.limit(10);
 			var body = {
 				limit: 10
 			};
@@ -283,7 +270,7 @@ describe('Query', function() {
 
 	describe('all', function() {
 		it('should create complex query with many different keys', function() {
-			var query = Query.builder()
+			var query = Query
 				.filter(Filter.gt('age', 12))
 				.sort('age', 'desc')
 				.sort('name')
@@ -303,24 +290,24 @@ describe('Query', function() {
 
 	describe('aggregate', function() {
 		it('should be chainnable', function() {
-			var query = Query.builder();
+			var query = Query.aggregate();
 			assert.strictEqual(query, query.aggregate('aggr', 'name', 'count'));
 		});
 
 		it('should add an existing aggregation', function() {
-			var query = Query.builder().aggregate('aggr', Aggregation.histogram('age', 100));
+			var query = Query.aggregate('aggr', Aggregation.histogram('age', 100));
 			var bodyStr = '{"aggregation":[{"age":{"name":"aggr","operator":"histogram","value":100}}]}';
 			assert.strictEqual(bodyStr, query.toString());
 		});
 
 		it('should add an aggregation from the given field and operator', function() {
-			var query = Query.builder().aggregate('aggr', 'foo', 'count');
+			var query = Query.aggregate('aggr', 'foo', 'count');
 			var bodyStr = '{"aggregation":[{"foo":{"name":"aggr","operator":"count"}}]}';
 			assert.strictEqual(bodyStr, query.toString());
 		});
 
 		it('should add multiple aggregations', function() {
-			var query = Query.builder()
+			var query = Query
 				.aggregate('aggr', Aggregation.histogram('age', 100))
 				.aggregate('aggr', 'foo', 'count');
 			var bodyStr = '{"aggregation":[' +
@@ -333,17 +320,17 @@ describe('Query', function() {
 
 	describe('highlight', function() {
 		it('should be chainnable', function() {
-			var query = Query.builder();
+			var query = Query.highlight();
 			assert.strictEqual(query, query.highlight('name'));
 		});
 
 		it('should add a highlight entry for a field', function() {
-			var query = Query.builder().highlight('name');
+			var query = Query.highlight('name');
 			assert.strictEqual('{"highlight":["name"]}', query.toString());
 		});
 
 		it('should add multiple highlights', function() {
-			var query = Query.builder()
+			var query = Query
 				.highlight('address')
 				.highlight('name', 10)
 				.highlight('lastName', 10, 5);
