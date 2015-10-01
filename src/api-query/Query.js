@@ -1,8 +1,9 @@
 'use strict';
 
+import core from 'bower:metal/src/core';
 import Embodied from './Embodied';
 import Filter from './Filter';
-import Search from './Search';
+import Aggregation from './Aggregation';
 
 /**
  * Class responsible for building queries.
@@ -15,6 +16,37 @@ class Query extends Embodied {
 	 */
 	static builder() {
 		return new Query();
+	}
+
+	/**
+	 * Adds an aggregation to this `Query` instance.
+	 * @param {string} name The aggregation name.
+	 * @param {!Aggregation|string} aggregationOrField Either an
+	 *   `Aggregation` instance or the name of the aggregation field.
+	 * @param {string} opt_operator The aggregation operator.
+	 * @chainnable
+	 */
+	aggregate(name, aggregationOrField, opt_operator) {
+		var aggregation = aggregationOrField;
+		if (!(aggregation instanceof Aggregation)) {
+			aggregation = Aggregation.field(aggregationOrField, opt_operator);
+		}
+
+		var field = aggregation.getField();
+		var value = {};
+		value[field] = {
+			name: name,
+			operator: aggregation.getOperator()
+		};
+		if (core.isDefAndNotNull(aggregation.getValue())) {
+			value[field].value = aggregation.getValue();
+		}
+
+		if (!this.body_.aggregation) {
+			this.body_.aggregation = [];
+		}
+		this.body_.aggregation.push(value);
+		return this;
 	}
 
 	/**
@@ -62,6 +94,22 @@ class Query extends Embodied {
 	}
 
 	/**
+	 * Adds a highlight entry to this `Query` instance.
+	 * @param {string} field The field's name.
+	 * @param {number} opt_size The highlight size.
+	 * @param {number} opt_count The highlight count.
+	 * @chainnable
+	 */
+	highlight(field) {
+		if (!this.body_.highlight) {
+			this.body_.highlight = [];
+		}
+
+		this.body_.highlight.push(field);
+		return this;
+	}
+
+	/**
 	 * Sets the query limit.
 	 * @param {number} limit The max amount of entries that this query should return.
 	 * @chainnable
@@ -72,12 +120,12 @@ class Query extends Embodied {
 	}
 
 	/**
-	 * Adds a search entry to this `Query`.
-	 * @param {!Search|!Filter|string} searchOrFilterOrTextOrField If no other
-	 *   arguments are passed to this function, this should be either a `Search`
-	 *   or `Filter` instance or a text to be used in a match filter. In the
-	 *   last two cases the filter will be applied to all fields. Another option
-	 *   is to pass this as a field name instead, together with other arguments
+	 * Adds a search to this `Query` instance.
+	 * @param {!Filter|string} filterOrTextOrField If no other arguments
+	 *   are passed to this function, this should be either a `Filter`
+	 *   instance or a text to be used in a match filter. In both cases
+	 *   the filter will be applied to all fields. Another option is to
+	 *   pass this as a field name instead, together with other arguments
 	 *   so the filter can be created.
 	 * @param {string} opt_textOrOperator Either a text to be used in a
 	 *   match filter, or the operator that should be used.
@@ -85,12 +133,19 @@ class Query extends Embodied {
 	 *   only be passed if an operator was passed as the second argument.
 	 * @chainnable
 	 */
-	search(searchOrFilterOrTextOrField, opt_textOrOperator, opt_value) {
-		var search = searchOrFilterOrTextOrField;
-		if (!(search instanceof Search)) {
-			search = Search.builder().query(searchOrFilterOrTextOrField, opt_textOrOperator, opt_value);
+	search(filterOrTextOrField, opt_textOrOperator, opt_value) {
+		var filter = filterOrTextOrField;
+		if (opt_value) {
+			filter = Filter.field(filterOrTextOrField, opt_textOrOperator, opt_value);
+		} else if (opt_textOrOperator) {
+			filter = Filter.match(filterOrTextOrField, opt_textOrOperator);
+		} else if (!(filter instanceof Filter)) {
+			filter = Filter.match(filterOrTextOrField);
 		}
-		this.body_.search = search.body();
+		if (!this.body_.search) {
+			this.body_.search = [];
+		}
+		this.body_.search.push(filter.body());
 		return this;
 	}
 

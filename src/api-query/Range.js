@@ -4,7 +4,7 @@ import core from 'bower:metal/src/core';
 import Embodied from './Embodied';
 
 /**
- * Class responsible for building range objects to be used by `SearchFilter`.
+ * Class responsible for building range objects to be used by `Filter`.
  */
 class Range extends Embodied {
 	/**

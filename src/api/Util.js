@@ -58,8 +58,7 @@ class Util {
 		if (qsAt > -1) {
 			qs = path.substring(qsAt, path.length);
 			path = path.substring(0, qsAt);
-		}
-		else {
+		} else {
 			qs = '';
 		}
 
