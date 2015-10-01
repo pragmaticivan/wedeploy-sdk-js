@@ -62,8 +62,6 @@ class Query extends Embodied {
 	/**
 	 * Adds a highlight entry to this `Query` instance.
 	 * @param {string} field The field's name.
-	 * @param {number} opt_size The highlight size.
-	 * @param {number} opt_count The highlight count.
 	 * @static
 	 */
 	static highlight(field) {
@@ -196,8 +194,6 @@ class Query extends Embodied {
 	/**
 	 * Adds a highlight entry to this `Query` instance.
 	 * @param {string} field The field's name.
-	 * @param {number} opt_size The highlight size.
-	 * @param {number} opt_count The highlight count.
 	 * @chainnable
 	 */
 	highlight(field) {

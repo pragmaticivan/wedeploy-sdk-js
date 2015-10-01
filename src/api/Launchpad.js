@@ -189,6 +189,19 @@ class Launchpad {
 	}
 
 	/**
+	 * Adds an aggregation to this `Query` instance.
+	 * @param {string} name The aggregation name.
+	 * @param {!Aggregation|string} aggregationOrField Either an
+	 *   `Aggregation` instance or the name of the aggregation field.
+	 * @param {string} opt_operator The aggregation operator.
+	 * @chainable
+	 */
+	aggregate(name, aggregationOrField, opt_operator) {
+		this.getOrCreateQuery_().aggregate(name, aggregationOrField, opt_operator);
+		return this;
+	}
+
+	/**
 	 * Sets the body that will be sent with this request.
 	 * @param {*} body
 	 * @chainable
@@ -217,6 +230,16 @@ class Launchpad {
 	 */
 	filter(fieldOrFilter, opt_operatorOrValue, opt_value) {
 		this.getOrCreateQuery_().filter(fieldOrFilter, opt_operatorOrValue, opt_value);
+		return this;
+	}
+
+	/**
+	 * Adds a highlight entry to this `Query` instance.
+	 * @param {string} field The field's name.
+	 * @chainable
+	 */
+	highlight(field) {
+		this.getOrCreateQuery_().highlight(field);
 		return this;
 	}
 

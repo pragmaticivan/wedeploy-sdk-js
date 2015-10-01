@@ -248,8 +248,24 @@ describe('Launchpad', function() {
 		this.requests[0].respond(200);
 	});
 
+	it('should send request with query highlight in the body', function(done) {
+		Launchpad.url('/url').highlight('field').post().then(function(response) {
+			assert.strictEqual('{"highlight":["field"]}', response.request().body());
+			done();
+		});
+		this.requests[0].respond(200);
+	});
+
+	it('should send request with query aggregate in the body', function(done) {
+		Launchpad.url('/url').aggregate('name', 'field').post().then(function(response) {
+			assert.strictEqual('{"aggregation":[{"field":{"name":"name"}}]}', response.request().body());
+			done();
+		});
+		this.requests[0].respond(200);
+	});
+
 	it('should send request prioritize body instead of query in the body', function(done) {
-		Launchpad.url('/url').sort('id', 'desc').post("body").then(function(response) {
+		Launchpad.url('/url').sort('id', 'desc').post('body').then(function(response) {
 			assert.strictEqual('"body"', response.request().body());
 			done();
 		});
