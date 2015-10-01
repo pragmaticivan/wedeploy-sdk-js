@@ -21,7 +21,7 @@ class Search extends Embodied {
 	aggregate(name, aggregationOrField, opt_operator) {
 		var aggregation = aggregationOrField;
 		if (!(aggregation instanceof Aggregation)) {
-			aggregation = Aggregation.of(aggregationOrField, opt_operator);
+			aggregation = Aggregation.field(aggregationOrField, opt_operator);
 		}
 
 		var field = aggregation.getField();
@@ -96,7 +96,7 @@ class Search extends Embodied {
 	filter_(filterOrTextOrField, opt_textOrOperator, opt_value, opt_filterType) {
 		var filter = filterOrTextOrField;
 		if (opt_value) {
-			filter = Filter.of(filterOrTextOrField, opt_textOrOperator, opt_value);
+			filter = Filter.field(filterOrTextOrField, opt_textOrOperator, opt_value);
 		} else if (opt_textOrOperator) {
 			filter = SearchFilter.match(filterOrTextOrField, opt_textOrOperator);
 		} else if (!(filter instanceof Filter)) {

@@ -3,9 +3,9 @@
 import Filter from '../../src/api-query/Filter';
 
 describe('Filter', function() {
-	describe('Filter.of', function() {
+	describe('Filter.field', function() {
 		it('should create Filter for a custom operator', function() {
-			var filter = Filter.of('age', '>', 12);
+			var filter = Filter.field('age', '>', 12);
 			var body = {
 				age: {
 					operator: '>',
@@ -15,7 +15,7 @@ describe('Filter', function() {
 			assert.deepEqual(body, filter.body());
 			assert.strictEqual('{"age":{"operator":">","value":12}}', filter.toString());
 
-			filter = Filter.of('number', '<', 0);
+			filter = Filter.field('number', '<', 0);
 			body = {
 				number: {
 					operator: '<',
@@ -27,7 +27,7 @@ describe('Filter', function() {
 		});
 
 		it('should assume "=" operator if none is given', function() {
-			var filter = Filter.of('age', 12);
+			var filter = Filter.field('age', 12);
 			var body = {
 				age: {
 					operator: '=',
@@ -266,7 +266,7 @@ describe('Filter', function() {
 
 	describe('Filter.not', function() {
 		it('should negate an existing filter', function() {
-			var filter = Filter.not(Filter.of('age', '>', 12));
+			var filter = Filter.not(Filter.field('age', '>', 12));
 			var body = {
 				not: {
 					age: {

@@ -52,7 +52,7 @@ class SearchFilter extends Filter {
 		}
 
 		var field = arg2IsString ? fieldOrQuery : SearchFilter.ALL;
-		return Filter.of(field, 'common', value);
+		return Filter.field(field, 'common', value);
 	}
 
 	/**
@@ -97,7 +97,7 @@ class SearchFilter extends Filter {
 		if (range.to) {
 			value.max = range.to;
 		}
-		return Filter.of(field, 'gp', value);
+		return Filter.field(field, 'gp', value);
 	}
 
 	/**
@@ -107,7 +107,7 @@ class SearchFilter extends Filter {
 	 * @static
 	 */
 	static exists(field) {
-		return Filter.of(field, 'exists', null);
+		return Filter.field(field, 'exists', null);
 	}
 
 	/**
@@ -167,7 +167,7 @@ class SearchFilter extends Filter {
 		}
 
 		var field = arg2IsString ? fieldOrQuery : SearchFilter.ALL;
-		return Filter.of(field, operator, value);
+		return Filter.field(field, operator, value);
 	}
 
 	/**
@@ -182,7 +182,7 @@ class SearchFilter extends Filter {
 	static match(fieldOrQuery, opt_query) {
 		var field = core.isString(opt_query) ? fieldOrQuery : SearchFilter.ALL;
 		var query = core.isString(opt_query) ? opt_query : fieldOrQuery;
-		return Filter.of(field, 'match', query);
+		return Filter.field(field, 'match', query);
 	}
 
 	/**
@@ -192,7 +192,7 @@ class SearchFilter extends Filter {
 	 * @static
 	 */
 	static missing(field) {
-		return Filter.of(field, 'missing', null);
+		return Filter.field(field, 'missing', null);
 	}
 
 	/**
@@ -209,7 +209,7 @@ class SearchFilter extends Filter {
 		var value = {
 			query: core.isString(query) ? query : fieldOrQuery
 		};
-		return Filter.of(field, 'mlt', value);
+		return Filter.field(field, 'mlt', value);
 	}
 
 	/**
@@ -224,7 +224,7 @@ class SearchFilter extends Filter {
 	static phrase(fieldOrQuery, opt_query) {
 		var field = core.isString(opt_query) ? fieldOrQuery : SearchFilter.ALL;
 		var query = core.isString(opt_query) ? opt_query : fieldOrQuery;
-		return Filter.of(field, 'phrase', query);
+		return Filter.field(field, 'phrase', query);
 	}
 
 	/**
@@ -239,7 +239,7 @@ class SearchFilter extends Filter {
 	static phrasePrefix(fieldOrQuery, opt_query) {
 		var field = core.isString(opt_query) ? fieldOrQuery : SearchFilter.ALL;
 		var query = core.isString(opt_query) ? opt_query : fieldOrQuery;
-		return Filter.of(field, 'phrasePrefix', query);
+		return Filter.field(field, 'phrasePrefix', query);
 	}
 
 	/**
@@ -251,7 +251,7 @@ class SearchFilter extends Filter {
 	 */
 	static polygon(field, ...points) {
 		points = points.map(point => Embodied.toBody(point));
-		return Filter.of(field, 'gp', points);
+		return Filter.field(field, 'gp', points);
 	}
 
 	/**
@@ -266,7 +266,7 @@ class SearchFilter extends Filter {
 	static prefix(fieldOrQuery, opt_query) {
 		var field = opt_query ? fieldOrQuery : SearchFilter.ALL;
 		var query = opt_query ? opt_query : fieldOrQuery;
-		return Filter.of(field, 'pre', query);
+		return Filter.field(field, 'pre', query);
 	}
 
 	/**
@@ -282,7 +282,7 @@ class SearchFilter extends Filter {
 		if (!(range instanceof Range)) {
 			range = Range.range(rangeOrMin, opt_max);
 		}
-		return Filter.of(field, 'range', range);
+		return Filter.field(field, 'range', range);
 	}
 
 	/**
@@ -298,7 +298,7 @@ class SearchFilter extends Filter {
 			type: 'geometrycollection',
 			geometries: shapes
 		};
-		return Filter.of(field, 'gs', value);
+		return Filter.field(field, 'gs', value);
 	}
 }
 

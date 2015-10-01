@@ -128,7 +128,7 @@ describe('Launchpad', function() {
 	});
 
 	it('should transform Filter into Query when sending via GET', function(done) {
-		Launchpad.url('/url').get(Filter.of('name', 'foo')).then(function(response) {
+		Launchpad.url('/url').get(Filter.field('name', 'foo')).then(function(response) {
 			assert.strictEqual('/url', response.request().url());
 			assert.strictEqual('GET', response.request().method());
 			assert.ok(!response.request().body());
@@ -357,7 +357,7 @@ describe('Launchpad', function() {
 	});
 
 	it('should wrap Filter in query when passed as request body', function(done) {
-		Launchpad.url('/url').post(Filter.of('name', 'foo')).then(function(response) {
+		Launchpad.url('/url').post(Filter.field('name', 'foo')).then(function(response) {
 			var bodyStr = '{"filter":[{"name":{"operator":"=","value":"foo"}}]}';
 			assert.strictEqual(bodyStr, response.request().body());
 			done();

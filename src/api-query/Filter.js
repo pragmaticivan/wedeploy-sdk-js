@@ -211,7 +211,7 @@ class Filter extends Embodied {
 	 * @return {!Filter}
    * @static
 	 */
-	static of(field, operatorOrValue, opt_value) {
+	static field(field, operatorOrValue, opt_value) {
 		return new Filter(field, operatorOrValue, opt_value);
 	}
 
@@ -248,7 +248,7 @@ class Filter extends Embodied {
 	static toFilter(fieldOrFilter, opt_operatorOrValue, opt_value) {
 		var filter = fieldOrFilter;
 		if (!(filter instanceof Filter)) {
-			filter = Filter.of(fieldOrFilter, opt_operatorOrValue, opt_value);
+			filter = Filter.field(fieldOrFilter, opt_operatorOrValue, opt_value);
 		}
 		return filter;
 	}

@@ -231,9 +231,9 @@ describe('Aggregation', function() {
 		});
 	});
 
-	describe('Aggregation.of', function() {
+	describe('Aggregation.field', function() {
 		it('should create an aggregation', function() {
-			var aggregation = Aggregation.of('myField', 'myOperator');
+			var aggregation = Aggregation.field('myField', 'myOperator');
 			assert.strictEqual('myField', aggregation.getField());
 			assert.strictEqual('myOperator', aggregation.getOperator());
 			assert.ok(!aggregation.getValue());

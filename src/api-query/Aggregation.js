@@ -27,7 +27,7 @@ class Aggregation {
 	 * @static
 	 */
 	static avg(field) {
-		return Aggregation.of(field, 'avg');
+		return Aggregation.field(field, 'avg');
 	}
 
 	/**
@@ -37,7 +37,7 @@ class Aggregation {
 	 * @static
 	 */
 	static count(field) {
-		return Aggregation.of(field, 'count');
+		return Aggregation.field(field, 'count');
 	}
 
 	/**
@@ -59,7 +59,7 @@ class Aggregation {
 	 * @static
 	 */
 	static extendedStats(field) {
-		return Aggregation.of(field, 'extendedStats');
+		return Aggregation.field(field, 'extendedStats');
 	}
 
 	/**
@@ -104,7 +104,7 @@ class Aggregation {
 	 * @static
 	 */
 	static max(field) {
-		return Aggregation.of(field, 'max');
+		return Aggregation.field(field, 'max');
 	}
 
 	/**
@@ -114,7 +114,7 @@ class Aggregation {
 	 * @static
 	 */
 	static min(field) {
-		return Aggregation.of(field, 'min');
+		return Aggregation.field(field, 'min');
 	}
 
 	/**
@@ -124,7 +124,7 @@ class Aggregation {
 	 * @static
 	 */
 	static missing(field) {
-		return Aggregation.of(field, 'missing');
+		return Aggregation.field(field, 'missing');
 	}
 
 	/**
@@ -134,7 +134,7 @@ class Aggregation {
 	 * @return {!Aggregation}
 	 * @static
 	 */
-	static of(field, operator) {
+	static field(field, operator) {
 		return new Aggregation(field, operator);
 	}
 
@@ -156,7 +156,7 @@ class Aggregation {
 	 * @static
 	 */
 	static stats(field) {
-		return Aggregation.of(field, 'stats');
+		return Aggregation.field(field, 'stats');
 	}
 
 	/**
@@ -166,7 +166,7 @@ class Aggregation {
 	 * @static
 	 */
 	static sum(field) {
-		return Aggregation.of(field, 'sum');
+		return Aggregation.field(field, 'sum');
 	}
 
 	/**
@@ -176,7 +176,7 @@ class Aggregation {
 	 * @static
 	 */
 	static terms(field) {
-		return Aggregation.of(field, 'terms');
+		return Aggregation.field(field, 'terms');
 	}
 }
 
