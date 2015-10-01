@@ -249,14 +249,14 @@ describe('Query', function() {
 		});
 	});
 
-	describe('from', function() {
+	describe('offset', function() {
 		it('should be chainnable', function() {
 			var query = Query.builder();
-			assert.strictEqual(query, query.from(10));
+			assert.strictEqual(query, query.offset(10));
 		});
 
 		it('should set the query type to the given value', function() {
-			var query = Query.builder().from(10);
+			var query = Query.builder().offset(10);
 			var body = {
 				offset: 10
 			};
@@ -287,7 +287,7 @@ describe('Query', function() {
 				.filter(Filter.gt('age', 12))
 				.sort('age', 'desc')
 				.sort('name')
-				.from(5)
+				.offset(5)
 				.limit(10)
 				.fetch();
 			var bodyStr = '{' +

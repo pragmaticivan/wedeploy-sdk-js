@@ -88,7 +88,7 @@ class Query extends Embodied {
 	 *   by this query.
 	 * @chainnable
 	 */
-	from(offset) {
+	offset(offset) {
 		this.body_.offset = offset;
 		return this;
 	}
