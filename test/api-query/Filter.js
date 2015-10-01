@@ -294,7 +294,7 @@ describe('Filter', function() {
 
 			var body = {
 				point: {
-					operator: 'gp',
+					operator: 'gd',
 					value: {
 						location: [0, 0],
 						max: 2
@@ -303,16 +303,16 @@ describe('Filter', function() {
 			};
 			assert.deepEqual(body, filter.body());
 
-			var bodyStr = '{"point":{"operator":"gp","value":{"location":[0,0],"max":2}}}';
+			var bodyStr = '{"point":{"operator":"gd","value":{"location":[0,0],"max":2}}}';
 			assert.strictEqual(bodyStr, filter.toString());
 		});
 
-		it('should create Filter with "gp" operator from location and distance', function() {
+		it('should create Filter with "gd" operator from location and distance', function() {
 			var filter = Filter.distance('point', Geo.point(0, 0), 2);
 
 			var body = {
 				point: {
-					operator: 'gp',
+					operator: 'gd',
 					value: {
 						location: [0, 0],
 						max: 2
@@ -321,16 +321,16 @@ describe('Filter', function() {
 			};
 			assert.deepEqual(body, filter.body());
 
-			var bodyStr = '{"point":{"operator":"gp","value":{"location":[0,0],"max":2}}}';
+			var bodyStr = '{"point":{"operator":"gd","value":{"location":[0,0],"max":2}}}';
 			assert.strictEqual(bodyStr, filter.toString());
 		});
 
-		it('should create Filter with "gp" operator from location and full range', function() {
+		it('should create Filter with "gd" operator from location and full range', function() {
 			var filter = Filter.distance('point', [0, 0], Range.range(1, 2));
 
 			var body = {
 				point: {
-					operator: 'gp',
+					operator: 'gd',
 					value: {
 						location: [0, 0],
 						min: 1,
@@ -340,16 +340,16 @@ describe('Filter', function() {
 			};
 			assert.deepEqual(body, filter.body());
 
-			var bodyStr = '{"point":{"operator":"gp","value":{"location":[0,0],"min":1,"max":2}}}';
+			var bodyStr = '{"point":{"operator":"gd","value":{"location":[0,0],"min":1,"max":2}}}';
 			assert.strictEqual(bodyStr, filter.toString());
 		});
 
-		it('should create Filter with "gp" operator from location and min range', function() {
+		it('should create Filter with "gd" operator from location and min range', function() {
 			var filter = Filter.distance('point', [0, 0], Range.from(1));
 
 			var body = {
 				point: {
-					operator: 'gp',
+					operator: 'gd',
 					value: {
 						location: [0, 0],
 						min: 1
@@ -358,7 +358,7 @@ describe('Filter', function() {
 			};
 			assert.deepEqual(body, filter.body());
 
-			var bodyStr = '{"point":{"operator":"gp","value":{"location":[0,0],"min":1}}}';
+			var bodyStr = '{"point":{"operator":"gd","value":{"location":[0,0],"min":1}}}';
 			assert.strictEqual(bodyStr, filter.toString());
 		});
 	});
