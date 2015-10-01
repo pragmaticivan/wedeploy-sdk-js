@@ -3790,8 +3790,6 @@ this.launchpadNamed = this.launchpadNamed || {};
 			/**
     * Adds a highlight entry to this `Query` instance.
     * @param {string} field The field's name.
-    * @param {number} opt_size The highlight size.
-    * @param {number} opt_count The highlight count.
     * @chainnable
     */
 		}, {
@@ -3944,8 +3942,6 @@ this.launchpadNamed = this.launchpadNamed || {};
 			/**
     * Adds a highlight entry to this `Query` instance.
     * @param {string} field The field's name.
-    * @param {number} opt_size The highlight size.
-    * @param {number} opt_count The highlight count.
     * @static
     */
 		}, {
@@ -4293,6 +4289,21 @@ this.launchpadNamed = this.launchpadNamed || {};
 			}
 
 			/**
+    * Adds an aggregation to this `Query` instance.
+    * @param {string} name The aggregation name.
+    * @param {!Aggregation|string} aggregationOrField Either an
+    *   `Aggregation` instance or the name of the aggregation field.
+    * @param {string} opt_operator The aggregation operator.
+    * @chainable
+    */
+		}, {
+			key: 'aggregate',
+			value: function aggregate(name, aggregationOrField, opt_operator) {
+				this.getOrCreateQuery_().aggregate(name, aggregationOrField, opt_operator);
+				return this;
+			}
+
+			/**
     * Sets the body that will be sent with this request.
     * @param {*} body
     * @chainable
@@ -4327,6 +4338,18 @@ this.launchpadNamed = this.launchpadNamed || {};
 			key: 'filter',
 			value: function filter(fieldOrFilter, opt_operatorOrValue, opt_value) {
 				this.getOrCreateQuery_().filter(fieldOrFilter, opt_operatorOrValue, opt_value);
+				return this;
+			}
+
+			/**
+    * Adds a highlight entry to this `Query` instance.
+    * @param {string} field The field's name.
+    * @chainable
+    */
+		}, {
+			key: 'highlight',
+			value: function highlight(field) {
+				this.getOrCreateQuery_().highlight(field);
 				return this;
 			}
 
