@@ -229,7 +229,7 @@ class SearchFilter extends Filter {
 	}
 
 	/**
-	 * Returns a SearchFilter instance that uses the "pre" operator.
+	 * Returns a SearchFilter instance that uses the "prefix" operator.
 	 * @param {string} fieldOrQuery If no second argument is given, this should
 	 *   be the query string, in which case all fields will be matched. Otherwise,
 	 *   this should be the name of the field to match.
@@ -240,7 +240,7 @@ class SearchFilter extends Filter {
 	static prefix(fieldOrQuery, opt_query) {
 		var field = opt_query ? fieldOrQuery : SearchFilter.ALL;
 		var query = opt_query ? opt_query : fieldOrQuery;
-		return Filter.field(field, 'pre', query);
+		return Filter.field(field, 'prefix', query);
 	}
 
 	/**

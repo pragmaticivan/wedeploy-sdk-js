@@ -415,28 +415,28 @@ describe('SearchFilter', function() {
 	});
 
 	describe('SearchFilter.prefix', function() {
-		it('should create SearchFilter with "pre" operator on all fields for given query', function() {
+		it('should create SearchFilter with "prefix" operator on all fields for given query', function() {
 			var filter = SearchFilter.prefix('myPrefix');
 			var body = {
 				'*': {
-					operator: 'pre',
+					operator: 'prefix',
 					value: 'myPrefix'
 				}
 			};
 			assert.deepEqual(body, filter.body());
-			assert.strictEqual('{"*":{"operator":"pre","value":"myPrefix"}}', filter.toString());
+			assert.strictEqual('{"*":{"operator":"prefix","value":"myPrefix"}}', filter.toString());
 		});
 
-		it('should create SearchFilter with "pre" operator for given field and query', function() {
+		it('should create SearchFilter with "prefix" operator for given field and query', function() {
 			var filter = SearchFilter.prefix('name', 'myPrefix');
 			var body = {
 				name: {
-					operator: 'pre',
+					operator: 'prefix',
 					value: 'myPrefix'
 				}
 			};
 			assert.deepEqual(body, filter.body());
-			assert.strictEqual('{"name":{"operator":"pre","value":"myPrefix"}}', filter.toString());
+			assert.strictEqual('{"name":{"operator":"prefix","value":"myPrefix"}}', filter.toString());
 		});
 	});
 
