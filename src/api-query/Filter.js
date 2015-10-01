@@ -148,7 +148,7 @@ class Filter extends Embodied {
 		if (range.to) {
 			value.max = range.to;
 		}
-		return Filter.field(field, 'gp', value);
+		return Filter.field(field, 'gd', value);
 	}
 
 	/**
