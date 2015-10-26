@@ -90,6 +90,21 @@ class Launchpad {
 	}
 
 	/**
+	 * Adds a key/value pair to be sent via the body in a `multipart/form-data` format.
+	 * If the body is set by other means (for example, through the `body` method), this
+	 * will be ignored.
+	 * @param {string} name
+	 * @param {*} value
+	 */
+	form(name, value) {
+		if (!this.formData_) {
+			this.formData_ = new FormData();
+		}
+		this.formData_.append(name, value);
+		return this;
+	}
+
+	/**
 	 * Sends message with GET http verb.
 	 * @param {*} opt_params Optional params to be added to the request url.
 	 * @return {Promise}
@@ -367,6 +382,11 @@ class Launchpad {
 	 */
 	encode(clientRequest) {
 		var body = clientRequest.body();
+
+		if (!body && this.formData_) {
+			body = this.formData_;
+			clientRequest.body(body);
+		}
 
 		if (core.isElement(body)) {
 			body = new FormData(body);

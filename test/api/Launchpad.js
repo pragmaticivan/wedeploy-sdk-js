@@ -413,6 +413,26 @@ describe('Launchpad', function() {
 		this.requests[0].respond(200);
 	});
 
+	it('should send data passed through "form" method as FormData object via the body', function(done) {
+		Launchpad.url('/url').form('age', 12).post().then(function(response) {
+			var body = response.request().body();
+			assert.ok(body instanceof FormData);
+			assert.strictEqual(undefined, response.request().headers().get('content-type'));
+			done();
+		});
+		this.requests[0].respond(200);
+	});
+
+	it('should not send data passed through "form" method via the body if the body is already set', function(done) {
+		Launchpad.url('/url').form('age', 12).post({}).then(function(response) {
+			var body = response.request().body();
+			assert.ok(!(body instanceof FormData));
+			assert.strictEqual('{}', body);
+			done();
+		});
+		this.requests[0].respond(200);
+	});
+
 	it('should response succeeded for status codes 2xx', function(done) {
 		Launchpad.url('/url').get().then(function(response) {
 			assert.ok(response.succeeded());
