@@ -310,6 +310,12 @@ class Launchpad {
 		return this;
 	}
 
+	/**
+	 * Gets the currently used `Query` object. If none exists yet,
+	 * a new one is created.
+	 * @return {Query}
+	 * @protected
+	 */
 	getOrCreateQuery_() {
 		if (!this.query_) {
 			this.query_ = new Query();
@@ -349,6 +355,8 @@ class Launchpad {
 		if (!core.isDefAndNotNull(clientRequest.body())) {
 			if (this.query_) {
 				clientRequest.body(this.query_.body());
+			} else if (this.formData_) {
+				clientRequest.body(this.formData_);
 			}
 		}
 
@@ -382,11 +390,6 @@ class Launchpad {
 	 */
 	encode(clientRequest) {
 		var body = clientRequest.body();
-
-		if (!body && this.formData_) {
-			body = this.formData_;
-			clientRequest.body(body);
-		}
 
 		if (core.isElement(body)) {
 			body = new FormData(body);

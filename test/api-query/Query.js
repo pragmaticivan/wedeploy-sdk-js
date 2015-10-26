@@ -234,6 +234,15 @@ describe('Query', function() {
 			assert.deepEqual(body, query.body());
 			assert.strictEqual('{"type":"fetch"}', query.toString());
 		});
+
+		it('should set the query type to last selected option', function() {
+			var query = Query.fetch().count();
+			var body = {
+				type: 'count'
+			};
+			assert.deepEqual(body, query.body());
+			assert.strictEqual('{"type":"count"}', query.toString());
+		});
 	});
 
 	describe('offset', function() {

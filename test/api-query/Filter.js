@@ -235,6 +235,16 @@ describe('Filter', function() {
 	});
 
 	describe('Composition', function() {
+		it('should compose current filter with another using the "add" method', function() {
+			var filter = Filter.gt('age', 12).add('and', Filter.lt('age', 15));
+			var bodyStr = '{"and":[{"age":{"operator":">","value":12}},' +
+				'{"age":{"operator":"<","value":15}}]}';
+			assert.strictEqual(bodyStr, filter.toString());
+
+			filter = Filter.gt('age', 12).add('and', 'age', '<', 15);
+			assert.strictEqual(bodyStr, filter.toString());
+		});
+
 		it('should compose current filter with another using the "and" operator', function() {
 			var filter = Filter.gt('age', 12).and(Filter.lt('age', 15));
 			var bodyStr = '{"and":[{"age":{"operator":">","value":12}},' +
@@ -252,6 +262,14 @@ describe('Filter', function() {
 			assert.strictEqual(bodyStr, filter.toString());
 
 			filter = Filter.gt('age', 12).or('age', '<', 15);
+			assert.strictEqual(bodyStr, filter.toString());
+		});
+
+		it('should compose current filter with multiple anothers using the "addMany" method', function() {
+			var filter = Filter.gt('age', 12).addMany('and', Filter.lt('age', 15), Filter.equal('age', 13));
+			var bodyStr = '{"and":[{"age":{"operator":">","value":12}},' +
+				'{"age":{"operator":"<","value":15}},' +
+				'{"age":{"operator":"=","value":13}}]}';
 			assert.strictEqual(bodyStr, filter.toString());
 		});
 	});

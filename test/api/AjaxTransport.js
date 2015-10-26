@@ -160,4 +160,31 @@ describe('AjaxTransport', function() {
 		this.requests[0].respond(200);
 	});
 
+	it('should parse request query string without params', function(done) {
+		var transport = new AjaxTransport();
+		var clientRequest = new ClientRequest();
+		clientRequest.url('/url?foo=1');
+		transport.request(clientRequest.url(), clientRequest.method()).then(function(xhrResponse) {
+			assert.strictEqual('/url?foo=1', xhrResponse.url);
+			done();
+		});
+		this.requests[0].respond(200);
+	});
+
+	it('should cancel request if given timeout is reached', function(done) {
+		var transport = new AjaxTransport();
+		var clientRequest = new ClientRequest();
+		clientRequest.url('/url?foo=1');
+		transport.request(
+			clientRequest.url(),
+			clientRequest.method(),
+			null,
+			null,
+			null,
+			100,
+			false
+		).catch(function() {
+			done();
+		});
+	});
 });

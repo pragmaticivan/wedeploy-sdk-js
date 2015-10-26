@@ -264,6 +264,14 @@ describe('Launchpad', function() {
 		this.requests[0].respond(200);
 	});
 
+	it('should send request with multiple queries in the body', function(done) {
+		Launchpad.url('/url').offset(0).limit(50).post().then(function(response) {
+			assert.strictEqual('{"offset":0,"limit":50}', response.request().body());
+			done();
+		});
+		this.requests[0].respond(200);
+	});
+
 	it('should send request prioritize body instead of query in the body', function(done) {
 		Launchpad.url('/url').sort('id', 'desc').post('body').then(function(response) {
 			assert.strictEqual('"body"', response.request().body());
@@ -414,7 +422,7 @@ describe('Launchpad', function() {
 	});
 
 	it('should send data passed through "form" method as FormData object via the body', function(done) {
-		Launchpad.url('/url').form('age', 12).post().then(function(response) {
+		Launchpad.url('/url').form('age', 12).form('weight', 100).post().then(function(response) {
 			var body = response.request().body();
 			assert.ok(body instanceof FormData);
 			assert.strictEqual(undefined, response.request().headers().get('content-type'));
