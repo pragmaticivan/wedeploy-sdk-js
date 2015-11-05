@@ -1,5 +1,5 @@
 {
-  "name": "api.js",
+  "name": "launchpad-client",
   "version": "0.0.0",
   "description": "Launchpad Api",
   "scripts": {
