@@ -11,7 +11,6 @@ import MultiMap from './MultiMap';
 
 /**
  * Base client contains code that is same for all transports.
- * @interface
  */
 class Launchpad {
 
@@ -239,7 +238,7 @@ class Launchpad {
 	 * Adds a filter to this Query.
 	 * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
 	 *   name of the field to filter by.
-	 * @param {*} operatorOrValue Either the field's operator or its value.
+	 * @param {*} opt_operatorOrValue Either the field's operator or its value.
 	 * @param {*} opt_value The filter's value.
 	 * @chainable
 	 */

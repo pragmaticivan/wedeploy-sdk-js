@@ -8,7 +8,6 @@ import { CancellablePromise as Promise } from 'bower:metal-promise/src/promise/P
 
 /**
  * Provides a convenient interface for data transport.
- * @interface
  */
 class AjaxTransport extends Transport {
 

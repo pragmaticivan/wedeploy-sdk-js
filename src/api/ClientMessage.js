@@ -6,7 +6,6 @@ import MultiMap from './MultiMap';
 /**
  */
 class ClientMessage {
-
 	constructor() {
 		this.headers_ = new MultiMap();
 	}
@@ -42,7 +41,7 @@ class ClientMessage {
 
 	/**
 	 * Fluent getter and setter for request headers.
-	 * @param {MultiMap|object} opt_params Request headers list
+	 * @param {MultiMap|object} opt_headers Request headers list
 	 *   to be set.
 	 * @return {MultiMap} Returns map of request headers.
 	 */

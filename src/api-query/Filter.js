@@ -65,7 +65,7 @@ class Filter extends Embodied {
 	/**
 	 * Returns a Filter instance that uses the "any" operator.
 	 * @param {string} field The name of the field to filter by.
-	 * @param {!Array|(...*)} value A variable amount of values to be used with
+	 * @param {!(Array|...*)} values A variable amount of values to be used with
 	 *   the "none" operator. Can be passed either as a single array or as
 	 *   separate params.
 	 * @return {!Filter}
@@ -353,7 +353,7 @@ class Filter extends Embodied {
 	 * @param {string} fieldOrQuery If no second string argument is given, this
 	 *   should be the query string, in which case all fields will be matched.
 	 *   Otherwise, this should be the name of the field to match.
-	 * @param {?string} opt_query The query string.
+	 * @param {?string} query The query string.
 	 * @return {!Filter}
 	 * @static
 	 */
@@ -390,7 +390,7 @@ class Filter extends Embodied {
 	/**
 	 * Returns a Filter instance that uses the "none" operator.
 	 * @param {string} field The name of the field to filter by.
-	 * @param {!Array|(...*)} value A variable amount of values to be used with
+	 * @param {!(Array|...*)} value A variable amount of values to be used with
 	 *   the "none" operator. Can be passed either as a single array or as
 	 *   separate params.
 	 * @return {!Filter}

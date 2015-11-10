@@ -104,7 +104,8 @@ class MultiMap extends Disposable {
 	/**
 	 * Sets the value of a key name. Relevant to replace the current values with
 	 * a new one.
-	 * @param {string} name  [description]
+	 * @param {string} name
+	 * @param {*} value
 	 * @chainable
 	 */
 	set(name, value) {

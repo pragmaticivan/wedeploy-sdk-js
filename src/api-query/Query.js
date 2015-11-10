@@ -15,6 +15,7 @@ class Query extends Embodied {
 	 * @param {!Aggregation|string} aggregationOrField Either an
 	 *   `Aggregation` instance or the name of the aggregation field.
 	 * @param {string} opt_operator The aggregation operator.
+	 * @return {!Query}
 	 * @static
 	 */
 	static aggregate(name, aggregationOrField, opt_operator) {
@@ -23,6 +24,7 @@ class Query extends Embodied {
 
 	/**
 	 * Sets this query's type to "count".
+	 * @return {!Query}
 	 * @static
 	 */
 	static count() {
@@ -31,6 +33,7 @@ class Query extends Embodied {
 
 	/**
 	 * Sets this query's type to "fetch".
+	 * @return {!Query}
 	 * @static
 	 */
 	static fetch() {
@@ -41,8 +44,9 @@ class Query extends Embodied {
 	 * Adds a filter to this Query.
 	 * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
 	 *   name of the field to filter by.
-	 * @param {*} operatorOrValue Either the field's operator or its value.
+	 * @param {*} opt_operatorOrValue Either the field's operator or its value.
 	 * @param {*} opt_value The filter's value.
+	 * @return {!Query}
 	 * @static
 	 */
 	static filter(fieldOrFilter, opt_operatorOrValue, opt_value) {
@@ -53,6 +57,7 @@ class Query extends Embodied {
 	 * Sets the query offset.
 	 * @param {number} offset The index of the first entry that should be returned
 	 *   by this query.
+	 * @return {!Query}
 	 * @static
 	 */
 	static offset(offset) {
@@ -62,6 +67,7 @@ class Query extends Embodied {
 	/**
 	 * Adds a highlight entry to this `Query` instance.
 	 * @param {string} field The field's name.
+	 * @return {!Query}
 	 * @static
 	 */
 	static highlight(field) {
@@ -71,6 +77,7 @@ class Query extends Embodied {
 	/**
 	 * Sets the query limit.
 	 * @param {number} limit The max amount of entries that this query should return.
+	 * @return {!Query}
 	 * @static
 	 */
 	static limit(limit) {
@@ -89,6 +96,7 @@ class Query extends Embodied {
 	 *   match filter, or the operator that should be used.
 	 * @param {*} opt_value The value to be used by the filter. Should
 	 *   only be passed if an operator was passed as the second argument.
+	 * @return {!Query}
 	 * @static
 	 */
 	static search(filterOrTextOrField, opt_textOrOperator, opt_value) {
@@ -101,6 +109,7 @@ class Query extends Embodied {
 	 * @param {string} field The field that the query should be sorted by.
 	 * @param {string} opt_direction The direction the sort operation should use.
 	 *   If none is given, "asc" is used by default.
+	 * @return {!Query}
 	 * @static
 	 */
 	static sort(field, opt_direction) {
@@ -110,6 +119,7 @@ class Query extends Embodied {
 	/**
 	 * Sets the query type.
 	 * @param {string} type The query's type. For example: "count", "fetch".
+	 * @return {!Query}
 	 * @static
 	 */
 	static type(type) {
@@ -167,7 +177,7 @@ class Query extends Embodied {
 	 * Adds a filter to this Query.
 	 * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
 	 *   name of the field to filter by.
-	 * @param {*} operatorOrValue Either the field's operator or its value.
+	 * @param {*} opt_operatorOrValue Either the field's operator or its value.
 	 * @param {*} opt_value The filter's value.
 	 * @chainnable
 	 */
