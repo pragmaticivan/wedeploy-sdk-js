@@ -68,16 +68,14 @@ class Util {
 	/**
 	 * Joins two paths.
 	 * @param {string} basePath
-	 * @param {string} path
+	 * @param {...string} ...paths
 	 */
-	static joinPaths(basePath, path) {
+	static joinPaths(basePath, ...paths) {
 		if (basePath.charAt(basePath.length - 1) === '/') {
 			basePath = basePath.substring(0, basePath.length - 1);
 		}
-		if (path.charAt(0) === '/') {
-			path = path.substring(1);
-		}
-		return [basePath, path].join('/').replace(/\/$/, '');
+		paths = paths.map(path => path.charAt(0) === '/' ? path.substring(1) : path);
+		return [basePath].concat(paths).join('/').replace(/\/$/, '');
 	}
 
 	/**

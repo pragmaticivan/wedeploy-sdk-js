@@ -23,6 +23,7 @@ describe('Util', function() {
 		assert.strictEqual('foo/bar', Util.joinPaths('foo/', 'bar'));
 		assert.strictEqual('foo/bar', Util.joinPaths('foo', 'bar'));
 		assert.strictEqual('foo/bar', Util.joinPaths('foo', '/bar'));
+		assert.strictEqual('foo/bar/bazz', Util.joinPaths('foo', '/bar', 'bazz'));
 	});
 
 	it('should join paths with full urls', function() {

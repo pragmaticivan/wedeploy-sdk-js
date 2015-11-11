@@ -282,10 +282,10 @@ describe('Launchpad', function() {
 
 	it('should create new client instance based on parent client', function() {
 		var books = Launchpad.url('/books');
-		var book1 = books.path('/1');
+		var book1 = books.path('/1', '/2', '3');
 		assert.notStrictEqual(book1, books);
 		assert.strictEqual('/books', books.url());
-		assert.strictEqual('/books/1', book1.url());
+		assert.strictEqual('/books/1/2/3', book1.url());
 	});
 
 	it('should send request to url without path', function(done) {

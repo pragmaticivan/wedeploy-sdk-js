@@ -13,14 +13,19 @@ import MultiMap from './MultiMap';
  * Base client contains code that is same for all transports.
  */
 class Launchpad {
-
-	constructor() {
+	/**
+	 * Launchpad constructor function.
+	 * @param {string} url The base url.
+	 * @param {...string} paths Any amount of paths to be appended to the base url.
+	 * @constructor
+	 */
+	constructor(url, ...paths) {
 		if (arguments.length === 0) {
 			throw new Error('Invalid arguments, try `new Launchpad(baseUrl, url)`');
 		}
 
 		this.body_ = null;
-		this.url_ = Util.joinPaths(arguments[0] || '', arguments[1] || '');
+		this.url_ = Util.joinPaths(url || '', ...paths);
 		this.headers_ = new MultiMap();
 		this.params_ = new MultiMap();
 
@@ -74,9 +79,11 @@ class Launchpad {
 
 	/**
 	 * Creates new {@link LaunchpadBaseClient}.
+	 * @param {...string} paths Any number of paths.
+	 * @return {!Launchpad} A new `Launchpad` instance for handling the given paths.
 	 */
-	path(path) {
-		return new Launchpad(this.url(), path).use(this.customTransport_);
+	path(...paths) {
+		return new Launchpad(this.url(), ...paths).use(this.customTransport_);
 	}
 
 	/**
