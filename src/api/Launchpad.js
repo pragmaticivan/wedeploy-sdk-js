@@ -70,7 +70,7 @@ class Launchpad {
 			Util.addParametersToUrlQueryString(clientRequest.url(), clientRequest.params()));
 
 		opt_options = opt_options || {
-			forceNew: true
+				forceNew: true
 		};
 		opt_options.path = opt_options.path || url[1];
 
