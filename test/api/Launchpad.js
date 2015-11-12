@@ -1,5 +1,6 @@
 'use strict';
 
+import Auth from '../../src/api/Auth';
 import Embodied from '../../src/api-query/Embodied';
 import Filter from '../../src/api-query/Filter';
 import Launchpad from '../../src/api/Launchpad';
@@ -350,6 +351,39 @@ describe('Launchpad', function() {
 			.get()
 			.then(function(response) {
 				assert.strictEqual('{"content-type":["application/json"],"x-pjax":["true"],"x-requested-with":["XMLHttpRequest"],"header":[2]}', response.request().headers().toString());
+				done();
+			});
+		this.requests[0].respond(200);
+	});
+
+	it('should send request with authorization token', function(done) {
+		Launchpad.url('/url/a')
+			.auth('My Token')
+			.get()
+			.then(function(response) {
+				assert.strictEqual('Bearer My Token', response.request().headers().get('Authorization'));
+				done();
+			});
+		this.requests[0].respond(200);
+	});
+
+	it('should send request with authorization username and password', function(done) {
+		Launchpad.url('/url/a')
+			.auth('username', 'password')
+			.get()
+			.then(function(response) {
+				assert.strictEqual(0, response.request().headers().get('Authorization').indexOf('Basic '));
+				done();
+			});
+		this.requests[0].respond(200);
+	});
+
+	it('should send request with authorization info from Auth instance', function(done) {
+		Launchpad.url('/url/a')
+			.auth(Auth.create('My Token'))
+			.get()
+			.then(function(response) {
+				assert.strictEqual('Bearer My Token', response.request().headers().get('Authorization'));
 				done();
 			});
 		this.requests[0].respond(200);

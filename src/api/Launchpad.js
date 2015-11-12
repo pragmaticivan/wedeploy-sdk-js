@@ -1,6 +1,7 @@
 'use strict';
 
 import core from 'bower:metal/src/core';
+import Auth from '../api/Auth';
 import Embodied from '../api-query/Embodied';
 import Filter from '../api-query/Filter';
 import Query from '../api-query/Query';
@@ -34,6 +35,7 @@ class Launchpad {
 			throw new Error('Invalid arguments, try `new Launchpad(baseUrl, url)`');
 		}
 
+		this.auth_ = null;
 		this.body_ = null;
 		this.url_ = Util.joinPaths(url || '', ...paths);
 		this.headers_ = new MultiMap();
@@ -54,6 +56,22 @@ class Launchpad {
 	 */
 	aggregate(name, aggregationOrField, opt_operator) {
 		this.getOrCreateQuery_().aggregate(name, aggregationOrField, opt_operator);
+		return this;
+	}
+
+	/**
+	 * Adds authorization information to this request.
+	 * @param {!Auth|string} authOrTokenOrUsername Either an {@link Auth} instance,
+	 *   an authorization token, or the username.
+	 * @param {string=} opt_password If a username is given as the first param,
+	 *   this should be the password.
+	 * @chainable
+	 */
+	auth(authOrTokenOrUsername, opt_password) {
+		this.auth_ = authOrTokenOrUsername;
+		if (!(this.auth_ instanceof Auth)) {
+			this.auth_ = Auth.create(authOrTokenOrUsername, opt_password);
+		}
 		return this;
 	}
 
@@ -176,6 +194,7 @@ class Launchpad {
 		}
 
 		this.encodeParams_(clientRequest);
+		this.resolveAuthentication_(clientRequest);
 
 		return clientRequest;
 	}
@@ -363,6 +382,23 @@ class Launchpad {
 	 */
 	put(opt_body) {
 		return this.sendAsync('PUT', opt_body);
+	}
+
+	/**
+	 * Adds the authentication information to the request.
+	 * @param {!ClientRequest} clientRequest
+	 * @protected
+	 */
+	resolveAuthentication_(clientRequest) {
+		if (!this.auth_) {
+			return;
+		}
+		if (this.auth_.hasToken()) {
+			clientRequest.header('Authorization', 'Bearer ' + this.auth_.token());
+		} else {
+			var credentials = this.auth_.username() + ':' + this.auth_.password();
+			clientRequest.header('Authorization', 'Basic ' + btoa(credentials));
+		}
 	}
 
 	/**
