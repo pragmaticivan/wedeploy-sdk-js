@@ -8,15 +8,16 @@ import Range from './Range';
 
 /**
  * Class responsible for building filters.
+ * @extends {Embodied}
  */
 class Filter extends Embodied {
 	/**
-	 * Constructs a Filter instance.
+	 * Constructs a {@link Filter} instance.
 	 * @param {string} field The name of the field to filter by.
 	 * @param {*} operatorOrValue If a third param is given, this should
 	 *   be the filter's operator (like ">="). Otherwise, this will be
 	 *   used as the filter's value, and the filter's operator will be "=".
-	 * @param {*} opt_value The filter's value.
+	 * @param {*=} opt_value The filter's value.
 	 * @constructor
 	 */
 	constructor(field, operatorOrValue, opt_value) {
@@ -27,10 +28,10 @@ class Filter extends Embodied {
 	/**
 	 * Adds a filter to be composed with this filter using the given operator.
 	 * @param {string} operator
-	 * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
+	 * @param {!Filter|string} fieldOrFilter Either a {@link Filter} instance or the
 	 *   name of the field to filter by.
-	 * @param {*} opt_operatorOrValue Either the field's operator or its value.
-	 * @param {*} opt_value The filter's value.
+	 * @param {*=} opt_operatorOrValue Either the field's operator or its value.
+	 * @param {*=} opt_value The filter's value.
 	 * @chainnable
 	 */
 	add(operator, fieldOrFilter, opt_operatorOrValue, opt_value) {
@@ -52,10 +53,10 @@ class Filter extends Embodied {
 
 	/**
 	 * Adds a filter to be composed with this filter using the "and" operator.
-	 * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
+	 * @param {!Filter|string} fieldOrFilter Either a {@link Filter} instance or the
 	 *   name of the field to filter by.
-	 * @param {*} opt_operatorOrValue Either the field's operator or its value.
-	 * @param {*} opt_value The filter's value.
+	 * @param {*=} opt_operatorOrValue Either the field's operator or its value.
+	 * @param {*=} opt_value The filter's value.
 	 * @chainnable
 	 */
 	and(fieldOrFilter, opt_operatorOrValue, opt_value) {
@@ -63,7 +64,7 @@ class Filter extends Embodied {
 	}
 
 	/**
-	 * Returns a Filter instance that uses the "any" operator.
+	 * Returns a {@link Filter} instance that uses the "any" operator.
 	 * @param {string} field The name of the field to filter by.
 	 * @param {!(Array|...*)} values A variable amount of values to be used with
 	 *   the "none" operator. Can be passed either as a single array or as
@@ -80,13 +81,13 @@ class Filter extends Embodied {
 	}
 
 	/**
-	 * Returns a Filter instance that uses the "gp" operator.
+	 * Returns a {@link Filter} instance that uses the "gp" operator.
 	 * This is a special use case of `Filter.polygon` for bounding
 	 * boxes.
 	 * @param {string} field The field's name.
 	 * @param {*} boxOrUpperLeft Either a `Geo.BoundingBox` instance, or
 	 *   a bounding box's upper left coordinate.
-	 * @param {*} opt_lowerRight A bounding box's lower right coordinate.
+	 * @param {*=} opt_lowerRight A bounding box's lower right coordinate.
 	 * @return {!Filter}
 	 * @static
 	 */
@@ -107,7 +108,7 @@ class Filter extends Embodied {
 	}
 
 	/**
-	 * Returns a Filter instance that uses the "gd" operator.
+	 * Returns a {@link Filter} instance that uses the "gd" operator.
 	 * @param {string} field The field's name.
 	 * @param {*} locationOrCircle Either a `Geo.Circle` instance or a coordinate.
 	 * @param {Range|string=} opt_rangeOrDistance Either a `Range` instance or
@@ -128,7 +129,7 @@ class Filter extends Embodied {
 	}
 
 	/**
-	 * Returns a Filter instance that uses the "gd" operator. This
+	 * Returns a {@link Filter} instance that uses the "gd" operator. This
 	 * is just an internal helper used by `Filter.distance`.
 	 * @param {string} field The field's name.
 	 * @param {*} location A location coordinate.
@@ -152,7 +153,7 @@ class Filter extends Embodied {
 	}
 
 	/**
-	 * Returns a Filter instance that uses the "=" operator.
+	 * Returns a {@link Filter} instance that uses the "=" operator.
 	 * @param {string} field The name of the field to filter by.
 	 * @param {*} value The filter's value.
 	 * @return {!Filter}
@@ -163,7 +164,7 @@ class Filter extends Embodied {
 	}
 
 	/**
-	 * Returns a Filter instance that uses the "exists" operator.
+	 * Returns a {@link Filter} instance that uses the "exists" operator.
 	 * @param {string} field The field's name.
 	 * @return {!Filter}
 	 * @static
@@ -173,7 +174,7 @@ class Filter extends Embodied {
 	}
 
 	/**
-	 * Returns a Filter instance that uses the "fuzzy" operator.
+	 * Returns a {@link Filter} instance that uses the "fuzzy" operator.
 	 * @param {string} fieldOrQuery If no second string argument is given, this
 	 *   should be the query string, in which case all fields will be matched.
 	 *   Otherwise, this should be the name of the field to match.
@@ -188,7 +189,7 @@ class Filter extends Embodied {
 	}
 
 	/**
-	 * Returns a Filter instance that uses the given fuzzy operator. This
+	 * Returns a {@link Filter} instance that uses the given fuzzy operator. This
 	 * is an internal implementation used by the `Filter.fuzzy` method.
 	 * @param {string} operator The fuzzy operator.
 	 * @param {string} fieldOrQuery If no second string argument is given, this
@@ -217,7 +218,7 @@ class Filter extends Embodied {
 	}
 
 	/**
-	 * Returns a Filter instance that uses the ">" operator.
+	 * Returns a {@link Filter} instance that uses the ">" operator.
 	 * @param {string} field The name of the field to filter by.
 	 * @param {*} value The filter's value.
 	 * @return {!Filter}
@@ -228,7 +229,7 @@ class Filter extends Embodied {
 	}
 
 	/**
-	 * Returns a Filter instance that uses the ">=" operator.
+	 * Returns a {@link Filter} instance that uses the ">=" operator.
 	 * @param {string} field The name of the field to filter by.
 	 * @param {*} value The filter's value.
 	 * @return {!Filter}
@@ -239,11 +240,11 @@ class Filter extends Embodied {
 	}
 
 	/**
-	 * Returns a Filter instance that uses the "match" operator.
+	 * Returns a {@link Filter} instance that uses the "match" operator.
 	 * @param {string} fieldOrQuery If no second string argument is given, this
 	 *   should be the query string, in which case all fields will be matched.
 	 *   Otherwise, this should be the name of the field to match.
-	 * @param {string} opt_query The query string.
+	 * @param {string=} opt_query The query string.
 	 * @return {!Filter}
 	 * @static
 	 */
@@ -254,7 +255,7 @@ class Filter extends Embodied {
 	}
 
 	/**
-	 * Returns a Filter instance that uses the "missing" operator.
+	 * Returns a {@link Filter} instance that uses the "missing" operator.
 	 * @param {string} field The field's name.
 	 * @return {!Filter}
 	 * @static
@@ -264,11 +265,11 @@ class Filter extends Embodied {
 	}
 
 	/**
-	 * Returns a Filter instance that uses the "phrase" operator.
+	 * Returns a {@link Filter} instance that uses the "phrase" operator.
 	 * @param {string} fieldOrQuery If no second string argument is given, this
 	 *   should be the query string, in which case all fields will be matched.
 	 *   Otherwise, this should be the name of the field to match.
-	 * @param {string} opt_query The query string.
+	 * @param {string=} opt_query The query string.
 	 * @return {!Filter}
 	 * @static
 	 */
@@ -279,7 +280,7 @@ class Filter extends Embodied {
 	}
 
 	/**
-	 * Returns a Filter instance that uses the "gp" operator.
+	 * Returns a {@link Filter} instance that uses the "gp" operator.
 	 * @param {string} field The name of the field.
 	 * @param {...!Object} points Objects representing points in the polygon.
 	 * @return {!Filter}
@@ -291,7 +292,7 @@ class Filter extends Embodied {
 	}
 
 	/**
-	 * Returns a Filter instance that uses the "prefix" operator.
+	 * Returns a {@link Filter} instance that uses the "prefix" operator.
 	 * @param {string} fieldOrQuery If no second argument is given, this should
 	 *   be the query string, in which case all fields will be matched. Otherwise,
 	 *   this should be the name of the field to match.
@@ -306,10 +307,10 @@ class Filter extends Embodied {
 	}
 
 	/**
-	 * Returns a Filter instance that uses the "range" operator.
+	 * Returns a {@link Filter} instance that uses the "range" operator.
 	 * @param {string} field The field's name.
 	 * @param {*} rangeOrMin Either a `Range` instance or a the range's min value.
-	 * @param {*} opt_max The range's max value.
+	 * @param {*=} opt_max The range's max value.
 	 * @return {!Filter}
 	 * @static
 	 */
@@ -322,7 +323,7 @@ class Filter extends Embodied {
 	}
 
 	/**
-	 * Returns a Filter instance that uses the "~" operator.
+	 * Returns a {@link Filter} instance that uses the "~" operator.
 	 * @param {string} field The name of the field to filter by.
 	 * @param {*} value The filter's value.
 	 * @return {!Filter}
@@ -333,7 +334,7 @@ class Filter extends Embodied {
 	}
 
 	/**
-	 * Returns a Filter instance that uses the "gs" operator.
+	 * Returns a {@link Filter} instance that uses the "gs" operator.
 	 * @param {string} field The field's name.
 	 * @param {...!Object} shapes Objects representing shapes.
 	 * @return {!Filter}
@@ -349,7 +350,7 @@ class Filter extends Embodied {
 	}
 
 	/**
-	 * Returns a Filter instance that uses the "similar" operator.
+	 * Returns a {@link Filter} instance that uses the "similar" operator.
 	 * @param {string} fieldOrQuery If no second string argument is given, this
 	 *   should be the query string, in which case all fields will be matched.
 	 *   Otherwise, this should be the name of the field to match.
@@ -366,7 +367,7 @@ class Filter extends Embodied {
 	}
 
 	/**
-	 * Returns a Filter instance that uses the "<" operator.
+	 * Returns a {@link Filter} instance that uses the "<" operator.
 	 * @param {string} field The name of the field to filter by.
 	 * @param {*} value The filter's value.
 	 * @return {!Filter}
@@ -377,7 +378,7 @@ class Filter extends Embodied {
 	}
 
 	/**
-	 * Returns a Filter instance that uses the "<=" operator.
+	 * Returns a {@link Filter} instance that uses the "<=" operator.
 	 * @param {string} field The name of the field to filter by.
 	 * @param {*} value The filter's value.
 	 * @return {!Filter}
@@ -388,7 +389,7 @@ class Filter extends Embodied {
 	}
 
 	/**
-	 * Returns a Filter instance that uses the "none" operator.
+	 * Returns a {@link Filter} instance that uses the "none" operator.
 	 * @param {string} field The name of the field to filter by.
 	 * @param {!(Array|...*)} value A variable amount of values to be used with
 	 *   the "none" operator. Can be passed either as a single array or as
@@ -405,7 +406,7 @@ class Filter extends Embodied {
 	}
 
 	/**
-	 * Returns a Filter instance that uses the "!=" operator.
+	 * Returns a {@link Filter} instance that uses the "!=" operator.
 	 * @param {string} field The name of the field to filter by.
 	 * @param {*} value The filter's value.
 	 * @return {!Filter}
@@ -416,11 +417,11 @@ class Filter extends Embodied {
 	}
 
 	/**
-	 * Returns a Filter instance that uses the "not" operator.
-	 * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
+	 * Returns a {@link Filter} instance that uses the "not" operator.
+	 * @param {!Filter|string} fieldOrFilter Either a {@link Filter} instance or the
 	 *   name of the field to filter by.
-	 * @param {*} opt_operatorOrValue Either the field's operator or its value.
-	 * @param {*} opt_value The filter's value.
+	 * @param {*=} opt_operatorOrValue Either the field's operator or its value.
+	 * @param {*=} opt_value The filter's value.
 	 * @return {!Filter}
 	 * @static
 	 */
@@ -429,12 +430,12 @@ class Filter extends Embodied {
 	}
 
 	/**
-	 * Returns a Filter instance.
+	 * Returns a {@link Filter} instance.
 	 * @param {string} field The name of the field to filter by.
 	 * @param {*} operatorOrValue If a third param is given, this should
 	 *   be the filter's operator (like ">="). Otherwise, this will be
 	 *   used as the filter's value, and the filter's operator will be "=".
-	 * @param {*} opt_value The filter's value.
+	 * @param {*=} opt_value The filter's value.
 	 * @return {!Filter}
    * @static
 	 */
@@ -444,10 +445,10 @@ class Filter extends Embodied {
 
 	/**
 	 * Adds a filter to be composed with this filter using the "or" operator.
-	 * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
+	 * @param {!Filter|string} fieldOrFilter Either a {@link Filter} instance or the
 	 *   name of the field to filter by.
-	 * @param {*} opt_operatorOrValue Either the field's operator or its value.
-	 * @param {*} opt_value The filter's value.
+	 * @param {*=} opt_operatorOrValue Either the field's operator or its value.
+	 * @param {*=} opt_value The filter's value.
 	 * @chainnable
 	 */
 	or(fieldOrFilter, opt_operatorOrValue, opt_value) {
@@ -455,11 +456,11 @@ class Filter extends Embodied {
 	}
 
 	/**
-	 * Converts the given arguments into a Filter instance.
-	 * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
+	 * Converts the given arguments into a {@link Filter} instance.
+	 * @param {!Filter|string} fieldOrFilter Either a {@link Filter} instance or the
 	 *   name of the field to filter by.
-	 * @param {*} opt_operatorOrValue Either the field's operator or its value.
-	 * @param {*} opt_value The filter's value.
+	 * @param {*=} opt_operatorOrValue Either the field's operator or its value.
+	 * @param {*=} opt_value The filter's value.
 	 * @return {!Filter}
 	 */
 	static toFilter(fieldOrFilter, opt_operatorOrValue, opt_value) {

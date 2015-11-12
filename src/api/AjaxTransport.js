@@ -7,14 +7,10 @@ import ClientResponse from './ClientResponse';
 import { CancellablePromise as Promise } from 'bower:metal-promise/src/promise/Promise';
 
 /**
- * Provides a convenient interface for data transport.
+ * The implementation of an ajax transport to be used with {@link Launchpad}.
+ * @extends {Transport}
  */
 class AjaxTransport extends Transport {
-
-	constructor() {
-		super();
-	}
-
 	/**
 	 * @inheritDoc
 	 */

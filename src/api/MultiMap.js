@@ -5,9 +5,9 @@ import Disposable from 'bower:metal/src/disposable/Disposable';
 /**
  * Case insensitive string Multimap implementation. Allows multiple values for
  * the same key name.
+ * @extends {Disposable}
  */
 class MultiMap extends Disposable {
-
 	constructor() {
 		super();
 		this.keys = {};
@@ -40,6 +40,7 @@ class MultiMap extends Disposable {
 	/**
 	 * Checks if map contains a value to the key name.
 	 * @param {string} name
+	 * @return {boolean}
 	 * @chainable
 	 */
 	contains(name) {
@@ -56,6 +57,7 @@ class MultiMap extends Disposable {
 	/**
 	 * Gets the first added value from a key name.
 	 * @param {string} name
+	 * @return {*}
 	 * @chainable
 	 */
 	get(name) {
@@ -68,7 +70,7 @@ class MultiMap extends Disposable {
 	/**
 	 * Gets all values from a key name.
 	 * @param {string} name
-	 * @return {array.<string>}
+	 * @return {Array.<*>}
 	 */
 	getAll(name) {
 		return this.values[name.toLowerCase()];
@@ -84,7 +86,7 @@ class MultiMap extends Disposable {
 
 	/**
 	 * Gets array of key names.
-	 * @return {array.<string>}
+	 * @return {Array.<string>}
 	 */
 	names() {
 		return Object.keys(this.values).map((key) => this.keys[key]);
@@ -122,10 +124,13 @@ class MultiMap extends Disposable {
 		return this.names().length;
 	}
 
+	/**
+	 * Returns the parsed values as a string.
+	 * @return {string}
+	 */
 	toString() {
 		return JSON.stringify(this.values);
 	}
-
 }
 
 export default MultiMap;

@@ -8,10 +8,10 @@ import Range from './Range';
  */
 class Aggregation {
 	/**
-	 * Constructs an `Aggregation` instance.
+	 * Constructs an {@link Aggregation} instance.
 	 * @param {string} field The aggregation field.
 	 * @param {string} operator The aggregation operator.
-	 * @param {*} opt_value The aggregation value.
+	 * @param {*=} opt_value The aggregation value.
 	 * @constructor
 	 */
 	constructor(field, operator, opt_value) {
@@ -21,7 +21,7 @@ class Aggregation {
 	}
 
 	/**
-	 * Creates an `Aggregation` instance with the "avg" operator.
+	 * Creates an {@link Aggregation} instance with the "avg" operator.
 	 * @param {string} field The aggregation field.
 	 * @return {!Aggregation}
 	 * @static
@@ -31,7 +31,7 @@ class Aggregation {
 	}
 
 	/**
-	 * Creates an `Aggregation` instance with the "count" operator.
+	 * Creates an {@link Aggregation} instance with the "count" operator.
 	 * @param {string} field The aggregation field.
 	 * @return {!Aggregation}
 	 * @static
@@ -41,11 +41,11 @@ class Aggregation {
 	}
 
 	/**
-	 * Creates an `Aggregation.DistanceAggregation` instance with the "geoDistance" operator.
+	 * Creates an {@link DistanceAggregation} instance with the "geoDistance" operator.
 	 * @param {string} field The aggregation field.
 	 * @param {*} location The aggregation location.
 	 * @param {...!Range} ranges The aggregation ranges.
-	 * @return {!Aggregation.DistanceAggregation}
+	 * @return {!DistanceAggregation}
 	 * @static
 	 */
 	static distance(field, location, ...ranges) {
@@ -53,7 +53,7 @@ class Aggregation {
 	}
 
 	/**
-	 * Creates an `Aggregation` instance with the "extendedStats" operator.
+	 * Creates an {@link Aggregation} instance with the "extendedStats" operator.
 	 * @param {string} field The aggregation field.
 	 * @return {!Aggregation}
 	 * @static
@@ -87,7 +87,7 @@ class Aggregation {
 	}
 
 	/**
-	 * Creates an `Aggregation` instance with the "histogram" operator.
+	 * Creates an {@link Aggregation} instance with the "histogram" operator.
 	 * @param {string} field The aggregation field.
 	 * @param {number} interval The histogram's interval.
 	 * @return {!Aggregation}
@@ -98,7 +98,7 @@ class Aggregation {
 	}
 
 	/**
-	 * Creates an `Aggregation` instance with the "max" operator.
+	 * Creates an {@link Aggregation} instance with the "max" operator.
 	 * @param {string} field The aggregation field.
 	 * @return {!Aggregation}
 	 * @static
@@ -108,7 +108,7 @@ class Aggregation {
 	}
 
 	/**
-	 * Creates an `Aggregation` instance with the "min" operator.
+	 * Creates an {@link Aggregation} instance with the "min" operator.
 	 * @param {string} field The aggregation field.
 	 * @return {!Aggregation}
 	 * @static
@@ -118,7 +118,7 @@ class Aggregation {
 	}
 
 	/**
-	 * Creates an `Aggregation` instance with the "missing" operator.
+	 * Creates an {@link Aggregation} instance with the "missing" operator.
 	 * @param {string} field The aggregation field.
 	 * @return {!Aggregation}
 	 * @static
@@ -128,7 +128,7 @@ class Aggregation {
 	}
 
 	/**
-	 * Creates a new `Aggregation` instance.
+	 * Creates a new {@link Aggregation} instance.
 	 * @param {string} field The aggregation field.
 	 * @param {string} operator The aggregation operator.
 	 * @return {!Aggregation}
@@ -139,10 +139,10 @@ class Aggregation {
 	}
 
 	/**
-	 * Creates an `Aggregation.RangeAggregation` instance with the "range" operator.
+	 * Creates an {@link RangeAggregation} instance with the "range" operator.
 	 * @param {string} field The aggregation field.
 	 * @param {...!Range} ranges The aggregation ranges.
-	 * @return {!Aggregation.RangeAggregation}
+	 * @return {!RangeAggregation}
 	 * @static
 	 */
 	static range(field, ...ranges) {
@@ -150,7 +150,7 @@ class Aggregation {
 	}
 
 	/**
-	 * Creates an `Aggregation` instance with the "stats" operator.
+	 * Creates an {@link Aggregation} instance with the "stats" operator.
 	 * @param {string} field The aggregation field.
 	 * @return {!Aggregation}
 	 * @static
@@ -160,7 +160,7 @@ class Aggregation {
 	}
 
 	/**
-	 * Creates an `Aggregation` instance with the "sum" operator.
+	 * Creates an {@link Aggregation} instance with the "sum" operator.
 	 * @param {string} field The aggregation field.
 	 * @return {!Aggregation}
 	 * @static
@@ -170,7 +170,7 @@ class Aggregation {
 	}
 
 	/**
-	 * Creates an `Aggregation` instance with the "terms" operator.
+	 * Creates an {@link Aggregation} instance with the "terms" operator.
 	 * @param {string} field The aggregation field.
 	 * @return {!Aggregation}
 	 * @static
@@ -182,10 +182,11 @@ class Aggregation {
 
 /**
  * Class that represents a distance aggregation.
+ * @extends {Aggregation}
  */
 class DistanceAggregation extends Aggregation {
 	/**
-	 * Constructs an `DistanceAggregation` instance.
+	 * Constructs an {@link DistanceAggregation} instance.
 	 * @param {string} field The aggregation field.
 	 * @param {*} location The aggregation location.
 	 * @param {...!Range} ranges The aggregation ranges.
@@ -200,7 +201,7 @@ class DistanceAggregation extends Aggregation {
 	/**
 	 * Adds a range to this aggregation.
 	 * @param {*} rangeOrFrom
-	 * @param {*} opt_to
+	 * @param {*=} opt_to
 	 * @chainnable
 	 */
 	range(rangeOrFrom, opt_to) {
@@ -226,10 +227,11 @@ Aggregation.DistanceAggregation = DistanceAggregation;
 
 /**
  * Class that represents a range aggregation.
+ * @extends {Aggregation}
  */
 class RangeAggregation extends Aggregation {
 	/**
-	 * Constructs an `RangeAggregation` instance.
+	 * Constructs an {@link RangeAggregation} instance.
 	 * @param {string} field The aggregation field.
 	 * @param {...!Range} ranges The aggregation ranges.
 	 * @constructor
@@ -242,7 +244,7 @@ class RangeAggregation extends Aggregation {
 	/**
 	 * Adds a range to this aggregation.
 	 * @param {*} rangeOrFrom
-	 * @param {*} opt_to
+	 * @param {*=} opt_to
 	 * @chainnable
 	 */
 	range(rangeOrFrom, opt_to) {

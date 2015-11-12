@@ -9,12 +9,12 @@ import Embodied from './Embodied';
  */
 class FilterBody {
 	/**
-	 * Constructs a FilterBody instance.
+	 * Constructs a {@link FilterBody} instance.
 	 * @param {string} field The name of the field to filter by.
 	 * @param {*} operatorOrValue If a third param is given, this should
 	 *   be the filter's operator (like ">="). Otherwise, this will be
 	 *   used as the filter's value, and the filter's operator will be "=".
-	 * @param {*} opt_value The filter's value.
+	 * @param {*=} opt_value The filter's value.
 	 * @constructor
 	 */
 	constructor(field, operatorOrValue, opt_value) {
@@ -34,7 +34,7 @@ class FilterBody {
 	/**
 	 * Composes the current filter with the given operator.
 	 * @param {string} operator
-	 * @param {Filter} opt_filter Another filter to compose this filter with,
+	 * @param {Filter=} opt_filter Another filter to compose this filter with,
 	 *   if the operator is not unary.
 	 */
 	add(operator, opt_filter) {

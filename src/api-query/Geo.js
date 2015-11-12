@@ -8,10 +8,10 @@ import Embodied from './Embodied';
  */
 class Geo {
 	/**
-	 * Creates a new `Geo.BoundingBox` instance.
+	 * Creates a new {@link BoundingBox} instance.
 	 * @param {*} upperLeft The upper left point.
 	 * @param {*} lowerRight The lower right point.
-	 * @return {Geo.BoundingBox}
+	 * @return {!BoundingBox}
 	 * @static
 	 */
 	static boundingBox(upperLeft, lowerRight) {
@@ -19,10 +19,10 @@ class Geo {
 	}
 
 	/**
-	 * Creates a new `Geo.Circle` instance.
+	 * Creates a new {@link Circle} instance.
 	 * @param {*} center The circle's center coordinate.
 	 * @param {string} radius The circle's radius.
-	 * @return {Geo.Circle}
+	 * @return {!Circle}
 	 * @static
 	 */
 	static circle(center, radius) {
@@ -30,9 +30,9 @@ class Geo {
 	}
 
 	/**
-	 * Creates a new `Geo.Line` instance.
+	 * Creates a new {@link Line} instance.
 	 * @param {...*} points This line's points.
-	 * @return {Geo.Line}
+	 * @return {!Line}
 	 * @static
 	 */
 	static line(...points) {
@@ -40,10 +40,10 @@ class Geo {
 	}
 
 	/**
-	 * Creates a new `Geo.Point` instance.
+	 * Creates a new {@link Point} instance.
 	 * @param {number} lat The latitude coordinate
 	 * @param {number} lon The longitude coordinate
-	 * @return {Geo.Point}
+	 * @return {!Point}
 	 * @static
 	 */
 	static point(lat, lon) {
@@ -51,9 +51,9 @@ class Geo {
 	}
 
 	/**
-	 * Creates a new `Geo.Polygon` instance.
+	 * Creates a new {@link Polygon} instance.
 	 * @param {...*} points This polygon's points.
-	 * @return {Geo.Polygon}
+	 * @return {!Polygon}
 	 * @static
 	 */
 	static polygon(...points) {
@@ -63,10 +63,11 @@ class Geo {
 
 /**
  * Class that represents a point coordinate.
+ * @extends {Embodied}
  */
 class Point extends Embodied {
 	/**
-	 * Constructs a `Geo.Point` instance.
+	 * Constructs a {@link Point} instance.
 	 * @param {number} lat The latitude coordinate
 	 * @param {number} lon The longitude coordinate
 	 * @constructor
@@ -80,10 +81,11 @@ Geo.Point = Point;
 
 /**
  * Class that represents a line.
+ * @extends {Embodied}
  */
 class Line extends Embodied {
 	/**
-	 * Constructs a `Geo.Line` instance.
+	 * Constructs a {@link Line} instance.
 	 * @param {...*} points This line's points.
 	 * @constructor
 	 */
@@ -99,10 +101,11 @@ Geo.Line = Line;
 
 /**
  * Class that represents a bounding box.
+ * @extends {Embodied}
  */
 class BoundingBox extends Embodied {
 	/**
-	 * Constructs a `Geo.BoundingBox` instance.
+	 * Constructs a {@link BoundingBox} instance.
 	 * @param {*} upperLeft The upper left point.
 	 * @param {*} lowerRight The lower right point.
 	 * @constructor
@@ -127,10 +130,11 @@ Geo.BoundingBox = BoundingBox;
 
 /**
  * Class that represents a circle.
+ * @extends {Embodied}
  */
 class Circle extends Embodied {
 	/**
-	 * Constructs a `Geo.Circle` instance.
+	 * Constructs a {@link Circle} instance.
 	 * @param {*} center The circle's center coordinate.
 	 * @param {string} radius The circle's radius.
 	 * @constructor
@@ -164,10 +168,11 @@ Geo.Circle = Circle;
 
 /**
  * Class that represents a polygon.
+ * @extends {Embodied}
  */
 class Polygon extends Embodied {
 	/**
-	 * Constructs a `Geo.Polygon` instance.
+	 * Constructs a {@link Polygon} instance.
 	 * @param {...*} points This polygon's points.
 	 * @constructor
 	 */

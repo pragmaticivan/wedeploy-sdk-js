@@ -5,9 +5,10 @@ import ClientMessage from './ClientMessage';
 import MultiMap from './MultiMap';
 
 /**
+ * Represents a client request object.
+ * @extends {ClientMessage}
  */
 class ClientRequest extends ClientMessage {
-
 	constructor() {
 		super();
 		this.params_ = new MultiMap();
@@ -15,9 +16,12 @@ class ClientRequest extends ClientMessage {
 
 	/**
 	 * Fluent getter and setter for request method.
-	 * @param {string} opt_method Request method to be set.
-	 * @return {string} Returns request method.
-	 * @chainable Chainable when used for setter.
+	 * @param {string=} opt_method Request method to be set. If none is given,
+	 *   the current method value will be returned.
+	 * @return {!ClientMessage|string} Returns request method if no new value was
+	 *   given. Otherwise returns the {@link ClientMessage} object itself, so
+	 *   calls can be chained.
+	 * @chainable Chainable when used as setter.
 	 */
 	method(opt_method) {
 		if (core.isDef(opt_method)) {
@@ -28,8 +32,8 @@ class ClientRequest extends ClientMessage {
 	}
 
 	/**
-	 * Adds a query. If the query with the same name already exists, it will not
-	 * be overwritten, but new value will be stored. The order is preserved.
+	 * Adds a query. If a query with the same name already exists, it will not
+	 * be overwritten, but new value will be stored as well. The order is preserved.
 	 * @param {string} name
 	 * @param {string} value
 	 * @chainable
@@ -44,8 +48,11 @@ class ClientRequest extends ClientMessage {
 
 	/**
 	 * Fluent getter and setter for request querystring.
-	 * @param {MultiMap|object} opt_params Request querystring map to be set.
-	 * @return {MultiMap} Returns map of request querystring.
+	 * @param {MultiMap|Object=} opt_params Request querystring map to be set.
+	 *   If none is given the current value of the params will be returned.
+	 * @return {!MultiMap|ClientMessage} Returns map of request querystring if
+	 *   no new value was given. Otherwise returns the {@link ClientMessage}
+	 *   object itself, so calls can be chained.
 	 */
 	params(opt_params) {
 		if (core.isDef(opt_params)) {
@@ -61,10 +68,12 @@ class ClientRequest extends ClientMessage {
 
 	/**
 	 * Fluent getter and setter for request url.
-	 * @param {string} opt_url Request url to be set.
-	 * @return {string} Returns request url.
-	 * @chainable Chainable when used for setter.
-	 * TODO: Renames on api.java as well.
+	 * @param {string=} opt_url Request url to be set. If none is given,
+	 *   the current value of the url will be returned.
+	 * @return {!ClientMessage|string} Returns request url if no new value was given.
+	 *   Otherwise returns the {@link ClientMessage} object itself, so calls can be
+	 *   chained.
+	 * @chainable Chainable when used as setter.
 	 */
 	url(opt_url) {
 		if (core.isDef(opt_url)) {

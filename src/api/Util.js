@@ -66,9 +66,9 @@ class Util {
 	}
 
 	/**
-	 * Joins two paths.
+	 * Joins the given paths.
 	 * @param {string} basePath
-	 * @param {...string} ...paths
+	 * @param {...string} ...paths Any number of paths to be joined with the base url.
 	 */
 	static joinPaths(basePath, ...paths) {
 		if (basePath.charAt(basePath.length - 1) === '/') {
@@ -81,11 +81,11 @@ class Util {
 	/**
 	 * XmlHttpRequest's getAllResponseHeaders() method returns a string of
 	 * response headers according to the format described on the spec:
-	 * http://www.w3.org/TR/XMLHttpRequest/#the-getallresponseheaders-method
+	 * {@link http://www.w3.org/TR/XMLHttpRequest/#the-getallresponseheaders-method}.
 	 * This method parses that string into a user-friendly name/value pair
 	 * object.
 	 * @param {string} allHeaders All headers as string.
-	 * @return {array.<object<string, string>>=}
+	 * @return {!Array.<Object<string, string>>}
 	 */
 	static parseResponseHeaders(allHeaders) {
 		var headers = [];

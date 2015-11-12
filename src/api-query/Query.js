@@ -7,14 +7,15 @@ import Aggregation from './Aggregation';
 
 /**
  * Class responsible for building queries.
+ * @extends {Embodied}
  */
 class Query extends Embodied {
 	/**
-	 * Adds an aggregation to this `Query` instance.
+	 * Adds an aggregation to this {@link Query} instance.
 	 * @param {string} name The aggregation name.
 	 * @param {!Aggregation|string} aggregationOrField Either an
-	 *   `Aggregation` instance or the name of the aggregation field.
-	 * @param {string} opt_operator The aggregation operator.
+	 *   {@link Aggregation} instance or the name of the aggregation field.
+	 * @param {string=} opt_operator The aggregation operator.
 	 * @return {!Query}
 	 * @static
 	 */
@@ -42,10 +43,10 @@ class Query extends Embodied {
 
 	/**
 	 * Adds a filter to this Query.
-	 * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
+	 * @param {!Filter|string} fieldOrFilter Either a {@link Filter} or the
 	 *   name of the field to filter by.
-	 * @param {*} opt_operatorOrValue Either the field's operator or its value.
-	 * @param {*} opt_value The filter's value.
+	 * @param {*=} opt_operatorOrValue Either the field's operator or its value.
+	 * @param {*=} opt_value The filter's value.
 	 * @return {!Query}
 	 * @static
 	 */
@@ -65,7 +66,7 @@ class Query extends Embodied {
 	}
 
 	/**
-	 * Adds a highlight entry to this `Query` instance.
+	 * Adds a highlight entry to this {@link Query} instance.
 	 * @param {string} field The field's name.
 	 * @return {!Query}
 	 * @static
@@ -85,16 +86,16 @@ class Query extends Embodied {
 	}
 
 	/**
-	 * Adds a search to this `Query` instance.
+	 * Adds a search to this {@link Query} instance.
 	 * @param {!Filter|string} filterOrTextOrField If no other arguments
-	 *   are passed to this function, this should be either a `Filter`
+	 *   are passed to this function, this should be either a {@link Filter}
 	 *   instance or a text to be used in a match filter. In both cases
 	 *   the filter will be applied to all fields. Another option is to
 	 *   pass this as a field name instead, together with other arguments
 	 *   so the filter can be created.
-	 * @param {string} opt_textOrOperator Either a text to be used in a
+	 * @param {string=} opt_textOrOperator Either a text to be used in a
 	 *   match filter, or the operator that should be used.
-	 * @param {*} opt_value The value to be used by the filter. Should
+	 * @param {*=} opt_value The value to be used by the filter. Should
 	 *   only be passed if an operator was passed as the second argument.
 	 * @return {!Query}
 	 * @static
@@ -107,7 +108,7 @@ class Query extends Embodied {
 	 * Adds a sort entry to this query, specifying the field this query should be
 	 * sorted by and, optionally, the sort direction.
 	 * @param {string} field The field that the query should be sorted by.
-	 * @param {string} opt_direction The direction the sort operation should use.
+	 * @param {string=} opt_direction The direction the sort operation should use.
 	 *   If none is given, "asc" is used by default.
 	 * @return {!Query}
 	 * @static
@@ -127,11 +128,11 @@ class Query extends Embodied {
 	}
 
 	/**
-	 * Adds an aggregation to this `Query` instance.
+	 * Adds an aggregation to this {@link Query} instance.
 	 * @param {string} name The aggregation name.
 	 * @param {!Aggregation|string} aggregationOrField Either an
-	 *   `Aggregation` instance or the name of the aggregation field.
-	 * @param {string} opt_operator The aggregation operator.
+	 *   {@link Aggregation} instance or the name of the aggregation field.
+	 * @param {string=} opt_operator The aggregation operator.
 	 * @chainnable
 	 */
 	aggregate(name, aggregationOrField, opt_operator) {
@@ -175,10 +176,10 @@ class Query extends Embodied {
 
 	/**
 	 * Adds a filter to this Query.
-	 * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
+	 * @param {!Filter|string} fieldOrFilter Either a {@link Filter} or the
 	 *   name of the field to filter by.
-	 * @param {*} opt_operatorOrValue Either the field's operator or its value.
-	 * @param {*} opt_value The filter's value.
+	 * @param {*=} opt_operatorOrValue Either the field's operator or its value.
+	 * @param {*=} opt_value The filter's value.
 	 * @chainnable
 	 */
 	filter(fieldOrFilter, opt_operatorOrValue, opt_value) {
@@ -202,7 +203,7 @@ class Query extends Embodied {
 	}
 
 	/**
-	 * Adds a highlight entry to this `Query` instance.
+	 * Adds a highlight entry to this {@link Query} instance.
 	 * @param {string} field The field's name.
 	 * @chainnable
 	 */
@@ -226,16 +227,16 @@ class Query extends Embodied {
 	}
 
 	/**
-	 * Adds a search to this `Query` instance.
+	 * Adds a search to this {@link Query} instance.
 	 * @param {!Filter|string} filterOrTextOrField If no other arguments
-	 *   are passed to this function, this should be either a `Filter`
+	 *   are passed to this function, this should be either a {@link Filter}
 	 *   instance or a text to be used in a match filter. In both cases
 	 *   the filter will be applied to all fields. Another option is to
 	 *   pass this as a field name instead, together with other arguments
 	 *   so the filter can be created.
-	 * @param {string} opt_textOrOperator Either a text to be used in a
+	 * @param {string=} opt_textOrOperator Either a text to be used in a
 	 *   match filter, or the operator that should be used.
-	 * @param {*} opt_value The value to be used by the filter. Should
+	 * @param {*=} opt_value The value to be used by the filter. Should
 	 *   only be passed if an operator was passed as the second argument.
 	 * @chainnable
 	 */
@@ -259,7 +260,7 @@ class Query extends Embodied {
 	 * Adds a sort entry to this query, specifying the field this query should be
 	 * sorted by and, optionally, the sort direction.
 	 * @param {string} field The field that the query should be sorted by.
-	 * @param {string} opt_direction The direction the sort operation should use.
+	 * @param {string=} opt_direction The direction the sort operation should use.
 	 *   If none is given, "asc" is used by default.
 	 * @chainnable
 	 */

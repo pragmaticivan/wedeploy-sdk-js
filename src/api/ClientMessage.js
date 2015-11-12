@@ -4,6 +4,7 @@ import core from 'bower:metal/src/core';
 import MultiMap from './MultiMap';
 
 /**
+ * Represents a client message (e.g. a request or a response).
  */
 class ClientMessage {
 	constructor() {
@@ -12,9 +13,11 @@ class ClientMessage {
 
 	/**
 	 * Fluent getter and setter for request body.
-	 * @param {string} opt_body Request body to be set.
-	 * @return {string} Returns request body.
-	 * @chainable Chainable when used for setter.
+	 * @param {*=} opt_body Request body to be set. If none is given,
+	 *   the current value of the body will be returned.
+	 * @return {*} Returns request body if no body value was given. Otherwise
+	 *   returns the {@link ClientMessage} object itself, so calls can be chained.
+	 * @chainable Chainable when used as setter.
 	 */
 	body(opt_body) {
 		if (core.isDef(opt_body)) {
@@ -25,8 +28,8 @@ class ClientMessage {
 	}
 
 	/**
-	 * Adds a header. If the header with the same name already exists, it will
-	 * not be overwritten, but new value will be stored. The order is preserved.
+	 * Adds a header. If a header with the same name already exists, it will not be
+	 * overwritten, but the new value will be stored as well. The order is preserved.
 	 * @param {string} name
 	 * @param {string} value
 	 * @chainable
@@ -41,9 +44,13 @@ class ClientMessage {
 
 	/**
 	 * Fluent getter and setter for request headers.
-	 * @param {MultiMap|object} opt_headers Request headers list
-	 *   to be set.
-	 * @return {MultiMap} Returns map of request headers.
+	 * @param {MultiMap|Object=} opt_headers Request headers list to
+	 *   be set. If none is given the current value of the headers will
+	 *   be returned.
+	 * @return {!MultiMap|ClientMessage} Returns map of request headers
+	 *   if no new value was given. Otherwise returns the {@link ClientMessage}
+	 *   object itself, so calls can be chained.
+	 * @chainable Chainable when used as setter.
 	 */
 	headers(opt_headers) {
 		if (core.isDef(opt_headers)) {

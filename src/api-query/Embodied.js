@@ -25,7 +25,7 @@ class Embodied {
 	 * If the given object is an instance of Embodied, this will
 	 * return its body content. Otherwise this will return the
 	 * original object.
-	 * @param  {*} obj
+	 * @param {*} obj
 	 * @return {*}
 	 * @static
 	 */

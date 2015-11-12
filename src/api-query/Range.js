@@ -5,10 +5,11 @@ import Embodied from './Embodied';
 
 /**
  * Class responsible for building range objects to be used by `Filter`.
+ * @extends {Embodied}
  */
 class Range extends Embodied {
 	/**
-	 * Constructs a Range instance.
+	 * Constructs a {@link Range} instance.
 	 * @param {*} from
 	 * @param {*} opt_to
 	 * @constructor
@@ -24,7 +25,7 @@ class Range extends Embodied {
 	}
 
 	/**
-	 * Constructs a Range instance.
+	 * Constructs a {@link Range} instance.
 	 * @param {*} from
 	 * @return {!Range}
 	 * @static
@@ -34,7 +35,7 @@ class Range extends Embodied {
 	}
 
 	/**
-	 * Constructs a Range instance.
+	 * Constructs a {@link Range} instance.
 	 * @param {*} from
 	 * @param {*} to
 	 * @return {!Range}
@@ -45,7 +46,7 @@ class Range extends Embodied {
 	}
 
 	/**
-	 * Constructs a Range instance.
+	 * Constructs a {@link Range} instance.
 	 * @param {*} to
 	 * @return {!Range}
 	 * @static

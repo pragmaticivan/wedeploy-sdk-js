@@ -10,7 +10,17 @@ import Util from './Util';
 import MultiMap from './MultiMap';
 
 /**
- * Base client contains code that is same for all transports.
+ * The main class for making api requests. Sending requests returns a promise that is
+ * resolved when the response arrives. Usage example:
+ * ```javascript
+ * Launchpad
+ *   .url('/data/tasks')
+ *   .post({desc: 'Buy milkl'})
+ *   .then(function(response) {
+ *     // Handle response here.
+ *     console.log(response.body())
+ *   });
+ * ```
  */
 class Launchpad {
 	/**
@@ -35,11 +45,11 @@ class Launchpad {
 	}
 
 	/**
-	 * Adds an aggregation to this `Query` instance.
+	 * Adds an aggregation to this {@link Query} instance.
 	 * @param {string} name The aggregation name.
 	 * @param {!Aggregation|string} aggregationOrField Either an
-	 *   `Aggregation` instance or the name of the aggregation field.
-	 * @param {string} opt_operator The aggregation operator.
+	 *   {@link Aggregation} instance or the name of the aggregation field.
+	 * @param {string=} opt_operator The aggregation operator.
 	 * @chainable
 	 */
 	aggregate(name, aggregationOrField, opt_operator) {
@@ -75,7 +85,7 @@ class Launchpad {
 	}
 
 	/**
-	 * Sets this query's type to "count".
+	 * Sets this request's query type to "count".
 	 * @chainnable
 	 */
 	count() {
@@ -114,9 +124,9 @@ class Launchpad {
 	}
 
 	/**
-	 * Decodes clientResponse body.
-	 * @param {ClientResponse} clientResponse
-	 * @return {ClientResponse}
+	 * Decodes clientResponse body, parsing the body for example.
+	 * @param {!ClientResponse} clientResponse The response object to be decoded.
+	 * @return {!ClientResponse} The decoded response.
 	 */
 	decode(clientResponse) {
 		if (Launchpad.isContentTypeJson(clientResponse)) {
@@ -128,18 +138,19 @@ class Launchpad {
 	}
 
 	/**
-	 * Sends message with DELETE http verb.
-	 * @param {string} opt_body
-	 * @return {Promise}
+	 * Sends message with the DELETE http verb.
+	 * @param {string=} opt_body Content to be sent as the request's body.
+	 * @return {!Promise}
 	 */
 	delete(opt_body) {
 		return this.sendAsync('DELETE', opt_body);
 	}
 
 	/**
-	 * Encodes clientRequest body.
-	 * @param {ClientRequest} clientRequest
-	 * @return {ClientRequest}
+	 * Encodes the given {@link ClientRequest}, converting its body to an appropriate
+	 * format for example.
+	 * @param {!ClientRequest} clientRequest The request object to encode.
+	 * @return {!ClientRequest} The encoded request.
 	 */
 	encode(clientRequest) {
 		var body = clientRequest.body();
@@ -190,11 +201,11 @@ class Launchpad {
 	}
 
 	/**
-	 * Adds a filter to this Query.
+	 * Adds a filter to this request's {@link Query}.
 	 * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
 	 *   name of the field to filter by.
-	 * @param {*} opt_operatorOrValue Either the field's operator or its value.
-	 * @param {*} opt_value The filter's value.
+	 * @param {*=} opt_operatorOrValue Either the field's operator or its value.
+	 * @param {*=} opt_value The filter's value.
 	 * @chainable
 	 */
 	filter(fieldOrFilter, opt_operatorOrValue, opt_value) {
@@ -208,6 +219,7 @@ class Launchpad {
 	 * will be ignored.
 	 * @param {string} name
 	 * @param {*} value
+	 * @chainable
 	 */
 	form(name, value) {
 		if (!this.formData_) {
@@ -218,18 +230,18 @@ class Launchpad {
 	}
 
 	/**
-	 * Sends message with GET http verb.
-	 * @param {*} opt_params Optional params to be added to the request url.
-	 * @return {Promise}
+	 * Sends message with the GET http verb.
+	 * @param {*=} opt_params Params to be added to the request url.
+	 * @return {!Promise}
 	 */
 	get(opt_params) {
 		return this.sendAsync('GET', opt_params);
 	}
 
 	/**
-	 * Gets the currently used `Query` object. If none exists yet,
+	 * Gets the currently used {@link Query} object. If none exists yet,
 	 * a new one is created.
-	 * @return {Query}
+	 * @return {!Query}
 	 * @protected
 	 */
 	getOrCreateQuery_() {
@@ -242,6 +254,9 @@ class Launchpad {
 	/**
 	 * Adds a header. If the header with the same name already exists, it will
 	 * not be overwritten, but new value will be stored. The order is preserved.
+	 * @param {string} name
+	 * @param {*} value
+	 * @chainable
 	 */
 	header(name, value) {
 		if (arguments.length !== 2) {
@@ -253,14 +268,14 @@ class Launchpad {
 
 	/**
 	 * Gets the headers.
-	 * @return {MultiMap}
+	 * @return {!MultiMap}
 	 */
 	headers() {
 		return this.headers_;
 	}
 
 	/**
-	 * Adds a highlight entry to this `Query` instance.
+	 * Adds a highlight entry to this request's {@link Query} instance.
 	 * @param {string} field The field's name.
 	 * @chainable
 	 */
@@ -270,8 +285,8 @@ class Launchpad {
 	}
 
 	/**
-	 * Sets the query limit.
-	 * @param {number} limit The max amount of entries that this query should return.
+	 * Sets the limit for this request's {@link Query}.
+	 * @param {number} limit The max amount of entries that this request should return.
 	 * @chainable
 	 */
 	limit(limit) {
@@ -280,7 +295,7 @@ class Launchpad {
 	}
 
 	/**
-	 * Sets the query offset.
+	 * Sets the offset for this request's {@link Query}.
 	 * @param {number} offset The index of the first entry that should be returned
 	 *   by this query.
 	 * @chainable
@@ -293,6 +308,9 @@ class Launchpad {
 	/**
 	 * Adds a query. If the query with the same name already exists, it will not
 	 * be overwritten, but new value will be stored. The order is preserved.
+	 * @param {string} name
+	 * @param {*} value
+	 * @chainable
 	 */
 	param(name, value) {
 		if (arguments.length !== 2) {
@@ -304,59 +322,60 @@ class Launchpad {
 
 	/**
 	 * Gets the query strings map.
-	 * @return {MultiMap}
+	 * @return {!MultiMap}
 	 */
 	params() {
 		return this.params_;
 	}
 
 	/**
-	 * Sends message with PATCH http verb.
-	 * @param {string} opt_body
-	 * @return {Promise}
+	 * Sends message with the PATCH http verb.
+	 * @param {string=} opt_body Content to be sent as the request's body.
+	 * @return {!Promise}
 	 */
 	patch(opt_body) {
 		return this.sendAsync('PATCH', opt_body);
 	}
 
 	/**
-	 * Creates new {@link LaunchpadBaseClient}.
+	 * Creates a new {@link Launchpad} instance for handling the url resulting in the
+	 * union of the current url with the given paths.
 	 * @param {...string} paths Any number of paths.
-	 * @return {!Launchpad} A new `Launchpad` instance for handling the given paths.
+	 * @return {!Launchpad} A new {@link Launchpad} instance for handling the given paths.
 	 */
 	path(...paths) {
 		return new Launchpad(this.url(), ...paths).use(this.customTransport_);
 	}
 
 	/**
-	 * Sends message with POST http verb.
-	 * @param {string} opt_body
-	 * @return {Promise}
+	 * Sends message with the POST http verb.
+	 * @param {string=} opt_body Content to be sent as the request's body.
+	 * @return {!Promise}
 	 */
 	post(opt_body) {
 		return this.sendAsync('POST', opt_body);
 	}
 
 	/**
-	 * Sends message with PUT http verb.
-	 * @param {string} opt_body
-	 * @return {Promise}
+	 * Sends message with the PUT http verb.
+	 * @param {string=} opt_body Content to be sent as the request's body.
+	 * @return {!Promise}
 	 */
 	put(opt_body) {
 		return this.sendAsync('PUT', opt_body);
 	}
 
 	/**
-	 * Adds a search to this `Query` instance.
+	 * Adds a search to this request's {@link Query} instance.
 	 * @param {!Filter|string} filterOrTextOrField If no other arguments
 	 *   are passed to this function, this should be either a `Filter`
 	 *   instance or a text to be used in a match filter. In both cases
 	 *   the filter will be applied to all fields. Another option is to
 	 *   pass this as a field name instead, together with other arguments
 	 *   so the filter can be created.
-	 * @param {string} opt_textOrOperator Either a text to be used in a
+	 * @param {string=} opt_textOrOperator Either a text to be used in a
 	 *   match filter, or the operator that should be used.
-	 * @param {*} opt_value The value to be used by the filter. Should
+	 * @param {*=} opt_value The value to be used by the filter. Should
 	 *   only be passed if an operator was passed as the second argument.
 	 * @chainable
 	 */
@@ -369,8 +388,8 @@ class Launchpad {
 	 * Uses transport to send request with given method name and body
 	 * asynchronously.
 	 * @param {string} method The HTTP method to be used when sending data.
-	 * @param {string} body
-	 * @return {Promise} Deferred request.
+	 * @param {string} body Content to be sent as the request's body.
+	 * @return {!Promise} Deferred request.
 	 */
 	sendAsync(method, body) {
 		var transport = this.customTransport_ || TransportFactory.instance().getDefault();
@@ -383,7 +402,7 @@ class Launchpad {
 	/**
 	 * Adds a sort query to this request's body.
 	 * @param {string} field The field that the query should be sorted by.
-	 * @param {string} opt_direction The direction the sort operation should use.
+	 * @param {string=} opt_direction The direction the sort operation should use.
 	 *   If none is given, "asc" is used by default.
 	 * @chainnable
 	 */
@@ -393,15 +412,15 @@ class Launchpad {
 	}
 
 	/**
-	 * Static factory for creating launchpad client.
+	 * Static factory for creating launchpad client for the given url.
+	 * @param {string} url The url that the client should use for sending requests.
 	 */
 	static url(url) {
 		return new Launchpad(url).use(this.customTransport_);
 	}
 
 	/**
-	 * Returns the URL.
-	 * TODO: Renames on api.java as well.
+	 * Returns the URL used by this client.
 	 */
 	url() {
 		return this.url_;
@@ -409,6 +428,7 @@ class Launchpad {
 
 	/**
 	 * Specifies {@link Transport} implementation.
+	 * @param {!Transport} transport The transport implementation that should be used.
 	 */
 	use(transport) {
 		this.customTransport_ = transport;
@@ -419,11 +439,15 @@ class Launchpad {
 	 * Creates new socket.io instance. The parameters passed to socket.io
 	 * constructor will be provided:
 	 *
-	 *   Launchpad.url('http://domain:8080/path/a').connect({ foo: true });
-	 *     -> io('domain:8080/path/a', { path: '/path', foo: true });
+	 * ```javascript
+	 * Launchpad.url('http://domain:8080/path/a').watch({id: 'myId'}, {foo: true});
+	 * // Equals:
+	 * io('domain:8080/?url=path%2Fa%3Fid%3DmyId', {foo: true});
+	 * ```
 	 *
-	 * @param {MultiMap} opt_params
-	 * @param {object} opt_options
+	 * @param {Object=} opt_params Params to be sent with the Socket IO request.
+	 * @param {Object=} opt_options Object with Socket IO options.
+	 * @return {!io} Socket IO reference. Server events can be listened on it.
 	 */
 	watch(opt_params, opt_options) {
 		if (typeof io === 'undefined') {
@@ -444,7 +468,7 @@ class Launchpad {
 	}
 
 	/**
-	 * Wraps the given `Embodied` instance with a `Query` instance if needed.
+	 * Wraps the given `Embodied` instance with a {@link Query} instance if needed.
 	 * @param {Embodied} embodied
 	 * @return {Embodied}
 	 * @protected
