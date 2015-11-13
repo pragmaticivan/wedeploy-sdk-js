@@ -3,20 +3,14 @@ this.launchpadNamed = this.launchpadNamed || {};
 (function (global) {
   var babelHelpers = global.babelHelpers = {};
 
-  babelHelpers.inherits = function (subClass, superClass) {
-    if (typeof superClass !== "function" && superClass !== null) {
-      throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
-    }
+  babelHelpers._typeof = function (obj) {
+    return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj;
+  };
 
-    subClass.prototype = Object.create(superClass && superClass.prototype, {
-      constructor: {
-        value: subClass,
-        enumerable: false,
-        writable: true,
-        configurable: true
-      }
-    });
-    if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+  babelHelpers.classCallCheck = function (instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
   };
 
   babelHelpers.createClass = (function () {
@@ -37,6 +31,30 @@ this.launchpadNamed = this.launchpadNamed || {};
     };
   })();
 
+  babelHelpers.inherits = function (subClass, superClass) {
+    if (typeof superClass !== "function" && superClass !== null) {
+      throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+    }
+
+    subClass.prototype = Object.create(superClass && superClass.prototype, {
+      constructor: {
+        value: subClass,
+        enumerable: false,
+        writable: true,
+        configurable: true
+      }
+    });
+    if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+  };
+
+  babelHelpers.possibleConstructorReturn = function (self, call) {
+    if (!self) {
+      throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+    }
+
+    return call && (typeof call === "object" || typeof call === "function") ? call : self;
+  };
+
   babelHelpers.toConsumableArray = function (arr) {
     if (Array.isArray(arr)) {
       for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
@@ -46,117 +64,20 @@ this.launchpadNamed = this.launchpadNamed || {};
       return Array.from(arr);
     }
   };
-
-  babelHelpers.bind = Function.prototype.bind;
-
-  babelHelpers.get = function get(object, property, receiver) {
-    if (object === null) object = Function.prototype;
-    var desc = Object.getOwnPropertyDescriptor(object, property);
-
-    if (desc === undefined) {
-      var parent = Object.getPrototypeOf(object);
-
-      if (parent === null) {
-        return undefined;
-      } else {
-        return get(parent, property, receiver);
-      }
-    } else if ("value" in desc) {
-      return desc.value;
-    } else {
-      var getter = desc.get;
-
-      if (getter === undefined) {
-        return undefined;
-      }
-
-      return getter.call(receiver);
-    }
-  };
-
-  babelHelpers.classCallCheck = function (instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  };
 })(typeof global === "undefined" ? self : global);
+'use strict'
+
+/**
+ * A collection of core utility functions.
+ * @const
+ */
+;
 (function () {
-	'use strict';
-
-	/**
-  * Class responsible for storing an object that will be printed as JSON
-  * when the `toString` method is called.
-  */
-
-	var Embodied = (function () {
-		/**
-   * Constructs a Embodied instance.
-   * @constructor
-   */
-
-		function Embodied() {
-			babelHelpers.classCallCheck(this, Embodied);
-
-			this.body_ = {};
-		}
-
-		/**
-   * Gets the json object that represents this instance.
-   * @return {!Object}
-   */
-		babelHelpers.createClass(Embodied, [{
-			key: 'body',
-			value: function body() {
-				return this.body_;
-			}
-
-			/**
-    * If the given object is an instance of Embodied, this will
-    * return its body content. Otherwise this will return the
-    * original object.
-    * @param  {*} obj
-    * @return {*}
-    * @static
-    */
-		}, {
-			key: 'toString',
-
-			/**
-    * Gets the json string that represents this instance.
-    * @return {string}
-    */
-			value: function toString() {
-				return JSON.stringify(this.body());
-			}
-		}], [{
-			key: 'toBody',
-			value: function toBody(obj) {
-				return obj instanceof Embodied ? obj.body() : obj;
-			}
-		}]);
-		return Embodied;
-	})();
-
-	this.launchpad.Embodied = Embodied;
-}).call(this);
-(function () {
-	'use strict';
-
-	/**
-  * A collection of core utility functions.
-  * @const
-  */
-
 	var core = (function () {
 		function core() {
 			babelHelpers.classCallCheck(this, core);
 		}
 
-		/**
-   * Unique id property prefix.
-   * @type {String}
-   * @protected
-   */
 		babelHelpers.createClass(core, null, [{
 			key: 'abstractMethod',
 
@@ -183,6 +104,7 @@ this.launchpadNamed = this.launchpadNamed || {};
     * @return {Array.<*>} Array of collected values.
     * TODO(*): Rethink superclass loop.
     */
+
 		}, {
 			key: 'collectSuperClassesProperty',
 			value: function collectSuperClassesProperty(constructor, propertyName) {
@@ -203,6 +125,7 @@ this.launchpadNamed = this.launchpadNamed || {};
     *     specified this method only returns the uid.
     * @throws {Error} when invoked to indicate the method should be overridden.
     */
+
 		}, {
 			key: 'getUid',
 			value: function getUid(opt_object) {
@@ -217,6 +140,7 @@ this.launchpadNamed = this.launchpadNamed || {};
     * @param {*=} opt_returnValue The single value that will be returned.
     * @return {?} The first argument.
     */
+
 		}, {
 			key: 'identityFunction',
 			value: function identityFunction(opt_returnValue) {
@@ -228,6 +152,7 @@ this.launchpadNamed = this.launchpadNamed || {};
     * @param {?} val Variable to test.
     * @return {boolean} Whether variable is boolean.
     */
+
 		}, {
 			key: 'isBoolean',
 			value: function isBoolean(val) {
@@ -239,6 +164,7 @@ this.launchpadNamed = this.launchpadNamed || {};
     * @param {?} val Variable to test.
     * @return {boolean} Whether variable is defined.
     */
+
 		}, {
 			key: 'isDef',
 			value: function isDef(val) {
@@ -250,6 +176,7 @@ this.launchpadNamed = this.launchpadNamed || {};
     * @param {*} val
     * @return {Boolean}
     */
+
 		}, {
 			key: 'isDefAndNotNull',
 			value: function isDefAndNotNull(val) {
@@ -261,10 +188,11 @@ this.launchpadNamed = this.launchpadNamed || {};
     * @param {*} val
     * @return {Boolean}
     */
+
 		}, {
 			key: 'isDocument',
 			value: function isDocument(val) {
-				return val && typeof val === 'object' && val.nodeType === 9;
+				return val && (typeof val === 'undefined' ? 'undefined' : babelHelpers._typeof(val)) === 'object' && val.nodeType === 9;
 			}
 
 			/**
@@ -272,10 +200,11 @@ this.launchpadNamed = this.launchpadNamed || {};
     * @param {*} val
     * @return {Boolean}
     */
+
 		}, {
 			key: 'isElement',
 			value: function isElement(val) {
-				return val && typeof val === 'object' && val.nodeType === 1;
+				return val && (typeof val === 'undefined' ? 'undefined' : babelHelpers._typeof(val)) === 'object' && val.nodeType === 1;
 			}
 
 			/**
@@ -283,6 +212,7 @@ this.launchpadNamed = this.launchpadNamed || {};
     * @param {?} val Variable to test.
     * @return {boolean} Whether variable is a function.
     */
+
 		}, {
 			key: 'isFunction',
 			value: function isFunction(val) {
@@ -294,6 +224,7 @@ this.launchpadNamed = this.launchpadNamed || {};
     * @param {*} val
     * @return {Boolean}
     */
+
 		}, {
 			key: 'isNull',
 			value: function isNull(val) {
@@ -305,6 +236,7 @@ this.launchpadNamed = this.launchpadNamed || {};
     * @param {?} val Variable to test.
     * @return {boolean} Whether variable is a number.
     */
+
 		}, {
 			key: 'isNumber',
 			value: function isNumber(val) {
@@ -316,6 +248,7 @@ this.launchpadNamed = this.launchpadNamed || {};
     * @param {*} val
     * @return {Boolean}
     */
+
 		}, {
 			key: 'isWindow',
 			value: function isWindow(val) {
@@ -328,10 +261,11 @@ this.launchpadNamed = this.launchpadNamed || {};
     * @param {?} val Variable to test.
     * @return {boolean} Whether variable is an object.
     */
+
 		}, {
 			key: 'isObject',
 			value: function isObject(val) {
-				var type = typeof val;
+				var type = typeof val === 'undefined' ? 'undefined' : babelHelpers._typeof(val);
 				return type === 'object' && val !== null || type === 'function';
 			}
 
@@ -340,6 +274,7 @@ this.launchpadNamed = this.launchpadNamed || {};
     * @param {*} val
     * @return {Boolean}
     */
+
 		}, {
 			key: 'isString',
 			value: function isString(val) {
@@ -358,6 +293,7 @@ this.launchpadNamed = this.launchpadNamed || {};
     *   Should return the merged value to be stored on the current class.
     * @return {boolean} Returns true if merge happens, false otherwise.
     */
+
 		}, {
 			key: 'mergeSuperClassesProperty',
 			value: function mergeSuperClassesProperty(constructor, propertyName, opt_mergeFn) {
@@ -378,12 +314,19 @@ this.launchpadNamed = this.launchpadNamed || {};
     * Null function used for default values of callbacks, etc.
     * @return {void} Nothing.
     */
+
 		}, {
 			key: 'nullFunction',
 			value: function nullFunction() {}
 		}]);
 		return core;
 	})();
+
+	/**
+  * Unique id property prefix.
+  * @type {String}
+  * @protected
+  */
 
 	core.UID_PROPERTY = 'core_' + (Math.random() * 1e9 >>> 0);
 
@@ -396,1763 +339,14 @@ this.launchpadNamed = this.launchpadNamed || {};
 
 	this.launchpad.core = core;
 }).call(this);
+'use strict'
+
+/**
+ * Provides a convenient interface for data transport.
+ * @interface
+ */
+;
 (function () {
-	'use strict';
-
-	var core = this.launchpad.core;
-	var Embodied = this.launchpad.Embodied;
-
-	/**
-  * Class responsible for building range objects to be used by `Filter`.
-  */
-
-	var Range = (function (_Embodied) {
-		babelHelpers.inherits(Range, _Embodied);
-
-		/**
-   * Constructs a Range instance.
-   * @param {*} from
-   * @param {*} opt_to
-   * @constructor
-   */
-
-		function Range(from, opt_to) {
-			babelHelpers.classCallCheck(this, Range);
-
-			babelHelpers.get(Object.getPrototypeOf(Range.prototype), 'constructor', this).call(this);
-			if (core.isDefAndNotNull(from)) {
-				this.body_.from = from;
-			}
-			if (core.isDefAndNotNull(opt_to)) {
-				this.body_.to = opt_to;
-			}
-		}
-
-		/**
-   * Constructs a Range instance.
-   * @param {*} from
-   * @return {!Range}
-   * @static
-   */
-		babelHelpers.createClass(Range, null, [{
-			key: 'from',
-			value: function from(_from) {
-				return new Range(_from);
-			}
-
-			/**
-    * Constructs a Range instance.
-    * @param {*} from
-    * @param {*} to
-    * @return {!Range}
-    * @static
-    */
-		}, {
-			key: 'range',
-			value: function range(from, to) {
-				return new Range(from, to);
-			}
-
-			/**
-    * Constructs a Range instance.
-    * @param {*} to
-    * @return {!Range}
-    * @static
-    */
-		}, {
-			key: 'to',
-			value: function to(_to) {
-				return new Range(null, _to);
-			}
-		}]);
-		return Range;
-	})(Embodied);
-
-	this.launchpad.Range = Range;
-}).call(this);
-(function () {
-	'use strict';
-
-	var Embodied = this.launchpad.Embodied;
-	var Range = this.launchpad.Range;
-
-	/**
-  * Class that represents a search aggregation.
-  */
-
-	var Aggregation = (function () {
-		/**
-   * Constructs an `Aggregation` instance.
-   * @param {string} field The aggregation field.
-   * @param {string} operator The aggregation operator.
-   * @param {*} opt_value The aggregation value.
-   * @constructor
-   */
-
-		function Aggregation(field, operator, opt_value) {
-			babelHelpers.classCallCheck(this, Aggregation);
-
-			this.field_ = field;
-			this.operator_ = operator;
-			this.value_ = opt_value;
-		}
-
-		/**
-   * Class that represents a distance aggregation.
-   */
-
-		/**
-   * Creates an `Aggregation` instance with the "avg" operator.
-   * @param {string} field The aggregation field.
-   * @return {!Aggregation}
-   * @static
-   */
-		babelHelpers.createClass(Aggregation, [{
-			key: 'getField',
-
-			/**
-    * Gets this aggregation's field.
-    * @return {string}
-    */
-			value: function getField() {
-				return this.field_;
-			}
-
-			/**
-    * Gets this aggregation's operator.
-    * @return {string}
-    */
-		}, {
-			key: 'getOperator',
-			value: function getOperator() {
-				return this.operator_;
-			}
-
-			/**
-    * Gets this aggregation's value.
-    * @return {*}
-    */
-		}, {
-			key: 'getValue',
-			value: function getValue() {
-				return this.value_;
-			}
-
-			/**
-    * Creates an `Aggregation` instance with the "histogram" operator.
-    * @param {string} field The aggregation field.
-    * @param {number} interval The histogram's interval.
-    * @return {!Aggregation}
-    * @static
-    */
-		}], [{
-			key: 'avg',
-			value: function avg(field) {
-				return Aggregation.field(field, 'avg');
-			}
-
-			/**
-    * Creates an `Aggregation` instance with the "count" operator.
-    * @param {string} field The aggregation field.
-    * @return {!Aggregation}
-    * @static
-    */
-		}, {
-			key: 'count',
-			value: function count(field) {
-				return Aggregation.field(field, 'count');
-			}
-
-			/**
-    * Creates an `Aggregation.DistanceAggregation` instance with the "geoDistance" operator.
-    * @param {string} field The aggregation field.
-    * @param {*} location The aggregation location.
-    * @param {...!Range} ranges The aggregation ranges.
-    * @return {!Aggregation.DistanceAggregation}
-    * @static
-    */
-		}, {
-			key: 'distance',
-			value: function distance(field, location) {
-				for (var _len = arguments.length, ranges = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
-					ranges[_key - 2] = arguments[_key];
-				}
-
-				return new (babelHelpers.bind.apply(Aggregation.DistanceAggregation, [null].concat([field, location], ranges)))();
-			}
-
-			/**
-    * Creates an `Aggregation` instance with the "extendedStats" operator.
-    * @param {string} field The aggregation field.
-    * @return {!Aggregation}
-    * @static
-    */
-		}, {
-			key: 'extendedStats',
-			value: function extendedStats(field) {
-				return Aggregation.field(field, 'extendedStats');
-			}
-		}, {
-			key: 'histogram',
-			value: function histogram(field, interval) {
-				return new Aggregation(field, 'histogram', interval);
-			}
-
-			/**
-    * Creates an `Aggregation` instance with the "max" operator.
-    * @param {string} field The aggregation field.
-    * @return {!Aggregation}
-    * @static
-    */
-		}, {
-			key: 'max',
-			value: function max(field) {
-				return Aggregation.field(field, 'max');
-			}
-
-			/**
-    * Creates an `Aggregation` instance with the "min" operator.
-    * @param {string} field The aggregation field.
-    * @return {!Aggregation}
-    * @static
-    */
-		}, {
-			key: 'min',
-			value: function min(field) {
-				return Aggregation.field(field, 'min');
-			}
-
-			/**
-    * Creates an `Aggregation` instance with the "missing" operator.
-    * @param {string} field The aggregation field.
-    * @return {!Aggregation}
-    * @static
-    */
-		}, {
-			key: 'missing',
-			value: function missing(field) {
-				return Aggregation.field(field, 'missing');
-			}
-
-			/**
-    * Creates a new `Aggregation` instance.
-    * @param {string} field The aggregation field.
-    * @param {string} operator The aggregation operator.
-    * @return {!Aggregation}
-    * @static
-    */
-		}, {
-			key: 'field',
-			value: function field(_field, operator) {
-				return new Aggregation(_field, operator);
-			}
-
-			/**
-    * Creates an `Aggregation.RangeAggregation` instance with the "range" operator.
-    * @param {string} field The aggregation field.
-    * @param {...!Range} ranges The aggregation ranges.
-    * @return {!Aggregation.RangeAggregation}
-    * @static
-    */
-		}, {
-			key: 'range',
-			value: function range(field) {
-				for (var _len2 = arguments.length, ranges = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-					ranges[_key2 - 1] = arguments[_key2];
-				}
-
-				return new (babelHelpers.bind.apply(Aggregation.RangeAggregation, [null].concat([field], ranges)))();
-			}
-
-			/**
-    * Creates an `Aggregation` instance with the "stats" operator.
-    * @param {string} field The aggregation field.
-    * @return {!Aggregation}
-    * @static
-    */
-		}, {
-			key: 'stats',
-			value: function stats(field) {
-				return Aggregation.field(field, 'stats');
-			}
-
-			/**
-    * Creates an `Aggregation` instance with the "sum" operator.
-    * @param {string} field The aggregation field.
-    * @return {!Aggregation}
-    * @static
-    */
-		}, {
-			key: 'sum',
-			value: function sum(field) {
-				return Aggregation.field(field, 'sum');
-			}
-
-			/**
-    * Creates an `Aggregation` instance with the "terms" operator.
-    * @param {string} field The aggregation field.
-    * @return {!Aggregation}
-    * @static
-    */
-		}, {
-			key: 'terms',
-			value: function terms(field) {
-				return Aggregation.field(field, 'terms');
-			}
-		}]);
-		return Aggregation;
-	})();
-
-	var DistanceAggregation = (function (_Aggregation) {
-		babelHelpers.inherits(DistanceAggregation, _Aggregation);
-
-		/**
-   * Constructs an `DistanceAggregation` instance.
-   * @param {string} field The aggregation field.
-   * @param {*} location The aggregation location.
-   * @param {...!Range} ranges The aggregation ranges.
-   * @constructor
-   */
-
-		function DistanceAggregation(field, location) {
-			babelHelpers.classCallCheck(this, DistanceAggregation);
-
-			babelHelpers.get(Object.getPrototypeOf(DistanceAggregation.prototype), 'constructor', this).call(this, field, 'geoDistance', {});
-			this.value_.location = Embodied.toBody(location);
-
-			for (var _len3 = arguments.length, ranges = Array(_len3 > 2 ? _len3 - 2 : 0), _key3 = 2; _key3 < _len3; _key3++) {
-				ranges[_key3 - 2] = arguments[_key3];
-			}
-
-			this.value_.ranges = ranges.map(function (range) {
-				return range.body();
-			});
-		}
-
-		/**
-   * Adds a range to this aggregation.
-   * @param {*} rangeOrFrom
-   * @param {*} opt_to
-   * @chainnable
-   */
-		babelHelpers.createClass(DistanceAggregation, [{
-			key: 'range',
-			value: function range(rangeOrFrom, opt_to) {
-				var range = rangeOrFrom;
-				if (!(range instanceof Range)) {
-					range = Range.range(rangeOrFrom, opt_to);
-				}
-				this.value_.ranges.push(range.body());
-				return this;
-			}
-
-			/**
-    * Sets this aggregation's unit.
-    * @param {string} unit
-    * @chainnable
-    */
-		}, {
-			key: 'unit',
-			value: function unit(_unit) {
-				this.value_.unit = _unit;
-				return this;
-			}
-		}]);
-		return DistanceAggregation;
-	})(Aggregation);
-
-	Aggregation.DistanceAggregation = DistanceAggregation;
-
-	/**
-  * Class that represents a range aggregation.
-  */
-
-	var RangeAggregation = (function (_Aggregation2) {
-		babelHelpers.inherits(RangeAggregation, _Aggregation2);
-
-		/**
-   * Constructs an `RangeAggregation` instance.
-   * @param {string} field The aggregation field.
-   * @param {...!Range} ranges The aggregation ranges.
-   * @constructor
-   */
-
-		function RangeAggregation(field) {
-			babelHelpers.classCallCheck(this, RangeAggregation);
-
-			babelHelpers.get(Object.getPrototypeOf(RangeAggregation.prototype), 'constructor', this).call(this, field, 'range');
-
-			for (var _len4 = arguments.length, ranges = Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {
-				ranges[_key4 - 1] = arguments[_key4];
-			}
-
-			this.value_ = ranges.map(function (range) {
-				return range.body();
-			});
-		}
-
-		/**
-   * Adds a range to this aggregation.
-   * @param {*} rangeOrFrom
-   * @param {*} opt_to
-   * @chainnable
-   */
-		babelHelpers.createClass(RangeAggregation, [{
-			key: 'range',
-			value: function range(rangeOrFrom, opt_to) {
-				var range = rangeOrFrom;
-				if (!(range instanceof Range)) {
-					range = Range.range(rangeOrFrom, opt_to);
-				}
-				this.value_.push(range.body());
-				return this;
-			}
-		}]);
-		return RangeAggregation;
-	})(Aggregation);
-
-	Aggregation.RangeAggregation = RangeAggregation;
-
-	this.launchpad.Aggregation = Aggregation;
-}).call(this);
-(function () {
-	'use strict';
-
-	var core = this.launchpad.core;
-	var Embodied = this.launchpad.Embodied;
-
-	/**
-  * Class responsible for storing and handling the body contents
-  * of a Filter instance.
-  */
-
-	var FilterBody = (function () {
-		/**
-   * Constructs a FilterBody instance.
-   * @param {string} field The name of the field to filter by.
-   * @param {*} operatorOrValue If a third param is given, this should
-   *   be the filter's operator (like ">="). Otherwise, this will be
-   *   used as the filter's value, and the filter's operator will be "=".
-   * @param {*} opt_value The filter's value.
-   * @constructor
-   */
-
-		function FilterBody(field, operatorOrValue, opt_value) {
-			babelHelpers.classCallCheck(this, FilterBody);
-
-			var obj = {
-				operator: core.isDef(opt_value) ? operatorOrValue : '='
-			};
-			var value = core.isDef(opt_value) ? opt_value : operatorOrValue;
-			if (core.isDefAndNotNull(value)) {
-				if (value instanceof Embodied) {
-					value = value.body();
-				}
-				obj.value = value;
-			}
-			this.createBody_(field, obj);
-		}
-
-		/**
-   * Composes the current filter with the given operator.
-   * @param {string} operator
-   * @param {Filter} opt_filter Another filter to compose this filter with,
-   *   if the operator is not unary.
-   */
-		babelHelpers.createClass(FilterBody, [{
-			key: 'add',
-			value: function add(operator, opt_filter) {
-				if (opt_filter) {
-					this.addArrayOperator_(operator, opt_filter);
-				} else {
-					this.createBody_(operator, this.body_);
-				}
-			}
-
-			/**
-    * Composes the current filter with an operator that stores its values in an array.
-    * @param {string} operator
-    * @param {!Filter} filter
-    * @protected
-    */
-		}, {
-			key: 'addArrayOperator_',
-			value: function addArrayOperator_(operator, filter) {
-				if (!(this.body_[operator] instanceof Array)) {
-					this.createBody_(operator, [this.body_]);
-				}
-				this.body_[operator].push(filter.body());
-			}
-
-			/**
-    * Adds filters to be composed with this filter body using the given operator.
-    * @param {string} operator
-    * @param {...*} filters A variable amount of filters to be composed.
-    */
-		}, {
-			key: 'addMany',
-			value: function addMany(operator) {
-				for (var _len = arguments.length, filters = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-					filters[_key - 1] = arguments[_key];
-				}
-
-				for (var i = 0; i < filters.length; i++) {
-					this.add(operator, filters[i]);
-				}
-			}
-
-			/**
-    * Creates a new body object, setting the requestd key to the given value.
-    * @param {string} key The key to set in the new body object
-    * @param {*} value The value the requested key should have in the new body object.
-    * @protected
-    */
-		}, {
-			key: 'createBody_',
-			value: function createBody_(key, value) {
-				this.body_ = {};
-				this.body_[key] = value;
-			}
-
-			/**
-    * Gets the json object that represents this filter's body.
-    * @return {!Object}
-    */
-		}, {
-			key: 'getObject',
-			value: function getObject() {
-				return this.body_;
-			}
-		}]);
-		return FilterBody;
-	})();
-
-	this.launchpad.FilterBody = FilterBody;
-}).call(this);
-(function () {
-	'use strict';
-
-	var Embodied = this.launchpad.Embodied;
-
-	/**
-  * Class responsible for building different types of geometric
-  * shapes.
-  */
-
-	var Geo = (function () {
-		function Geo() {
-			babelHelpers.classCallCheck(this, Geo);
-		}
-
-		/**
-   * Class that represents a point coordinate.
-   */
-		babelHelpers.createClass(Geo, null, [{
-			key: 'boundingBox',
-
-			/**
-    * Creates a new `Geo.BoundingBox` instance.
-    * @param {*} upperLeft The upper left point.
-    * @param {*} lowerRight The lower right point.
-    * @return {Geo.BoundingBox}
-    * @static
-    */
-			value: function boundingBox(upperLeft, lowerRight) {
-				return new Geo.BoundingBox(upperLeft, lowerRight);
-			}
-
-			/**
-    * Creates a new `Geo.Circle` instance.
-    * @param {*} center The circle's center coordinate.
-    * @param {string} radius The circle's radius.
-    * @return {Geo.Circle}
-    * @static
-    */
-		}, {
-			key: 'circle',
-			value: function circle(center, radius) {
-				return new Geo.Circle(center, radius);
-			}
-
-			/**
-    * Creates a new `Geo.Line` instance.
-    * @param {...*} points This line's points.
-    * @return {Geo.Line}
-    * @static
-    */
-		}, {
-			key: 'line',
-			value: function line() {
-				for (var _len = arguments.length, points = Array(_len), _key = 0; _key < _len; _key++) {
-					points[_key] = arguments[_key];
-				}
-
-				return new (babelHelpers.bind.apply(Geo.Line, [null].concat(points)))();
-			}
-
-			/**
-    * Creates a new `Geo.Point` instance.
-    * @param {number} lat The latitude coordinate
-    * @param {number} lon The longitude coordinate
-    * @return {Geo.Point}
-    * @static
-    */
-		}, {
-			key: 'point',
-			value: function point(lat, lon) {
-				return new Geo.Point(lat, lon);
-			}
-
-			/**
-    * Creates a new `Geo.Polygon` instance.
-    * @param {...*} points This polygon's points.
-    * @return {Geo.Polygon}
-    * @static
-    */
-		}, {
-			key: 'polygon',
-			value: function polygon() {
-				for (var _len2 = arguments.length, points = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-					points[_key2] = arguments[_key2];
-				}
-
-				return new (babelHelpers.bind.apply(Geo.Polygon, [null].concat(points)))();
-			}
-		}]);
-		return Geo;
-	})();
-
-	var Point = (function (_Embodied) {
-		babelHelpers.inherits(Point, _Embodied);
-
-		/**
-   * Constructs a `Geo.Point` instance.
-   * @param {number} lat The latitude coordinate
-   * @param {number} lon The longitude coordinate
-   * @constructor
-   */
-
-		function Point(lat, lon) {
-			babelHelpers.classCallCheck(this, Point);
-
-			babelHelpers.get(Object.getPrototypeOf(Point.prototype), 'constructor', this).call(this);
-			this.body_ = [lat, lon];
-		}
-
-		return Point;
-	})(Embodied);
-
-	Geo.Point = Point;
-
-	/**
-  * Class that represents a line.
-  */
-
-	var Line = (function (_Embodied2) {
-		babelHelpers.inherits(Line, _Embodied2);
-
-		/**
-   * Constructs a `Geo.Line` instance.
-   * @param {...*} points This line's points.
-   * @constructor
-   */
-
-		function Line() {
-			babelHelpers.classCallCheck(this, Line);
-
-			babelHelpers.get(Object.getPrototypeOf(Line.prototype), 'constructor', this).call(this);
-
-			for (var _len3 = arguments.length, points = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-				points[_key3] = arguments[_key3];
-			}
-
-			this.body_ = {
-				type: 'linestring',
-				coordinates: points.map(function (point) {
-					return Embodied.toBody(point);
-				})
-			};
-		}
-
-		return Line;
-	})(Embodied);
-
-	Geo.Line = Line;
-
-	/**
-  * Class that represents a bounding box.
-  */
-
-	var BoundingBox = (function (_Embodied3) {
-		babelHelpers.inherits(BoundingBox, _Embodied3);
-
-		/**
-   * Constructs a `Geo.BoundingBox` instance.
-   * @param {*} upperLeft The upper left point.
-   * @param {*} lowerRight The lower right point.
-   * @constructor
-   */
-
-		function BoundingBox(upperLeft, lowerRight) {
-			babelHelpers.classCallCheck(this, BoundingBox);
-
-			babelHelpers.get(Object.getPrototypeOf(BoundingBox.prototype), 'constructor', this).call(this);
-			this.body_ = {
-				type: 'envelope',
-				coordinates: [Embodied.toBody(upperLeft), Embodied.toBody(lowerRight)]
-			};
-		}
-
-		/**
-   * Gets this bounding box's points.
-   * @return {!Array}
-   */
-		babelHelpers.createClass(BoundingBox, [{
-			key: 'getPoints',
-			value: function getPoints() {
-				return this.body_.coordinates;
-			}
-		}]);
-		return BoundingBox;
-	})(Embodied);
-
-	Geo.BoundingBox = BoundingBox;
-
-	/**
-  * Class that represents a circle.
-  */
-
-	var Circle = (function (_Embodied4) {
-		babelHelpers.inherits(Circle, _Embodied4);
-
-		/**
-   * Constructs a `Geo.Circle` instance.
-   * @param {*} center The circle's center coordinate.
-   * @param {string} radius The circle's radius.
-   * @constructor
-   */
-
-		function Circle(center, radius) {
-			babelHelpers.classCallCheck(this, Circle);
-
-			babelHelpers.get(Object.getPrototypeOf(Circle.prototype), 'constructor', this).call(this);
-			this.body_ = {
-				type: 'circle',
-				coordinates: Embodied.toBody(center),
-				radius: radius
-			};
-		}
-
-		/**
-   * Gets this circle's center coordinate.
-   * @return {*}
-   */
-		babelHelpers.createClass(Circle, [{
-			key: 'getCenter',
-			value: function getCenter() {
-				return this.body_.coordinates;
-			}
-
-			/**
-    * Gets this circle's radius.
-    * @return {string}
-    */
-		}, {
-			key: 'getRadius',
-			value: function getRadius() {
-				return this.body_.radius;
-			}
-		}]);
-		return Circle;
-	})(Embodied);
-
-	Geo.Circle = Circle;
-
-	/**
-  * Class that represents a polygon.
-  */
-
-	var Polygon = (function (_Embodied5) {
-		babelHelpers.inherits(Polygon, _Embodied5);
-
-		/**
-   * Constructs a `Geo.Polygon` instance.
-   * @param {...*} points This polygon's points.
-   * @constructor
-   */
-
-		function Polygon() {
-			babelHelpers.classCallCheck(this, Polygon);
-
-			babelHelpers.get(Object.getPrototypeOf(Polygon.prototype), 'constructor', this).call(this);
-			this.body_ = {
-				type: 'polygon',
-				coordinates: []
-			};
-			this.addCoordinates_.apply(this, arguments);
-		}
-
-		/**
-   * Adds the given points as coordinates for this polygon.
-   * @param {...*} points
-   * @protected
-   */
-		babelHelpers.createClass(Polygon, [{
-			key: 'addCoordinates_',
-			value: function addCoordinates_() {
-				for (var _len4 = arguments.length, points = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
-					points[_key4] = arguments[_key4];
-				}
-
-				this.body_.coordinates.push(points.map(function (point) {
-					return Embodied.toBody(point);
-				}));
-			}
-
-			/**
-    * Adds the given points as a hole inside this polygon.
-    * @param  {...*} points
-    * @chainnable
-    */
-		}, {
-			key: 'hole',
-			value: function hole() {
-				this.addCoordinates_.apply(this, arguments);
-				return this;
-			}
-		}]);
-		return Polygon;
-	})(Embodied);
-
-	Geo.Polygon = Polygon;
-
-	this.launchpad.Geo = Geo;
-}).call(this);
-(function () {
-	'use strict';
-
-	var core = this.launchpad.core;
-	var Embodied = this.launchpad.Embodied;
-	var FilterBody = this.launchpad.FilterBody;
-	var Geo = this.launchpad.Geo;
-	var Range = this.launchpad.Range;
-
-	/**
-  * Class responsible for building filters.
-  */
-
-	var Filter = (function (_Embodied) {
-		babelHelpers.inherits(Filter, _Embodied);
-
-		/**
-   * Constructs a Filter instance.
-   * @param {string} field The name of the field to filter by.
-   * @param {*} operatorOrValue If a third param is given, this should
-   *   be the filter's operator (like ">="). Otherwise, this will be
-   *   used as the filter's value, and the filter's operator will be "=".
-   * @param {*} opt_value The filter's value.
-   * @constructor
-   */
-
-		function Filter(field, operatorOrValue, opt_value) {
-			babelHelpers.classCallCheck(this, Filter);
-
-			babelHelpers.get(Object.getPrototypeOf(Filter.prototype), 'constructor', this).call(this);
-			this.body_ = new FilterBody(field, operatorOrValue, opt_value);
-		}
-
-		/**
-   * String constant that represents all fields.
-   * @type {string}
-   * @static
-   */
-
-		/**
-   * Adds a filter to be composed with this filter using the given operator.
-   * @param {string} operator
-   * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
-   *   name of the field to filter by.
-   * @param {*} opt_operatorOrValue Either the field's operator or its value.
-   * @param {*} opt_value The filter's value.
-   * @chainnable
-   */
-		babelHelpers.createClass(Filter, [{
-			key: 'add',
-			value: function add(operator, fieldOrFilter, opt_operatorOrValue, opt_value) {
-				var filter = fieldOrFilter ? Filter.toFilter(fieldOrFilter, opt_operatorOrValue, opt_value) : null;
-				this.body_.add(operator, filter);
-				return this;
-			}
-
-			/**
-    * Adds filters to be composed with this filter using the given operator.
-    * @param {string} operator
-    * @param {...*} filters A variable amount of filters to be composed.
-    * @chainnable
-    */
-		}, {
-			key: 'addMany',
-			value: function addMany(operator) {
-				var _body_;
-
-				for (var _len = arguments.length, filters = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-					filters[_key - 1] = arguments[_key];
-				}
-
-				(_body_ = this.body_).addMany.apply(_body_, [operator].concat(filters));
-				return this;
-			}
-
-			/**
-    * Adds a filter to be composed with this filter using the "and" operator.
-    * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
-    *   name of the field to filter by.
-    * @param {*} opt_operatorOrValue Either the field's operator or its value.
-    * @param {*} opt_value The filter's value.
-    * @chainnable
-    */
-		}, {
-			key: 'and',
-			value: function and(fieldOrFilter, opt_operatorOrValue, opt_value) {
-				return this.add('and', fieldOrFilter, opt_operatorOrValue, opt_value);
-			}
-
-			/**
-    * Returns a Filter instance that uses the "any" operator.
-    * @param {string} field The name of the field to filter by.
-    * @param {!Array|(...*)} value A variable amount of values to be used with
-    *   the "none" operator. Can be passed either as a single array or as
-    *   separate params.
-    * @return {!Filter}
-    * @static
-    */
-		}, {
-			key: 'body',
-
-			/**
-    * Gets the json object that represents this filter.
-    * @return {!Object}
-    */
-			value: function body() {
-				return this.body_.getObject();
-			}
-
-			/**
-    * Returns a Filter instance that uses the "gd" operator.
-    * @param {string} field The field's name.
-    * @param {*} locationOrCircle Either a `Geo.Circle` instance or a coordinate.
-    * @param {Range|string=} opt_rangeOrDistance Either a `Range` instance or
-    *   the distance value.
-    * @return {!Filter}
-    * @static
-    */
-		}, {
-			key: 'or',
-
-			/**
-    * Adds a filter to be composed with this filter using the "or" operator.
-    * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
-    *   name of the field to filter by.
-    * @param {*} opt_operatorOrValue Either the field's operator or its value.
-    * @param {*} opt_value The filter's value.
-    * @chainnable
-    */
-			value: function or(fieldOrFilter, opt_operatorOrValue, opt_value) {
-				return this.add('or', fieldOrFilter, opt_operatorOrValue, opt_value);
-			}
-
-			/**
-    * Converts the given arguments into a Filter instance.
-    * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
-    *   name of the field to filter by.
-    * @param {*} opt_operatorOrValue Either the field's operator or its value.
-    * @param {*} opt_value The filter's value.
-    * @return {!Filter}
-    */
-		}], [{
-			key: 'any',
-			value: function any(field) {
-				var values = Array.prototype.slice.call(arguments, 1);
-				if (values.length === 1 && values[0] instanceof Array) {
-					values = values[0];
-				}
-				return new Filter(field, 'any', values);
-			}
-
-			/**
-    * Returns a Filter instance that uses the "gp" operator.
-    * This is a special use case of `Filter.polygon` for bounding
-    * boxes.
-    * @param {string} field The field's name.
-    * @param {*} boxOrUpperLeft Either a `Geo.BoundingBox` instance, or
-    *   a bounding box's upper left coordinate.
-    * @param {*} opt_lowerRight A bounding box's lower right coordinate.
-    * @return {!Filter}
-    * @static
-    */
-		}, {
-			key: 'boundingBox',
-			value: function boundingBox(field, boxOrUpperLeft, opt_lowerRight) {
-				if (boxOrUpperLeft instanceof Geo.BoundingBox) {
-					return Filter.polygon.apply(Filter, [field].concat(babelHelpers.toConsumableArray(boxOrUpperLeft.getPoints())));
-				} else {
-					return Filter.polygon(field, boxOrUpperLeft, opt_lowerRight);
-				}
-			}
-		}, {
-			key: 'distance',
-			value: function distance(field, locationOrCircle, opt_rangeOrDistance) {
-				var location = locationOrCircle;
-				var range = opt_rangeOrDistance;
-				if (locationOrCircle instanceof Geo.Circle) {
-					location = locationOrCircle.getCenter();
-					range = Range.to(locationOrCircle.getRadius());
-				} else if (!(opt_rangeOrDistance instanceof Range)) {
-					range = Range.to(opt_rangeOrDistance);
-				}
-				return Filter.distanceInternal_(field, location, range);
-			}
-
-			/**
-    * Returns a Filter instance that uses the "gd" operator. This
-    * is just an internal helper used by `Filter.distance`.
-    * @param {string} field The field's name.
-    * @param {*} location A location coordinate.
-    * @param {Range} range A `Range` instance.
-    * @return {!Filter}
-    * @protected
-    * @static
-    */
-		}, {
-			key: 'distanceInternal_',
-			value: function distanceInternal_(field, location, range) {
-				var value = {
-					location: Embodied.toBody(location)
-				};
-				range = range.body();
-				if (range.from) {
-					value.min = range.from;
-				}
-				if (range.to) {
-					value.max = range.to;
-				}
-				return Filter.field(field, 'gd', value);
-			}
-
-			/**
-    * Returns a Filter instance that uses the "=" operator.
-    * @param {string} field The name of the field to filter by.
-    * @param {*} value The filter's value.
-    * @return {!Filter}
-     * @static
-    */
-		}, {
-			key: 'equal',
-			value: function equal(field, value) {
-				return new Filter(field, '=', value);
-			}
-
-			/**
-    * Returns a Filter instance that uses the "exists" operator.
-    * @param {string} field The field's name.
-    * @return {!Filter}
-    * @static
-    */
-		}, {
-			key: 'exists',
-			value: function exists(field) {
-				return Filter.field(field, 'exists', null);
-			}
-
-			/**
-    * Returns a Filter instance that uses the "fuzzy" operator.
-    * @param {string} fieldOrQuery If no second string argument is given, this
-    *   should be the query string, in which case all fields will be matched.
-    *   Otherwise, this should be the name of the field to match.
-    * @param {string|number=} opt_queryOrFuzziness If this is a string, it should
-    *   be the query, otherwise it should be the fuzziness value.
-    * @param {number=} opt_fuzziness The fuzziness value.
-    * @return {!Filter}
-    * @static
-    */
-		}, {
-			key: 'fuzzy',
-			value: function fuzzy(fieldOrQuery, opt_queryOrFuzziness, opt_fuzziness) {
-				return Filter.fuzzyInternal_('fuzzy', fieldOrQuery, opt_queryOrFuzziness, opt_fuzziness);
-			}
-
-			/**
-    * Returns a Filter instance that uses the given fuzzy operator. This
-    * is an internal implementation used by the `Filter.fuzzy` method.
-    * @param {string} operator The fuzzy operator.
-    * @param {string} fieldOrQuery If no second string argument is given, this
-    *   should be the query string, in which case all fields will be matched.
-    *   Otherwise, this should be the name of the field to match.
-    * @param {string|number=} opt_queryOrFuzziness If this is a string, it should
-    *   be the query, otherwise it should be the fuzziness value.
-    * @param {number=} opt_fuzziness The fuzziness value.
-    * @return {!Filter}
-    * @protected
-    * @static
-    */
-		}, {
-			key: 'fuzzyInternal_',
-			value: function fuzzyInternal_(operator, fieldOrQuery, opt_queryOrFuzziness, opt_fuzziness) {
-				var arg2IsString = core.isString(opt_queryOrFuzziness);
-
-				var value = {
-					query: arg2IsString ? opt_queryOrFuzziness : fieldOrQuery
-				};
-				var fuzziness = arg2IsString ? opt_fuzziness : opt_queryOrFuzziness;
-				if (fuzziness) {
-					value.fuzziness = fuzziness;
-				}
-
-				var field = arg2IsString ? fieldOrQuery : Filter.ALL;
-				return Filter.field(field, operator, value);
-			}
-
-			/**
-    * Returns a Filter instance that uses the ">" operator.
-    * @param {string} field The name of the field to filter by.
-    * @param {*} value The filter's value.
-    * @return {!Filter}
-     * @static
-    */
-		}, {
-			key: 'gt',
-			value: function gt(field, value) {
-				return new Filter(field, '>', value);
-			}
-
-			/**
-    * Returns a Filter instance that uses the ">=" operator.
-    * @param {string} field The name of the field to filter by.
-    * @param {*} value The filter's value.
-    * @return {!Filter}
-     * @static
-    */
-		}, {
-			key: 'gte',
-			value: function gte(field, value) {
-				return new Filter(field, '>=', value);
-			}
-
-			/**
-    * Returns a Filter instance that uses the "match" operator.
-    * @param {string} fieldOrQuery If no second string argument is given, this
-    *   should be the query string, in which case all fields will be matched.
-    *   Otherwise, this should be the name of the field to match.
-    * @param {string} opt_query The query string.
-    * @return {!Filter}
-    * @static
-    */
-		}, {
-			key: 'match',
-			value: function match(fieldOrQuery, opt_query) {
-				var field = core.isString(opt_query) ? fieldOrQuery : Filter.ALL;
-				var query = core.isString(opt_query) ? opt_query : fieldOrQuery;
-				return Filter.field(field, 'match', query);
-			}
-
-			/**
-    * Returns a Filter instance that uses the "missing" operator.
-    * @param {string} field The field's name.
-    * @return {!Filter}
-    * @static
-    */
-		}, {
-			key: 'missing',
-			value: function missing(field) {
-				return Filter.field(field, 'missing', null);
-			}
-
-			/**
-    * Returns a Filter instance that uses the "phrase" operator.
-    * @param {string} fieldOrQuery If no second string argument is given, this
-    *   should be the query string, in which case all fields will be matched.
-    *   Otherwise, this should be the name of the field to match.
-    * @param {string} opt_query The query string.
-    * @return {!Filter}
-    * @static
-    */
-		}, {
-			key: 'phrase',
-			value: function phrase(fieldOrQuery, opt_query) {
-				var field = core.isString(opt_query) ? fieldOrQuery : Filter.ALL;
-				var query = core.isString(opt_query) ? opt_query : fieldOrQuery;
-				return Filter.field(field, 'phrase', query);
-			}
-
-			/**
-    * Returns a Filter instance that uses the "gp" operator.
-    * @param {string} field The name of the field.
-    * @param {...!Object} points Objects representing points in the polygon.
-    * @return {!Filter}
-    * @static
-    */
-		}, {
-			key: 'polygon',
-			value: function polygon(field) {
-				for (var _len2 = arguments.length, points = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-					points[_key2 - 1] = arguments[_key2];
-				}
-
-				points = points.map(function (point) {
-					return Embodied.toBody(point);
-				});
-				return Filter.field(field, 'gp', points);
-			}
-
-			/**
-    * Returns a Filter instance that uses the "prefix" operator.
-    * @param {string} fieldOrQuery If no second argument is given, this should
-    *   be the query string, in which case all fields will be matched. Otherwise,
-    *   this should be the name of the field to match.
-    * @param {string=} opt_query The query string.
-    * @return {!Filter}
-    * @static
-    */
-		}, {
-			key: 'prefix',
-			value: function prefix(fieldOrQuery, opt_query) {
-				var field = opt_query ? fieldOrQuery : Filter.ALL;
-				var query = opt_query ? opt_query : fieldOrQuery;
-				return Filter.field(field, 'prefix', query);
-			}
-
-			/**
-    * Returns a Filter instance that uses the "range" operator.
-    * @param {string} field The field's name.
-    * @param {*} rangeOrMin Either a `Range` instance or a the range's min value.
-    * @param {*} opt_max The range's max value.
-    * @return {!Filter}
-    * @static
-    */
-		}, {
-			key: 'range',
-			value: function range(field, rangeOrMin, opt_max) {
-				var range = rangeOrMin;
-				if (!(range instanceof Range)) {
-					range = Range.range(rangeOrMin, opt_max);
-				}
-				return Filter.field(field, 'range', range);
-			}
-
-			/**
-    * Returns a Filter instance that uses the "~" operator.
-    * @param {string} field The name of the field to filter by.
-    * @param {*} value The filter's value.
-    * @return {!Filter}
-     * @static
-    */
-		}, {
-			key: 'regex',
-			value: function regex(field, value) {
-				return new Filter(field, '~', value);
-			}
-
-			/**
-    * Returns a Filter instance that uses the "gs" operator.
-    * @param {string} field The field's name.
-    * @param {...!Object} shapes Objects representing shapes.
-    * @return {!Filter}
-    * @static
-    */
-		}, {
-			key: 'shape',
-			value: function shape(field) {
-				for (var _len3 = arguments.length, shapes = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
-					shapes[_key3 - 1] = arguments[_key3];
-				}
-
-				shapes = shapes.map(function (shape) {
-					return Embodied.toBody(shape);
-				});
-				var value = {
-					type: 'geometrycollection',
-					geometries: shapes
-				};
-				return Filter.field(field, 'gs', value);
-			}
-
-			/**
-    * Returns a Filter instance that uses the "similar" operator.
-    * @param {string} fieldOrQuery If no second string argument is given, this
-    *   should be the query string, in which case all fields will be matched.
-    *   Otherwise, this should be the name of the field to match.
-    * @param {?string} opt_query The query string.
-    * @return {!Filter}
-    * @static
-    */
-		}, {
-			key: 'similar',
-			value: function similar(fieldOrQuery, query) {
-				var field = core.isString(query) ? fieldOrQuery : Filter.ALL;
-				var value = {
-					query: core.isString(query) ? query : fieldOrQuery
-				};
-				return Filter.field(field, 'similar', value);
-			}
-
-			/**
-    * Returns a Filter instance that uses the "<" operator.
-    * @param {string} field The name of the field to filter by.
-    * @param {*} value The filter's value.
-    * @return {!Filter}
-     * @static
-    */
-		}, {
-			key: 'lt',
-			value: function lt(field, value) {
-				return new Filter(field, '<', value);
-			}
-
-			/**
-    * Returns a Filter instance that uses the "<=" operator.
-    * @param {string} field The name of the field to filter by.
-    * @param {*} value The filter's value.
-    * @return {!Filter}
-     * @static
-    */
-		}, {
-			key: 'lte',
-			value: function lte(field, value) {
-				return new Filter(field, '<=', value);
-			}
-
-			/**
-    * Returns a Filter instance that uses the "none" operator.
-    * @param {string} field The name of the field to filter by.
-    * @param {!Array|(...*)} value A variable amount of values to be used with
-    *   the "none" operator. Can be passed either as a single array or as
-    *   separate params.
-    * @return {!Filter}
-    * @static
-    */
-		}, {
-			key: 'none',
-			value: function none(field) {
-				var values = Array.prototype.slice.call(arguments, 1);
-				if (values.length === 1 && values[0] instanceof Array) {
-					values = values[0];
-				}
-				return new Filter(field, 'none', values);
-			}
-
-			/**
-    * Returns a Filter instance that uses the "!=" operator.
-    * @param {string} field The name of the field to filter by.
-    * @param {*} value The filter's value.
-    * @return {!Filter}
-    * @static
-    */
-		}, {
-			key: 'notEqual',
-			value: function notEqual(field, value) {
-				return new Filter(field, '!=', value);
-			}
-
-			/**
-    * Returns a Filter instance that uses the "not" operator.
-    * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
-    *   name of the field to filter by.
-    * @param {*} opt_operatorOrValue Either the field's operator or its value.
-    * @param {*} opt_value The filter's value.
-    * @return {!Filter}
-    * @static
-    */
-		}, {
-			key: 'not',
-			value: function not(fieldOrFilter, opt_operatorOrValue, opt_value) {
-				return Filter.toFilter(fieldOrFilter, opt_operatorOrValue, opt_value).add('not');
-			}
-
-			/**
-    * Returns a Filter instance.
-    * @param {string} field The name of the field to filter by.
-    * @param {*} operatorOrValue If a third param is given, this should
-    *   be the filter's operator (like ">="). Otherwise, this will be
-    *   used as the filter's value, and the filter's operator will be "=".
-    * @param {*} opt_value The filter's value.
-    * @return {!Filter}
-     * @static
-    */
-		}, {
-			key: 'field',
-			value: function field(_field, operatorOrValue, opt_value) {
-				return new Filter(_field, operatorOrValue, opt_value);
-			}
-		}, {
-			key: 'toFilter',
-			value: function toFilter(fieldOrFilter, opt_operatorOrValue, opt_value) {
-				var filter = fieldOrFilter;
-				if (!(filter instanceof Filter)) {
-					filter = Filter.field(fieldOrFilter, opt_operatorOrValue, opt_value);
-				}
-				return filter;
-			}
-		}]);
-		return Filter;
-	})(Embodied);
-
-	Filter.ALL = '*';
-
-	this.launchpad.Filter = Filter;
-}).call(this);
-(function () {
-	'use strict';
-
-	var core = this.launchpad.core;
-	var Embodied = this.launchpad.Embodied;
-	var Filter = this.launchpad.Filter;
-	var Aggregation = this.launchpad.Aggregation;
-
-	/**
-  * Class responsible for building queries.
-  */
-
-	var Query = (function (_Embodied) {
-		babelHelpers.inherits(Query, _Embodied);
-
-		function Query() {
-			babelHelpers.classCallCheck(this, Query);
-			babelHelpers.get(Object.getPrototypeOf(Query.prototype), 'constructor', this).apply(this, arguments);
-		}
-
-		babelHelpers.createClass(Query, [{
-			key: 'aggregate',
-
-			/**
-    * Adds an aggregation to this `Query` instance.
-    * @param {string} name The aggregation name.
-    * @param {!Aggregation|string} aggregationOrField Either an
-    *   `Aggregation` instance or the name of the aggregation field.
-    * @param {string} opt_operator The aggregation operator.
-    * @chainnable
-    */
-			value: function aggregate(name, aggregationOrField, opt_operator) {
-				var aggregation = aggregationOrField;
-				if (!(aggregation instanceof Aggregation)) {
-					aggregation = Aggregation.field(aggregationOrField, opt_operator);
-				}
-
-				var field = aggregation.getField();
-				var value = {};
-				value[field] = {
-					name: name,
-					operator: aggregation.getOperator()
-				};
-				if (core.isDefAndNotNull(aggregation.getValue())) {
-					value[field].value = aggregation.getValue();
-				}
-
-				if (!this.body_.aggregation) {
-					this.body_.aggregation = [];
-				}
-				this.body_.aggregation.push(value);
-				return this;
-			}
-
-			/**
-    * Sets this query's type to "count".
-    * @chainnable
-    */
-		}, {
-			key: 'count',
-			value: function count() {
-				return this.type('count');
-			}
-
-			/**
-    * Sets this query's type to "fetch".
-    * @chainnable
-    */
-		}, {
-			key: 'fetch',
-			value: function fetch() {
-				return this.type('fetch');
-			}
-
-			/**
-    * Adds a filter to this Query.
-    * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
-    *   name of the field to filter by.
-    * @param {*} operatorOrValue Either the field's operator or its value.
-    * @param {*} opt_value The filter's value.
-    * @chainnable
-    */
-		}, {
-			key: 'filter',
-			value: function filter(fieldOrFilter, opt_operatorOrValue, opt_value) {
-				var filter = Filter.toFilter(fieldOrFilter, opt_operatorOrValue, opt_value);
-				if (!this.body_.filter) {
-					this.body_.filter = [];
-				}
-				this.body_.filter.push(filter.body());
-				return this;
-			}
-
-			/**
-    * Sets the query offset.
-    * @param {number} offset The index of the first entry that should be returned
-    *   by this query.
-    * @chainnable
-    */
-		}, {
-			key: 'offset',
-			value: function offset(_offset2) {
-				this.body_.offset = _offset2;
-				return this;
-			}
-
-			/**
-    * Adds a highlight entry to this `Query` instance.
-    * @param {string} field The field's name.
-    * @chainnable
-    */
-		}, {
-			key: 'highlight',
-			value: function highlight(field) {
-				if (!this.body_.highlight) {
-					this.body_.highlight = [];
-				}
-
-				this.body_.highlight.push(field);
-				return this;
-			}
-
-			/**
-    * Sets the query limit.
-    * @param {number} limit The max amount of entries that this query should return.
-    * @chainnable
-    */
-		}, {
-			key: 'limit',
-			value: function limit(_limit2) {
-				this.body_.limit = _limit2;
-				return this;
-			}
-
-			/**
-    * Adds a search to this `Query` instance.
-    * @param {!Filter|string} filterOrTextOrField If no other arguments
-    *   are passed to this function, this should be either a `Filter`
-    *   instance or a text to be used in a match filter. In both cases
-    *   the filter will be applied to all fields. Another option is to
-    *   pass this as a field name instead, together with other arguments
-    *   so the filter can be created.
-    * @param {string} opt_textOrOperator Either a text to be used in a
-    *   match filter, or the operator that should be used.
-    * @param {*} opt_value The value to be used by the filter. Should
-    *   only be passed if an operator was passed as the second argument.
-    * @chainnable
-    */
-		}, {
-			key: 'search',
-			value: function search(filterOrTextOrField, opt_textOrOperator, opt_value) {
-				var filter = filterOrTextOrField;
-				if (opt_value) {
-					filter = Filter.field(filterOrTextOrField, opt_textOrOperator, opt_value);
-				} else if (opt_textOrOperator) {
-					filter = Filter.match(filterOrTextOrField, opt_textOrOperator);
-				} else if (!(filter instanceof Filter)) {
-					filter = Filter.match(filterOrTextOrField);
-				}
-				if (!this.body_.search) {
-					this.body_.search = [];
-				}
-				this.body_.search.push(filter.body());
-				return this;
-			}
-
-			/**
-    * Adds a sort entry to this query, specifying the field this query should be
-    * sorted by and, optionally, the sort direction.
-    * @param {string} field The field that the query should be sorted by.
-    * @param {string} opt_direction The direction the sort operation should use.
-    *   If none is given, "asc" is used by default.
-    * @chainnable
-    */
-		}, {
-			key: 'sort',
-			value: function sort(field, opt_direction) {
-				if (!this.body_.sort) {
-					this.body_.sort = [];
-				}
-				var sortEntry = {};
-				sortEntry[field] = opt_direction || 'asc';
-				this.body_.sort.push(sortEntry);
-				return this;
-			}
-
-			/**
-    * Sets the query type.
-    * @param {string} type The query's type. For example: "count", "fetch".
-    * @chainnable
-    */
-		}, {
-			key: 'type',
-			value: function type(_type2) {
-				this.body_.type = _type2;
-				return this;
-			}
-		}], [{
-			key: 'aggregate',
-
-			/**
-    * Adds an aggregation to this `Query` instance.
-    * @param {string} name The aggregation name.
-    * @param {!Aggregation|string} aggregationOrField Either an
-    *   `Aggregation` instance or the name of the aggregation field.
-    * @param {string} opt_operator The aggregation operator.
-    * @static
-    */
-			value: function aggregate(name, aggregationOrField, opt_operator) {
-				return new Query().aggregate(name, aggregationOrField, opt_operator);
-			}
-
-			/**
-    * Sets this query's type to "count".
-    * @static
-    */
-		}, {
-			key: 'count',
-			value: function count() {
-				return new Query().type('count');
-			}
-
-			/**
-    * Sets this query's type to "fetch".
-    * @static
-    */
-		}, {
-			key: 'fetch',
-			value: function fetch() {
-				return new Query().type('fetch');
-			}
-
-			/**
-    * Adds a filter to this Query.
-    * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
-    *   name of the field to filter by.
-    * @param {*} operatorOrValue Either the field's operator or its value.
-    * @param {*} opt_value The filter's value.
-    * @static
-    */
-		}, {
-			key: 'filter',
-			value: function filter(fieldOrFilter, opt_operatorOrValue, opt_value) {
-				return new Query().filter(fieldOrFilter, opt_operatorOrValue, opt_value);
-			}
-
-			/**
-    * Sets the query offset.
-    * @param {number} offset The index of the first entry that should be returned
-    *   by this query.
-    * @static
-    */
-		}, {
-			key: 'offset',
-			value: function offset(_offset) {
-				return new Query().offset(_offset);
-			}
-
-			/**
-    * Adds a highlight entry to this `Query` instance.
-    * @param {string} field The field's name.
-    * @static
-    */
-		}, {
-			key: 'highlight',
-			value: function highlight(field) {
-				return new Query().highlight(field);
-			}
-
-			/**
-    * Sets the query limit.
-    * @param {number} limit The max amount of entries that this query should return.
-    * @static
-    */
-		}, {
-			key: 'limit',
-			value: function limit(_limit) {
-				return new Query().limit(_limit);
-			}
-
-			/**
-    * Adds a search to this `Query` instance.
-    * @param {!Filter|string} filterOrTextOrField If no other arguments
-    *   are passed to this function, this should be either a `Filter`
-    *   instance or a text to be used in a match filter. In both cases
-    *   the filter will be applied to all fields. Another option is to
-    *   pass this as a field name instead, together with other arguments
-    *   so the filter can be created.
-    * @param {string} opt_textOrOperator Either a text to be used in a
-    *   match filter, or the operator that should be used.
-    * @param {*} opt_value The value to be used by the filter. Should
-    *   only be passed if an operator was passed as the second argument.
-    * @static
-    */
-		}, {
-			key: 'search',
-			value: function search(filterOrTextOrField, opt_textOrOperator, opt_value) {
-				return new Query().search(filterOrTextOrField, opt_textOrOperator, opt_value);
-			}
-
-			/**
-    * Adds a sort entry to this query, specifying the field this query should be
-    * sorted by and, optionally, the sort direction.
-    * @param {string} field The field that the query should be sorted by.
-    * @param {string} opt_direction The direction the sort operation should use.
-    *   If none is given, "asc" is used by default.
-    * @static
-    */
-		}, {
-			key: 'sort',
-			value: function sort(field, opt_direction) {
-				return new Query().sort(field, opt_direction);
-			}
-
-			/**
-    * Sets the query type.
-    * @param {string} type The query's type. For example: "count", "fetch".
-    * @static
-    */
-		}, {
-			key: 'type',
-			value: function type(_type) {
-				return new Query().type(_type);
-			}
-		}]);
-		return Query;
-	})(Embodied);
-
-	this.launchpad.Query = Query;
-}).call(this);
-(function () {
-	'use strict';
-
-	var Filter = this.launchpad.Filter;
-	var Geo = this.launchpad.Geo;
-	var Query = this.launchpad.Query;
-	var Range = this.launchpad.Range;
-
-	if (typeof window !== undefined) {
-		window.Filter = Filter;
-		window.Geo = Geo;
-		window.Query = Query;
-		window.Range = Range;
-	}
-}).call(this);
-(function () {
-	'use strict';
-
-	/**
-  * Provides a convenient interface for data transport.
-  * @interface
-  */
-
 	var Transport = (function () {
 		function Transport() {
 			babelHelpers.classCallCheck(this, Transport);
@@ -2163,8 +357,8 @@ this.launchpadNamed = this.launchpadNamed || {};
 
 			/**
     * Sends a message for the specified client.
-    * @param {ClientRequest} clientRequest
-    * @return {Promise} Deferred request.
+    * @param {!ClientRequest} clientRequest
+    * @return {!Promise} Deferred request.
     */
 			value: function send() {}
 		}]);
@@ -2173,14 +367,14 @@ this.launchpadNamed = this.launchpadNamed || {};
 
 	this.launchpad.Transport = Transport;
 }).call(this);
+'use strict'
+
+/**
+ * Provides a convenient interface for data transport.
+ * @interface
+ */
+;
 (function () {
-	'use strict';
-
-	/**
-  * Provides a convenient interface for data transport.
-  * @interface
-  */
-
 	var Util = (function () {
 		function Util() {
 			babelHelpers.classCallCheck(this, Util);
@@ -2218,6 +412,7 @@ this.launchpadNamed = this.launchpadNamed || {};
     * @return {array} Array containing the url domain and path.
     * @protected
     */
+
 		}, {
 			key: 'parseUrl',
 			value: function parseUrl(url) {
@@ -2251,31 +446,37 @@ this.launchpadNamed = this.launchpadNamed || {};
 			}
 
 			/**
-    * Joins two paths.
+    * Joins the given paths.
     * @param {string} basePath
-    * @param {string} path
+    * @param {...string} ...paths Any number of paths to be joined with the base url.
     */
+
 		}, {
 			key: 'joinPaths',
-			value: function joinPaths(basePath, path) {
+			value: function joinPaths(basePath) {
+				for (var _len = arguments.length, paths = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+					paths[_key - 1] = arguments[_key];
+				}
+
 				if (basePath.charAt(basePath.length - 1) === '/') {
 					basePath = basePath.substring(0, basePath.length - 1);
 				}
-				if (path.charAt(0) === '/') {
-					path = path.substring(1);
-				}
-				return [basePath, path].join('/').replace(/\/$/, '');
+				paths = paths.map(function (path) {
+					return path.charAt(0) === '/' ? path.substring(1) : path;
+				});
+				return [basePath].concat(paths).join('/').replace(/\/$/, '');
 			}
 
 			/**
     * XmlHttpRequest's getAllResponseHeaders() method returns a string of
     * response headers according to the format described on the spec:
-    * http://www.w3.org/TR/XMLHttpRequest/#the-getallresponseheaders-method
+    * {@link http://www.w3.org/TR/XMLHttpRequest/#the-getallresponseheaders-method}.
     * This method parses that string into a user-friendly name/value pair
     * object.
     * @param {string} allHeaders All headers as string.
-    * @return {array.<object<string, string>>=}
+    * @return {!Array.<Object<string, string>>}
     */
+
 		}, {
 			key: 'parseResponseHeaders',
 			value: function parseResponseHeaders(allHeaders) {
@@ -2303,17 +504,17 @@ this.launchpadNamed = this.launchpadNamed || {};
 
 	this.launchpad.Util = Util;
 }).call(this);
+'use strict'
+
+/**
+ * Disposable utility. When inherited provides the `dispose` function to its
+ * subclass, which is responsible for disposing of any object references
+ * when an instance won't be used anymore. Subclasses should override
+ * `disposeInternal` to implement any specific disposing logic.
+ * @constructor
+ */
+;
 (function () {
-	'use strict';
-
-	/**
-  * Disposable utility. When inherited provides the `dispose` function to its
-  * subclass, which is responsible for disposing of any object references
-  * when an instance won't be used anymore. Subclasses should override
-  * `disposeInternal` to implement any specific disposing logic.
-  * @constructor
-  */
-
 	var Disposable = (function () {
 		function Disposable() {
 			babelHelpers.classCallCheck(this, Disposable);
@@ -2329,6 +530,7 @@ this.launchpadNamed = this.launchpadNamed || {};
 		/**
    * Disposes of this instance's object references. Calls `disposeInternal`.
    */
+
 		babelHelpers.createClass(Disposable, [{
 			key: 'dispose',
 			value: function dispose() {
@@ -2343,6 +545,7 @@ this.launchpadNamed = this.launchpadNamed || {};
     * disposing logic (like clearing references and calling `dispose` on other
     * disposables).
     */
+
 		}, {
 			key: 'disposeInternal',
 			value: function disposeInternal() {}
@@ -2351,6 +554,7 @@ this.launchpadNamed = this.launchpadNamed || {};
     * Checks if this instance has already been disposed.
     * @return {boolean}
     */
+
 		}, {
 			key: 'isDisposed',
 			value: function isDisposed() {
@@ -2362,14 +566,15 @@ this.launchpadNamed = this.launchpadNamed || {};
 
 	this.launchpad.Disposable = Disposable;
 }).call(this);
-(function () {
-	'use strict';
+'use strict';
 
+(function () {
 	var Disposable = this.launchpad.Disposable;
 
 	/**
   * Case insensitive string Multimap implementation. Allows multiple values for
   * the same key name.
+  * @extends {Disposable}
   */
 
 	var MultiMap = (function (_Disposable) {
@@ -2378,9 +583,11 @@ this.launchpadNamed = this.launchpadNamed || {};
 		function MultiMap() {
 			babelHelpers.classCallCheck(this, MultiMap);
 
-			babelHelpers.get(Object.getPrototypeOf(MultiMap.prototype), 'constructor', this).call(this);
-			this.keys = {};
-			this.values = {};
+			var _this = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(MultiMap).call(this));
+
+			_this.keys = {};
+			_this.values = {};
+			return _this;
 		}
 
 		/**
@@ -2389,6 +596,7 @@ this.launchpadNamed = this.launchpadNamed || {};
    * @param {*} value
    * @chainable
    */
+
 		babelHelpers.createClass(MultiMap, [{
 			key: 'add',
 			value: function add(name, value) {
@@ -2402,6 +610,7 @@ this.launchpadNamed = this.launchpadNamed || {};
     * Clears map names and values.
     * @chainable
     */
+
 		}, {
 			key: 'clear',
 			value: function clear() {
@@ -2413,8 +622,10 @@ this.launchpadNamed = this.launchpadNamed || {};
 			/**
     * Checks if map contains a value to the key name.
     * @param {string} name
+    * @return {boolean}
     * @chainable
     */
+
 		}, {
 			key: 'contains',
 			value: function contains(name) {
@@ -2424,6 +635,7 @@ this.launchpadNamed = this.launchpadNamed || {};
 			/**
     * @inheritDoc
     */
+
 		}, {
 			key: 'disposeInternal',
 			value: function disposeInternal() {
@@ -2433,8 +645,10 @@ this.launchpadNamed = this.launchpadNamed || {};
 			/**
     * Gets the first added value from a key name.
     * @param {string} name
+    * @return {*}
     * @chainable
     */
+
 		}, {
 			key: 'get',
 			value: function get(name) {
@@ -2447,8 +661,9 @@ this.launchpadNamed = this.launchpadNamed || {};
 			/**
     * Gets all values from a key name.
     * @param {string} name
-    * @return {array.<string>}
+    * @return {Array.<*>}
     */
+
 		}, {
 			key: 'getAll',
 			value: function getAll(name) {
@@ -2459,6 +674,7 @@ this.launchpadNamed = this.launchpadNamed || {};
     * Returns true if the map is empty, false otherwise.
     * @return {boolean}
     */
+
 		}, {
 			key: 'isEmpty',
 			value: function isEmpty() {
@@ -2467,15 +683,16 @@ this.launchpadNamed = this.launchpadNamed || {};
 
 			/**
     * Gets array of key names.
-    * @return {array.<string>}
+    * @return {Array.<string>}
     */
+
 		}, {
 			key: 'names',
 			value: function names() {
-				var _this = this;
+				var _this2 = this;
 
 				return Object.keys(this.values).map(function (key) {
-					return _this.keys[key];
+					return _this2.keys[key];
 				});
 			}
 
@@ -2484,6 +701,7 @@ this.launchpadNamed = this.launchpadNamed || {};
     * @param {string} name
     * @chainable
     */
+
 		}, {
 			key: 'remove',
 			value: function remove(name) {
@@ -2495,9 +713,11 @@ this.launchpadNamed = this.launchpadNamed || {};
 			/**
     * Sets the value of a key name. Relevant to replace the current values with
     * a new one.
-    * @param {string} name  [description]
+    * @param {string} name
+    * @param {*} value
     * @chainable
     */
+
 		}, {
 			key: 'set',
 			value: function set(name, value) {
@@ -2510,11 +730,18 @@ this.launchpadNamed = this.launchpadNamed || {};
     * Gets the size of the map key names.
     * @return {number}
     */
+
 		}, {
 			key: 'size',
 			value: function size() {
 				return this.names().length;
 			}
+
+			/**
+    * Returns the parsed values as a string.
+    * @return {string}
+    */
+
 		}, {
 			key: 'toString',
 			value: function toString() {
@@ -2526,13 +753,14 @@ this.launchpadNamed = this.launchpadNamed || {};
 
 	this.launchpad.MultiMap = MultiMap;
 }).call(this);
-(function () {
-	'use strict';
+'use strict';
 
+(function () {
 	var core = this.launchpad.core;
 	var MultiMap = this.launchpad.MultiMap;
 
 	/**
+  * Represents a client message (e.g. a request or a response).
   */
 
 	var ClientMessage = (function () {
@@ -2544,10 +772,13 @@ this.launchpadNamed = this.launchpadNamed || {};
 
 		/**
    * Fluent getter and setter for request body.
-   * @param {string} opt_body Request body to be set.
-   * @return {string} Returns request body.
-   * @chainable Chainable when used for setter.
+   * @param {*=} opt_body Request body to be set. If none is given,
+   *   the current value of the body will be returned.
+   * @return {*} Returns request body if no body value was given. Otherwise
+   *   returns the {@link ClientMessage} object itself, so calls can be chained.
+   * @chainable Chainable when used as setter.
    */
+
 		babelHelpers.createClass(ClientMessage, [{
 			key: 'body',
 			value: function body(opt_body) {
@@ -2559,12 +790,13 @@ this.launchpadNamed = this.launchpadNamed || {};
 			}
 
 			/**
-    * Adds a header. If the header with the same name already exists, it will
-    * not be overwritten, but new value will be stored. The order is preserved.
+    * Adds a header. If a header with the same name already exists, it will not be
+    * overwritten, but the new value will be stored as well. The order is preserved.
     * @param {string} name
     * @param {string} value
     * @chainable
     */
+
 		}, {
 			key: 'header',
 			value: function header(name, value) {
@@ -2577,10 +809,15 @@ this.launchpadNamed = this.launchpadNamed || {};
 
 			/**
     * Fluent getter and setter for request headers.
-    * @param {MultiMap|object} opt_params Request headers list
-    *   to be set.
-    * @return {MultiMap} Returns map of request headers.
+    * @param {MultiMap|Object=} opt_headers Request headers list to
+    *   be set. If none is given the current value of the headers will
+    *   be returned.
+    * @return {!MultiMap|ClientMessage} Returns map of request headers
+    *   if no new value was given. Otherwise returns the {@link ClientMessage}
+    *   object itself, so calls can be chained.
+    * @chainable Chainable when used as setter.
     */
+
 		}, {
 			key: 'headers',
 			value: function headers(opt_headers) {
@@ -2598,6 +835,7 @@ this.launchpadNamed = this.launchpadNamed || {};
 			/**
     * Removes the body.
     */
+
 		}, {
 			key: 'removeBody',
 			value: function removeBody() {
@@ -2609,13 +847,15 @@ this.launchpadNamed = this.launchpadNamed || {};
 
 	this.launchpad.ClientMessage = ClientMessage;
 }).call(this);
-(function () {
-	'use strict';
+'use strict';
 
+(function () {
 	var core = this.launchpad.core;
 	var ClientMessage = this.launchpad.ClientMessage;
 
 	/**
+  * Represents a client response object.
+  * @extends {ClientMessage}
   */
 
 	var ClientResponse = (function (_ClientMessage) {
@@ -2624,17 +864,20 @@ this.launchpadNamed = this.launchpadNamed || {};
 		function ClientResponse(clientRequest) {
 			babelHelpers.classCallCheck(this, ClientResponse);
 
-			babelHelpers.get(Object.getPrototypeOf(ClientResponse.prototype), 'constructor', this).call(this);
+			var _this = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(ClientResponse).call(this));
+
 			if (!clientRequest) {
 				throw new Error('Can\'t create response without request');
 			}
-			this.clientRequest_ = clientRequest;
+			_this.clientRequest_ = clientRequest;
+			return _this;
 		}
 
 		/**
    * Returns request that created this response.
-   * @return {ClientRequest}
+   * @return {!ClientRequest}
    */
+
 		babelHelpers.createClass(ClientResponse, [{
 			key: 'request',
 			value: function request() {
@@ -2643,9 +886,14 @@ this.launchpadNamed = this.launchpadNamed || {};
 
 			/**
     * Fluent getter and setter for response status code.
-    * @param {number} opt_statusCode Request status code to be set.
-    * @return {number} Returns response status code.
+    * @param {number=} opt_statusCode Request status code to be set. If none is given,
+    *   the current status code value will be returned.
+    * @return {!ClientMessage|number} Returns response status code if no new value was
+    *   given. Otherwise returns the {@link ClientMessage} object itself, so calls can
+    *   be chained.
+    * @chainable Chainable when used as setter.
     */
+
 		}, {
 			key: 'statusCode',
 			value: function statusCode(opt_statusCode) {
@@ -2658,9 +906,14 @@ this.launchpadNamed = this.launchpadNamed || {};
 
 			/**
     * Fluent getter and setter for response status text.
-    * @param {string} opt_statusText Request status text to be set.
-    * @return {string} Returns response status text.
+    * @param {string=} opt_statusText Request status text to be set. If none is given,
+    *   the current status text value will be returned.
+    * @return {!ClientMessage|number} Returns response status text if no new value was
+    *   given. Otherwise returns the {@link ClientMessage} object itself, so calls can
+    *   be chained.
+    * @chainable Chainable when used as setter.
     */
+
 		}, {
 			key: 'statusText',
 			value: function statusText(opt_statusText) {
@@ -2672,10 +925,10 @@ this.launchpadNamed = this.launchpadNamed || {};
 			}
 
 			/**
-    * Checks if response succeeded. Any status code 2xx or 3xx is considered
-    * valid.
+    * Checks if response succeeded. Any status code 2xx or 3xx is considered valid.
     * @return {boolean}
     */
+
 		}, {
 			key: 'succeeded',
 			value: function succeeded() {
@@ -2687,19 +940,19 @@ this.launchpadNamed = this.launchpadNamed || {};
 
 	this.launchpad.ClientResponse = ClientResponse;
 }).call(this);
+/*!
+ * Promises polyfill from Google's Closure Library.
+ *
+ *      Copyright 2013 The Closure Library Authors. All Rights Reserved.
+ *
+ * NOTE(eduardo): Promise support is not ready on all supported browsers,
+ * therefore core.js is temporarily using Google's promises as polyfill. It
+ * supports cancellable promises and has clean and fast implementation.
+ */
+
+'use strict';
+
 (function () {
-  /*!
-   * Promises polyfill from Google's Closure Library.
-   *
-   *      Copyright 2013 The Closure Library Authors. All Rights Reserved.
-   *
-   * NOTE(eduardo): Promise support is not ready on all supported browsers,
-   * therefore core.js is temporarily using Google's promises as polyfill. It
-   * supports cancellable promises and has clean and fast implementation.
-   */
-
-  'use strict';
-
   var core = this.launchpad.core;
 
   /**
@@ -2710,6 +963,7 @@ this.launchpadNamed = this.launchpadNamed || {};
    * @extends {IThenable.<TYPE>}
    * @template TYPE
    */
+
   var Thenable = function Thenable() {};
 
   /**
@@ -3373,7 +1627,7 @@ this.launchpadNamed = this.launchpadNamed || {};
   /**
    * Alias of {@link CancellablePromise.prototype.thenCatch}
    */
-  CancellablePromise.prototype['catch'] = CancellablePromise.prototype.thenCatch;
+  CancellablePromise.prototype.catch = CancellablePromise.prototype.thenCatch;
 
   /**
    * Cancels the Promise if it is still pending by rejecting it with a cancel
@@ -3801,11 +2055,12 @@ this.launchpadNamed = this.launchpadNamed || {};
     function _class(opt_message) {
       babelHelpers.classCallCheck(this, _class);
 
-      babelHelpers.get(Object.getPrototypeOf(_class.prototype), 'constructor', this).call(this, opt_message);
+      var _this = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(_class).call(this, opt_message));
 
       if (opt_message) {
-        this.message = opt_message;
+        _this.message = opt_message;
       }
+      return _this;
     }
 
     return _class;
@@ -3822,9 +2077,9 @@ this.launchpadNamed = this.launchpadNamed || {};
   this.launchpadNamed.Promise.CancellablePromise = CancellablePromise;
   this.launchpadNamed.Promise.async = async;
 }).call(this);
-(function () {
-	'use strict';
+'use strict';
 
+(function () {
 	var core = this.launchpad.core;
 	var Transport = this.launchpad.Transport;
 	var Util = this.launchpad.Util;
@@ -3832,8 +2087,8 @@ this.launchpadNamed = this.launchpadNamed || {};
 	var Promise = this.launchpadNamed.Promise.CancellablePromise;
 
 	/**
-  * Provides a convenient interface for data transport.
-  * @interface
+  * The implementation of an ajax transport to be used with {@link Launchpad}.
+  * @extends {Transport}
   */
 
 	var AjaxTransport = (function (_Transport) {
@@ -3841,15 +2096,15 @@ this.launchpadNamed = this.launchpadNamed || {};
 
 		function AjaxTransport() {
 			babelHelpers.classCallCheck(this, AjaxTransport);
-
-			babelHelpers.get(Object.getPrototypeOf(AjaxTransport.prototype), 'constructor', this).call(this);
+			return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(AjaxTransport).apply(this, arguments));
 		}
 
-		/**
-   * @inheritDoc
-   */
 		babelHelpers.createClass(AjaxTransport, [{
 			key: 'send',
+
+			/**
+    * @inheritDoc
+    */
 			value: function send(clientRequest) {
 				var deferred = this.request(clientRequest.url(), clientRequest.method(), clientRequest.body(), clientRequest.headers(), clientRequest.params(), null, false);
 
@@ -3877,6 +2132,7 @@ this.launchpadNamed = this.launchpadNamed || {};
     * @return {Promise} Deferred ajax request.
     * @protected
     */
+
 		}, {
 			key: 'request',
 			value: function request(url, method, body, opt_headers, opt_params, opt_timeout, opt_sync) {
@@ -3930,14 +2186,129 @@ this.launchpadNamed = this.launchpadNamed || {};
 
 	this.launchpad.AjaxTransport = AjaxTransport;
 }).call(this);
-(function () {
-	'use strict';
+'use strict';
 
+(function () {
+	var core = this.launchpad.core;
+
+	/**
+  * Class responsible for storing authorization information.
+  */
+
+	var Auth = (function () {
+		/**
+   * Constructs an {@link Auth} instance.
+   * @param {string} tokenOrUsername Either the authorization token, or
+   *   the username.
+   * @param {string=} opt_password If a username is given as the first param,
+   *   this should be the password.
+   * @constructor
+   */
+
+		function Auth(tokenOrUsername) {
+			var opt_password = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+			babelHelpers.classCallCheck(this, Auth);
+
+			this.token_ = core.isString(opt_password) ? null : tokenOrUsername;
+			this.username_ = core.isString(opt_password) ? tokenOrUsername : null;
+			this.password_ = opt_password;
+		}
+
+		/**
+   * Constructs an {@link Auth} instance.
+   * @param {string} tokenOrUsername Either the authorization token, or
+   *   the username.
+   * @param {string=} opt_password If a username is given as the first param,
+   *   this should be the password.
+   * @return {!Auth}
+   */
+
+		babelHelpers.createClass(Auth, [{
+			key: 'hasPassword',
+
+			/**
+    * Checks if the password is set.
+    * @return {boolean}
+    */
+			value: function hasPassword() {
+				return this.password_ !== null;
+			}
+
+			/**
+    * Checks if the token is set.
+    * @return {boolean}
+    */
+
+		}, {
+			key: 'hasToken',
+			value: function hasToken() {
+				return this.token_ !== null;
+			}
+
+			/**
+    * Checks if the username is set.
+    * @return {boolean}
+    */
+
+		}, {
+			key: 'hasUsername',
+			value: function hasUsername() {
+				return this.username_ !== null;
+			}
+
+			/**
+    * Returns the password.
+    * @return {string}
+    */
+
+		}, {
+			key: 'password',
+			value: function password() {
+				return this.password_;
+			}
+
+			/**
+    * Returns the token.
+    * @return {string}
+    */
+
+		}, {
+			key: 'token',
+			value: function token() {
+				return this.token_;
+			}
+
+			/**
+    * Returns the username.
+    * @return {string}
+    */
+
+		}, {
+			key: 'username',
+			value: function username() {
+				return this.username_;
+			}
+		}], [{
+			key: 'create',
+			value: function create(tokenOrUsername, opt_password) {
+				return new Auth(tokenOrUsername, opt_password);
+			}
+		}]);
+		return Auth;
+	})();
+
+	this.launchpad.Auth = Auth;
+}).call(this);
+'use strict';
+
+(function () {
 	var core = this.launchpad.core;
 	var ClientMessage = this.launchpad.ClientMessage;
 	var MultiMap = this.launchpad.MultiMap;
 
 	/**
+  * Represents a client request object.
+  * @extends {ClientMessage}
   */
 
 	var ClientRequest = (function (_ClientMessage) {
@@ -3946,16 +2317,22 @@ this.launchpadNamed = this.launchpadNamed || {};
 		function ClientRequest() {
 			babelHelpers.classCallCheck(this, ClientRequest);
 
-			babelHelpers.get(Object.getPrototypeOf(ClientRequest.prototype), 'constructor', this).call(this);
-			this.params_ = new MultiMap();
+			var _this = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(ClientRequest).call(this));
+
+			_this.params_ = new MultiMap();
+			return _this;
 		}
 
 		/**
    * Fluent getter and setter for request method.
-   * @param {string} opt_method Request method to be set.
-   * @return {string} Returns request method.
-   * @chainable Chainable when used for setter.
+   * @param {string=} opt_method Request method to be set. If none is given,
+   *   the current method value will be returned.
+   * @return {!ClientMessage|string} Returns request method if no new value was
+   *   given. Otherwise returns the {@link ClientMessage} object itself, so
+   *   calls can be chained.
+   * @chainable Chainable when used as setter.
    */
+
 		babelHelpers.createClass(ClientRequest, [{
 			key: 'method',
 			value: function method(opt_method) {
@@ -3967,12 +2344,13 @@ this.launchpadNamed = this.launchpadNamed || {};
 			}
 
 			/**
-    * Adds a query. If the query with the same name already exists, it will not
-    * be overwritten, but new value will be stored. The order is preserved.
+    * Adds a query. If a query with the same name already exists, it will not
+    * be overwritten, but new value will be stored as well. The order is preserved.
     * @param {string} name
     * @param {string} value
     * @chainable
     */
+
 		}, {
 			key: 'param',
 			value: function param(name, value) {
@@ -3985,9 +2363,13 @@ this.launchpadNamed = this.launchpadNamed || {};
 
 			/**
     * Fluent getter and setter for request querystring.
-    * @param {MultiMap|object} opt_params Request querystring map to be set.
-    * @return {MultiMap} Returns map of request querystring.
+    * @param {MultiMap|Object=} opt_params Request querystring map to be set.
+    *   If none is given the current value of the params will be returned.
+    * @return {!MultiMap|ClientMessage} Returns map of request querystring if
+    *   no new value was given. Otherwise returns the {@link ClientMessage}
+    *   object itself, so calls can be chained.
     */
+
 		}, {
 			key: 'params',
 			value: function params(opt_params) {
@@ -4004,11 +2386,14 @@ this.launchpadNamed = this.launchpadNamed || {};
 
 			/**
     * Fluent getter and setter for request url.
-    * @param {string} opt_url Request url to be set.
-    * @return {string} Returns request url.
-    * @chainable Chainable when used for setter.
-    * TODO: Renames on api.java as well.
+    * @param {string=} opt_url Request url to be set. If none is given,
+    *   the current value of the url will be returned.
+    * @return {!ClientMessage|string} Returns request url if no new value was given.
+    *   Otherwise returns the {@link ClientMessage} object itself, so calls can be
+    *   chained.
+    * @chainable Chainable when used as setter.
     */
+
 		}, {
 			key: 'url',
 			value: function url(opt_url) {
@@ -4026,9 +2411,1923 @@ this.launchpadNamed = this.launchpadNamed || {};
 
 	this.launchpad.ClientRequest = ClientRequest;
 }).call(this);
-(function () {
-	'use strict';
+'use strict'
 
+/**
+ * Class responsible for storing an object that will be printed as JSON
+ * when the `toString` method is called.
+ */
+;
+(function () {
+	var Embodied = (function () {
+		/**
+   * Constructs a Embodied instance.
+   * @constructor
+   */
+
+		function Embodied() {
+			babelHelpers.classCallCheck(this, Embodied);
+
+			this.body_ = {};
+		}
+
+		/**
+   * Gets the json object that represents this instance.
+   * @return {!Object}
+   */
+
+		babelHelpers.createClass(Embodied, [{
+			key: 'body',
+			value: function body() {
+				return this.body_;
+			}
+
+			/**
+    * If the given object is an instance of Embodied, this will
+    * return its body content. Otherwise this will return the
+    * original object.
+    * @param {*} obj
+    * @return {*}
+    * @static
+    */
+
+		}, {
+			key: 'toString',
+
+			/**
+    * Gets the json string that represents this instance.
+    * @return {string}
+    */
+			value: function toString() {
+				return JSON.stringify(this.body());
+			}
+		}], [{
+			key: 'toBody',
+			value: function toBody(obj) {
+				return obj instanceof Embodied ? obj.body() : obj;
+			}
+		}]);
+		return Embodied;
+	})();
+
+	this.launchpad.Embodied = Embodied;
+}).call(this);
+'use strict';
+
+(function () {
+	var core = this.launchpad.core;
+	var Embodied = this.launchpad.Embodied;
+
+	/**
+  * Class responsible for storing and handling the body contents
+  * of a Filter instance.
+  */
+
+	var FilterBody = (function () {
+		/**
+   * Constructs a {@link FilterBody} instance.
+   * @param {string} field The name of the field to filter by.
+   * @param {*} operatorOrValue If a third param is given, this should
+   *   be the filter's operator (like ">="). Otherwise, this will be
+   *   used as the filter's value, and the filter's operator will be "=".
+   * @param {*=} opt_value The filter's value.
+   * @constructor
+   */
+
+		function FilterBody(field, operatorOrValue, opt_value) {
+			babelHelpers.classCallCheck(this, FilterBody);
+
+			var obj = {
+				operator: core.isDef(opt_value) ? operatorOrValue : '='
+			};
+			var value = core.isDef(opt_value) ? opt_value : operatorOrValue;
+			if (core.isDefAndNotNull(value)) {
+				if (value instanceof Embodied) {
+					value = value.body();
+				}
+				obj.value = value;
+			}
+			this.createBody_(field, obj);
+		}
+
+		/**
+   * Composes the current filter with the given operator.
+   * @param {string} operator
+   * @param {Filter=} opt_filter Another filter to compose this filter with,
+   *   if the operator is not unary.
+   */
+
+		babelHelpers.createClass(FilterBody, [{
+			key: 'add',
+			value: function add(operator, opt_filter) {
+				if (opt_filter) {
+					this.addArrayOperator_(operator, opt_filter);
+				} else {
+					this.createBody_(operator, this.body_);
+				}
+			}
+
+			/**
+    * Composes the current filter with an operator that stores its values in an array.
+    * @param {string} operator
+    * @param {!Filter} filter
+    * @protected
+    */
+
+		}, {
+			key: 'addArrayOperator_',
+			value: function addArrayOperator_(operator, filter) {
+				if (!(this.body_[operator] instanceof Array)) {
+					this.createBody_(operator, [this.body_]);
+				}
+				this.body_[operator].push(filter.body());
+			}
+
+			/**
+    * Adds filters to be composed with this filter body using the given operator.
+    * @param {string} operator
+    * @param {...*} filters A variable amount of filters to be composed.
+    */
+
+		}, {
+			key: 'addMany',
+			value: function addMany(operator) {
+				for (var _len = arguments.length, filters = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+					filters[_key - 1] = arguments[_key];
+				}
+
+				for (var i = 0; i < filters.length; i++) {
+					this.add(operator, filters[i]);
+				}
+			}
+
+			/**
+    * Creates a new body object, setting the requestd key to the given value.
+    * @param {string} key The key to set in the new body object
+    * @param {*} value The value the requested key should have in the new body object.
+    * @protected
+    */
+
+		}, {
+			key: 'createBody_',
+			value: function createBody_(key, value) {
+				this.body_ = {};
+				this.body_[key] = value;
+			}
+
+			/**
+    * Gets the json object that represents this filter's body.
+    * @return {!Object}
+    */
+
+		}, {
+			key: 'getObject',
+			value: function getObject() {
+				return this.body_;
+			}
+		}]);
+		return FilterBody;
+	})();
+
+	this.launchpad.FilterBody = FilterBody;
+}).call(this);
+'use strict';
+
+(function () {
+	var Embodied = this.launchpad.Embodied;
+
+	/**
+  * Class responsible for building different types of geometric
+  * shapes.
+  */
+
+	var Geo = (function () {
+		function Geo() {
+			babelHelpers.classCallCheck(this, Geo);
+		}
+
+		babelHelpers.createClass(Geo, null, [{
+			key: 'boundingBox',
+
+			/**
+    * Creates a new {@link BoundingBox} instance.
+    * @param {*} upperLeft The upper left point.
+    * @param {*} lowerRight The lower right point.
+    * @return {!BoundingBox}
+    * @static
+    */
+			value: function boundingBox(upperLeft, lowerRight) {
+				return new Geo.BoundingBox(upperLeft, lowerRight);
+			}
+
+			/**
+    * Creates a new {@link Circle} instance.
+    * @param {*} center The circle's center coordinate.
+    * @param {string} radius The circle's radius.
+    * @return {!Circle}
+    * @static
+    */
+
+		}, {
+			key: 'circle',
+			value: function circle(center, radius) {
+				return new Geo.Circle(center, radius);
+			}
+
+			/**
+    * Creates a new {@link Line} instance.
+    * @param {...*} points This line's points.
+    * @return {!Line}
+    * @static
+    */
+
+		}, {
+			key: 'line',
+			value: function line() {
+				for (var _len = arguments.length, points = Array(_len), _key = 0; _key < _len; _key++) {
+					points[_key] = arguments[_key];
+				}
+
+				return new (Function.prototype.bind.apply(Geo.Line, [null].concat(points)))();
+			}
+
+			/**
+    * Creates a new {@link Point} instance.
+    * @param {number} lat The latitude coordinate
+    * @param {number} lon The longitude coordinate
+    * @return {!Point}
+    * @static
+    */
+
+		}, {
+			key: 'point',
+			value: function point(lat, lon) {
+				return new Geo.Point(lat, lon);
+			}
+
+			/**
+    * Creates a new {@link Polygon} instance.
+    * @param {...*} points This polygon's points.
+    * @return {!Polygon}
+    * @static
+    */
+
+		}, {
+			key: 'polygon',
+			value: function polygon() {
+				for (var _len2 = arguments.length, points = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+					points[_key2] = arguments[_key2];
+				}
+
+				return new (Function.prototype.bind.apply(Geo.Polygon, [null].concat(points)))();
+			}
+		}]);
+		return Geo;
+	})();
+
+	/**
+  * Class that represents a point coordinate.
+  * @extends {Embodied}
+  */
+
+	var Point = (function (_Embodied) {
+		babelHelpers.inherits(Point, _Embodied);
+
+		/**
+   * Constructs a {@link Point} instance.
+   * @param {number} lat The latitude coordinate
+   * @param {number} lon The longitude coordinate
+   * @constructor
+   */
+
+		function Point(lat, lon) {
+			babelHelpers.classCallCheck(this, Point);
+
+			var _this = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Point).call(this));
+
+			_this.body_ = [lat, lon];
+			return _this;
+		}
+
+		return Point;
+	})(Embodied);
+
+	Geo.Point = Point;
+
+	/**
+  * Class that represents a line.
+  * @extends {Embodied}
+  */
+
+	var Line = (function (_Embodied2) {
+		babelHelpers.inherits(Line, _Embodied2);
+
+		/**
+   * Constructs a {@link Line} instance.
+   * @param {...*} points This line's points.
+   * @constructor
+   */
+
+		function Line() {
+			babelHelpers.classCallCheck(this, Line);
+
+			var _this2 = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Line).call(this));
+
+			for (var _len3 = arguments.length, points = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+				points[_key3] = arguments[_key3];
+			}
+
+			_this2.body_ = {
+				type: 'linestring',
+				coordinates: points.map(function (point) {
+					return Embodied.toBody(point);
+				})
+			};
+			return _this2;
+		}
+
+		return Line;
+	})(Embodied);
+
+	Geo.Line = Line;
+
+	/**
+  * Class that represents a bounding box.
+  * @extends {Embodied}
+  */
+
+	var BoundingBox = (function (_Embodied3) {
+		babelHelpers.inherits(BoundingBox, _Embodied3);
+
+		/**
+   * Constructs a {@link BoundingBox} instance.
+   * @param {*} upperLeft The upper left point.
+   * @param {*} lowerRight The lower right point.
+   * @constructor
+   */
+
+		function BoundingBox(upperLeft, lowerRight) {
+			babelHelpers.classCallCheck(this, BoundingBox);
+
+			var _this3 = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(BoundingBox).call(this));
+
+			_this3.body_ = {
+				type: 'envelope',
+				coordinates: [Embodied.toBody(upperLeft), Embodied.toBody(lowerRight)]
+			};
+			return _this3;
+		}
+
+		/**
+   * Gets this bounding box's points.
+   * @return {!Array}
+   */
+
+		babelHelpers.createClass(BoundingBox, [{
+			key: 'getPoints',
+			value: function getPoints() {
+				return this.body_.coordinates;
+			}
+		}]);
+		return BoundingBox;
+	})(Embodied);
+
+	Geo.BoundingBox = BoundingBox;
+
+	/**
+  * Class that represents a circle.
+  * @extends {Embodied}
+  */
+
+	var Circle = (function (_Embodied4) {
+		babelHelpers.inherits(Circle, _Embodied4);
+
+		/**
+   * Constructs a {@link Circle} instance.
+   * @param {*} center The circle's center coordinate.
+   * @param {string} radius The circle's radius.
+   * @constructor
+   */
+
+		function Circle(center, radius) {
+			babelHelpers.classCallCheck(this, Circle);
+
+			var _this4 = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Circle).call(this));
+
+			_this4.body_ = {
+				type: 'circle',
+				coordinates: Embodied.toBody(center),
+				radius: radius
+			};
+			return _this4;
+		}
+
+		/**
+   * Gets this circle's center coordinate.
+   * @return {*}
+   */
+
+		babelHelpers.createClass(Circle, [{
+			key: 'getCenter',
+			value: function getCenter() {
+				return this.body_.coordinates;
+			}
+
+			/**
+    * Gets this circle's radius.
+    * @return {string}
+    */
+
+		}, {
+			key: 'getRadius',
+			value: function getRadius() {
+				return this.body_.radius;
+			}
+		}]);
+		return Circle;
+	})(Embodied);
+
+	Geo.Circle = Circle;
+
+	/**
+  * Class that represents a polygon.
+  * @extends {Embodied}
+  */
+
+	var Polygon = (function (_Embodied5) {
+		babelHelpers.inherits(Polygon, _Embodied5);
+
+		/**
+   * Constructs a {@link Polygon} instance.
+   * @param {...*} points This polygon's points.
+   * @constructor
+   */
+
+		function Polygon() {
+			babelHelpers.classCallCheck(this, Polygon);
+
+			var _this5 = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Polygon).call(this));
+
+			_this5.body_ = {
+				type: 'polygon',
+				coordinates: []
+			};
+			_this5.addCoordinates_.apply(_this5, arguments);
+			return _this5;
+		}
+
+		/**
+   * Adds the given points as coordinates for this polygon.
+   * @param {...*} points
+   * @protected
+   */
+
+		babelHelpers.createClass(Polygon, [{
+			key: 'addCoordinates_',
+			value: function addCoordinates_() {
+				for (var _len4 = arguments.length, points = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+					points[_key4] = arguments[_key4];
+				}
+
+				this.body_.coordinates.push(points.map(function (point) {
+					return Embodied.toBody(point);
+				}));
+			}
+
+			/**
+    * Adds the given points as a hole inside this polygon.
+    * @param  {...*} points
+    * @chainnable
+    */
+
+		}, {
+			key: 'hole',
+			value: function hole() {
+				this.addCoordinates_.apply(this, arguments);
+				return this;
+			}
+		}]);
+		return Polygon;
+	})(Embodied);
+
+	Geo.Polygon = Polygon;
+
+	this.launchpad.Geo = Geo;
+}).call(this);
+'use strict';
+
+(function () {
+	var core = this.launchpad.core;
+	var Embodied = this.launchpad.Embodied;
+
+	/**
+  * Class responsible for building range objects to be used by `Filter`.
+  * @extends {Embodied}
+  */
+
+	var Range = (function (_Embodied) {
+		babelHelpers.inherits(Range, _Embodied);
+
+		/**
+   * Constructs a {@link Range} instance.
+   * @param {*} from
+   * @param {*} opt_to
+   * @constructor
+   */
+
+		function Range(from, opt_to) {
+			babelHelpers.classCallCheck(this, Range);
+
+			var _this = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Range).call(this));
+
+			if (core.isDefAndNotNull(from)) {
+				_this.body_.from = from;
+			}
+			if (core.isDefAndNotNull(opt_to)) {
+				_this.body_.to = opt_to;
+			}
+			return _this;
+		}
+
+		/**
+   * Constructs a {@link Range} instance.
+   * @param {*} from
+   * @return {!Range}
+   * @static
+   */
+
+		babelHelpers.createClass(Range, null, [{
+			key: 'from',
+			value: function from(_from) {
+				return new Range(_from);
+			}
+
+			/**
+    * Constructs a {@link Range} instance.
+    * @param {*} from
+    * @param {*} to
+    * @return {!Range}
+    * @static
+    */
+
+		}, {
+			key: 'range',
+			value: function range(from, to) {
+				return new Range(from, to);
+			}
+
+			/**
+    * Constructs a {@link Range} instance.
+    * @param {*} to
+    * @return {!Range}
+    * @static
+    */
+
+		}, {
+			key: 'to',
+			value: function to(_to) {
+				return new Range(null, _to);
+			}
+		}]);
+		return Range;
+	})(Embodied);
+
+	this.launchpad.Range = Range;
+}).call(this);
+'use strict';
+
+(function () {
+	var core = this.launchpad.core;
+	var Embodied = this.launchpad.Embodied;
+	var FilterBody = this.launchpad.FilterBody;
+	var Geo = this.launchpad.Geo;
+	var Range = this.launchpad.Range;
+
+	/**
+  * Class responsible for building filters.
+  * @extends {Embodied}
+  */
+
+	var Filter = (function (_Embodied) {
+		babelHelpers.inherits(Filter, _Embodied);
+
+		/**
+   * Constructs a {@link Filter} instance.
+   * @param {string} field The name of the field to filter by.
+   * @param {*} operatorOrValue If a third param is given, this should
+   *   be the filter's operator (like ">="). Otherwise, this will be
+   *   used as the filter's value, and the filter's operator will be "=".
+   * @param {*=} opt_value The filter's value.
+   * @constructor
+   */
+
+		function Filter(field, operatorOrValue, opt_value) {
+			babelHelpers.classCallCheck(this, Filter);
+
+			var _this = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Filter).call(this));
+
+			_this.body_ = new FilterBody(field, operatorOrValue, opt_value);
+			return _this;
+		}
+
+		/**
+   * Adds a filter to be composed with this filter using the given operator.
+   * @param {string} operator
+   * @param {!Filter|string} fieldOrFilter Either a {@link Filter} instance or the
+   *   name of the field to filter by.
+   * @param {*=} opt_operatorOrValue Either the field's operator or its value.
+   * @param {*=} opt_value The filter's value.
+   * @chainnable
+   */
+
+		babelHelpers.createClass(Filter, [{
+			key: 'add',
+			value: function add(operator, fieldOrFilter, opt_operatorOrValue, opt_value) {
+				var filter = fieldOrFilter ? Filter.toFilter(fieldOrFilter, opt_operatorOrValue, opt_value) : null;
+				this.body_.add(operator, filter);
+				return this;
+			}
+
+			/**
+    * Adds filters to be composed with this filter using the given operator.
+    * @param {string} operator
+    * @param {...*} filters A variable amount of filters to be composed.
+    * @chainnable
+    */
+
+		}, {
+			key: 'addMany',
+			value: function addMany(operator) {
+				var _body_;
+
+				for (var _len = arguments.length, filters = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+					filters[_key - 1] = arguments[_key];
+				}
+
+				(_body_ = this.body_).addMany.apply(_body_, [operator].concat(filters));
+				return this;
+			}
+
+			/**
+    * Adds a filter to be composed with this filter using the "and" operator.
+    * @param {!Filter|string} fieldOrFilter Either a {@link Filter} instance or the
+    *   name of the field to filter by.
+    * @param {*=} opt_operatorOrValue Either the field's operator or its value.
+    * @param {*=} opt_value The filter's value.
+    * @chainnable
+    */
+
+		}, {
+			key: 'and',
+			value: function and(fieldOrFilter, opt_operatorOrValue, opt_value) {
+				return this.add('and', fieldOrFilter, opt_operatorOrValue, opt_value);
+			}
+
+			/**
+    * Returns a {@link Filter} instance that uses the "any" operator.
+    * @param {string} field The name of the field to filter by.
+    * @param {!(Array|...*)} values A variable amount of values to be used with
+    *   the "none" operator. Can be passed either as a single array or as
+    *   separate params.
+    * @return {!Filter}
+    * @static
+    */
+
+		}, {
+			key: 'body',
+
+			/**
+    * Gets the json object that represents this filter.
+    * @return {!Object}
+    */
+			value: function body() {
+				return this.body_.getObject();
+			}
+
+			/**
+    * Returns a {@link Filter} instance that uses the "gd" operator.
+    * @param {string} field The field's name.
+    * @param {*} locationOrCircle Either a `Geo.Circle` instance or a coordinate.
+    * @param {Range|string=} opt_rangeOrDistance Either a `Range` instance or
+    *   the distance value.
+    * @return {!Filter}
+    * @static
+    */
+
+		}, {
+			key: 'or',
+
+			/**
+    * Adds a filter to be composed with this filter using the "or" operator.
+    * @param {!Filter|string} fieldOrFilter Either a {@link Filter} instance or the
+    *   name of the field to filter by.
+    * @param {*=} opt_operatorOrValue Either the field's operator or its value.
+    * @param {*=} opt_value The filter's value.
+    * @chainnable
+    */
+			value: function or(fieldOrFilter, opt_operatorOrValue, opt_value) {
+				return this.add('or', fieldOrFilter, opt_operatorOrValue, opt_value);
+			}
+
+			/**
+    * Converts the given arguments into a {@link Filter} instance.
+    * @param {!Filter|string} fieldOrFilter Either a {@link Filter} instance or the
+    *   name of the field to filter by.
+    * @param {*=} opt_operatorOrValue Either the field's operator or its value.
+    * @param {*=} opt_value The filter's value.
+    * @return {!Filter}
+    */
+
+		}], [{
+			key: 'any',
+			value: function any(field) {
+				var values = Array.prototype.slice.call(arguments, 1);
+				if (values.length === 1 && values[0] instanceof Array) {
+					values = values[0];
+				}
+				return new Filter(field, 'any', values);
+			}
+
+			/**
+    * Returns a {@link Filter} instance that uses the "gp" operator.
+    * This is a special use case of `Filter.polygon` for bounding
+    * boxes.
+    * @param {string} field The field's name.
+    * @param {*} boxOrUpperLeft Either a `Geo.BoundingBox` instance, or
+    *   a bounding box's upper left coordinate.
+    * @param {*=} opt_lowerRight A bounding box's lower right coordinate.
+    * @return {!Filter}
+    * @static
+    */
+
+		}, {
+			key: 'boundingBox',
+			value: function boundingBox(field, boxOrUpperLeft, opt_lowerRight) {
+				if (boxOrUpperLeft instanceof Geo.BoundingBox) {
+					return Filter.polygon.apply(Filter, [field].concat(babelHelpers.toConsumableArray(boxOrUpperLeft.getPoints())));
+				} else {
+					return Filter.polygon(field, boxOrUpperLeft, opt_lowerRight);
+				}
+			}
+		}, {
+			key: 'distance',
+			value: function distance(field, locationOrCircle, opt_rangeOrDistance) {
+				var location = locationOrCircle;
+				var range = opt_rangeOrDistance;
+				if (locationOrCircle instanceof Geo.Circle) {
+					location = locationOrCircle.getCenter();
+					range = Range.to(locationOrCircle.getRadius());
+				} else if (!(opt_rangeOrDistance instanceof Range)) {
+					range = Range.to(opt_rangeOrDistance);
+				}
+				return Filter.distanceInternal_(field, location, range);
+			}
+
+			/**
+    * Returns a {@link Filter} instance that uses the "gd" operator. This
+    * is just an internal helper used by `Filter.distance`.
+    * @param {string} field The field's name.
+    * @param {*} location A location coordinate.
+    * @param {Range} range A `Range` instance.
+    * @return {!Filter}
+    * @protected
+    * @static
+    */
+
+		}, {
+			key: 'distanceInternal_',
+			value: function distanceInternal_(field, location, range) {
+				var value = {
+					location: Embodied.toBody(location)
+				};
+				range = range.body();
+				if (range.from) {
+					value.min = range.from;
+				}
+				if (range.to) {
+					value.max = range.to;
+				}
+				return Filter.field(field, 'gd', value);
+			}
+
+			/**
+    * Returns a {@link Filter} instance that uses the "=" operator.
+    * @param {string} field The name of the field to filter by.
+    * @param {*} value The filter's value.
+    * @return {!Filter}
+     * @static
+    */
+
+		}, {
+			key: 'equal',
+			value: function equal(field, value) {
+				return new Filter(field, '=', value);
+			}
+
+			/**
+    * Returns a {@link Filter} instance that uses the "exists" operator.
+    * @param {string} field The field's name.
+    * @return {!Filter}
+    * @static
+    */
+
+		}, {
+			key: 'exists',
+			value: function exists(field) {
+				return Filter.field(field, 'exists', null);
+			}
+
+			/**
+    * Returns a {@link Filter} instance that uses the "fuzzy" operator.
+    * @param {string} fieldOrQuery If no second string argument is given, this
+    *   should be the query string, in which case all fields will be matched.
+    *   Otherwise, this should be the name of the field to match.
+    * @param {string|number=} opt_queryOrFuzziness If this is a string, it should
+    *   be the query, otherwise it should be the fuzziness value.
+    * @param {number=} opt_fuzziness The fuzziness value.
+    * @return {!Filter}
+    * @static
+    */
+
+		}, {
+			key: 'fuzzy',
+			value: function fuzzy(fieldOrQuery, opt_queryOrFuzziness, opt_fuzziness) {
+				return Filter.fuzzyInternal_('fuzzy', fieldOrQuery, opt_queryOrFuzziness, opt_fuzziness);
+			}
+
+			/**
+    * Returns a {@link Filter} instance that uses the given fuzzy operator. This
+    * is an internal implementation used by the `Filter.fuzzy` method.
+    * @param {string} operator The fuzzy operator.
+    * @param {string} fieldOrQuery If no second string argument is given, this
+    *   should be the query string, in which case all fields will be matched.
+    *   Otherwise, this should be the name of the field to match.
+    * @param {string|number=} opt_queryOrFuzziness If this is a string, it should
+    *   be the query, otherwise it should be the fuzziness value.
+    * @param {number=} opt_fuzziness The fuzziness value.
+    * @return {!Filter}
+    * @protected
+    * @static
+    */
+
+		}, {
+			key: 'fuzzyInternal_',
+			value: function fuzzyInternal_(operator, fieldOrQuery, opt_queryOrFuzziness, opt_fuzziness) {
+				var arg2IsString = core.isString(opt_queryOrFuzziness);
+
+				var value = {
+					query: arg2IsString ? opt_queryOrFuzziness : fieldOrQuery
+				};
+				var fuzziness = arg2IsString ? opt_fuzziness : opt_queryOrFuzziness;
+				if (fuzziness) {
+					value.fuzziness = fuzziness;
+				}
+
+				var field = arg2IsString ? fieldOrQuery : Filter.ALL;
+				return Filter.field(field, operator, value);
+			}
+
+			/**
+    * Returns a {@link Filter} instance that uses the ">" operator.
+    * @param {string} field The name of the field to filter by.
+    * @param {*} value The filter's value.
+    * @return {!Filter}
+     * @static
+    */
+
+		}, {
+			key: 'gt',
+			value: function gt(field, value) {
+				return new Filter(field, '>', value);
+			}
+
+			/**
+    * Returns a {@link Filter} instance that uses the ">=" operator.
+    * @param {string} field The name of the field to filter by.
+    * @param {*} value The filter's value.
+    * @return {!Filter}
+     * @static
+    */
+
+		}, {
+			key: 'gte',
+			value: function gte(field, value) {
+				return new Filter(field, '>=', value);
+			}
+
+			/**
+    * Returns a {@link Filter} instance that uses the "match" operator.
+    * @param {string} fieldOrQuery If no second string argument is given, this
+    *   should be the query string, in which case all fields will be matched.
+    *   Otherwise, this should be the name of the field to match.
+    * @param {string=} opt_query The query string.
+    * @return {!Filter}
+    * @static
+    */
+
+		}, {
+			key: 'match',
+			value: function match(fieldOrQuery, opt_query) {
+				var field = core.isString(opt_query) ? fieldOrQuery : Filter.ALL;
+				var query = core.isString(opt_query) ? opt_query : fieldOrQuery;
+				return Filter.field(field, 'match', query);
+			}
+
+			/**
+    * Returns a {@link Filter} instance that uses the "missing" operator.
+    * @param {string} field The field's name.
+    * @return {!Filter}
+    * @static
+    */
+
+		}, {
+			key: 'missing',
+			value: function missing(field) {
+				return Filter.field(field, 'missing', null);
+			}
+
+			/**
+    * Returns a {@link Filter} instance that uses the "phrase" operator.
+    * @param {string} fieldOrQuery If no second string argument is given, this
+    *   should be the query string, in which case all fields will be matched.
+    *   Otherwise, this should be the name of the field to match.
+    * @param {string=} opt_query The query string.
+    * @return {!Filter}
+    * @static
+    */
+
+		}, {
+			key: 'phrase',
+			value: function phrase(fieldOrQuery, opt_query) {
+				var field = core.isString(opt_query) ? fieldOrQuery : Filter.ALL;
+				var query = core.isString(opt_query) ? opt_query : fieldOrQuery;
+				return Filter.field(field, 'phrase', query);
+			}
+
+			/**
+    * Returns a {@link Filter} instance that uses the "gp" operator.
+    * @param {string} field The name of the field.
+    * @param {...!Object} points Objects representing points in the polygon.
+    * @return {!Filter}
+    * @static
+    */
+
+		}, {
+			key: 'polygon',
+			value: function polygon(field) {
+				for (var _len2 = arguments.length, points = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+					points[_key2 - 1] = arguments[_key2];
+				}
+
+				points = points.map(function (point) {
+					return Embodied.toBody(point);
+				});
+				return Filter.field(field, 'gp', points);
+			}
+
+			/**
+    * Returns a {@link Filter} instance that uses the "prefix" operator.
+    * @param {string} fieldOrQuery If no second argument is given, this should
+    *   be the query string, in which case all fields will be matched. Otherwise,
+    *   this should be the name of the field to match.
+    * @param {string=} opt_query The query string.
+    * @return {!Filter}
+    * @static
+    */
+
+		}, {
+			key: 'prefix',
+			value: function prefix(fieldOrQuery, opt_query) {
+				var field = opt_query ? fieldOrQuery : Filter.ALL;
+				var query = opt_query ? opt_query : fieldOrQuery;
+				return Filter.field(field, 'prefix', query);
+			}
+
+			/**
+    * Returns a {@link Filter} instance that uses the "range" operator.
+    * @param {string} field The field's name.
+    * @param {*} rangeOrMin Either a `Range` instance or a the range's min value.
+    * @param {*=} opt_max The range's max value.
+    * @return {!Filter}
+    * @static
+    */
+
+		}, {
+			key: 'range',
+			value: function range(field, rangeOrMin, opt_max) {
+				var range = rangeOrMin;
+				if (!(range instanceof Range)) {
+					range = Range.range(rangeOrMin, opt_max);
+				}
+				return Filter.field(field, 'range', range);
+			}
+
+			/**
+    * Returns a {@link Filter} instance that uses the "~" operator.
+    * @param {string} field The name of the field to filter by.
+    * @param {*} value The filter's value.
+    * @return {!Filter}
+     * @static
+    */
+
+		}, {
+			key: 'regex',
+			value: function regex(field, value) {
+				return new Filter(field, '~', value);
+			}
+
+			/**
+    * Returns a {@link Filter} instance that uses the "gs" operator.
+    * @param {string} field The field's name.
+    * @param {...!Object} shapes Objects representing shapes.
+    * @return {!Filter}
+    * @static
+    */
+
+		}, {
+			key: 'shape',
+			value: function shape(field) {
+				for (var _len3 = arguments.length, shapes = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+					shapes[_key3 - 1] = arguments[_key3];
+				}
+
+				shapes = shapes.map(function (shape) {
+					return Embodied.toBody(shape);
+				});
+				var value = {
+					type: 'geometrycollection',
+					geometries: shapes
+				};
+				return Filter.field(field, 'gs', value);
+			}
+
+			/**
+    * Returns a {@link Filter} instance that uses the "similar" operator.
+    * @param {string} fieldOrQuery If no second string argument is given, this
+    *   should be the query string, in which case all fields will be matched.
+    *   Otherwise, this should be the name of the field to match.
+    * @param {?string} query The query string.
+    * @return {!Filter}
+    * @static
+    */
+
+		}, {
+			key: 'similar',
+			value: function similar(fieldOrQuery, query) {
+				var field = core.isString(query) ? fieldOrQuery : Filter.ALL;
+				var value = {
+					query: core.isString(query) ? query : fieldOrQuery
+				};
+				return Filter.field(field, 'similar', value);
+			}
+
+			/**
+    * Returns a {@link Filter} instance that uses the "<" operator.
+    * @param {string} field The name of the field to filter by.
+    * @param {*} value The filter's value.
+    * @return {!Filter}
+     * @static
+    */
+
+		}, {
+			key: 'lt',
+			value: function lt(field, value) {
+				return new Filter(field, '<', value);
+			}
+
+			/**
+    * Returns a {@link Filter} instance that uses the "<=" operator.
+    * @param {string} field The name of the field to filter by.
+    * @param {*} value The filter's value.
+    * @return {!Filter}
+     * @static
+    */
+
+		}, {
+			key: 'lte',
+			value: function lte(field, value) {
+				return new Filter(field, '<=', value);
+			}
+
+			/**
+    * Returns a {@link Filter} instance that uses the "none" operator.
+    * @param {string} field The name of the field to filter by.
+    * @param {!(Array|...*)} value A variable amount of values to be used with
+    *   the "none" operator. Can be passed either as a single array or as
+    *   separate params.
+    * @return {!Filter}
+    * @static
+    */
+
+		}, {
+			key: 'none',
+			value: function none(field) {
+				var values = Array.prototype.slice.call(arguments, 1);
+				if (values.length === 1 && values[0] instanceof Array) {
+					values = values[0];
+				}
+				return new Filter(field, 'none', values);
+			}
+
+			/**
+    * Returns a {@link Filter} instance that uses the "!=" operator.
+    * @param {string} field The name of the field to filter by.
+    * @param {*} value The filter's value.
+    * @return {!Filter}
+    * @static
+    */
+
+		}, {
+			key: 'notEqual',
+			value: function notEqual(field, value) {
+				return new Filter(field, '!=', value);
+			}
+
+			/**
+    * Returns a {@link Filter} instance that uses the "not" operator.
+    * @param {!Filter|string} fieldOrFilter Either a {@link Filter} instance or the
+    *   name of the field to filter by.
+    * @param {*=} opt_operatorOrValue Either the field's operator or its value.
+    * @param {*=} opt_value The filter's value.
+    * @return {!Filter}
+    * @static
+    */
+
+		}, {
+			key: 'not',
+			value: function not(fieldOrFilter, opt_operatorOrValue, opt_value) {
+				return Filter.toFilter(fieldOrFilter, opt_operatorOrValue, opt_value).add('not');
+			}
+
+			/**
+    * Returns a {@link Filter} instance.
+    * @param {string} field The name of the field to filter by.
+    * @param {*} operatorOrValue If a third param is given, this should
+    *   be the filter's operator (like ">="). Otherwise, this will be
+    *   used as the filter's value, and the filter's operator will be "=".
+    * @param {*=} opt_value The filter's value.
+    * @return {!Filter}
+     * @static
+    */
+
+		}, {
+			key: 'field',
+			value: function field(_field, operatorOrValue, opt_value) {
+				return new Filter(_field, operatorOrValue, opt_value);
+			}
+		}, {
+			key: 'toFilter',
+			value: function toFilter(fieldOrFilter, opt_operatorOrValue, opt_value) {
+				var filter = fieldOrFilter;
+				if (!(filter instanceof Filter)) {
+					filter = Filter.field(fieldOrFilter, opt_operatorOrValue, opt_value);
+				}
+				return filter;
+			}
+		}]);
+		return Filter;
+	})(Embodied);
+
+	/**
+  * String constant that represents all fields.
+  * @type {string}
+  * @static
+  */
+
+	Filter.ALL = '*';
+
+	this.launchpad.Filter = Filter;
+}).call(this);
+'use strict';
+
+(function () {
+	var Embodied = this.launchpad.Embodied;
+	var Range = this.launchpad.Range;
+
+	/**
+  * Class that represents a search aggregation.
+  */
+
+	var Aggregation = (function () {
+		/**
+   * Constructs an {@link Aggregation} instance.
+   * @param {string} field The aggregation field.
+   * @param {string} operator The aggregation operator.
+   * @param {*=} opt_value The aggregation value.
+   * @constructor
+   */
+
+		function Aggregation(field, operator, opt_value) {
+			babelHelpers.classCallCheck(this, Aggregation);
+
+			this.field_ = field;
+			this.operator_ = operator;
+			this.value_ = opt_value;
+		}
+
+		/**
+   * Creates an {@link Aggregation} instance with the "avg" operator.
+   * @param {string} field The aggregation field.
+   * @return {!Aggregation}
+   * @static
+   */
+
+		babelHelpers.createClass(Aggregation, [{
+			key: 'getField',
+
+			/**
+    * Gets this aggregation's field.
+    * @return {string}
+    */
+			value: function getField() {
+				return this.field_;
+			}
+
+			/**
+    * Gets this aggregation's operator.
+    * @return {string}
+    */
+
+		}, {
+			key: 'getOperator',
+			value: function getOperator() {
+				return this.operator_;
+			}
+
+			/**
+    * Gets this aggregation's value.
+    * @return {*}
+    */
+
+		}, {
+			key: 'getValue',
+			value: function getValue() {
+				return this.value_;
+			}
+
+			/**
+    * Creates an {@link Aggregation} instance with the "histogram" operator.
+    * @param {string} field The aggregation field.
+    * @param {number} interval The histogram's interval.
+    * @return {!Aggregation}
+    * @static
+    */
+
+		}], [{
+			key: 'avg',
+			value: function avg(field) {
+				return Aggregation.field(field, 'avg');
+			}
+
+			/**
+    * Creates an {@link Aggregation} instance with the "count" operator.
+    * @param {string} field The aggregation field.
+    * @return {!Aggregation}
+    * @static
+    */
+
+		}, {
+			key: 'count',
+			value: function count(field) {
+				return Aggregation.field(field, 'count');
+			}
+
+			/**
+    * Creates an {@link DistanceAggregation} instance with the "geoDistance" operator.
+    * @param {string} field The aggregation field.
+    * @param {*} location The aggregation location.
+    * @param {...!Range} ranges The aggregation ranges.
+    * @return {!DistanceAggregation}
+    * @static
+    */
+
+		}, {
+			key: 'distance',
+			value: function distance(field, location) {
+				for (var _len = arguments.length, ranges = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+					ranges[_key - 2] = arguments[_key];
+				}
+
+				return new (Function.prototype.bind.apply(Aggregation.DistanceAggregation, [null].concat([field, location], ranges)))();
+			}
+
+			/**
+    * Creates an {@link Aggregation} instance with the "extendedStats" operator.
+    * @param {string} field The aggregation field.
+    * @return {!Aggregation}
+    * @static
+    */
+
+		}, {
+			key: 'extendedStats',
+			value: function extendedStats(field) {
+				return Aggregation.field(field, 'extendedStats');
+			}
+		}, {
+			key: 'histogram',
+			value: function histogram(field, interval) {
+				return new Aggregation(field, 'histogram', interval);
+			}
+
+			/**
+    * Creates an {@link Aggregation} instance with the "max" operator.
+    * @param {string} field The aggregation field.
+    * @return {!Aggregation}
+    * @static
+    */
+
+		}, {
+			key: 'max',
+			value: function max(field) {
+				return Aggregation.field(field, 'max');
+			}
+
+			/**
+    * Creates an {@link Aggregation} instance with the "min" operator.
+    * @param {string} field The aggregation field.
+    * @return {!Aggregation}
+    * @static
+    */
+
+		}, {
+			key: 'min',
+			value: function min(field) {
+				return Aggregation.field(field, 'min');
+			}
+
+			/**
+    * Creates an {@link Aggregation} instance with the "missing" operator.
+    * @param {string} field The aggregation field.
+    * @return {!Aggregation}
+    * @static
+    */
+
+		}, {
+			key: 'missing',
+			value: function missing(field) {
+				return Aggregation.field(field, 'missing');
+			}
+
+			/**
+    * Creates a new {@link Aggregation} instance.
+    * @param {string} field The aggregation field.
+    * @param {string} operator The aggregation operator.
+    * @return {!Aggregation}
+    * @static
+    */
+
+		}, {
+			key: 'field',
+			value: function field(_field, operator) {
+				return new Aggregation(_field, operator);
+			}
+
+			/**
+    * Creates an {@link RangeAggregation} instance with the "range" operator.
+    * @param {string} field The aggregation field.
+    * @param {...!Range} ranges The aggregation ranges.
+    * @return {!RangeAggregation}
+    * @static
+    */
+
+		}, {
+			key: 'range',
+			value: function range(field) {
+				for (var _len2 = arguments.length, ranges = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+					ranges[_key2 - 1] = arguments[_key2];
+				}
+
+				return new (Function.prototype.bind.apply(Aggregation.RangeAggregation, [null].concat([field], ranges)))();
+			}
+
+			/**
+    * Creates an {@link Aggregation} instance with the "stats" operator.
+    * @param {string} field The aggregation field.
+    * @return {!Aggregation}
+    * @static
+    */
+
+		}, {
+			key: 'stats',
+			value: function stats(field) {
+				return Aggregation.field(field, 'stats');
+			}
+
+			/**
+    * Creates an {@link Aggregation} instance with the "sum" operator.
+    * @param {string} field The aggregation field.
+    * @return {!Aggregation}
+    * @static
+    */
+
+		}, {
+			key: 'sum',
+			value: function sum(field) {
+				return Aggregation.field(field, 'sum');
+			}
+
+			/**
+    * Creates an {@link Aggregation} instance with the "terms" operator.
+    * @param {string} field The aggregation field.
+    * @return {!Aggregation}
+    * @static
+    */
+
+		}, {
+			key: 'terms',
+			value: function terms(field) {
+				return Aggregation.field(field, 'terms');
+			}
+		}]);
+		return Aggregation;
+	})();
+
+	/**
+  * Class that represents a distance aggregation.
+  * @extends {Aggregation}
+  */
+
+	var DistanceAggregation = (function (_Aggregation) {
+		babelHelpers.inherits(DistanceAggregation, _Aggregation);
+
+		/**
+   * Constructs an {@link DistanceAggregation} instance.
+   * @param {string} field The aggregation field.
+   * @param {*} location The aggregation location.
+   * @param {...!Range} ranges The aggregation ranges.
+   * @constructor
+   */
+
+		function DistanceAggregation(field, location) {
+			babelHelpers.classCallCheck(this, DistanceAggregation);
+
+			var _this = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(DistanceAggregation).call(this, field, 'geoDistance', {}));
+
+			_this.value_.location = Embodied.toBody(location);
+
+			for (var _len3 = arguments.length, ranges = Array(_len3 > 2 ? _len3 - 2 : 0), _key3 = 2; _key3 < _len3; _key3++) {
+				ranges[_key3 - 2] = arguments[_key3];
+			}
+
+			_this.value_.ranges = ranges.map(function (range) {
+				return range.body();
+			});
+			return _this;
+		}
+
+		/**
+   * Adds a range to this aggregation.
+   * @param {*} rangeOrFrom
+   * @param {*=} opt_to
+   * @chainnable
+   */
+
+		babelHelpers.createClass(DistanceAggregation, [{
+			key: 'range',
+			value: function range(rangeOrFrom, opt_to) {
+				var range = rangeOrFrom;
+				if (!(range instanceof Range)) {
+					range = Range.range(rangeOrFrom, opt_to);
+				}
+				this.value_.ranges.push(range.body());
+				return this;
+			}
+
+			/**
+    * Sets this aggregation's unit.
+    * @param {string} unit
+    * @chainnable
+    */
+
+		}, {
+			key: 'unit',
+			value: function unit(_unit) {
+				this.value_.unit = _unit;
+				return this;
+			}
+		}]);
+		return DistanceAggregation;
+	})(Aggregation);
+
+	Aggregation.DistanceAggregation = DistanceAggregation;
+
+	/**
+  * Class that represents a range aggregation.
+  * @extends {Aggregation}
+  */
+
+	var RangeAggregation = (function (_Aggregation2) {
+		babelHelpers.inherits(RangeAggregation, _Aggregation2);
+
+		/**
+   * Constructs an {@link RangeAggregation} instance.
+   * @param {string} field The aggregation field.
+   * @param {...!Range} ranges The aggregation ranges.
+   * @constructor
+   */
+
+		function RangeAggregation(field) {
+			babelHelpers.classCallCheck(this, RangeAggregation);
+
+			var _this2 = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(RangeAggregation).call(this, field, 'range'));
+
+			for (var _len4 = arguments.length, ranges = Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {
+				ranges[_key4 - 1] = arguments[_key4];
+			}
+
+			_this2.value_ = ranges.map(function (range) {
+				return range.body();
+			});
+			return _this2;
+		}
+
+		/**
+   * Adds a range to this aggregation.
+   * @param {*} rangeOrFrom
+   * @param {*=} opt_to
+   * @chainnable
+   */
+
+		babelHelpers.createClass(RangeAggregation, [{
+			key: 'range',
+			value: function range(rangeOrFrom, opt_to) {
+				var range = rangeOrFrom;
+				if (!(range instanceof Range)) {
+					range = Range.range(rangeOrFrom, opt_to);
+				}
+				this.value_.push(range.body());
+				return this;
+			}
+		}]);
+		return RangeAggregation;
+	})(Aggregation);
+
+	Aggregation.RangeAggregation = RangeAggregation;
+
+	this.launchpad.Aggregation = Aggregation;
+}).call(this);
+'use strict';
+
+(function () {
+	var core = this.launchpad.core;
+	var Embodied = this.launchpad.Embodied;
+	var Filter = this.launchpad.Filter;
+	var Aggregation = this.launchpad.Aggregation;
+
+	/**
+  * Class responsible for building queries.
+  * @extends {Embodied}
+  */
+
+	var Query = (function (_Embodied) {
+		babelHelpers.inherits(Query, _Embodied);
+
+		function Query() {
+			babelHelpers.classCallCheck(this, Query);
+			return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Query).apply(this, arguments));
+		}
+
+		babelHelpers.createClass(Query, [{
+			key: 'aggregate',
+
+			/**
+    * Adds an aggregation to this {@link Query} instance.
+    * @param {string} name The aggregation name.
+    * @param {!Aggregation|string} aggregationOrField Either an
+    *   {@link Aggregation} instance or the name of the aggregation field.
+    * @param {string=} opt_operator The aggregation operator.
+    * @chainnable
+    */
+			value: function aggregate(name, aggregationOrField, opt_operator) {
+				var aggregation = aggregationOrField;
+				if (!(aggregation instanceof Aggregation)) {
+					aggregation = Aggregation.field(aggregationOrField, opt_operator);
+				}
+
+				var field = aggregation.getField();
+				var value = {};
+				value[field] = {
+					name: name,
+					operator: aggregation.getOperator()
+				};
+				if (core.isDefAndNotNull(aggregation.getValue())) {
+					value[field].value = aggregation.getValue();
+				}
+
+				if (!this.body_.aggregation) {
+					this.body_.aggregation = [];
+				}
+				this.body_.aggregation.push(value);
+				return this;
+			}
+
+			/**
+    * Sets this query's type to "count".
+    * @chainnable
+    */
+
+		}, {
+			key: 'count',
+			value: function count() {
+				return this.type('count');
+			}
+
+			/**
+    * Sets this query's type to "fetch".
+    * @chainnable
+    */
+
+		}, {
+			key: 'fetch',
+			value: function fetch() {
+				return this.type('fetch');
+			}
+
+			/**
+    * Adds a filter to this Query.
+    * @param {!Filter|string} fieldOrFilter Either a {@link Filter} or the
+    *   name of the field to filter by.
+    * @param {*=} opt_operatorOrValue Either the field's operator or its value.
+    * @param {*=} opt_value The filter's value.
+    * @chainnable
+    */
+
+		}, {
+			key: 'filter',
+			value: function filter(fieldOrFilter, opt_operatorOrValue, opt_value) {
+				var filter = Filter.toFilter(fieldOrFilter, opt_operatorOrValue, opt_value);
+				if (!this.body_.filter) {
+					this.body_.filter = [];
+				}
+				this.body_.filter.push(filter.body());
+				return this;
+			}
+
+			/**
+    * Sets the query offset.
+    * @param {number} offset The index of the first entry that should be returned
+    *   by this query.
+    * @chainnable
+    */
+
+		}, {
+			key: 'offset',
+			value: function offset(_offset2) {
+				this.body_.offset = _offset2;
+				return this;
+			}
+
+			/**
+    * Adds a highlight entry to this {@link Query} instance.
+    * @param {string} field The field's name.
+    * @chainnable
+    */
+
+		}, {
+			key: 'highlight',
+			value: function highlight(field) {
+				if (!this.body_.highlight) {
+					this.body_.highlight = [];
+				}
+
+				this.body_.highlight.push(field);
+				return this;
+			}
+
+			/**
+    * Sets the query limit.
+    * @param {number} limit The max amount of entries that this query should return.
+    * @chainnable
+    */
+
+		}, {
+			key: 'limit',
+			value: function limit(_limit2) {
+				this.body_.limit = _limit2;
+				return this;
+			}
+
+			/**
+    * Adds a search to this {@link Query} instance.
+    * @param {!Filter|string} filterOrTextOrField If no other arguments
+    *   are passed to this function, this should be either a {@link Filter}
+    *   instance or a text to be used in a match filter. In both cases
+    *   the filter will be applied to all fields. Another option is to
+    *   pass this as a field name instead, together with other arguments
+    *   so the filter can be created.
+    * @param {string=} opt_textOrOperator Either a text to be used in a
+    *   match filter, or the operator that should be used.
+    * @param {*=} opt_value The value to be used by the filter. Should
+    *   only be passed if an operator was passed as the second argument.
+    * @chainnable
+    */
+
+		}, {
+			key: 'search',
+			value: function search(filterOrTextOrField, opt_textOrOperator, opt_value) {
+				var filter = filterOrTextOrField;
+				if (opt_value) {
+					filter = Filter.field(filterOrTextOrField, opt_textOrOperator, opt_value);
+				} else if (opt_textOrOperator) {
+					filter = Filter.match(filterOrTextOrField, opt_textOrOperator);
+				} else if (!(filter instanceof Filter)) {
+					filter = Filter.match(filterOrTextOrField);
+				}
+				if (!this.body_.search) {
+					this.body_.search = [];
+				}
+				this.body_.search.push(filter.body());
+				return this;
+			}
+
+			/**
+    * Adds a sort entry to this query, specifying the field this query should be
+    * sorted by and, optionally, the sort direction.
+    * @param {string} field The field that the query should be sorted by.
+    * @param {string=} opt_direction The direction the sort operation should use.
+    *   If none is given, "asc" is used by default.
+    * @chainnable
+    */
+
+		}, {
+			key: 'sort',
+			value: function sort(field, opt_direction) {
+				if (!this.body_.sort) {
+					this.body_.sort = [];
+				}
+				var sortEntry = {};
+				sortEntry[field] = opt_direction || 'asc';
+				this.body_.sort.push(sortEntry);
+				return this;
+			}
+
+			/**
+    * Sets the query type.
+    * @param {string} type The query's type. For example: "count", "fetch".
+    * @chainnable
+    */
+
+		}, {
+			key: 'type',
+			value: function type(_type2) {
+				this.body_.type = _type2;
+				return this;
+			}
+		}], [{
+			key: 'aggregate',
+
+			/**
+    * Adds an aggregation to this {@link Query} instance.
+    * @param {string} name The aggregation name.
+    * @param {!Aggregation|string} aggregationOrField Either an
+    *   {@link Aggregation} instance or the name of the aggregation field.
+    * @param {string=} opt_operator The aggregation operator.
+    * @return {!Query}
+    * @static
+    */
+			value: function aggregate(name, aggregationOrField, opt_operator) {
+				return new Query().aggregate(name, aggregationOrField, opt_operator);
+			}
+
+			/**
+    * Sets this query's type to "count".
+    * @return {!Query}
+    * @static
+    */
+
+		}, {
+			key: 'count',
+			value: function count() {
+				return new Query().type('count');
+			}
+
+			/**
+    * Sets this query's type to "fetch".
+    * @return {!Query}
+    * @static
+    */
+
+		}, {
+			key: 'fetch',
+			value: function fetch() {
+				return new Query().type('fetch');
+			}
+
+			/**
+    * Adds a filter to this Query.
+    * @param {!Filter|string} fieldOrFilter Either a {@link Filter} or the
+    *   name of the field to filter by.
+    * @param {*=} opt_operatorOrValue Either the field's operator or its value.
+    * @param {*=} opt_value The filter's value.
+    * @return {!Query}
+    * @static
+    */
+
+		}, {
+			key: 'filter',
+			value: function filter(fieldOrFilter, opt_operatorOrValue, opt_value) {
+				return new Query().filter(fieldOrFilter, opt_operatorOrValue, opt_value);
+			}
+
+			/**
+    * Sets the query offset.
+    * @param {number} offset The index of the first entry that should be returned
+    *   by this query.
+    * @return {!Query}
+    * @static
+    */
+
+		}, {
+			key: 'offset',
+			value: function offset(_offset) {
+				return new Query().offset(_offset);
+			}
+
+			/**
+    * Adds a highlight entry to this {@link Query} instance.
+    * @param {string} field The field's name.
+    * @return {!Query}
+    * @static
+    */
+
+		}, {
+			key: 'highlight',
+			value: function highlight(field) {
+				return new Query().highlight(field);
+			}
+
+			/**
+    * Sets the query limit.
+    * @param {number} limit The max amount of entries that this query should return.
+    * @return {!Query}
+    * @static
+    */
+
+		}, {
+			key: 'limit',
+			value: function limit(_limit) {
+				return new Query().limit(_limit);
+			}
+
+			/**
+    * Adds a search to this {@link Query} instance.
+    * @param {!Filter|string} filterOrTextOrField If no other arguments
+    *   are passed to this function, this should be either a {@link Filter}
+    *   instance or a text to be used in a match filter. In both cases
+    *   the filter will be applied to all fields. Another option is to
+    *   pass this as a field name instead, together with other arguments
+    *   so the filter can be created.
+    * @param {string=} opt_textOrOperator Either a text to be used in a
+    *   match filter, or the operator that should be used.
+    * @param {*=} opt_value The value to be used by the filter. Should
+    *   only be passed if an operator was passed as the second argument.
+    * @return {!Query}
+    * @static
+    */
+
+		}, {
+			key: 'search',
+			value: function search(filterOrTextOrField, opt_textOrOperator, opt_value) {
+				return new Query().search(filterOrTextOrField, opt_textOrOperator, opt_value);
+			}
+
+			/**
+    * Adds a sort entry to this query, specifying the field this query should be
+    * sorted by and, optionally, the sort direction.
+    * @param {string} field The field that the query should be sorted by.
+    * @param {string=} opt_direction The direction the sort operation should use.
+    *   If none is given, "asc" is used by default.
+    * @return {!Query}
+    * @static
+    */
+
+		}, {
+			key: 'sort',
+			value: function sort(field, opt_direction) {
+				return new Query().sort(field, opt_direction);
+			}
+
+			/**
+    * Sets the query type.
+    * @param {string} type The query's type. For example: "count", "fetch".
+    * @return {!Query}
+    * @static
+    */
+
+		}, {
+			key: 'type',
+			value: function type(_type) {
+				return new Query().type(_type);
+			}
+		}]);
+		return Query;
+	})(Embodied);
+
+	this.launchpad.Query = Query;
+}).call(this);
+'use strict';
+
+(function () {
 	var AjaxTransport = this.launchpad.AjaxTransport;
 
 	/**
@@ -4044,14 +4343,21 @@ this.launchpadNamed = this.launchpadNamed || {};
 		}
 
 		/**
-   * Returns {@code TransportFactory} instance.
+   * Returns {@link TransportFactory} instance.
    */
+
 		babelHelpers.createClass(TransportFactory, [{
 			key: 'get',
+
+			/**
+    * Gets an instance of the transport implementation with the given name.
+    * @param {string} implementationName
+    * @return {!Transport}
+    */
 			value: function get(implementationName) {
 				var TransportClass = this.transports[implementationName];
 
-				if (TransportClass === null) {
+				if (!TransportClass) {
 					throw new Error('Invalid transport name: ' + implementationName);
 				}
 
@@ -4063,8 +4369,10 @@ this.launchpadNamed = this.launchpadNamed || {};
 			}
 
 			/**
-    * Returns default transport.
+    * Returns the default transport implementation.
+    * @return {!Transport}
     */
+
 		}, {
 			key: 'getDefault',
 			value: function getDefault() {
@@ -4086,10 +4394,11 @@ this.launchpadNamed = this.launchpadNamed || {};
 
 	this.launchpad.TransportFactory = TransportFactory;
 }).call(this);
-(function () {
-	'use strict';
+'use strict';
 
+(function () {
 	var core = this.launchpad.core;
+	var Auth = this.launchpad.Auth;
 	var Embodied = this.launchpad.Embodied;
 	var Filter = this.launchpad.Filter;
 	var Query = this.launchpad.Query;
@@ -4099,20 +4408,41 @@ this.launchpadNamed = this.launchpadNamed || {};
 	var MultiMap = this.launchpad.MultiMap;
 
 	/**
-  * Base client contains code that is same for all transports.
-  * @interface
+  * The main class for making api requests. Sending requests returns a promise that is
+  * resolved when the response arrives. Usage example:
+  * ```javascript
+  * Launchpad
+  *   .url('/data/tasks')
+  *   .post({desc: 'Buy milkl'})
+  *   .then(function(response) {
+  *     // Handle response here.
+  *     console.log(response.body())
+  *   });
+  * ```
   */
 
 	var Launchpad = (function () {
-		function Launchpad() {
+		/**
+   * Launchpad constructor function.
+   * @param {string} url The base url.
+   * @param {...string} paths Any amount of paths to be appended to the base url.
+   * @constructor
+   */
+
+		function Launchpad(url) {
+			for (var _len = arguments.length, paths = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+				paths[_key - 1] = arguments[_key];
+			}
+
 			babelHelpers.classCallCheck(this, Launchpad);
 
 			if (arguments.length === 0) {
 				throw new Error('Invalid arguments, try `new Launchpad(baseUrl, url)`');
 			}
 
+			this.auth_ = null;
 			this.body_ = null;
-			this.url_ = Util.joinPaths(arguments[0] || '', arguments[1] || '');
+			this.url_ = Util.joinPaths.apply(Util, [url || ''].concat(paths));
 			this.headers_ = new MultiMap();
 			this.params_ = new MultiMap();
 
@@ -4122,199 +4452,37 @@ this.launchpadNamed = this.launchpadNamed || {};
 		}
 
 		/**
-   * Static factory for creating launchpad client.
+   * Adds an aggregation to this {@link Query} instance.
+   * @param {string} name The aggregation name.
+   * @param {!Aggregation|string} aggregationOrField Either an
+   *   {@link Aggregation} instance or the name of the aggregation field.
+   * @param {string=} opt_operator The aggregation operator.
+   * @chainable
    */
+
 		babelHelpers.createClass(Launchpad, [{
-			key: 'use',
-
-			/**
-    * Specifies {@link Transport} implementation.
-    */
-			value: function use(transport) {
-				this.customTransport_ = transport;
-				return this;
-			}
-
-			/**
-    * Creates new socket.io instance. The parameters passed to socket.io
-    * constructor will be provided:
-    *
-    *   Launchpad.url('http://domain:8080/path/a').connect({ foo: true });
-    *     -> io('domain:8080/path/a', { path: '/path', foo: true });
-    *
-    * @param {MultiMap} opt_params
-    * @param {object} opt_options
-    */
-		}, {
-			key: 'watch',
-			value: function watch(opt_params, opt_options) {
-				if (typeof io === 'undefined') {
-					throw new Error('Socket.io client not loaded');
-				}
-
-				var clientRequest = this.createClientRequest_('GET', opt_params);
-
-				var url = Util.parseUrl(Util.addParametersToUrlQueryString(clientRequest.url(), clientRequest.params()));
-
-				opt_options = opt_options || {
-					forceNew: true
-				};
-				opt_options.path = opt_options.path || url[1];
-
-				return io(url[0] + '?url=' + encodeURIComponent(url[1] + url[2]), opt_options);
-			}
-
-			/**
-    * Creates new {@link LaunchpadBaseClient}.
-    */
-		}, {
-			key: 'path',
-			value: function path(_path) {
-				return new Launchpad(this.url(), _path).use(this.customTransport_);
-			}
-
-			/**
-    * Sends message with DELETE http verb.
-    * @param {string} opt_body
-    * @return {Promise}
-    */
-		}, {
-			key: 'delete',
-			value: function _delete(opt_body) {
-				return this.sendAsync('DELETE', opt_body);
-			}
-
-			/**
-    * Sends message with GET http verb.
-    * @param {*} opt_params Optional params to be added to the request url.
-    * @return {Promise}
-    */
-		}, {
-			key: 'get',
-			value: function get(opt_params) {
-				return this.sendAsync('GET', opt_params);
-			}
-
-			/**
-    * Sends message with PATCH http verb.
-    * @param {string} opt_body
-    * @return {Promise}
-    */
-		}, {
-			key: 'patch',
-			value: function patch(opt_body) {
-				return this.sendAsync('PATCH', opt_body);
-			}
-
-			/**
-    * Sends message with POST http verb.
-    * @param {string} opt_body
-    * @return {Promise}
-    */
-		}, {
-			key: 'post',
-			value: function post(opt_body) {
-				return this.sendAsync('POST', opt_body);
-			}
-
-			/**
-    * Sends message with PUT http verb.
-    * @param {string} opt_body
-    * @return {Promise}
-    */
-		}, {
-			key: 'put',
-			value: function put(opt_body) {
-				return this.sendAsync('PUT', opt_body);
-			}
-
-			/**
-    * Adds a header. If the header with the same name already exists, it will
-    * not be overwritten, but new value will be stored. The order is preserved.
-    */
-		}, {
-			key: 'header',
-			value: function header(name, value) {
-				if (arguments.length !== 2) {
-					throw new Error('Invalid arguments');
-				}
-				this.headers_.set(name, value);
-				return this;
-			}
-
-			/**
-    * Gets the headers.
-    * @return {MultiMap}
-    */
-		}, {
-			key: 'headers',
-			value: function headers() {
-				return this.headers_;
-			}
-
-			/**
-    * Adds a query. If the query with the same name already exists, it will not
-    * be overwritten, but new value will be stored. The order is preserved.
-    */
-		}, {
-			key: 'param',
-			value: function param(name, value) {
-				if (arguments.length !== 2) {
-					throw new Error('Invalid arguments');
-				}
-				this.params_.set(name, value);
-				return this;
-			}
-
-			/**
-    * Gets the query strings map.
-    * @return {MultiMap}
-    */
-		}, {
-			key: 'params',
-			value: function params() {
-				return this.params_;
-			}
-
-			/**
-    * Returns the URL.
-    * TODO: Renames on api.java as well.
-    */
-		}, {
-			key: 'url',
-			value: function url() {
-				return this.url_;
-			}
-
-			/**
-    * Uses transport to send request with given method name and body
-    * asynchronously.
-    * @param {string} method The HTTP method to be used when sending data.
-    * @param {string} body
-    * @return {Promise} Deferred request.
-    */
-		}, {
-			key: 'sendAsync',
-			value: function sendAsync(method, body) {
-				var transport = this.customTransport_ || TransportFactory.instance().getDefault();
-
-				var clientRequest = this.createClientRequest_(method, body);
-
-				return transport.send(clientRequest).then(this.decode);
-			}
-
-			/**
-    * Adds an aggregation to this `Query` instance.
-    * @param {string} name The aggregation name.
-    * @param {!Aggregation|string} aggregationOrField Either an
-    *   `Aggregation` instance or the name of the aggregation field.
-    * @param {string} opt_operator The aggregation operator.
-    * @chainable
-    */
-		}, {
 			key: 'aggregate',
 			value: function aggregate(name, aggregationOrField, opt_operator) {
 				this.getOrCreateQuery_().aggregate(name, aggregationOrField, opt_operator);
+				return this;
+			}
+
+			/**
+    * Adds authorization information to this request.
+    * @param {!Auth|string} authOrTokenOrUsername Either an {@link Auth} instance,
+    *   an authorization token, or the username.
+    * @param {string=} opt_password If a username is given as the first param,
+    *   this should be the password.
+    * @chainable
+    */
+
+		}, {
+			key: 'auth',
+			value: function auth(authOrTokenOrUsername, opt_password) {
+				this.auth_ = authOrTokenOrUsername;
+				if (!(this.auth_ instanceof Auth)) {
+					this.auth_ = Auth.create(authOrTokenOrUsername, opt_password);
+				}
 				return this;
 			}
 
@@ -4323,6 +4491,7 @@ this.launchpadNamed = this.launchpadNamed || {};
     * @param {*} body
     * @chainable
     */
+
 		}, {
 			key: 'body',
 			value: function body(_body) {
@@ -4331,117 +4500,12 @@ this.launchpadNamed = this.launchpadNamed || {};
 			}
 
 			/**
-    * Sets this query's type to "count".
-    * @chainnable
-    */
-		}, {
-			key: 'count',
-			value: function count() {
-				this.getOrCreateQuery_().type('count');
-				return this;
-			}
-
-			/**
-    * Adds a filter to this Query.
-    * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
-    *   name of the field to filter by.
-    * @param {*} operatorOrValue Either the field's operator or its value.
-    * @param {*} opt_value The filter's value.
-    * @chainable
-    */
-		}, {
-			key: 'filter',
-			value: function filter(fieldOrFilter, opt_operatorOrValue, opt_value) {
-				this.getOrCreateQuery_().filter(fieldOrFilter, opt_operatorOrValue, opt_value);
-				return this;
-			}
-
-			/**
-    * Adds a highlight entry to this `Query` instance.
-    * @param {string} field The field's name.
-    * @chainable
-    */
-		}, {
-			key: 'highlight',
-			value: function highlight(field) {
-				this.getOrCreateQuery_().highlight(field);
-				return this;
-			}
-
-			/**
-    * Sets the query offset.
-    * @param {number} offset The index of the first entry that should be returned
-    *   by this query.
-    * @chainable
-    */
-		}, {
-			key: 'offset',
-			value: function offset(_offset) {
-				this.getOrCreateQuery_().offset(_offset);
-				return this;
-			}
-
-			/**
-    * Sets the query limit.
-    * @param {number} limit The max amount of entries that this query should return.
-    * @chainable
-    */
-		}, {
-			key: 'limit',
-			value: function limit(_limit) {
-				this.getOrCreateQuery_().limit(_limit);
-				return this;
-			}
-
-			/**
-    * Adds a search to this `Query` instance.
-    * @param {!Filter|string} filterOrTextOrField If no other arguments
-    *   are passed to this function, this should be either a `Filter`
-    *   instance or a text to be used in a match filter. In both cases
-    *   the filter will be applied to all fields. Another option is to
-    *   pass this as a field name instead, together with other arguments
-    *   so the filter can be created.
-    * @param {string} opt_textOrOperator Either a text to be used in a
-    *   match filter, or the operator that should be used.
-    * @param {*} opt_value The value to be used by the filter. Should
-    *   only be passed if an operator was passed as the second argument.
-    * @chainable
-    */
-		}, {
-			key: 'search',
-			value: function search(filterOrTextOrField, opt_textOrOperator, opt_value) {
-				this.getOrCreateQuery_().search(filterOrTextOrField, opt_textOrOperator, opt_value);
-				return this;
-			}
-
-			/**
-    * Adds a sort query to this request's body.
-    * @param {string} field The field that the query should be sorted by.
-    * @param {string} opt_direction The direction the sort operation should use.
-    *   If none is given, "asc" is used by default.
-    * @chainnable
-    */
-		}, {
-			key: 'sort',
-			value: function sort(field, opt_direction) {
-				this.getOrCreateQuery_().sort(field, opt_direction);
-				return this;
-			}
-		}, {
-			key: 'getOrCreateQuery_',
-			value: function getOrCreateQuery_() {
-				if (!this.query_) {
-					this.query_ = new Query();
-				}
-				return this.query_;
-			}
-
-			/**
     * Converts the given body object to query params.
     * @param {!ClientRequest} clientRequest
     * @param {*} body
     * @protected
     */
+
 		}, {
 			key: 'convertBodyToParams_',
 			value: function convertBodyToParams_(clientRequest, body) {
@@ -4458,12 +4522,25 @@ this.launchpadNamed = this.launchpadNamed || {};
 			}
 
 			/**
+    * Sets this request's query type to "count".
+    * @chainnable
+    */
+
+		}, {
+			key: 'count',
+			value: function count() {
+				this.getOrCreateQuery_().type('count');
+				return this;
+			}
+
+			/**
     * Creates client request and encode.
     * @param {string} method
     * @param {*} body
     * @return {!ClientRequest} clientRequest
     * @protected
     */
+
 		}, {
 			key: 'createClientRequest_',
 			value: function createClientRequest_(method, body) {
@@ -4474,6 +4551,8 @@ this.launchpadNamed = this.launchpadNamed || {};
 				if (!core.isDefAndNotNull(clientRequest.body())) {
 					if (this.query_) {
 						clientRequest.body(this.query_.body());
+					} else if (this.formData_) {
+						clientRequest.body(this.formData_);
 					}
 				}
 
@@ -4488,25 +4567,41 @@ this.launchpadNamed = this.launchpadNamed || {};
 			}
 
 			/**
-    * Wraps the given `Embodied` instance with a `Query` instance if needed.
-    * @param {Embodied} embodied
-    * @return {Embodied}
-    * @protected
+    * Decodes clientResponse body, parsing the body for example.
+    * @param {!ClientResponse} clientResponse The response object to be decoded.
+    * @return {!ClientResponse} The decoded response.
     */
+
 		}, {
-			key: 'wrapWithQuery_',
-			value: function wrapWithQuery_(embodied) {
-				if (embodied instanceof Filter) {
-					embodied = Query.filter(embodied);
+			key: 'decode',
+			value: function decode(clientResponse) {
+				if (Launchpad.isContentTypeJson(clientResponse)) {
+					try {
+						clientResponse.body(JSON.parse(clientResponse.body()));
+					} catch (err) {}
 				}
-				return embodied;
+				return clientResponse;
 			}
 
 			/**
-    * Encodes clientRequest body.
-    * @param {ClientRequest} clientRequest
-    * @return {ClientRequest}
+    * Sends message with the DELETE http verb.
+    * @param {string=} opt_body Content to be sent as the request's body.
+    * @return {!Promise}
     */
+
+		}, {
+			key: 'delete',
+			value: function _delete(opt_body) {
+				return this.sendAsync('DELETE', opt_body);
+			}
+
+			/**
+    * Encodes the given {@link ClientRequest}, converting its body to an appropriate
+    * format for example.
+    * @param {!ClientRequest} clientRequest The request object to encode.
+    * @return {!ClientRequest} The encoded request.
+    */
+
 		}, {
 			key: 'encode',
 			value: function encode(clientRequest) {
@@ -4533,6 +4628,7 @@ this.launchpadNamed = this.launchpadNamed || {};
 				}
 
 				this.encodeParams_(clientRequest);
+				this.resolveAuthentication_(clientRequest);
 
 				return clientRequest;
 			}
@@ -4542,6 +4638,7 @@ this.launchpadNamed = this.launchpadNamed || {};
     * @param {!ClientRequest} clientRequest
     * @protected
     */
+
 		}, {
 			key: 'encodeParams_',
 			value: function encodeParams_(clientRequest) {
@@ -4560,19 +4657,369 @@ this.launchpadNamed = this.launchpadNamed || {};
 			}
 
 			/**
-    * Decodes clientResponse body.
-    * @param {ClientResponse} clientResponse
-    * @return {ClientResponse}
+    * Adds a filter to this request's {@link Query}.
+    * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
+    *   name of the field to filter by.
+    * @param {*=} opt_operatorOrValue Either the field's operator or its value.
+    * @param {*=} opt_value The filter's value.
+    * @chainable
     */
+
 		}, {
-			key: 'decode',
-			value: function decode(clientResponse) {
-				if (Launchpad.isContentTypeJson(clientResponse)) {
-					try {
-						clientResponse.body(JSON.parse(clientResponse.body()));
-					} catch (err) {}
+			key: 'filter',
+			value: function filter(fieldOrFilter, opt_operatorOrValue, opt_value) {
+				this.getOrCreateQuery_().filter(fieldOrFilter, opt_operatorOrValue, opt_value);
+				return this;
+			}
+
+			/**
+    * Adds a key/value pair to be sent via the body in a `multipart/form-data` format.
+    * If the body is set by other means (for example, through the `body` method), this
+    * will be ignored.
+    * @param {string} name
+    * @param {*} value
+    * @chainable
+    */
+
+		}, {
+			key: 'form',
+			value: function form(name, value) {
+				if (!this.formData_) {
+					this.formData_ = new FormData();
 				}
-				return clientResponse;
+				this.formData_.append(name, value);
+				return this;
+			}
+
+			/**
+    * Sends message with the GET http verb.
+    * @param {*=} opt_params Params to be added to the request url.
+    * @return {!Promise}
+    */
+
+		}, {
+			key: 'get',
+			value: function get(opt_params) {
+				return this.sendAsync('GET', opt_params);
+			}
+
+			/**
+    * Gets the currently used {@link Query} object. If none exists yet,
+    * a new one is created.
+    * @return {!Query}
+    * @protected
+    */
+
+		}, {
+			key: 'getOrCreateQuery_',
+			value: function getOrCreateQuery_() {
+				if (!this.query_) {
+					this.query_ = new Query();
+				}
+				return this.query_;
+			}
+
+			/**
+    * Adds a header. If the header with the same name already exists, it will
+    * not be overwritten, but new value will be stored. The order is preserved.
+    * @param {string} name
+    * @param {*} value
+    * @chainable
+    */
+
+		}, {
+			key: 'header',
+			value: function header(name, value) {
+				if (arguments.length !== 2) {
+					throw new Error('Invalid arguments');
+				}
+				this.headers_.set(name, value);
+				return this;
+			}
+
+			/**
+    * Gets the headers.
+    * @return {!MultiMap}
+    */
+
+		}, {
+			key: 'headers',
+			value: function headers() {
+				return this.headers_;
+			}
+
+			/**
+    * Adds a highlight entry to this request's {@link Query} instance.
+    * @param {string} field The field's name.
+    * @chainable
+    */
+
+		}, {
+			key: 'highlight',
+			value: function highlight(field) {
+				this.getOrCreateQuery_().highlight(field);
+				return this;
+			}
+
+			/**
+    * Sets the limit for this request's {@link Query}.
+    * @param {number} limit The max amount of entries that this request should return.
+    * @chainable
+    */
+
+		}, {
+			key: 'limit',
+			value: function limit(_limit) {
+				this.getOrCreateQuery_().limit(_limit);
+				return this;
+			}
+
+			/**
+    * Sets the offset for this request's {@link Query}.
+    * @param {number} offset The index of the first entry that should be returned
+    *   by this query.
+    * @chainable
+    */
+
+		}, {
+			key: 'offset',
+			value: function offset(_offset) {
+				this.getOrCreateQuery_().offset(_offset);
+				return this;
+			}
+
+			/**
+    * Adds a query. If the query with the same name already exists, it will not
+    * be overwritten, but new value will be stored. The order is preserved.
+    * @param {string} name
+    * @param {*} value
+    * @chainable
+    */
+
+		}, {
+			key: 'param',
+			value: function param(name, value) {
+				if (arguments.length !== 2) {
+					throw new Error('Invalid arguments');
+				}
+				this.params_.set(name, value);
+				return this;
+			}
+
+			/**
+    * Gets the query strings map.
+    * @return {!MultiMap}
+    */
+
+		}, {
+			key: 'params',
+			value: function params() {
+				return this.params_;
+			}
+
+			/**
+    * Sends message with the PATCH http verb.
+    * @param {string=} opt_body Content to be sent as the request's body.
+    * @return {!Promise}
+    */
+
+		}, {
+			key: 'patch',
+			value: function patch(opt_body) {
+				return this.sendAsync('PATCH', opt_body);
+			}
+
+			/**
+    * Creates a new {@link Launchpad} instance for handling the url resulting in the
+    * union of the current url with the given paths.
+    * @param {...string} paths Any number of paths.
+    * @return {!Launchpad} A new {@link Launchpad} instance for handling the given paths.
+    */
+
+		}, {
+			key: 'path',
+			value: function path() {
+				for (var _len2 = arguments.length, paths = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+					paths[_key2] = arguments[_key2];
+				}
+
+				return new (Function.prototype.bind.apply(Launchpad, [null].concat([this.url()], paths)))().use(this.customTransport_);
+			}
+
+			/**
+    * Sends message with the POST http verb.
+    * @param {string=} opt_body Content to be sent as the request's body.
+    * @return {!Promise}
+    */
+
+		}, {
+			key: 'post',
+			value: function post(opt_body) {
+				return this.sendAsync('POST', opt_body);
+			}
+
+			/**
+    * Sends message with the PUT http verb.
+    * @param {string=} opt_body Content to be sent as the request's body.
+    * @return {!Promise}
+    */
+
+		}, {
+			key: 'put',
+			value: function put(opt_body) {
+				return this.sendAsync('PUT', opt_body);
+			}
+
+			/**
+    * Adds the authentication information to the request.
+    * @param {!ClientRequest} clientRequest
+    * @protected
+    */
+
+		}, {
+			key: 'resolveAuthentication_',
+			value: function resolveAuthentication_(clientRequest) {
+				if (!this.auth_) {
+					return;
+				}
+				if (this.auth_.hasToken()) {
+					clientRequest.header('Authorization', 'Bearer ' + this.auth_.token());
+				} else {
+					var credentials = this.auth_.username() + ':' + this.auth_.password();
+					clientRequest.header('Authorization', 'Basic ' + btoa(credentials));
+				}
+			}
+
+			/**
+    * Adds a search to this request's {@link Query} instance.
+    * @param {!Filter|string} filterOrTextOrField If no other arguments
+    *   are passed to this function, this should be either a `Filter`
+    *   instance or a text to be used in a match filter. In both cases
+    *   the filter will be applied to all fields. Another option is to
+    *   pass this as a field name instead, together with other arguments
+    *   so the filter can be created.
+    * @param {string=} opt_textOrOperator Either a text to be used in a
+    *   match filter, or the operator that should be used.
+    * @param {*=} opt_value The value to be used by the filter. Should
+    *   only be passed if an operator was passed as the second argument.
+    * @chainable
+    */
+
+		}, {
+			key: 'search',
+			value: function search(filterOrTextOrField, opt_textOrOperator, opt_value) {
+				this.getOrCreateQuery_().search(filterOrTextOrField, opt_textOrOperator, opt_value);
+				return this;
+			}
+
+			/**
+    * Uses transport to send request with given method name and body
+    * asynchronously.
+    * @param {string} method The HTTP method to be used when sending data.
+    * @param {string} body Content to be sent as the request's body.
+    * @return {!Promise} Deferred request.
+    */
+
+		}, {
+			key: 'sendAsync',
+			value: function sendAsync(method, body) {
+				var transport = this.customTransport_ || TransportFactory.instance().getDefault();
+
+				var clientRequest = this.createClientRequest_(method, body);
+
+				return transport.send(clientRequest).then(this.decode);
+			}
+
+			/**
+    * Adds a sort query to this request's body.
+    * @param {string} field The field that the query should be sorted by.
+    * @param {string=} opt_direction The direction the sort operation should use.
+    *   If none is given, "asc" is used by default.
+    * @chainnable
+    */
+
+		}, {
+			key: 'sort',
+			value: function sort(field, opt_direction) {
+				this.getOrCreateQuery_().sort(field, opt_direction);
+				return this;
+			}
+
+			/**
+    * Static factory for creating launchpad client for the given url.
+    * @param {string} url The url that the client should use for sending requests.
+    */
+
+		}, {
+			key: 'url',
+
+			/**
+    * Returns the URL used by this client.
+    */
+			value: function url() {
+				return this.url_;
+			}
+
+			/**
+    * Specifies {@link Transport} implementation.
+    * @param {!Transport} transport The transport implementation that should be used.
+    */
+
+		}, {
+			key: 'use',
+			value: function use(transport) {
+				this.customTransport_ = transport;
+				return this;
+			}
+
+			/**
+    * Creates new socket.io instance. The parameters passed to socket.io
+    * constructor will be provided:
+    *
+    * ```javascript
+    * Launchpad.url('http://domain:8080/path/a').watch({id: 'myId'}, {foo: true});
+    * // Equals:
+    * io('domain:8080/?url=path%2Fa%3Fid%3DmyId', {foo: true});
+    * ```
+    *
+    * @param {Object=} opt_params Params to be sent with the Socket IO request.
+    * @param {Object=} opt_options Object with Socket IO options.
+    * @return {!io} Socket IO reference. Server events can be listened on it.
+    */
+
+		}, {
+			key: 'watch',
+			value: function watch(opt_params, opt_options) {
+				if (typeof io === 'undefined') {
+					throw new Error('Socket.io client not loaded');
+				}
+
+				var clientRequest = this.createClientRequest_('GET', opt_params);
+
+				var url = Util.parseUrl(Util.addParametersToUrlQueryString(clientRequest.url(), clientRequest.params()));
+
+				opt_options = opt_options || {
+					forceNew: true
+				};
+				opt_options.path = opt_options.path || url[1];
+
+				return io(url[0] + '?url=' + encodeURIComponent(url[1] + url[2]), opt_options);
+			}
+
+			/**
+    * Wraps the given `Embodied` instance with a {@link Query} instance if needed.
+    * @param {Embodied} embodied
+    * @return {Embodied}
+    * @protected
+    */
+
+		}, {
+			key: 'wrapWithQuery_',
+			value: function wrapWithQuery_(embodied) {
+				if (embodied instanceof Filter) {
+					embodied = Query.filter(embodied);
+				}
+				return embodied;
 			}
 		}], [{
 			key: 'url',
@@ -4590,13 +5037,28 @@ this.launchpadNamed = this.launchpadNamed || {};
 
 	this.launchpad.Launchpad = Launchpad;
 }).call(this);
-(function () {
-	'use strict';
+'use strict';
 
+(function () {
 	var Launchpad = this.launchpad.Launchpad;
 
-	if (typeof window !== undefined) {
+	if ((typeof window === 'undefined' ? 'undefined' : babelHelpers._typeof(window)) !== undefined) {
 		window.Launchpad = Launchpad;
+	}
+}).call(this);
+'use strict';
+
+(function () {
+	var Filter = this.launchpad.Filter;
+	var Geo = this.launchpad.Geo;
+	var Query = this.launchpad.Query;
+	var Range = this.launchpad.Range;
+
+	if ((typeof window === 'undefined' ? 'undefined' : babelHelpers._typeof(window)) !== undefined) {
+		window.Filter = Filter;
+		window.Geo = Geo;
+		window.Query = Query;
+		window.Range = Range;
 	}
 }).call(this);
 //# sourceMappingURL=api.js.map
