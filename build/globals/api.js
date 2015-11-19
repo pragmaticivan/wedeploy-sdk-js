@@ -1,70 +1,71 @@
+(function() {
 this.launchpad = this.launchpad || {};
 this.launchpadNamed = this.launchpadNamed || {};
-(function (global) {
-  var babelHelpers = global.babelHelpers = {};
+var babelHelpers = {};
 
-  babelHelpers._typeof = function (obj) {
-    return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj;
-  };
+babelHelpers.typeof = function (obj) {
+  return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj;
+};
 
-  babelHelpers.classCallCheck = function (instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
+babelHelpers.classCallCheck = function (instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+};
+
+babelHelpers.createClass = (function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
     }
+  }
+
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
   };
+})();
 
-  babelHelpers.createClass = (function () {
-    function defineProperties(target, props) {
-      for (var i = 0; i < props.length; i++) {
-        var descriptor = props[i];
-        descriptor.enumerable = descriptor.enumerable || false;
-        descriptor.configurable = true;
-        if ("value" in descriptor) descriptor.writable = true;
-        Object.defineProperty(target, descriptor.key, descriptor);
-      }
+babelHelpers.inherits = function (subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+  }
+
+  subClass.prototype = Object.create(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      enumerable: false,
+      writable: true,
+      configurable: true
     }
+  });
+  if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+};
 
-    return function (Constructor, protoProps, staticProps) {
-      if (protoProps) defineProperties(Constructor.prototype, protoProps);
-      if (staticProps) defineProperties(Constructor, staticProps);
-      return Constructor;
-    };
-  })();
+babelHelpers.possibleConstructorReturn = function (self, call) {
+  if (!self) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }
 
-  babelHelpers.inherits = function (subClass, superClass) {
-    if (typeof superClass !== "function" && superClass !== null) {
-      throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
-    }
+  return call && (typeof call === "object" || typeof call === "function") ? call : self;
+};
 
-    subClass.prototype = Object.create(superClass && superClass.prototype, {
-      constructor: {
-        value: subClass,
-        enumerable: false,
-        writable: true,
-        configurable: true
-      }
-    });
-    if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
-  };
+babelHelpers.toConsumableArray = function (arr) {
+  if (Array.isArray(arr)) {
+    for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
 
-  babelHelpers.possibleConstructorReturn = function (self, call) {
-    if (!self) {
-      throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-    }
+    return arr2;
+  } else {
+    return Array.from(arr);
+  }
+};
 
-    return call && (typeof call === "object" || typeof call === "function") ? call : self;
-  };
-
-  babelHelpers.toConsumableArray = function (arr) {
-    if (Array.isArray(arr)) {
-      for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
-
-      return arr2;
-    } else {
-      return Array.from(arr);
-    }
-  };
-})(typeof global === "undefined" ? self : global);
+babelHelpers;
 'use strict'
 
 /**
@@ -114,6 +115,24 @@ this.launchpadNamed = this.launchpadNamed || {};
 					propertyValues.push(constructor[propertyName]);
 				}
 				return propertyValues;
+			}
+
+			/**
+    * Gets the name of the given function. If the current browser doesn't
+    * support the `name` property, this will calculate it from the function's
+    * content string.
+    * @param {!function()} fn
+    * @return {string}
+    */
+
+		}, {
+			key: 'getFunctionName',
+			value: function getFunctionName(fn) {
+				if (!fn.name) {
+					var str = fn.toString();
+					fn.name = str.substring(9, str.indexOf('('));
+				}
+				return fn.name;
 			}
 
 			/**
@@ -192,7 +211,7 @@ this.launchpadNamed = this.launchpadNamed || {};
 		}, {
 			key: 'isDocument',
 			value: function isDocument(val) {
-				return val && (typeof val === 'undefined' ? 'undefined' : babelHelpers._typeof(val)) === 'object' && val.nodeType === 9;
+				return val && (typeof val === 'undefined' ? 'undefined' : babelHelpers.typeof(val)) === 'object' && val.nodeType === 9;
 			}
 
 			/**
@@ -204,7 +223,7 @@ this.launchpadNamed = this.launchpadNamed || {};
 		}, {
 			key: 'isElement',
 			value: function isElement(val) {
-				return val && (typeof val === 'undefined' ? 'undefined' : babelHelpers._typeof(val)) === 'object' && val.nodeType === 1;
+				return val && (typeof val === 'undefined' ? 'undefined' : babelHelpers.typeof(val)) === 'object' && val.nodeType === 1;
 			}
 
 			/**
@@ -265,7 +284,7 @@ this.launchpadNamed = this.launchpadNamed || {};
 		}, {
 			key: 'isObject',
 			value: function isObject(val) {
-				var type = typeof val === 'undefined' ? 'undefined' : babelHelpers._typeof(val);
+				var type = typeof val === 'undefined' ? 'undefined' : babelHelpers.typeof(val);
 				return type === 'object' && val !== null || type === 'function';
 			}
 
@@ -5042,7 +5061,7 @@ this.launchpadNamed = this.launchpadNamed || {};
 (function () {
 	var Launchpad = this.launchpad.Launchpad;
 
-	if ((typeof window === 'undefined' ? 'undefined' : babelHelpers._typeof(window)) !== undefined) {
+	if ((typeof window === 'undefined' ? 'undefined' : babelHelpers.typeof(window)) !== undefined) {
 		window.Launchpad = Launchpad;
 	}
 }).call(this);
@@ -5054,11 +5073,12 @@ this.launchpadNamed = this.launchpadNamed || {};
 	var Query = this.launchpad.Query;
 	var Range = this.launchpad.Range;
 
-	if ((typeof window === 'undefined' ? 'undefined' : babelHelpers._typeof(window)) !== undefined) {
+	if ((typeof window === 'undefined' ? 'undefined' : babelHelpers.typeof(window)) !== undefined) {
 		window.Filter = Filter;
 		window.Geo = Geo;
 		window.Query = Query;
 		window.Range = Range;
 	}
+}).call(this);
 }).call(this);
 //# sourceMappingURL=api.js.map
