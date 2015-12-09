@@ -960,6 +960,232 @@ babelHelpers;
 	this.launchpad.ClientResponse = ClientResponse;
 }).call(this);
 /*!
+ * Polyfill from Google's Closure Library.
+ * Copyright 2013 The Closure Library Authors. All Rights Reserved.
+ */
+
+'use strict';
+
+(function () {
+	var core = this.launchpad.core;
+
+	var async = {};
+
+	/**
+  * Throw an item without interrupting the current execution context.  For
+  * example, if processing a group of items in a loop, sometimes it is useful
+  * to report an error while still allowing the rest of the batch to be
+  * processed.
+  * @param {*} exception
+  */
+	async.throwException = function (exception) {
+		// Each throw needs to be in its own context.
+		async.nextTick(function () {
+			throw exception;
+		});
+	};
+
+	/**
+  * Fires the provided callback just before the current callstack unwinds, or as
+  * soon as possible after the current JS execution context.
+  * @param {function(this:THIS)} callback
+  * @param {THIS=} opt_context Object to use as the "this value" when calling
+  *     the provided function.
+  * @template THIS
+  */
+	async.run = function (callback, opt_context) {
+		if (!async.run.workQueueScheduled_) {
+			// Nothing is currently scheduled, schedule it now.
+			async.nextTick(async.run.processWorkQueue);
+			async.run.workQueueScheduled_ = true;
+		}
+
+		async.run.workQueue_.push(new async.run.WorkItem_(callback, opt_context));
+	};
+
+	/** @private {boolean} */
+	async.run.workQueueScheduled_ = false;
+
+	/** @private {!Array.<!async.run.WorkItem_>} */
+	async.run.workQueue_ = [];
+
+	/**
+  * Run any pending async.run work items. This function is not intended
+  * for general use, but for use by entry point handlers to run items ahead of
+  * async.nextTick.
+  */
+	async.run.processWorkQueue = function () {
+		// NOTE: additional work queue items may be pushed while processing.
+		while (async.run.workQueue_.length) {
+			// Don't let the work queue grow indefinitely.
+			var workItems = async.run.workQueue_;
+			async.run.workQueue_ = [];
+			for (var i = 0; i < workItems.length; i++) {
+				var workItem = workItems[i];
+				try {
+					workItem.fn.call(workItem.scope);
+				} catch (e) {
+					async.throwException(e);
+				}
+			}
+		}
+
+		// There are no more work items, reset the work queue.
+		async.run.workQueueScheduled_ = false;
+	};
+
+	/**
+  * @constructor
+  * @final
+  * @struct
+  * @private
+  *
+  * @param {function()} fn
+  * @param {Object|null|undefined} scope
+  */
+	async.run.WorkItem_ = function (fn, scope) {
+		/** @const */
+		this.fn = fn;
+		/** @const */
+		this.scope = scope;
+	};
+
+	/**
+  * Fires the provided callbacks as soon as possible after the current JS
+  * execution context. setTimeout(…, 0) always takes at least 5ms for legacy
+  * reasons.
+  * @param {function(this:SCOPE)} callback Callback function to fire as soon as
+  *     possible.
+  * @param {SCOPE=} opt_context Object in whose scope to call the listener.
+  * @template SCOPE
+  */
+	async.nextTick = function (callback, opt_context) {
+		var cb = callback;
+		if (opt_context) {
+			cb = callback.bind(opt_context);
+		}
+		cb = async.nextTick.wrapCallback_(cb);
+		// Introduced and currently only supported by IE10.
+		if (core.isFunction(window.setImmediate)) {
+			window.setImmediate(cb);
+			return;
+		}
+		// Look for and cache the custom fallback version of setImmediate.
+		if (!async.nextTick.setImmediate_) {
+			async.nextTick.setImmediate_ = async.nextTick.getSetImmediateEmulator_();
+		}
+		async.nextTick.setImmediate_(cb);
+	};
+
+	/**
+  * Cache for the setImmediate implementation.
+  * @type {function(function())}
+  * @private
+  */
+	async.nextTick.setImmediate_ = null;
+
+	/**
+  * Determines the best possible implementation to run a function as soon as
+  * the JS event loop is idle.
+  * @return {function(function())} The "setImmediate" implementation.
+  * @private
+  */
+	async.nextTick.getSetImmediateEmulator_ = function () {
+		// Create a private message channel and use it to postMessage empty messages
+		// to ourselves.
+		var Channel = window.MessageChannel;
+		// If MessageChannel is not available and we are in a browser, implement
+		// an iframe based polyfill in browsers that have postMessage and
+		// document.addEventListener. The latter excludes IE8 because it has a
+		// synchronous postMessage implementation.
+		if (typeof Channel === 'undefined' && typeof window !== 'undefined' && window.postMessage && window.addEventListener) {
+			/** @constructor */
+			Channel = function () {
+				// Make an empty, invisible iframe.
+				var iframe = document.createElement('iframe');
+				iframe.style.display = 'none';
+				iframe.src = '';
+				document.documentElement.appendChild(iframe);
+				var win = iframe.contentWindow;
+				var doc = win.document;
+				doc.open();
+				doc.write('');
+				doc.close();
+				var message = 'callImmediate' + Math.random();
+				var origin = win.location.protocol + '//' + win.location.host;
+				var onmessage = (function (e) {
+					// Validate origin and message to make sure that this message was
+					// intended for us.
+					if (e.origin !== origin && e.data !== message) {
+						return;
+					}
+					this.port1.onmessage();
+				}).bind(this);
+				win.addEventListener('message', onmessage, false);
+				this.port1 = {};
+				this.port2 = {
+					postMessage: function postMessage() {
+						win.postMessage(message, origin);
+					}
+				};
+			};
+		}
+		if (typeof Channel !== 'undefined') {
+			var channel = new Channel();
+			// Use a fifo linked list to call callbacks in the right order.
+			var head = {};
+			var tail = head;
+			channel.port1.onmessage = function () {
+				head = head.next;
+				var cb = head.cb;
+				head.cb = null;
+				cb();
+			};
+			return function (cb) {
+				tail.next = {
+					cb: cb
+				};
+				tail = tail.next;
+				channel.port2.postMessage(0);
+			};
+		}
+		// Implementation for IE6-8: Script elements fire an asynchronous
+		// onreadystatechange event when inserted into the DOM.
+		if (typeof document !== 'undefined' && 'onreadystatechange' in document.createElement('script')) {
+			return function (cb) {
+				var script = document.createElement('script');
+				script.onreadystatechange = function () {
+					// Clean up and call the callback.
+					script.onreadystatechange = null;
+					script.parentNode.removeChild(script);
+					script = null;
+					cb();
+					cb = null;
+				};
+				document.documentElement.appendChild(script);
+			};
+		}
+		// Fall back to setTimeout with 0. In browsers this creates a delay of 5ms
+		// or more.
+		return function (cb) {
+			setTimeout(cb, 0);
+		};
+	};
+
+	/**
+  * Helper function that is overrided to protect callbacks with entry point
+  * monitor if the application monitors entry points.
+  * @param {function()} callback Callback function to fire as soon as possible.
+  * @return {function()} The wrapped callback.
+  * @private
+  */
+	async.nextTick.wrapCallback_ = function (opt_returnValue) {
+		return opt_returnValue;
+	};
+
+	this.launchpad.async = async;
+}).call(this);
+/*!
  * Promises polyfill from Google's Closure Library.
  *
  *      Copyright 2013 The Closure Library Authors. All Rights Reserved.
@@ -973,6 +1199,7 @@ babelHelpers;
 
 (function () {
   var core = this.launchpad.core;
+  var async = this.launchpad.async;
 
   /**
    * Provides a more strict interface for Thenables in terms of
@@ -1078,220 +1305,6 @@ babelHelpers;
       newArgs.push.apply(newArgs, arguments);
       return fn.apply(this, newArgs);
     };
-  };
-
-  var async = {};
-
-  /**
-   * Throw an item without interrupting the current execution context.  For
-   * example, if processing a group of items in a loop, sometimes it is useful
-   * to report an error while still allowing the rest of the batch to be
-   * processed.
-   * @param {*} exception
-   */
-  async.throwException = function (exception) {
-    // Each throw needs to be in its own context.
-    async.nextTick(function () {
-      throw exception;
-    });
-  };
-
-  /**
-   * Fires the provided callback just before the current callstack unwinds, or as
-   * soon as possible after the current JS execution context.
-   * @param {function(this:THIS)} callback
-   * @param {THIS=} opt_context Object to use as the "this value" when calling
-   *     the provided function.
-   * @template THIS
-   */
-  async.run = function (callback, opt_context) {
-    if (!async.run.workQueueScheduled_) {
-      // Nothing is currently scheduled, schedule it now.
-      async.nextTick(async.run.processWorkQueue);
-      async.run.workQueueScheduled_ = true;
-    }
-
-    async.run.workQueue_.push(new async.run.WorkItem_(callback, opt_context));
-  };
-
-  /** @private {boolean} */
-  async.run.workQueueScheduled_ = false;
-
-  /** @private {!Array.<!async.run.WorkItem_>} */
-  async.run.workQueue_ = [];
-
-  /**
-   * Run any pending async.run work items. This function is not intended
-   * for general use, but for use by entry point handlers to run items ahead of
-   * async.nextTick.
-   */
-  async.run.processWorkQueue = function () {
-    // NOTE: additional work queue items may be pushed while processing.
-    while (async.run.workQueue_.length) {
-      // Don't let the work queue grow indefinitely.
-      var workItems = async.run.workQueue_;
-      async.run.workQueue_ = [];
-      for (var i = 0; i < workItems.length; i++) {
-        var workItem = workItems[i];
-        try {
-          workItem.fn.call(workItem.scope);
-        } catch (e) {
-          async.throwException(e);
-        }
-      }
-    }
-
-    // There are no more work items, reset the work queue.
-    async.run.workQueueScheduled_ = false;
-  };
-
-  /**
-   * @constructor
-   * @final
-   * @struct
-   * @private
-   *
-   * @param {function()} fn
-   * @param {Object|null|undefined} scope
-   */
-  async.run.WorkItem_ = function (fn, scope) {
-    /** @const */
-    this.fn = fn;
-    /** @const */
-    this.scope = scope;
-  };
-
-  /**
-   * Fires the provided callbacks as soon as possible after the current JS
-   * execution context. setTimeout(…, 0) always takes at least 5ms for legacy
-   * reasons.
-   * @param {function(this:SCOPE)} callback Callback function to fire as soon as
-   *     possible.
-   * @param {SCOPE=} opt_context Object in whose scope to call the listener.
-   * @template SCOPE
-   */
-  async.nextTick = function (callback, opt_context) {
-    var cb = callback;
-    if (opt_context) {
-      cb = callback.bind(opt_context);
-    }
-    cb = async.nextTick.wrapCallback_(cb);
-    // Introduced and currently only supported by IE10.
-    if (core.isFunction(window.setImmediate)) {
-      window.setImmediate(cb);
-      return;
-    }
-    // Look for and cache the custom fallback version of setImmediate.
-    if (!async.nextTick.setImmediate_) {
-      async.nextTick.setImmediate_ = async.nextTick.getSetImmediateEmulator_();
-    }
-    async.nextTick.setImmediate_(cb);
-  };
-
-  /**
-   * Cache for the setImmediate implementation.
-   * @type {function(function())}
-   * @private
-   */
-  async.nextTick.setImmediate_ = null;
-
-  /**
-   * Determines the best possible implementation to run a function as soon as
-   * the JS event loop is idle.
-   * @return {function(function())} The "setImmediate" implementation.
-   * @private
-   */
-  async.nextTick.getSetImmediateEmulator_ = function () {
-    // Create a private message channel and use it to postMessage empty messages
-    // to ourselves.
-    var Channel = window.MessageChannel;
-    // If MessageChannel is not available and we are in a browser, implement
-    // an iframe based polyfill in browsers that have postMessage and
-    // document.addEventListener. The latter excludes IE8 because it has a
-    // synchronous postMessage implementation.
-    if (typeof Channel === 'undefined' && typeof window !== 'undefined' && window.postMessage && window.addEventListener) {
-      /** @constructor */
-      Channel = function () {
-        // Make an empty, invisible iframe.
-        var iframe = document.createElement('iframe');
-        iframe.style.display = 'none';
-        iframe.src = '';
-        document.documentElement.appendChild(iframe);
-        var win = iframe.contentWindow;
-        var doc = win.document;
-        doc.open();
-        doc.write('');
-        doc.close();
-        var message = 'callImmediate' + Math.random();
-        var origin = win.location.protocol + '//' + win.location.host;
-        var onmessage = (function (e) {
-          // Validate origin and message to make sure that this message was
-          // intended for us.
-          if (e.origin !== origin && e.data !== message) {
-            return;
-          }
-          this.port1.onmessage();
-        }).bind(this);
-        win.addEventListener('message', onmessage, false);
-        this.port1 = {};
-        this.port2 = {
-          postMessage: function postMessage() {
-            win.postMessage(message, origin);
-          }
-        };
-      };
-    }
-    if (typeof Channel !== 'undefined') {
-      var channel = new Channel();
-      // Use a fifo linked list to call callbacks in the right order.
-      var head = {};
-      var tail = head;
-      channel.port1.onmessage = function () {
-        head = head.next;
-        var cb = head.cb;
-        head.cb = null;
-        cb();
-      };
-      return function (cb) {
-        tail.next = {
-          cb: cb
-        };
-        tail = tail.next;
-        channel.port2.postMessage(0);
-      };
-    }
-    // Implementation for IE6-8: Script elements fire an asynchronous
-    // onreadystatechange event when inserted into the DOM.
-    if (typeof document !== 'undefined' && 'onreadystatechange' in document.createElement('script')) {
-      return function (cb) {
-        var script = document.createElement('script');
-        script.onreadystatechange = function () {
-          // Clean up and call the callback.
-          script.onreadystatechange = null;
-          script.parentNode.removeChild(script);
-          script = null;
-          cb();
-          cb = null;
-        };
-        document.documentElement.appendChild(script);
-      };
-    }
-    // Fall back to setTimeout with 0. In browsers this creates a delay of 5ms
-    // or more.
-    return function (cb) {
-      setTimeout(cb, 0);
-    };
-  };
-
-  /**
-   * Helper function that is overrided to protect callbacks with entry point
-   * monitor if the application monitors entry points.
-   * @param {function()} callback Callback function to fire as soon as possible.
-   * @return {function()} The wrapped callback.
-   * @private
-   */
-  async.nextTick.wrapCallback_ = function (opt_returnValue) {
-    return opt_returnValue;
   };
 
   /**
@@ -1664,6 +1677,7 @@ babelHelpers;
     if (this.state_ === CancellablePromise.State_.PENDING) {
       async.run(function () {
         var err = new CancellablePromise.CancellationError(opt_message);
+        err.IS_CANCELLATION_ERROR = true;
         this.cancelInternal_(err);
       }, this);
     }
@@ -1791,7 +1805,7 @@ babelHelpers;
       callbackEntry.onRejected = onRejected ? function (reason) {
         try {
           var result = onRejected.call(opt_context, reason);
-          if (!core.isDef(result) && reason instanceof CancellablePromise.CancellationError) {
+          if (!core.isDef(result) && reason.IS_CANCELLATION_ERROR) {
             // Propagate cancellation to children if no other result is returned.
             reject(reason);
           } else {
@@ -1884,7 +1898,7 @@ babelHelpers;
     this.state_ = state;
     this.scheduleCallbacks_();
 
-    if (state === CancellablePromise.State_.REJECTED && !(x instanceof CancellablePromise.CancellationError)) {
+    if (state === CancellablePromise.State_.REJECTED && !x.IS_CANCELLATION_ERROR) {
       CancellablePromise.addUnhandledRejection_(this, x);
     }
   };
@@ -2088,13 +2102,9 @@ babelHelpers;
   /** @override */
   CancellablePromise.CancellationError.prototype.name = 'cancel';
 
-  if (typeof window.Promise === 'undefined') {
-    window.Promise = CancellablePromise;
-  }
-
   this.launchpadNamed.Promise = {};
   this.launchpadNamed.Promise.CancellablePromise = CancellablePromise;
-  this.launchpadNamed.Promise.async = async;
+  this.launchpad.Promise = CancellablePromise;
 }).call(this);
 'use strict';
 
