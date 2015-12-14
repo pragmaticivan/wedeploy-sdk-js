@@ -7,7 +7,7 @@ import Filter from '../api-query/Filter';
 import Query from '../api-query/Query';
 import TransportFactory from './TransportFactory';
 import ClientRequest from './ClientRequest';
-import Util from './Util';
+import Ajax from 'bower:metal-ajax/src/Ajax';
 import MultiMap from 'bower:metal-multimap/src/MultiMap';
 
 /**
@@ -37,7 +37,7 @@ class Launchpad {
 
 		this.auth_ = null;
 		this.body_ = null;
-		this.url_ = Util.joinPaths(url || '', ...paths);
+		this.url_ = Ajax.joinPaths(url || '', ...paths);
 		this.headers_ = new MultiMap();
 		this.params_ = new MultiMap();
 
@@ -492,8 +492,8 @@ class Launchpad {
 
 		var clientRequest = this.createClientRequest_('GET', opt_params);
 
-		var url = Util.parseUrl(
-			Util.addParametersToUrlQueryString(clientRequest.url(), clientRequest.params()));
+		var url = Ajax.parseUrl(
+			Ajax.addParametersToUrlQueryString(clientRequest.url(), clientRequest.params()));
 
 		opt_options = opt_options || {
 				forceNew: true

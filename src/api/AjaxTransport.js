@@ -2,7 +2,7 @@
 
 import core from 'bower:metal/src/core';
 import Transport from './Transport';
-import Util from './Util';
+import Ajax from 'bower:metal-ajax/src/Ajax';
 import ClientResponse from './ClientResponse';
 import { CancellablePromise as Promise } from 'bower:metal-promise/src/promise/Promise';
 
@@ -15,7 +15,7 @@ class AjaxTransport extends Transport {
 	 * @inheritDoc
 	 */
 	send(clientRequest) {
-		var deferred = this.request(
+		var deferred = Ajax.request(
 			clientRequest.url(), clientRequest.method(), clientRequest.body(),
 			clientRequest.headers(), clientRequest.params(), null, false);
 
@@ -24,69 +24,11 @@ class AjaxTransport extends Transport {
 			clientResponse.body(response.responseText);
 			clientResponse.statusCode(response.status);
 			clientResponse.statusText(response.statusText);
-			Util.parseResponseHeaders(response.getAllResponseHeaders()).forEach(function(header) {
+			Ajax.parseResponseHeaders(response.getAllResponseHeaders()).forEach(function(header) {
 				clientResponse.header(header.name, header.value);
 			});
 			return clientResponse;
 		});
-	}
-
-	/**
-	 * Requests the url using XMLHttpRequest.
-	 * @param {!string} url
-	 * @param {!string} method
-	 * @param {?string} body
-	 * @param {MultiMap} opt_headers
-	 * @param {MultiMap} opt_params
-	 * @param {number=} opt_timeout
-	 * @param {boolean=} opt_sync
-	 * @return {Promise} Deferred ajax request.
-	 * @protected
-	 */
-	request(url, method, body, opt_headers, opt_params, opt_timeout, opt_sync) {
-		var request = new XMLHttpRequest();
-
-		var promise = new Promise(function(resolve, reject) {
-			request.onload = function() {
-				if (request.aborted) {
-					request.onerror();
-					return;
-				}
-				resolve(request);
-			};
-			request.onerror = function() {
-				var error = new Error('Request error');
-				error.request = request;
-				reject(error);
-			};
-		}).thenCatch(function(reason) {
-			request.abort();
-			throw reason;
-		}).thenAlways(function() {
-			clearTimeout(timeout);
-		});
-
-		if (opt_params) {
-			url = Util.addParametersToUrlQueryString(url, opt_params);
-		}
-
-		request.open(method, url, !opt_sync);
-
-		if (opt_headers) {
-			opt_headers.names().forEach(function(name) {
-				request.setRequestHeader(name, opt_headers.getAll(name).join(', '));
-			});
-		}
-
-		request.send(core.isDef(body) ? body : null);
-
-		if (core.isDefAndNotNull(opt_timeout)) {
-			var timeout = setTimeout(function() {
-				promise.cancel('Request timeout');
-			}, opt_timeout);
-		}
-
-		return promise;
 	}
 
 }
