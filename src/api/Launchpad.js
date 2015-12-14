@@ -8,7 +8,7 @@ import Query from '../api-query/Query';
 import TransportFactory from './TransportFactory';
 import ClientRequest from './ClientRequest';
 import Util from './Util';
-import MultiMap from './MultiMap';
+import MultiMap from 'bower:metal-multimap/src/MultiMap';
 
 /**
  * The main class for making api requests. Sending requests returns a promise that is

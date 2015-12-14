@@ -2,7 +2,7 @@
 
 import core from 'bower:metal/src/core';
 import ClientMessage from './ClientMessage';
-import MultiMap from './MultiMap';
+import MultiMap from 'bower:metal-multimap/src/MultiMap';
 
 /**
  * Represents a client request object.

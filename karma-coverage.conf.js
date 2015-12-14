@@ -13,6 +13,7 @@ module.exports = function (config) {
     files: [
       'bower_components/metal/**/*.js',
       'bower_components/metal-promise/**/*.js',
+      'bower_components/metal-multimap/**/*.js',
       'bower_components/soyutils/soyutils.js',
       'src/**/*.js',
       'test/**/*.js'
@@ -21,6 +22,7 @@ module.exports = function (config) {
     preprocessors: {
       'bower_components/metal/**/*.js': ['babel', 'commonjs'],
       'bower_components/metal-promise/**/*.js': ['babel', 'commonjs'],
+      'bower_components/metal-multimap/**/*.js': ['babel', 'commonjs'],
       'src/**/*.js': ['coverage', 'commonjs'],
       'test/**/*.js': ['babel', 'commonjs']
     },
