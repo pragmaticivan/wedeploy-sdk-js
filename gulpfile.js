@@ -6,6 +6,7 @@ var metal = require('gulp-metal');
 
 metal.registerTasks({
 	globalName: 'launchpad',
+	buildSrc: ['src/**/!(node)/*.js'],
 	bundleFileName: 'api.js'
 });
 
