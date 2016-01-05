@@ -3,16 +3,13 @@
 import ClientRequest from '../../../src/api/ClientRequest';
 import MultiMap from 'bower:metal-multimap/src/MultiMap';
 import NodeTransport from '../../../src/api/node/NodeTransport';
-import RequestMock from '../../fixtures/RequestMock';
-
-var TransportRequestMock = RequestMock.get();
 
 describe('NodeTransport', function() {
-	beforeEach(TransportRequestMock.setup);
-	afterEach(TransportRequestMock.teardown);
+	beforeEach(RequestMock.setup);
+	afterEach(RequestMock.teardown);
 
 	it('should cancel send request to an url', function(done) {
-		TransportRequestMock.intercept('GET', 'http://localhost/url').reply(200);
+		RequestMock.intercept('GET', 'http://localhost/url').reply(200);
 		var transport = new NodeTransport();
 		var clientRequest = new ClientRequest();
 		clientRequest.url('http://localhost/url');
@@ -28,7 +25,7 @@ describe('NodeTransport', function() {
 	});
 
 	it('should send request with body', function(done) {
-		TransportRequestMock.intercept('GET', 'http://localhost/url').reply(200, 'responseBody');
+		RequestMock.intercept('GET', 'http://localhost/url').reply(200, 'responseBody');
 		var transport = new NodeTransport();
 		var clientRequest = new ClientRequest();
 		clientRequest.url('http://localhost/url');
@@ -41,7 +38,7 @@ describe('NodeTransport', function() {
 	});
 
 	it('should send request with header', function(done) {
-		TransportRequestMock.intercept('GET', 'http://localhost/url').reply(200);
+		RequestMock.intercept('GET', 'http://localhost/url').reply(200);
 		var transport = new NodeTransport();
 		var clientRequest = new ClientRequest();
 		clientRequest.url('http://localhost/url');
@@ -53,7 +50,7 @@ describe('NodeTransport', function() {
 	});
 
 	it('should send request with multiple headers with same name', function(done) {
-		TransportRequestMock.intercept('GET', 'http://localhost/url', undefined, {
+		RequestMock.intercept('GET', 'http://localhost/url', undefined, {
 			reqheaders: {
 				'content-type': 'application/json, text/html'
 			}
@@ -73,7 +70,7 @@ describe('NodeTransport', function() {
 	});
 
 	it('should response with headers', function(done) {
-		TransportRequestMock.intercept('GET', 'http://localhost/url').reply(200, undefined, {
+		RequestMock.intercept('GET', 'http://localhost/url').reply(200, undefined, {
 			'content-type': 'application/json'
 		});
 		var transport = new NodeTransport();
@@ -86,7 +83,7 @@ describe('NodeTransport', function() {
 	});
 
 	it('should parse request query string', function(done) {
-		TransportRequestMock.intercept('GET', 'http://xyz/url?foo=1&query=1&query=%20').reply(200);
+		RequestMock.intercept('GET', 'http://xyz/url?foo=1&query=1&query=%20').reply(200);
 		var transport = new NodeTransport();
 		var clientRequest = new ClientRequest();
 		clientRequest.url('http://xyz/url?foo=1');
@@ -102,7 +99,7 @@ describe('NodeTransport', function() {
 	});
 
 	it('should parse request query string without params', function(done) {
-		TransportRequestMock.intercept('GET', 'http://localhost/url?foo=1').reply(200);
+		RequestMock.intercept('GET', 'http://localhost/url?foo=1').reply(200);
 		var transport = new NodeTransport();
 		var clientRequest = new ClientRequest();
 		clientRequest.url('http://localhost/url?foo=1');
@@ -113,7 +110,7 @@ describe('NodeTransport', function() {
 	});
 
 	it('should cancel request if given timeout is reached', function(done) {
-		TransportRequestMock.intercept('GET', 'http://localhost/url?foo=1').socketDelay(5).reply(200);
+		RequestMock.intercept('GET', 'http://localhost/url?foo=1').socketDelay(5).reply(200);
 
 		var transport = new NodeTransport();
 		var clientRequest = new ClientRequest();

@@ -2,16 +2,13 @@
 
 import AjaxTransport from '../../../src/api/browser/AjaxTransport';
 import ClientRequest from '../../../src/api/ClientRequest';
-import RequestMock from '../../fixtures/RequestMock';
-
-var TransportRequestMock = RequestMock.get();
 
 describe('AjaxTransport', function() {
-	beforeEach(TransportRequestMock.setup);
-	afterEach(TransportRequestMock.teardown);
+	beforeEach(RequestMock.setup);
+	afterEach(RequestMock.teardown);
 
 	it('should cancel send request to an url', function(done) {
-		TransportRequestMock.intercept('GET', '/url').reply(200);
+		RequestMock.intercept('GET', '/url').reply(200);
 		var transport = new AjaxTransport();
 		var clientRequest = new ClientRequest();
 		clientRequest.url('/url');
@@ -20,14 +17,14 @@ describe('AjaxTransport', function() {
 				assert.fail();
 			})
 			.catch(function() {
-				assert.ok(TransportRequestMock.get().aborted);
+				assert.ok(RequestMock.get().aborted);
 				done();
 			})
 			.cancel();
 	});
 
 	it('should fail on transport error', function(done) {
-		TransportRequestMock.intercept('GET', '/url').reply(200);
+		RequestMock.intercept('GET', '/url').reply(200);
 		var transport = new AjaxTransport();
 		var clientRequest = new ClientRequest();
 		clientRequest.url('/url');
@@ -35,6 +32,6 @@ describe('AjaxTransport', function() {
 			assert.ok(reason instanceof Error);
 			done();
 		});
-		TransportRequestMock.get().abort();
+		RequestMock.get().abort();
 	});
 });

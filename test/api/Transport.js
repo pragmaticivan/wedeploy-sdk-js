@@ -1,17 +1,14 @@
 'use strict';
 
 import ClientRequest from '../../src/api/ClientRequest';
-import RequestMock from '../fixtures/RequestMock';
 import TransportFactory from '../../src/api/TransportFactory';
 
-var TransportRequestMock = RequestMock.get();
-
 describe('Transport', function() {
-	beforeEach(TransportRequestMock.setup);
-	afterEach(TransportRequestMock.teardown);
+	beforeEach(RequestMock.setup);
+	afterEach(RequestMock.teardown);
 
 	it('should send request to an url', function(done) {
-		TransportRequestMock.intercept('GET', 'http://localhost/url').reply(200);
+		RequestMock.intercept('GET', 'http://localhost/url').reply(200);
 		var transport = TransportFactory.instance().getDefault();
 		var clientRequest = new ClientRequest();
 		clientRequest.url('http://localhost/url');
@@ -22,7 +19,7 @@ describe('Transport', function() {
 	});
 
 	it('should send request with different http method', function(done) {
-		TransportRequestMock.intercept('POST', 'http://localhost/url').reply(200);
+		RequestMock.intercept('POST', 'http://localhost/url').reply(200);
 		var transport = TransportFactory.instance().getDefault();
 		var clientRequest = new ClientRequest();
 		clientRequest.url('http://localhost/url');
@@ -34,7 +31,7 @@ describe('Transport', function() {
 	});
 
 	it('should send request with body', function(done) {
-		TransportRequestMock.intercept('GET', 'http://localhost/url').reply(200, 'responseBody');
+		RequestMock.intercept('GET', 'http://localhost/url').reply(200, 'responseBody');
 		var transport = TransportFactory.instance().getDefault();
 		var clientRequest = new ClientRequest();
 		clientRequest.url('http://localhost/url');
@@ -47,7 +44,7 @@ describe('Transport', function() {
 	});
 
 	it('should send request with query string', function(done) {
-		TransportRequestMock.intercept('GET', 'http://localhost/url?query=1').reply(200);
+		RequestMock.intercept('GET', 'http://localhost/url?query=1').reply(200);
 		var transport = TransportFactory.instance().getDefault();
 		var clientRequest = new ClientRequest();
 		clientRequest.url('http://localhost/url');
@@ -59,7 +56,7 @@ describe('Transport', function() {
 	});
 
 	it('should send request with header', function(done) {
-		TransportRequestMock.intercept('GET', 'http://localhost/url').reply(200);
+		RequestMock.intercept('GET', 'http://localhost/url').reply(200);
 		var transport = TransportFactory.instance().getDefault();
 		var clientRequest = new ClientRequest();
 		clientRequest.url('http://localhost/url');
@@ -71,7 +68,7 @@ describe('Transport', function() {
 	});
 
 	it('should send request with multiple header of same name', function(done) {
-		TransportRequestMock.intercept('GET', 'http://localhost/url').reply(200);
+		RequestMock.intercept('GET', 'http://localhost/url').reply(200);
 		var transport = TransportFactory.instance().getDefault();
 		var clientRequest = new ClientRequest();
 		clientRequest.url('http://localhost/url');
@@ -85,7 +82,7 @@ describe('Transport', function() {
 	});
 
 	it('should response with headers', function(done) {
-		TransportRequestMock.intercept('GET', 'http://localhost/url').reply(200, undefined, {
+		RequestMock.intercept('GET', 'http://localhost/url').reply(200, undefined, {
 			'content-type': 'application/json'
 		});
 		var transport = TransportFactory.instance().getDefault();
@@ -98,7 +95,7 @@ describe('Transport', function() {
 	});
 
 	it('should response success with any status code', function(done) {
-		TransportRequestMock.intercept('GET', 'http://localhost/url').reply(500);
+		RequestMock.intercept('GET', 'http://localhost/url').reply(500);
 		var transport = TransportFactory.instance().getDefault();
 		var clientRequest = new ClientRequest();
 		clientRequest.url('http://localhost/url');

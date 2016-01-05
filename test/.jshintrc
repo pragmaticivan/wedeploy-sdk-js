@@ -1,7 +1,8 @@
 {
 	"globals": {
 		"assert": true,
-		"sinon": true
+		"sinon": true,
+		"RequestMock": true
 	},
 	"mocha": true,
 	"extends": "../src/.jshintrc"
