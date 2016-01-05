@@ -11,6 +11,8 @@ import ClientRequest from './ClientRequest';
 import Ajax from 'bower:metal-ajax/src/Ajax';
 import MultiMap from 'bower:metal-multimap/src/MultiMap';
 
+var io;
+
 /**
  * The main class for making api requests. Sending requests returns a promise that is
  * resolved when the response arrives. Usage example:
@@ -159,7 +161,7 @@ class Launchpad {
 	/**
 	 * Sends message with the DELETE http verb.
 	 * @param {string=} opt_body Content to be sent as the request's body.
-	 * @return {!Promise}
+	 * @return {!CancellablePromise}
 	 */
 	delete(opt_body) {
 		return this.sendAsync('DELETE', opt_body);
@@ -256,7 +258,7 @@ class Launchpad {
 	/**
 	 * Sends message with the GET http verb.
 	 * @param {*=} opt_params Params to be added to the request url.
-	 * @return {!Promise}
+	 * @return {!CancellablePromise}
 	 */
 	get(opt_params) {
 		return this.sendAsync('GET', opt_params);
@@ -355,7 +357,7 @@ class Launchpad {
 	/**
 	 * Sends message with the PATCH http verb.
 	 * @param {string=} opt_body Content to be sent as the request's body.
-	 * @return {!Promise}
+	 * @return {!CancellablePromise}
 	 */
 	patch(opt_body) {
 		return this.sendAsync('PATCH', opt_body);
@@ -374,7 +376,7 @@ class Launchpad {
 	/**
 	 * Sends message with the POST http verb.
 	 * @param {string=} opt_body Content to be sent as the request's body.
-	 * @return {!Promise}
+	 * @return {!CancellablePromise}
 	 */
 	post(opt_body) {
 		return this.sendAsync('POST', opt_body);
@@ -383,7 +385,7 @@ class Launchpad {
 	/**
 	 * Sends message with the PUT http verb.
 	 * @param {string=} opt_body Content to be sent as the request's body.
-	 * @return {!Promise}
+	 * @return {!CancellablePromise}
 	 */
 	put(opt_body) {
 		return this.sendAsync('PUT', opt_body);
@@ -430,7 +432,7 @@ class Launchpad {
 	 * asynchronously.
 	 * @param {string} method The HTTP method to be used when sending data.
 	 * @param {string} body Content to be sent as the request's body.
-	 * @return {!Promise} Deferred request.
+	 * @return {!CancellablePromise} Deferred request.
 	 */
 	sendAsync(method, body) {
 		var transport = this.customTransport_ || TransportFactory.instance().getDefault();
@@ -438,6 +440,14 @@ class Launchpad {
 		var clientRequest = this.createClientRequest_(method, body);
 
 		return transport.send(clientRequest).then(this.decode);
+	}
+
+	/**
+	 * Sets the socket transport
+	 * @param {Object} socket implementation object.
+	 */
+	static socket(socket) {
+		io = socket;
 	}
 
 	/**
