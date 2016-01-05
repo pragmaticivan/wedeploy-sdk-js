@@ -2,3 +2,4 @@ bower_components
 docs
 coverage
 node_modules
+build/node
