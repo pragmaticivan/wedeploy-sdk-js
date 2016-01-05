@@ -16,13 +16,14 @@ metal.registerTasks({
 });
 
 gulp.task('test:node', function() {
-	return gulp.src([
+	var files = [
 		'src/**/*.js',
 		'test/enviroment/node/env.js',
 		'test/**/*.js',
 		'!src/**/browser/**/*.js',
 		'!test/**/browser/**/*.js'
-	])
+	];
+	return gulp.src(files)
 		.pipe(mocha({
 			compilers: [require('babel-core/register')]
 		}));
@@ -38,13 +39,14 @@ gulp.task('test:node:cover', function() {
 });
 
 gulp.task('test:node:coverage', ['test:node:cover'], function() {
-	return gulp.src([
+	var files = [
 		'src/**/*.js',
 		'test/enviroment/node/env.js',
 		'test/**/*.js',
 		'!src/**/browser/**/*.js',
 		'!test/**/browser/**/*.js'
-	])
+	];
+	return gulp.src(files)
 		.pipe(mocha({
 			compilers: [require('babel-core/register')]
 		}))
@@ -53,7 +55,7 @@ gulp.task('test:node:coverage', ['test:node:cover'], function() {
 		}));
 });
 
-gulp.task('ci', ['lint', 'test:node:coverage', 'test:coverage', 'build:node', 'build']);
+gulp.task('ci', ['lint', 'test:node', 'test', 'build:node', 'build']);
 
 gulp.task('build:node', function() {
 	function build(src, dest) {
