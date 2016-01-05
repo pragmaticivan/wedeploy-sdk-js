@@ -55,7 +55,7 @@ gulp.task('test:node:coverage', ['test:node:cover'], function() {
 		}));
 });
 
-gulp.task('ci', ['lint', 'test:node', 'test', 'build:node', 'build']);
+gulp.task('ci', ['lint', 'test:node', 'test:saucelabs', 'build:node', 'build']);
 
 gulp.task('build:node', function() {
 	function build(src, dest) {
