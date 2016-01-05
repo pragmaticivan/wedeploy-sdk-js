@@ -2,8 +2,9 @@
   "name": "launchpad-client",
   "version": "0.0.0",
   "description": "Launchpad Api",
+  "main": "./build/node/src/environment/node/env.js",
   "scripts": {
-    "test": "gulp test"
+    "test": "gulp ci"
   },
   "keywords": [
     "metal"
@@ -28,7 +29,9 @@
     "gulp-rename": "^1.2.2",
     "gulp-uglify": "^1.1.0",
     "isparta": "^4.0.0",
+    "merge-stream": "^1.0.0",
     "nock": "^3.3.2",
+    "run-sequence": "^1.1.5",
     "sinon": "^1.17.2",
     "source-map-support": "^0.4.0"
   }
