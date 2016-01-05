@@ -1,5 +1,6 @@
-Launchpad api client for JavaScript
-===============
+# Launchpad api client for JavaScript [![Build Status](http://img.shields.io/travis/launchpad-project/api.js/master.svg?style=flat)](https://travis-ci.org/launchpad-project/api.js)
+
+[![Sauce Test Status](https://saucelabs.com/browser-matrix/launchpad-api.svg)](https://travis-ci.org/launchpad-project/launchpad-client)
 
 ## Usage
 
@@ -43,6 +44,15 @@ gulp watch
 ```
 
 ## Test
+
+### Test on node.js
+
+```
+gulp test:node
+```
+
+
+### Test on browsers
 
 ```
 gulp test
