@@ -12,24 +12,28 @@ class AjaxRequestMock {
 	static reply(status, body, headers) {
 		AjaxRequestMock.status = status;
 		AjaxRequestMock.headers = headers;
-		AjaxRequestMock.body = body;
+		AjaxRequestMock.body = body || '';
 	}
 
 	static get() {
-		return AjaxRequestMock.xhr;
+		var xhr = AjaxRequestMock.fakeServer.requests;
+		return xhr && xhr[0];
 	}
 
 	static setup() {
-		AjaxRequestMock.fakeServer = sinon.useFakeXMLHttpRequest();
+		AjaxRequestMock.fakeServer = sinon.fakeServer.create();
 
-		AjaxRequestMock.fakeServer.onCreate = (xhr) => {
-			AjaxRequestMock.xhr = xhr;
-			setTimeout(() => {
-				if (!AjaxRequestMock.timeout_) {
-					xhr.respond(AjaxRequestMock.status, AjaxRequestMock.headers, AjaxRequestMock.body);
-				}
-			}, 0);
-		};
+		// must wait reaching each test to get what to respond to the mocked request
+		setTimeout(() => {
+			if (AjaxRequestMock.status && !AjaxRequestMock.timeout_) {
+				AjaxRequestMock.fakeServer.respondWith([
+					AjaxRequestMock.status,
+					AjaxRequestMock.headers,
+					AjaxRequestMock.body
+				]);
+				AjaxRequestMock.fakeServer.respond();
+			}
+		}, 0);
 	}
 
 	static teardown() {
