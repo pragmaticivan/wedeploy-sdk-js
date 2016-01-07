@@ -2,9 +2,10 @@
 this.launchpad = this.launchpad || {};
 this.launchpadNamed = this.launchpadNamed || {};
 var babelHelpers = {};
-
-babelHelpers.typeof = function (obj) {
-  return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj;
+babelHelpers.typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+  return typeof obj;
+} : function (obj) {
+  return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj;
 };
 
 babelHelpers.classCallCheck = function (instance, Constructor) {
@@ -56,7 +57,7 @@ babelHelpers;
  */
 
 (function () {
-	var core = (function () {
+	var core = function () {
 		function core() {
 			babelHelpers.classCallCheck(this, core);
 		}
@@ -285,7 +286,7 @@ babelHelpers;
 		core.nullFunction = function nullFunction() {};
 
 		return core;
-	})();
+	}();
 
 	/**
   * Unique id property prefix.
@@ -313,7 +314,7 @@ babelHelpers;
   * Class responsible for storing authorization information.
   */
 
-	var Auth = (function () {
+	var Auth = function () {
 		/**
    * Constructs an {@link Auth} instance.
    * @param {string} tokenOrUsername Either the authorization token, or
@@ -400,7 +401,7 @@ babelHelpers;
 		};
 
 		return Auth;
-	})();
+	}();
 
 	this.launchpad.Auth = Auth;
 }).call(this);
@@ -415,7 +416,7 @@ babelHelpers;
  */
 
 (function () {
-	var Disposable = (function () {
+	var Disposable = function () {
 		function Disposable() {
 			babelHelpers.classCallCheck(this, Disposable);
 
@@ -456,7 +457,7 @@ babelHelpers;
 		};
 
 		return Disposable;
-	})();
+	}();
 
 	this.launchpad.Disposable = Disposable;
 }).call(this);
@@ -471,7 +472,7 @@ babelHelpers;
   * @extends {Disposable}
   */
 
-	var MultiMap = (function (_Disposable) {
+	var MultiMap = function (_Disposable) {
 		babelHelpers.inherits(MultiMap, _Disposable);
 
 		function MultiMap() {
@@ -619,7 +620,7 @@ babelHelpers;
 		};
 
 		return MultiMap;
-	})(Disposable);
+	}(Disposable);
 
 	MultiMap.prototype.registerMetalComponent && MultiMap.prototype.registerMetalComponent(MultiMap, 'MultiMap')
 	this.launchpad.MultiMap = MultiMap;
@@ -634,7 +635,7 @@ babelHelpers;
   * Represents a client message (e.g. a request or a response).
   */
 
-	var ClientMessage = (function () {
+	var ClientMessage = function () {
 		function ClientMessage() {
 			babelHelpers.classCallCheck(this, ClientMessage);
 
@@ -706,7 +707,7 @@ babelHelpers;
 		};
 
 		return ClientMessage;
-	})();
+	}();
 
 	this.launchpad.ClientMessage = ClientMessage;
 }).call(this);
@@ -722,7 +723,7 @@ babelHelpers;
   * @extends {ClientMessage}
   */
 
-	var ClientRequest = (function (_ClientMessage) {
+	var ClientRequest = function (_ClientMessage) {
 		babelHelpers.inherits(ClientRequest, _ClientMessage);
 
 		function ClientRequest() {
@@ -808,7 +809,7 @@ babelHelpers;
 		};
 
 		return ClientRequest;
-	})(ClientMessage);
+	}(ClientMessage);
 
 	ClientRequest.prototype.registerMetalComponent && ClientRequest.prototype.registerMetalComponent(ClientRequest, 'ClientRequest')
 
@@ -827,7 +828,7 @@ babelHelpers;
   * @extends {ClientMessage}
   */
 
-	var ClientResponse = (function (_ClientMessage) {
+	var ClientResponse = function (_ClientMessage) {
 		babelHelpers.inherits(ClientResponse, _ClientMessage);
 
 		function ClientResponse(clientRequest) {
@@ -897,7 +898,7 @@ babelHelpers;
 		};
 
 		return ClientResponse;
-	})(ClientMessage);
+	}(ClientMessage);
 
 	ClientResponse.prototype.registerMetalComponent && ClientResponse.prototype.registerMetalComponent(ClientResponse, 'ClientResponse')
 	this.launchpad.ClientResponse = ClientResponse;
@@ -910,7 +911,7 @@ babelHelpers;
  */
 
 (function () {
-	var Base64 = (function () {
+	var Base64 = function () {
 		function Base64() {
 			babelHelpers.classCallCheck(this, Base64);
 		}
@@ -931,7 +932,7 @@ babelHelpers;
 		};
 
 		return Base64;
-	})();
+	}();
 
 	this.launchpad.Base64 = Base64;
 }).call(this);
@@ -943,7 +944,7 @@ babelHelpers;
  */
 
 (function () {
-	var Embodied = (function () {
+	var Embodied = function () {
 		/**
    * Constructs a Embodied instance.
    * @constructor
@@ -987,7 +988,7 @@ babelHelpers;
 		};
 
 		return Embodied;
-	})();
+	}();
 
 	this.launchpad.Embodied = Embodied;
 }).call(this);
@@ -1002,7 +1003,7 @@ babelHelpers;
   * of a Filter instance.
   */
 
-	var FilterBody = (function () {
+	var FilterBody = function () {
 		/**
    * Constructs a {@link FilterBody} instance.
    * @param {string} field The name of the field to filter by.
@@ -1096,7 +1097,7 @@ babelHelpers;
 		};
 
 		return FilterBody;
-	})();
+	}();
 
 	this.launchpad.FilterBody = FilterBody;
 }).call(this);
@@ -1110,7 +1111,7 @@ babelHelpers;
   * shapes.
   */
 
-	var Geo = (function () {
+	var Geo = function () {
 		function Geo() {
 			babelHelpers.classCallCheck(this, Geo);
 		}
@@ -1182,14 +1183,14 @@ babelHelpers;
 		};
 
 		return Geo;
-	})();
+	}();
 
 	/**
   * Class that represents a point coordinate.
   * @extends {Embodied}
   */
 
-	var Point = (function (_Embodied) {
+	var Point = function (_Embodied) {
 		babelHelpers.inherits(Point, _Embodied);
 
 		/**
@@ -1209,7 +1210,7 @@ babelHelpers;
 		}
 
 		return Point;
-	})(Embodied);
+	}(Embodied);
 
 	Point.prototype.registerMetalComponent && Point.prototype.registerMetalComponent(Point, 'Point')
 
@@ -1220,7 +1221,7 @@ babelHelpers;
   * @extends {Embodied}
   */
 
-	var Line = (function (_Embodied2) {
+	var Line = function (_Embodied2) {
 		babelHelpers.inherits(Line, _Embodied2);
 
 		/**
@@ -1248,7 +1249,7 @@ babelHelpers;
 		}
 
 		return Line;
-	})(Embodied);
+	}(Embodied);
 
 	Line.prototype.registerMetalComponent && Line.prototype.registerMetalComponent(Line, 'Line')
 
@@ -1259,7 +1260,7 @@ babelHelpers;
   * @extends {Embodied}
   */
 
-	var BoundingBox = (function (_Embodied3) {
+	var BoundingBox = function (_Embodied3) {
 		babelHelpers.inherits(BoundingBox, _Embodied3);
 
 		/**
@@ -1291,7 +1292,7 @@ babelHelpers;
 		};
 
 		return BoundingBox;
-	})(Embodied);
+	}(Embodied);
 
 	BoundingBox.prototype.registerMetalComponent && BoundingBox.prototype.registerMetalComponent(BoundingBox, 'BoundingBox')
 
@@ -1302,7 +1303,7 @@ babelHelpers;
   * @extends {Embodied}
   */
 
-	var Circle = (function (_Embodied4) {
+	var Circle = function (_Embodied4) {
 		babelHelpers.inherits(Circle, _Embodied4);
 
 		/**
@@ -1344,7 +1345,7 @@ babelHelpers;
 		};
 
 		return Circle;
-	})(Embodied);
+	}(Embodied);
 
 	Circle.prototype.registerMetalComponent && Circle.prototype.registerMetalComponent(Circle, 'Circle')
 
@@ -1355,7 +1356,7 @@ babelHelpers;
   * @extends {Embodied}
   */
 
-	var Polygon = (function (_Embodied5) {
+	var Polygon = function (_Embodied5) {
 		babelHelpers.inherits(Polygon, _Embodied5);
 
 		/**
@@ -1405,7 +1406,7 @@ babelHelpers;
 		};
 
 		return Polygon;
-	})(Embodied);
+	}(Embodied);
 
 	Polygon.prototype.registerMetalComponent && Polygon.prototype.registerMetalComponent(Polygon, 'Polygon')
 
@@ -1424,7 +1425,7 @@ babelHelpers;
   * @extends {Embodied}
   */
 
-	var Range = (function (_Embodied) {
+	var Range = function (_Embodied) {
 		babelHelpers.inherits(Range, _Embodied);
 
 		/**
@@ -1483,7 +1484,7 @@ babelHelpers;
 		};
 
 		return Range;
-	})(Embodied);
+	}(Embodied);
 
 	Range.prototype.registerMetalComponent && Range.prototype.registerMetalComponent(Range, 'Range')
 	this.launchpad.Range = Range;
@@ -1502,7 +1503,7 @@ babelHelpers;
   * @extends {Embodied}
   */
 
-	var Filter = (function (_Embodied) {
+	var Filter = function (_Embodied) {
 		babelHelpers.inherits(Filter, _Embodied);
 
 		/**
@@ -2020,7 +2021,7 @@ babelHelpers;
 		};
 
 		return Filter;
-	})(Embodied);
+	}(Embodied);
 
 	/**
   * String constant that represents all fields.
@@ -2043,7 +2044,7 @@ babelHelpers;
   * Class that represents a search aggregation.
   */
 
-	var Aggregation = (function () {
+	var Aggregation = function () {
 		/**
    * Constructs an {@link Aggregation} instance.
    * @param {string} field The aggregation field.
@@ -2244,14 +2245,14 @@ babelHelpers;
 		};
 
 		return Aggregation;
-	})();
+	}();
 
 	/**
   * Class that represents a distance aggregation.
   * @extends {Aggregation}
   */
 
-	var DistanceAggregation = (function (_Aggregation) {
+	var DistanceAggregation = function (_Aggregation) {
 		babelHelpers.inherits(DistanceAggregation, _Aggregation);
 
 		/**
@@ -2307,7 +2308,7 @@ babelHelpers;
 		};
 
 		return DistanceAggregation;
-	})(Aggregation);
+	}(Aggregation);
 
 	DistanceAggregation.prototype.registerMetalComponent && DistanceAggregation.prototype.registerMetalComponent(DistanceAggregation, 'DistanceAggregation')
 
@@ -2318,7 +2319,7 @@ babelHelpers;
   * @extends {Aggregation}
   */
 
-	var RangeAggregation = (function (_Aggregation2) {
+	var RangeAggregation = function (_Aggregation2) {
 		babelHelpers.inherits(RangeAggregation, _Aggregation2);
 
 		/**
@@ -2360,7 +2361,7 @@ babelHelpers;
 		};
 
 		return RangeAggregation;
-	})(Aggregation);
+	}(Aggregation);
 
 	RangeAggregation.prototype.registerMetalComponent && RangeAggregation.prototype.registerMetalComponent(RangeAggregation, 'RangeAggregation')
 
@@ -2381,7 +2382,7 @@ babelHelpers;
   * @extends {Embodied}
   */
 
-	var Query = (function (_Embodied) {
+	var Query = function (_Embodied) {
 		babelHelpers.inherits(Query, _Embodied);
 
 		function Query() {
@@ -2684,7 +2685,7 @@ babelHelpers;
 		};
 
 		return Query;
-	})(Embodied);
+	}(Embodied);
 
 	Query.prototype.registerMetalComponent && Query.prototype.registerMetalComponent(Query, 'Query')
 	this.launchpad.Query = Query;
@@ -2696,7 +2697,7 @@ babelHelpers;
  */
 
 (function () {
-	var TransportFactory = (function () {
+	var TransportFactory = function () {
 		function TransportFactory() {
 			babelHelpers.classCallCheck(this, TransportFactory);
 
@@ -2745,7 +2746,7 @@ babelHelpers;
 		};
 
 		return TransportFactory;
-	})();
+	}();
 
 	TransportFactory.DEFAULT_TRANSPORT_NAME = 'default';
 
@@ -2903,7 +2904,7 @@ babelHelpers;
 		// synchronous postMessage implementation.
 		if (typeof Channel === 'undefined' && typeof window !== 'undefined' && window.postMessage && window.addEventListener) {
 			/** @constructor */
-			Channel = function () {
+			Channel = function Channel() {
 				// Make an empty, invisible iframe.
 				var iframe = document.createElement('iframe');
 				iframe.style.display = 'none';
@@ -2916,14 +2917,14 @@ babelHelpers;
 				doc.close();
 				var message = 'callImmediate' + Math.random();
 				var origin = win.location.protocol + '//' + win.location.host;
-				var onmessage = (function (e) {
+				var onmessage = function (e) {
 					// Validate origin and message to make sure that this message was
 					// intended for us.
 					if (e.origin !== origin && e.data !== message) {
 						return;
 					}
 					this.port1.onmessage();
-				}).bind(this);
+				}.bind(this);
 				win.addEventListener('message', onmessage, false);
 				this.port1 = {};
 				this.port2 = {
@@ -3885,7 +3886,7 @@ babelHelpers;
    * @extends {Error}
    * @final
    */
-  CancellablePromise.CancellationError = (function (_Error) {
+  CancellablePromise.CancellationError = function (_Error) {
     babelHelpers.inherits(_class, _Error);
 
     function _class(opt_message) {
@@ -3900,7 +3901,7 @@ babelHelpers;
     }
 
     return _class;
-  })(Error);
+  }(Error);
 
   /** @override */
   CancellablePromise.CancellationError.prototype.name = 'cancel';
@@ -3915,7 +3916,7 @@ babelHelpers;
 	var core = this.launchpad.core;
 	var Promise = this.launchpadNamed.Promise.CancellablePromise;
 
-	var Ajax = (function () {
+	var Ajax = function () {
 		function Ajax() {
 			babelHelpers.classCallCheck(this, Ajax);
 		}
@@ -4091,7 +4092,7 @@ babelHelpers;
 		};
 
 		return Ajax;
-	})();
+	}();
 
 	this.launchpad.Ajax = Ajax;
 }).call(this);
@@ -4125,7 +4126,7 @@ babelHelpers;
   * ```
   */
 
-	var Launchpad = (function () {
+	var Launchpad = function () {
 		/**
    * Launchpad constructor function.
    * @param {string} url The base url.
@@ -4678,7 +4679,7 @@ babelHelpers;
 		};
 
 		return Launchpad;
-	})();
+	}();
 
 	Launchpad.isContentTypeJson = function (clientMessage) {
 		var contentType = clientMessage.headers().get('content-type') || '';
@@ -4695,7 +4696,7 @@ babelHelpers;
  */
 
 (function () {
-	var Transport = (function () {
+	var Transport = function () {
 		function Transport() {
 			babelHelpers.classCallCheck(this, Transport);
 		}
@@ -4709,7 +4710,7 @@ babelHelpers;
 		Transport.prototype.send = function send() {};
 
 		return Transport;
-	})();
+	}();
 
 	this.launchpad.Transport = Transport;
 }).call(this);
@@ -4725,7 +4726,7 @@ babelHelpers;
   * @extends {Transport}
   */
 
-	var AjaxTransport = (function (_Transport) {
+	var AjaxTransport = function (_Transport) {
 		babelHelpers.inherits(AjaxTransport, _Transport);
 
 		function AjaxTransport() {
@@ -4753,7 +4754,7 @@ babelHelpers;
 		};
 
 		return AjaxTransport;
-	})(Transport);
+	}(Transport);
 
 	AjaxTransport.prototype.registerMetalComponent && AjaxTransport.prototype.registerMetalComponent(AjaxTransport, 'AjaxTransport')
 	this.launchpad.AjaxTransport = AjaxTransport;
