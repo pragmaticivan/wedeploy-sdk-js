@@ -4,6 +4,7 @@
   "description": "Launchpad Api",
   "main": "./build/node/src/environment/node/env.js",
   "scripts": {
+    "prepublish": "gulp build:node",
     "test": "gulp ci"
   },
   "keywords": [
