@@ -111,7 +111,15 @@ gulp.task('test:node:coverage', ['test:node:cover'], function() {
 		}));
 });
 
-gulp.task('ci', ['lint', 'test:node', 'test:saucelabs', 'build:node', 'build']);
+gulp.task('ci', function(cb) {
+	if (process.env.SAUCE_USERNAME) {
+		return runSequence('lint', 'test:node', 'test:saucelabs', 'build:node', 'build', cb);
+	}
+
+	console.warn('Not running tests on browsers (most likely due to security restrictions)');
+	console.warn('See https://docs.travis-ci.com/user/sauce-connect/ for help');
+	return runSequence('lint', 'test:node', 'build:node', 'build', cb);
+});
 
 gulp.task('build:node', function() {
 	function build(src, dest) {
