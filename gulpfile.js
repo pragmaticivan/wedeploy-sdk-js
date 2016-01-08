@@ -132,8 +132,7 @@ gulp.task('build:node', function() {
 		build('bower_components/metal-ajax/**/*.js', 'build/node/bower_components/metal-ajax'),
 		build('bower_components/metal-multimap/**/*.js', 'build/node/bower_components/metal-multimap'),
 		build('bower_components/metal-promise/**/*.js', 'build/node/bower_components/metal-promise'),
-		build('src/**/!(browser)/*.js', 'build/node/src'),
-		build('src/**/!(browser)/env.js', 'build/node/src')
+		build('src/**/!(browser)/*.js', 'build/node/src')
 	);
 });
 
