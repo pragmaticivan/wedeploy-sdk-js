@@ -11,7 +11,7 @@ var merge = require('merge-stream');
 
 metal.registerTasks({
 	globalName: 'launchpad',
-	buildSrc: ['src/**/!(node)/env.js', 'src/**/!(node)/*.js'],
+	buildSrc: ['src/**/!(node)/*.js', 'src/**/!(node)/env.js'],
 	bundleFileName: 'api.js',
 	testSaucelabsBrowsers: {
 		sl_chrome: {
