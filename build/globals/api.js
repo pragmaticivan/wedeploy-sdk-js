@@ -4197,6 +4197,11 @@ babelHelpers;
 
 	var io;
 
+	// Optimistic initialization of `io` reference from global `window.io`.
+	if (typeof window !== 'undefined') {
+		io = window.io;
+	}
+
 	/**
   * The main class for making api requests. Sending requests returns a promise that is
   * resolved when the response arrives. Usage example:
@@ -4781,8 +4786,6 @@ babelHelpers;
   var Launchpad = this.launchpad.Launchpad;
   var Query = this.launchpad.Query;
   var Range = this.launchpad.Range;
-
-  Launchpad.socket(window.io);
 
   window.Filter = Filter;
   window.Geo = Geo;
