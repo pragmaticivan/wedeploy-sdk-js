@@ -13,6 +13,11 @@ import MultiMap from 'bower:metal-multimap/src/MultiMap';
 
 var io;
 
+// Optimistic initialization of `io` reference from global `window.io`.
+if (typeof window !== 'undefined') {
+	io = window.io;
+}
+
 /**
  * The main class for making api requests. Sending requests returns a promise that is
  * resolved when the response arrives. Usage example:
@@ -508,7 +513,8 @@ class Launchpad {
 		var clientRequest = this.createClientRequest_('GET', opt_params);
 
 		var url = Ajax.parseUrl(
-			Ajax.addParametersToUrlQueryString(clientRequest.url(), clientRequest.params()));
+			Ajax.addParametersToUrlQueryString(
+				clientRequest.url(), clientRequest.params()));
 
 		opt_options = opt_options || {
 				forceNew: true

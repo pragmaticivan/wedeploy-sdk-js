@@ -6,8 +6,6 @@ import Launchpad from '../../api/Launchpad';
 import Query from '../../api-query/Query';
 import Range from '../../api-query/Range';
 
-Launchpad.socket(window.io);
-
 window.Filter = Filter;
 window.Geo = Geo;
 window.Query = Query;
