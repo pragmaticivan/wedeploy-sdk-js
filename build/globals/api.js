@@ -2700,68 +2700,6 @@ babelHelpers;
 	Query.prototype.registerMetalComponent && Query.prototype.registerMetalComponent(Query, 'Query')
 	this.launchpad.Query = Query;
 }).call(this);
-'use strict';
-
-/**
- * Provides a factory for data transport.
- */
-
-(function () {
-	var TransportFactory = function () {
-		function TransportFactory() {
-			babelHelpers.classCallCheck(this, TransportFactory);
-
-			this.transports = {};
-			this.transports[TransportFactory.DEFAULT_TRANSPORT_NAME] = TransportFactory[TransportFactory.DEFAULT_TRANSPORT_NAME];
-		}
-
-		/**
-   * Returns {@link TransportFactory} instance.
-   */
-
-		TransportFactory.instance = function instance() {
-			if (!TransportFactory.instance_) {
-				TransportFactory.instance_ = new TransportFactory();
-			}
-			return TransportFactory.instance_;
-		};
-
-		/**
-   * Gets an instance of the transport implementation with the given name.
-   * @param {string} implementationName
-   * @return {!Transport}
-   */
-
-		TransportFactory.prototype.get = function get(implementationName) {
-			var TransportClass = this.transports[implementationName];
-
-			if (!TransportClass) {
-				throw new Error('Invalid transport name: ' + implementationName);
-			}
-
-			try {
-				return new TransportClass();
-			} catch (err) {
-				throw new Error('Can\'t create transport', err);
-			}
-		};
-
-		/**
-   * Returns the default transport implementation.
-   * @return {!Transport}
-   */
-
-		TransportFactory.prototype.getDefault = function getDefault() {
-			return this.get(TransportFactory.DEFAULT_TRANSPORT_NAME);
-		};
-
-		return TransportFactory;
-	}();
-
-	TransportFactory.DEFAULT_TRANSPORT_NAME = 'default';
-
-	this.launchpad.TransportFactory = TransportFactory;
-}).call(this);
 /*!
  * Polyfill from Google's Closure Library.
  * Copyright 2013 The Closure Library Authors. All Rights Reserved.
@@ -4108,6 +4046,143 @@ babelHelpers;
 }).call(this);
 'use strict';
 
+/**
+ * Provides a convenient interface for data transport.
+ * @interface
+ */
+
+(function () {
+	var Transport = function () {
+		function Transport() {
+			babelHelpers.classCallCheck(this, Transport);
+		}
+
+		/**
+   * Sends a message for the specified client.
+   * @param {!ClientRequest} clientRequest
+   * @return {!Promise} Deferred request.
+   */
+
+		Transport.prototype.send = function send() {};
+
+		return Transport;
+	}();
+
+	this.launchpad.Transport = Transport;
+}).call(this);
+'use strict';
+
+(function () {
+	var Ajax = this.launchpad.Ajax;
+	var Transport = this.launchpad.Transport;
+	var ClientResponse = this.launchpad.ClientResponse;
+
+	/**
+  * The implementation of an ajax transport to be used with {@link Launchpad}.
+  * @extends {Transport}
+  */
+
+	var AjaxTransport = function (_Transport) {
+		babelHelpers.inherits(AjaxTransport, _Transport);
+
+		function AjaxTransport() {
+			babelHelpers.classCallCheck(this, AjaxTransport);
+			return babelHelpers.possibleConstructorReturn(this, _Transport.apply(this, arguments));
+		}
+
+		/**
+   * @inheritDoc
+   */
+
+		AjaxTransport.prototype.send = function send(clientRequest) {
+			var deferred = Ajax.request(clientRequest.url(), clientRequest.method(), clientRequest.body(), clientRequest.headers(), clientRequest.params(), null, false);
+
+			return deferred.then(function (response) {
+				var clientResponse = new ClientResponse(clientRequest);
+				clientResponse.body(response.responseText);
+				clientResponse.statusCode(response.status);
+				clientResponse.statusText(response.statusText);
+				Ajax.parseResponseHeaders(response.getAllResponseHeaders()).forEach(function (header) {
+					clientResponse.header(header.name, header.value);
+				});
+				return clientResponse;
+			});
+		};
+
+		return AjaxTransport;
+	}(Transport);
+
+	AjaxTransport.prototype.registerMetalComponent && AjaxTransport.prototype.registerMetalComponent(AjaxTransport, 'AjaxTransport')
+	this.launchpad.AjaxTransport = AjaxTransport;
+}).call(this);
+'use strict';
+
+(function () {
+	var AjaxTransport = this.launchpad.AjaxTransport;
+
+	/**
+  * Provides a factory for data transport.
+  */
+
+	var TransportFactory = function () {
+		function TransportFactory() {
+			babelHelpers.classCallCheck(this, TransportFactory);
+
+			this.transports = {};
+			this.transports[TransportFactory.DEFAULT_TRANSPORT_NAME] = TransportFactory[TransportFactory.DEFAULT_TRANSPORT_NAME];
+		}
+
+		/**
+   * Returns {@link TransportFactory} instance.
+   */
+
+		TransportFactory.instance = function instance() {
+			if (!TransportFactory.instance_) {
+				TransportFactory.instance_ = new TransportFactory();
+			}
+			return TransportFactory.instance_;
+		};
+
+		/**
+   * Gets an instance of the transport implementation with the given name.
+   * @param {string} implementationName
+   * @return {!Transport}
+   */
+
+		TransportFactory.prototype.get = function get(implementationName) {
+			var TransportClass = this.transports[implementationName];
+
+			if (!TransportClass) {
+				throw new Error('Invalid transport name: ' + implementationName);
+			}
+
+			try {
+				return new TransportClass();
+			} catch (err) {
+				throw new Error('Can\'t create transport', err);
+			}
+		};
+
+		/**
+   * Returns the default transport implementation.
+   * @return {!Transport}
+   */
+
+		TransportFactory.prototype.getDefault = function getDefault() {
+			return this.get(TransportFactory.DEFAULT_TRANSPORT_NAME);
+		};
+
+		return TransportFactory;
+	}();
+
+	TransportFactory.DEFAULT_TRANSPORT_NAME = 'default';
+
+	TransportFactory[TransportFactory.DEFAULT_TRANSPORT_NAME] = AjaxTransport;
+
+	this.launchpad.TransportFactory = TransportFactory;
+}).call(this);
+'use strict';
+
 (function () {
 	var core = this.launchpad.core;
 	var Auth = this.launchpad.Auth;
@@ -4700,87 +4775,13 @@ babelHelpers;
 }).call(this);
 'use strict';
 
-/**
- * Provides a convenient interface for data transport.
- * @interface
- */
-
 (function () {
-	var Transport = function () {
-		function Transport() {
-			babelHelpers.classCallCheck(this, Transport);
-		}
-
-		/**
-   * Sends a message for the specified client.
-   * @param {!ClientRequest} clientRequest
-   * @return {!Promise} Deferred request.
-   */
-
-		Transport.prototype.send = function send() {};
-
-		return Transport;
-	}();
-
-	this.launchpad.Transport = Transport;
-}).call(this);
-'use strict';
-
-(function () {
-	var Ajax = this.launchpad.Ajax;
-	var Transport = this.launchpad.Transport;
-	var ClientResponse = this.launchpad.ClientResponse;
-
-	/**
-  * The implementation of an ajax transport to be used with {@link Launchpad}.
-  * @extends {Transport}
-  */
-
-	var AjaxTransport = function (_Transport) {
-		babelHelpers.inherits(AjaxTransport, _Transport);
-
-		function AjaxTransport() {
-			babelHelpers.classCallCheck(this, AjaxTransport);
-			return babelHelpers.possibleConstructorReturn(this, _Transport.apply(this, arguments));
-		}
-
-		/**
-   * @inheritDoc
-   */
-
-		AjaxTransport.prototype.send = function send(clientRequest) {
-			var deferred = Ajax.request(clientRequest.url(), clientRequest.method(), clientRequest.body(), clientRequest.headers(), clientRequest.params(), null, false);
-
-			return deferred.then(function (response) {
-				var clientResponse = new ClientResponse(clientRequest);
-				clientResponse.body(response.responseText);
-				clientResponse.statusCode(response.status);
-				clientResponse.statusText(response.statusText);
-				Ajax.parseResponseHeaders(response.getAllResponseHeaders()).forEach(function (header) {
-					clientResponse.header(header.name, header.value);
-				});
-				return clientResponse;
-			});
-		};
-
-		return AjaxTransport;
-	}(Transport);
-
-	AjaxTransport.prototype.registerMetalComponent && AjaxTransport.prototype.registerMetalComponent(AjaxTransport, 'AjaxTransport')
-	this.launchpad.AjaxTransport = AjaxTransport;
-}).call(this);
-'use strict';
-
-(function () {
-  var AjaxTransport = this.launchpad.AjaxTransport;
   var Filter = this.launchpad.Filter;
   var Geo = this.launchpad.Geo;
   var Launchpad = this.launchpad.Launchpad;
   var Query = this.launchpad.Query;
   var Range = this.launchpad.Range;
-  var TransportFactory = this.launchpad.TransportFactory;
 
-  TransportFactory[TransportFactory.DEFAULT_TRANSPORT_NAME] = AjaxTransport;
   Launchpad.socket(window.io);
 
   window.Filter = Filter;

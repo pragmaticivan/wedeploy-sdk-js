@@ -1,5 +1,7 @@
 'use strict';
 
+import AjaxTransport from './browser/AjaxTransport';
+
 /**
  * Provides a factory for data transport.
  */
@@ -48,5 +50,7 @@ class TransportFactory {
 }
 
 TransportFactory.DEFAULT_TRANSPORT_NAME = 'default';
+
+TransportFactory[TransportFactory.DEFAULT_TRANSPORT_NAME] = AjaxTransport;
 
 export default TransportFactory;
