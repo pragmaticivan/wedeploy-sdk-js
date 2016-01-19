@@ -242,6 +242,16 @@ babelHelpers;
 		};
 
 		/**
+   * Returns true if value is a Promise.
+   * @param {*} val
+   * @return {Boolean}
+   */
+
+		core.isPromise = function isPromise(val) {
+			return val && (typeof val === 'undefined' ? 'undefined' : babelHelpers.typeof(val)) === 'object' && typeof val.then === 'function';
+		};
+
+		/**
    * Returns true if value is a string.
    * @param {*} val
    * @return {Boolean}
