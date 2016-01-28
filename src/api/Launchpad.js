@@ -8,7 +8,6 @@ import Filter from '../api-query/Filter';
 import Query from '../api-query/Query';
 import TransportFactory from './TransportFactory';
 import ClientRequest from './ClientRequest';
-import Ajax from 'metal-ajax/src/Ajax';
 import MultiMap from 'metal-multimap/src/MultiMap';
 import Uri from 'metal-uri/src/Uri';
 
@@ -46,7 +45,7 @@ class Launchpad {
 
 		this.auth_ = null;
 		this.body_ = null;
-		this.url_ = Ajax.joinPaths(url || '', ...paths);
+		this.url_ = Uri.joinPaths(url || '', ...paths);
 		this.headers_ = new MultiMap();
 		this.params_ = new MultiMap();
 
