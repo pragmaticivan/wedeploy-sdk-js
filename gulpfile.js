@@ -102,6 +102,7 @@ gulp.task('build:node', function() {
 	function build(src, dest) {
 		return gulp.src(src)
 			.pipe(babel({
+				presets: ['metal'],
 				resolveModuleSource: function(originalPath, filename) {
 					if (originalPath[0] !== '.' && originalPath[0] !== '/' && originalPath.startsWith('metal')) {
 						// We need to change the imports for metal code to point to the compiled version.
