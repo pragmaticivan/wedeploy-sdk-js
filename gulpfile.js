@@ -99,29 +99,26 @@ gulp.task('ci', function(cb) {
 });
 
 gulp.task('build:node', function() {
-	function build(src, dest) {
-		return gulp.src(src)
-			.pipe(babel({
-				presets: ['metal'],
-				resolveModuleSource: function(originalPath, filename) {
-					if (originalPath[0] !== '.' && originalPath[0] !== '/' && originalPath.startsWith('metal')) {
-						// We need to change the imports for metal code to point to the compiled version.
-						return path.join(path.relative(path.dirname(filename), path.resolve('node_modules')), originalPath);
-					} else {
-						return originalPath;
-					}
+	var globs = [
+		'src/**/!(browser)/*.js',
+		'node_modules/metal*/**/*.js',
+		'!node_modules/metal-tools*/**/*.js',
+		'!node_modules/metal-karma*/**/*.js',
+		'!node_modules/metal-jquery-adapter/**/*.js'
+	];
+	return gulp.src(globs, {base: process.cwd()})
+		.pipe(babel({
+			presets: ['metal'],
+			resolveModuleSource: function(originalPath, filename) {
+				if (originalPath[0] !== '.' && originalPath[0] !== '/' && originalPath.startsWith('metal')) {
+					// We need to change the imports for metal code to point to the compiled version.
+					return path.join(path.relative(path.dirname(filename), path.resolve('node_modules')), originalPath);
+				} else {
+					return originalPath;
 				}
-			}))
-			.pipe(gulp.dest(dest));
-	}
-
-	return merge(
-		build('node_modules/metal/**/*.js', 'build/node/node_modules/metal'),
-		build('node_modules/metal-ajax/**/*.js', 'build/node/node_modules/metal-ajax'),
-		build('node_modules/metal-multimap/**/*.js', 'build/node/node_modules/metal-multimap'),
-		build('node_modules/metal-promise/**/*.js', 'build/node/node_modules/metal-promise'),
-		build('src/**/!(browser)/*.js', 'build/node/src')
-	);
+			}
+		}))
+		.pipe(gulp.dest('build/node'));
 });
 
 gulp.task('build:min', function() {
