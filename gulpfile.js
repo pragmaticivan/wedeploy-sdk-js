@@ -89,35 +89,6 @@ gulp.task('test:node', function() {
 		}));
 });
 
-gulp.task('test:node:cover', function() {
-	return gulp.src(['src/**/*.js'])
-		.pipe(istanbul({
-			instrumenter: isparta.Instrumenter,
-			includeUntested: true
-		}))
-		.pipe(istanbul.hookRequire());
-});
-
-gulp.task('test:node:coverage', ['test:node:cover'], function() {
-	var files = [
-		'src/**/*.js',
-		'test/enviroment/node/env.js',
-		'test/**/*.js',
-		'!src/**/browser/**/*.js',
-		'!test/**/browser/**/*.js'
-	];
-	return gulp.src(files)
-		.pipe(mocha({
-			compilers: [require('babel-core/register')({
-			  ignore: false,
-			  sourceMaps: 'both'
-			})]
-		}))
-		.pipe(istanbul.writeReports({
-			dir: './coverage/node'
-		}));
-});
-
 gulp.task('ci', function(cb) {
 	if (process.env.SAUCE_USERNAME) {
 		return runSequence('lint', 'test:node', 'test:saucelabs', 'build:node', 'build', cb);
@@ -162,7 +133,7 @@ gulp.task('build:min', function() {
 });
 
 gulp.task('build', function(cb) {
-	runSequence('build:globals', 'build:min', cb);
+	runSequence('build:globals', cb);
 });
 
 gulp.task('watch', ['watch:globals']);
