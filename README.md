@@ -29,10 +29,6 @@ Launchpad
 npm install
 ```
 
-```
-bower install
-```
-
 ## Build
 
 ```

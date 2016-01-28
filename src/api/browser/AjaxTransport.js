@@ -1,6 +1,6 @@
 'use strict';
 
-import Ajax from 'bower:metal-ajax/src/Ajax';
+import Ajax from 'metal-ajax/src/Ajax';
 import Transport from '../Transport';
 import ClientResponse from '../ClientResponse';
 

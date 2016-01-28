@@ -1,6 +1,6 @@
 'use strict';
 
-import core from 'bower:metal/src/core';
+import core from 'metal/src/core';
 import Embodied from './Embodied';
 import FilterBody from './FilterBody';
 import Geo from './Geo';

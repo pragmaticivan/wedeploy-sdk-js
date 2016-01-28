@@ -1,6 +1,6 @@
 'use strict';
 
-import async from 'bower:metal/src/async/async';
+import async from 'metal/src/async/async';
 
 class AjaxRequestMock {
 	static intercept() {

@@ -1,6 +1,6 @@
 'use strict';
 
-import core from 'bower:metal/src/core';
+import core from 'metal/src/core';
 import Auth from './Auth';
 import Base64 from '../crypt/Base64';
 import Embodied from '../api-query/Embodied';
@@ -8,8 +8,8 @@ import Filter from '../api-query/Filter';
 import Query from '../api-query/Query';
 import TransportFactory from './TransportFactory';
 import ClientRequest from './ClientRequest';
-import Ajax from 'bower:metal-ajax/src/Ajax';
-import MultiMap from 'bower:metal-multimap/src/MultiMap';
+import Ajax from 'metal-ajax/src/Ajax';
+import MultiMap from 'metal-multimap/src/MultiMap';
 
 var io;
 

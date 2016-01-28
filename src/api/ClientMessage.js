@@ -1,7 +1,7 @@
 'use strict';
 
-import core from 'bower:metal/src/core';
-import MultiMap from 'bower:metal-multimap/src/MultiMap';
+import core from 'metal/src/core';
+import MultiMap from 'metal-multimap/src/MultiMap';
 
 /**
  * Represents a client message (e.g. a request or a response).

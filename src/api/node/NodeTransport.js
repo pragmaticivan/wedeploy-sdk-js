@@ -2,8 +2,8 @@
 
 import http from 'http';
 import request from 'request';
-import Ajax from 'bower:metal-ajax/src/Ajax';
-import CancellablePromise from 'bower:metal-promise/src/promise/Promise';
+import Ajax from 'metal-ajax/src/Ajax';
+import CancellablePromise from 'metal-promise/src/promise/Promise';
 import ClientResponse from '../ClientResponse';
 import Transport from '../Transport';
 

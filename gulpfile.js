@@ -8,6 +8,7 @@ var metal = require('gulp-metal');
 var mocha = require('gulp-mocha');
 var babel = require('gulp-babel');
 var merge = require('merge-stream');
+var path = require('path');
 
 metal.registerTasks({
 	globalName: 'launchpad',
@@ -81,7 +82,10 @@ gulp.task('test:node', function() {
 	];
 	return gulp.src(files)
 		.pipe(mocha({
-			compilers: [require('babel-core/register')]
+			compilers: [require('babel-core/register')({
+			  ignore: false,
+			  sourceMaps: 'both'
+			})]
 		}));
 });
 
@@ -104,7 +108,10 @@ gulp.task('test:node:coverage', ['test:node:cover'], function() {
 	];
 	return gulp.src(files)
 		.pipe(mocha({
-			compilers: [require('babel-core/register')]
+			compilers: [require('babel-core/register')({
+			  ignore: false,
+			  sourceMaps: 'both'
+			})]
 		}))
 		.pipe(istanbul.writeReports({
 			dir: './coverage/node'
@@ -123,15 +130,24 @@ gulp.task('ci', function(cb) {
 gulp.task('build:node', function() {
 	function build(src, dest) {
 		return gulp.src(src)
-			.pipe(babel())
+			.pipe(babel({
+				resolveModuleSource: function(originalPath, filename) {
+					if (originalPath[0] !== '.' && originalPath[0] !== '/' && originalPath.startsWith('metal')) {
+						// We need to change the imports for metal code to point to the compiled version.
+						return path.join(path.relative(path.dirname(filename), path.resolve('node_modules')), originalPath);
+					} else {
+						return originalPath;
+					}
+				}
+			}))
 			.pipe(gulp.dest(dest));
 	}
 
 	return merge(
-		build('bower_components/metal/**/*.js', 'build/node/bower_components/metal'),
-		build('bower_components/metal-ajax/**/*.js', 'build/node/bower_components/metal-ajax'),
-		build('bower_components/metal-multimap/**/*.js', 'build/node/bower_components/metal-multimap'),
-		build('bower_components/metal-promise/**/*.js', 'build/node/bower_components/metal-promise'),
+		build('node_modules/metal/**/*.js', 'build/node/node_modules/metal'),
+		build('node_modules/metal-ajax/**/*.js', 'build/node/node_modules/metal-ajax'),
+		build('node_modules/metal-multimap/**/*.js', 'build/node/node_modules/metal-multimap'),
+		build('node_modules/metal-promise/**/*.js', 'build/node/node_modules/metal-promise'),
 		build('src/**/!(browser)/*.js', 'build/node/src')
 	);
 });

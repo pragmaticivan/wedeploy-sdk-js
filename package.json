@@ -16,16 +16,19 @@
   },
   "dependencies": {
     "socket.io-client": "^1.3.7",
-    "request": "^2.67.0"
+    "request": "^2.67.0",
+    "metal": "metal/metal.js#master",
+    "metal-ajax": "metal/metal-ajax#master",
+    "metal-multimap": "metal/metal-multimap#master",
+    "metal-promise": "metal/metal-promise#master"
   },
   "devDependencies": {
-    "babel-core": "^6.3.21",
-    "babel-preset-metal": "^1.0.4",
+    "babel-core": "^5.8.35",
     "chai": "^2.3.0",
     "gulp": "^3.8.11",
     "gulp-babel": "^6.1.1",
     "gulp-istanbul": "^0.10.3",
-    "gulp-metal": "^0.8.3",
+    "gulp-metal": "^0.9.0",
     "gulp-mocha": "^2.2.0",
     "gulp-rename": "^1.2.2",
     "gulp-uglify": "^1.1.0",
