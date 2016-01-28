@@ -1,3 +1,8 @@
+var babelOptions = {
+	presets: ['metal'],
+	sourceMap: 'both'
+};
+
 module.exports = function (config) {
 	config.set({
 		frameworks: ['mocha', 'chai', 'sinon', 'source-map-support', 'commonjs'],
@@ -23,6 +28,8 @@ module.exports = function (config) {
 			'test/**/*.js': ['babel', 'commonjs']
 		},
 
-		browsers: ['Chrome']
+		browsers: ['Chrome'],
+
+		babelPreprocessor: {options: babelOptions}
 	});
 };

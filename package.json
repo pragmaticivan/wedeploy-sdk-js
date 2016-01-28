@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "babel-core": "^5.8.35",
+    "babel-preset-metal": "^2.0.1",
     "chai": "^2.3.0",
     "gulp": "^3.8.11",
     "gulp-babel": "^6.1.1",
