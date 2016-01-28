@@ -20,7 +20,8 @@
     "metal": "metal/metal.js#master",
     "metal-ajax": "metal/metal-ajax#master",
     "metal-multimap": "metal/metal-multimap#master",
-    "metal-promise": "metal/metal-promise#master"
+    "metal-promise": "metal/metal-promise#master",
+    "metal-uri": "metal/metal-uri#master"
   },
   "devDependencies": {
     "babel-core": "^5.8.35",

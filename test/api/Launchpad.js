@@ -19,10 +19,11 @@ describe('Launchpad', function() {
 
 	it('should socket.io use path from client url', function(done) {
 		Launchpad.socket(function(url, opts) {
-			assert.strictEqual('domain:8080?url=%2Fpath%2Fa%3Ffoo%3D1', url);
+			assert.strictEqual('domain:8080', url);
 			assert.deepEqual({
 				forceNew: true,
-				path: '/path/a'
+				path: '/path/a',
+				url: '/path/a?foo=1'
 			}, opts);
 			done();
 		});
@@ -32,9 +33,10 @@ describe('Launchpad', function() {
 
 	it('should socket.io ignore path from client url and use from options', function(done) {
 		Launchpad.socket(function(url, opts) {
-			assert.strictEqual('domain:8080?url=%2Fpath%2Fa', url);
+			assert.strictEqual('domain:8080', url);
 			assert.deepEqual({
-				path: '/new'
+				path: '/new',
+				url: '/path/a'
 			}, opts);
 			done();
 		});

@@ -10,6 +10,7 @@ import TransportFactory from './TransportFactory';
 import ClientRequest from './ClientRequest';
 import Ajax from 'metal-ajax/src/Ajax';
 import MultiMap from 'metal-multimap/src/MultiMap';
+import Uri from 'metal-uri/src/Uri';
 
 var io;
 
@@ -511,17 +512,16 @@ class Launchpad {
 		}
 
 		var clientRequest = this.createClientRequest_('GET', opt_params);
-
-		var url = Ajax.parseUrl(
-			Ajax.addParametersToUrlQueryString(
-				clientRequest.url(), clientRequest.params()));
+		var uri = new Uri(clientRequest.url());
+		uri.addParametersFromMultiMap(clientRequest.params());
 
 		opt_options = opt_options || {
 				forceNew: true
 		};
-		opt_options.path = opt_options.path || url[1];
+		opt_options.url = uri.getPathname() + uri.getSearch();
+		opt_options.path = opt_options.path || uri.getPathname();
 
-		return io(url[0] + '?url=' + encodeURIComponent(url[1] + url[2]), opt_options);
+		return io(uri.getHost(), opt_options);
 	}
 
 	/**

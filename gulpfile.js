@@ -83,8 +83,8 @@ gulp.task('test:node', function() {
 	return gulp.src(files)
 		.pipe(mocha({
 			compilers: [require('babel-core/register')({
-			  ignore: false,
-			  sourceMaps: 'both'
+				ignore: false,
+				sourceMaps: 'both'
 			})]
 		}));
 });
