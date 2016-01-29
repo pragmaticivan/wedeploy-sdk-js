@@ -1,5 +1,5 @@
 {
-  "name": "launchpad-client",
+  "name": "api.js",
   "version": "0.0.0",
   "description": "Launchpad Api",
   "main": "./build/node/src/environment/node/env.js",
@@ -10,10 +10,6 @@
   "keywords": [
     "metal"
   ],
-  "repository": {
-    "type": "git",
-    "url": "http://github.com/liferay-apps/api.js.git"
-  },
   "dependencies": {
     "socket.io-client": "^1.3.7",
     "request": "^2.67.0",
