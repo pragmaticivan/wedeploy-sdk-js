@@ -515,7 +515,7 @@ class Launchpad {
 		uri.addParametersFromMultiMap(clientRequest.params());
 
 		opt_options = opt_options || {
-				forceNew: true
+			forceNew: true
 		};
 		opt_options.url = uri.getPathname() + uri.getSearch();
 		opt_options.path = opt_options.path || uri.getPathname();
