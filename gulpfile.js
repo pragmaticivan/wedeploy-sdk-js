@@ -1,8 +1,6 @@
 'use strict';
 
 var gulp = require('gulp');
-var rename = require('gulp-rename');
-var uglify = require('gulp-uglify');
 var runSequence = require('run-sequence');
 var metal = require('gulp-metal');
 var mocha = require('gulp-mocha');
@@ -90,15 +88,6 @@ gulp.task('ci', function(cb) {
 	console.warn('Not running tests (most likely due to security restrictions)');
 	console.warn('See https://docs.travis-ci.com/user/sauce-connect/ for help');
 	cb();
-});
-
-gulp.task('build:min', function() {
-	return gulp.src('build/api.js')
-		.pipe(uglify())
-		.pipe(rename(function(path) {
-			path.basename += '-min';
-		}))
-		.pipe(gulp.dest('build'));
 });
 
 gulp.task('build', function(cb) {
