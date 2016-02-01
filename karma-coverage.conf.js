@@ -14,13 +14,13 @@ module.exports = function (config) {
 			'node_modules/closure-templates/soyutils.js',
 			'node_modules/metal/src/**/*.js',
 			'node_modules/metal-*/src/**/*.js',
-			'src/**/*.js',
+			'src/**/!(node)/*.js',
 			'test/enviroment/browser/env.js',
 			'test/**/*.js'
 		],
 
 		exclude: [
-			'src/**/node/**/*.js',
+			'src/env/node.js',
 			'test/**/node/**/*.js'
 		],
 

@@ -1,6 +1,6 @@
 'use strict';
 
-import core from 'metal/src/core';
+import { core } from 'metal';
 
 /**
  * Class responsible for storing authorization information.

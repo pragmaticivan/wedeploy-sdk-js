@@ -1,6 +1,6 @@
 'use strict';
 
-import core from 'metal/src/core';
+import { core } from 'metal';
 import Embodied from './Embodied';
 import Filter from './Filter';
 import Aggregation from './Aggregation';

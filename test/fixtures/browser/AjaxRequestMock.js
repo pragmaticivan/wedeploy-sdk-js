@@ -1,6 +1,6 @@
 'use strict';
 
-import async from 'metal/src/async/async';
+import { async } from 'metal';
 
 class AjaxRequestMock {
 	static intercept() {

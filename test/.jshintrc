@@ -5,5 +5,5 @@
 		"RequestMock": true
 	},
 	"mocha": true,
-	"extends": "../src/.jshintrc"
+	"extends": "../.jshintrc"
 }

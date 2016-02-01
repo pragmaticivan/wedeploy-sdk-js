@@ -1,8 +1,8 @@
 'use strict';
 
-import core from 'metal/src/core';
+import { core } from 'metal';
 import ClientMessage from './ClientMessage';
-import MultiMap from 'metal-multimap/src/MultiMap';
+import MultiMap from 'metal-multimap';
 
 /**
  * Represents a client request object.

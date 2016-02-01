@@ -2,10 +2,10 @@
 
 import http from 'http';
 import request from 'request';
-import Ajax from 'metal-ajax/src/Ajax';
-import CancellablePromise from 'metal-promise/src/promise/Promise';
+import CancellablePromise from 'metal-promise';
 import ClientResponse from '../ClientResponse';
 import Transport from '../Transport';
+import Uri from 'metal-uri';
 
 /**
  * Provides a convenient interface for data transport.
@@ -47,7 +47,7 @@ class NodeTransport extends Transport {
 	 */
 	request(url, method, body, opt_headers, opt_params, opt_timeout) {
 		if (opt_params) {
-			url = Ajax.addParametersToUrlQueryString(url, opt_params);
+			url = new Uri(url).addParametersFromMultiMap(opt_params).toString();
 		}
 
 		var options = {

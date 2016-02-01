@@ -1,6 +1,6 @@
 'use strict';
 
-import core from 'metal/src/core';
+import { core } from 'metal';
 import Auth from './Auth';
 import Base64 from '../crypt/Base64';
 import Embodied from '../api-query/Embodied';
@@ -8,8 +8,8 @@ import Filter from '../api-query/Filter';
 import Query from '../api-query/Query';
 import TransportFactory from './TransportFactory';
 import ClientRequest from './ClientRequest';
-import MultiMap from 'metal-multimap/src/MultiMap';
-import Uri from 'metal-uri/src/Uri';
+import MultiMap from 'metal-multimap';
+import Uri from 'metal-uri';
 
 var io;
 
