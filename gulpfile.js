@@ -79,9 +79,3 @@ gulp.task('ci', function(cb) {
 	console.warn('See https://docs.travis-ci.com/user/sauce-connect/ for help');
 	cb();
 });
-
-gulp.task('build', function(cb) {
-	runSequence('build:globals', cb);
-});
-
-gulp.task('watch', ['watch:globals']);
