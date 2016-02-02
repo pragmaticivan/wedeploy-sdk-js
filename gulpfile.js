@@ -3,12 +3,16 @@
 var gulp = require('gulp');
 var runSequence = require('run-sequence');
 var metal = require('gulp-metal');
-var mocha = require('gulp-mocha');
 
 metal.registerTasks({
 	globalName: 'launchpad',
 	buildSrc: ['src/**/!(node)/*.js', '!src/env/node.js'],
 	bundleFileName: 'api.js',
+	testNodeSrc: [
+		'test/enviroment/node/env.js',
+		'test/**/*.js',
+		'!test/**/browser/**/*.js'
+	],
 	testSaucelabsBrowsers: {
 		sl_chrome: {
 			base: 'SauceLabs',
@@ -65,20 +69,6 @@ metal.registerTasks({
 			version: '5.0'
 		}
 	}
-});
-
-gulp.task('test:node', function() {
-	var files = [
-		'test/enviroment/node/env.js',
-		'test/**/*.js',
-		'!test/**/browser/**/*.js'
-	];
-	return gulp.src(files)
-		.pipe(mocha({
-			compilers: [require('babel-core/register')({
-				sourceMaps: 'both'
-			})]
-		}));
 });
 
 gulp.task('ci', function(cb) {
