@@ -517,7 +517,7 @@ class Launchpad {
 		opt_options = opt_options || {
 			forceNew: true
 		};
-		opt_options.query = "url=" + encodeURIComponent(uri.getPathname() + uri.getSearch());
+		opt_options.query = 'url=' + encodeURIComponent(uri.getPathname() + uri.getSearch());
 		opt_options.path = opt_options.path || uri.getPathname();
 
 		return io(uri.getHost(), opt_options);

@@ -23,7 +23,7 @@ describe('Launchpad', function() {
 			assert.deepEqual({
 				forceNew: true,
 				path: '/path/a',
-				url: '/path/a?foo=1'
+				query: 'url=' + encodeURIComponent('/path/a?foo=1')
 			}, opts);
 			done();
 		});
@@ -36,7 +36,7 @@ describe('Launchpad', function() {
 			assert.strictEqual('domain:8080', url);
 			assert.deepEqual({
 				path: '/new',
-				url: '/path/a'
+				query: 'url=' + encodeURIComponent('/path/a')
 			}, opts);
 			done();
 		});
