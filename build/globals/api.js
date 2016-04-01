@@ -125,6 +125,7 @@ babelHelpers;
    * TODO(*): Rethink superclass loop.
    */
 
+
 		core.collectSuperClassesProperty = function collectSuperClassesProperty(constructor, propertyName) {
 			var propertyValues = [constructor[propertyName]];
 			while (constructor.__proto__ && !constructor.__proto__.isPrototypeOf(Function)) {
@@ -141,6 +142,7 @@ babelHelpers;
    * @param {!function()} fn
    * @return {string}
    */
+
 
 		core.getFunctionName = function getFunctionName(fn) {
 			if (!fn.name) {
@@ -160,6 +162,7 @@ babelHelpers;
    * @throws {Error} when invoked to indicate the method should be overridden.
    */
 
+
 		core.getUid = function getUid(opt_object) {
 			if (opt_object) {
 				return opt_object[core.UID_PROPERTY] || (opt_object[core.UID_PROPERTY] = core.uniqueIdCounter_++);
@@ -173,6 +176,7 @@ babelHelpers;
    * @return {?} The first argument.
    */
 
+
 		core.identityFunction = function identityFunction(opt_returnValue) {
 			return opt_returnValue;
 		};
@@ -182,6 +186,7 @@ babelHelpers;
    * @param {?} val Variable to test.
    * @return {boolean} Whether variable is boolean.
    */
+
 
 		core.isBoolean = function isBoolean(val) {
 			return typeof val === 'boolean';
@@ -193,6 +198,7 @@ babelHelpers;
    * @return {boolean} Whether variable is defined.
    */
 
+
 		core.isDef = function isDef(val) {
 			return val !== undefined;
 		};
@@ -202,6 +208,7 @@ babelHelpers;
    * @param {*} val
    * @return {Boolean}
    */
+
 
 		core.isDefAndNotNull = function isDefAndNotNull(val) {
 			return core.isDef(val) && !core.isNull(val);
@@ -213,6 +220,7 @@ babelHelpers;
    * @return {Boolean}
    */
 
+
 		core.isDocument = function isDocument(val) {
 			return val && (typeof val === 'undefined' ? 'undefined' : babelHelpers.typeof(val)) === 'object' && val.nodeType === 9;
 		};
@@ -222,6 +230,7 @@ babelHelpers;
    * @param {*} val
    * @return {Boolean}
    */
+
 
 		core.isElement = function isElement(val) {
 			return val && (typeof val === 'undefined' ? 'undefined' : babelHelpers.typeof(val)) === 'object' && val.nodeType === 1;
@@ -233,6 +242,7 @@ babelHelpers;
    * @return {boolean} Whether variable is a function.
    */
 
+
 		core.isFunction = function isFunction(val) {
 			return typeof val === 'function';
 		};
@@ -242,6 +252,7 @@ babelHelpers;
    * @param {*} val
    * @return {Boolean}
    */
+
 
 		core.isNull = function isNull(val) {
 			return val === null;
@@ -253,6 +264,7 @@ babelHelpers;
    * @return {boolean} Whether variable is a number.
    */
 
+
 		core.isNumber = function isNumber(val) {
 			return typeof val === 'number';
 		};
@@ -262,6 +274,7 @@ babelHelpers;
    * @param {*} val
    * @return {Boolean}
    */
+
 
 		core.isWindow = function isWindow(val) {
 			return val !== null && val === val.window;
@@ -274,6 +287,7 @@ babelHelpers;
    * @return {boolean} Whether variable is an object.
    */
 
+
 		core.isObject = function isObject(val) {
 			var type = typeof val === 'undefined' ? 'undefined' : babelHelpers.typeof(val);
 			return type === 'object' && val !== null || type === 'function';
@@ -285,6 +299,7 @@ babelHelpers;
    * @return {Boolean}
    */
 
+
 		core.isPromise = function isPromise(val) {
 			return val && (typeof val === 'undefined' ? 'undefined' : babelHelpers.typeof(val)) === 'object' && typeof val.then === 'function';
 		};
@@ -294,6 +309,7 @@ babelHelpers;
    * @param {*} val
    * @return {Boolean}
    */
+
 
 		core.isString = function isString(val) {
 			return typeof val === 'string';
@@ -311,6 +327,7 @@ babelHelpers;
    *   Should return the merged value to be stored on the current class.
    * @return {boolean} Returns true if merge happens, false otherwise.
    */
+
 
 		core.mergeSuperClassesProperty = function mergeSuperClassesProperty(constructor, propertyName, opt_mergeFn) {
 			var mergedName = propertyName + '_MERGED';
@@ -331,6 +348,7 @@ babelHelpers;
    * @return {void} Nothing.
    */
 
+
 		core.nullFunction = function nullFunction() {};
 
 		return core;
@@ -341,6 +359,7 @@ babelHelpers;
   * @type {String}
   * @protected
   */
+
 
 	core.UID_PROPERTY = 'core_' + (Math.random() * 1e9 >>> 0);
 
@@ -371,12 +390,15 @@ babelHelpers;
    */
 
 		array.equal = function equal(arr1, arr2) {
+			if (arr1.length !== arr2.length) {
+				return false;
+			}
 			for (var i = 0; i < arr1.length; i++) {
 				if (arr1[i] !== arr2[i]) {
 					return false;
 				}
 			}
-			return arr1.length === arr2.length;
+			return true;
 		};
 
 		/**
@@ -384,6 +406,7 @@ babelHelpers;
    * @param {!Array} arr
    * @return {*}
    */
+
 
 		array.firstDefinedValue = function firstDefinedValue(arr) {
 			for (var i = 0; i < arr.length; i++) {
@@ -399,6 +422,7 @@ babelHelpers;
    * @param {Array.<*>} opt_output Optional output array.
    * @return {Array.<*>} Flat array.
    */
+
 
 		array.flatten = function flatten(arr, opt_output) {
 			var output = opt_output || [];
@@ -420,6 +444,7 @@ babelHelpers;
    * @template T
    */
 
+
 		array.remove = function remove(arr, obj) {
 			var i = arr.indexOf(obj);
 			var rv;
@@ -436,6 +461,7 @@ babelHelpers;
    * @return {boolean} True if an element was removed.
    */
 
+
 		array.removeAt = function removeAt(arr, i) {
 			return Array.prototype.splice.call(arr, i, 1).length === 1;
 		};
@@ -450,6 +476,7 @@ babelHelpers;
    *   start index will be included.
    * @return {!Array}
    */
+
 
 		array.slice = function slice(arr, start, opt_end) {
 			var sliced = [];
@@ -729,6 +756,7 @@ babelHelpers;
    * Disposes of this instance's object references. Calls `disposeInternal`.
    */
 
+
 		Disposable.prototype.dispose = function dispose() {
 			if (!this.disposed_) {
 				this.disposeInternal();
@@ -742,12 +770,14 @@ babelHelpers;
    * disposables).
    */
 
+
 		Disposable.prototype.disposeInternal = function disposeInternal() {};
 
 		/**
    * Checks if this instance has already been disposed.
    * @return {boolean}
    */
+
 
 		Disposable.prototype.isDisposed = function isDisposed() {
 			return this.disposed_;
@@ -761,471 +791,6 @@ babelHelpers;
 'use strict';
 
 (function () {
-	var Disposable = this.launchpad.Disposable;
-
-	/**
-  * EventHandle utility. Holds information about an event subscription, and
-  * allows removing them easily.
-  * EventHandle is a Disposable, but it's important to note that the
-  * EventEmitter that created it is not the one responsible for disposing it.
-  * That responsibility is for the code that holds a reference to it.
-  * @param {!EventEmitter} emitter Emitter the event was subscribed to.
-  * @param {string} event The name of the event that was subscribed to.
-  * @param {!Function} listener The listener subscribed to the event.
-  * @constructor
-  * @extends {Disposable}
-  */
-
-	var EventHandle = function (_Disposable) {
-		babelHelpers.inherits(EventHandle, _Disposable);
-
-		function EventHandle(emitter, event, listener) {
-			babelHelpers.classCallCheck(this, EventHandle);
-
-			/**
-    * The EventEmitter instance that the event was subscribed to.
-    * @type {EventEmitter}
-    * @protected
-    */
-
-			var _this = babelHelpers.possibleConstructorReturn(this, _Disposable.call(this));
-
-			_this.emitter_ = emitter;
-
-			/**
-    * The name of the event that was subscribed to.
-    * @type {string}
-    * @protected
-    */
-			_this.event_ = event;
-
-			/**
-    * The listener subscribed to the event.
-    * @type {Function}
-    * @protected
-    */
-			_this.listener_ = listener;
-			return _this;
-		}
-
-		/**
-   * Disposes of this instance's object references.
-   * @override
-   */
-
-		EventHandle.prototype.disposeInternal = function disposeInternal() {
-			this.removeListener();
-			this.emitter_ = null;
-			this.listener_ = null;
-		};
-
-		/**
-   * Removes the listener subscription from the emitter.
-   */
-
-		EventHandle.prototype.removeListener = function removeListener() {
-			if (!this.emitter_.isDisposed()) {
-				this.emitter_.removeListener(this.event_, this.listener_);
-			}
-		};
-
-		return EventHandle;
-	}(Disposable);
-
-	EventHandle.prototype.registerMetalComponent && EventHandle.prototype.registerMetalComponent(EventHandle, 'EventHandle')
-	this.launchpad.EventHandle = EventHandle;
-}).call(this);
-'use strict';
-
-(function () {
-	var core = this.launchpad.core;
-	var array = this.launchpad.array;
-	var Disposable = this.launchpad.Disposable;
-	var EventHandle = this.launchpad.EventHandle;
-
-	/**
-  * EventEmitter utility.
-  * @constructor
-  * @extends {Disposable}
-  */
-
-	var EventEmitter = function (_Disposable) {
-		babelHelpers.inherits(EventEmitter, _Disposable);
-
-		function EventEmitter() {
-			babelHelpers.classCallCheck(this, EventEmitter);
-
-			/**
-    * Holds event listeners scoped by event type.
-    * @type {!Object<string, !Array<!function()>>}
-    * @protected
-    */
-
-			var _this = babelHelpers.possibleConstructorReturn(this, _Disposable.call(this));
-
-			_this.events_ = [];
-
-			/**
-    * The maximum number of listeners allowed for each event type. If the number
-    * becomes higher than the max, a warning will be issued.
-    * @type {number}
-    * @protected
-    */
-			_this.maxListeners_ = 10;
-
-			/**
-    * Configuration option which determines if an event facade should be sent
-    * as a param of listeners when emitting events. If set to true, the facade
-    * will be passed as the first argument of the listener.
-    * @type {boolean}
-    * @protected
-    */
-			_this.shouldUseFacade_ = false;
-			return _this;
-		}
-
-		/**
-   * Adds a listener to the end of the listeners array for the specified events.
-   * @param {!(Array|string)} events
-   * @param {!Function} listener
-   * @param {boolean} opt_default Flag indicating if this listener is a default
-   *   action for this event. Default actions are run last, and only if no previous
-   *   listener call `preventDefault()` on the received event facade.
-   * @return {!EventHandle} Can be used to remove the listener.
-   */
-
-		EventEmitter.prototype.addListener = function addListener(events, listener, opt_default) {
-			this.validateListener_(listener);
-
-			events = this.normalizeEvents_(events);
-			for (var i = 0; i < events.length; i++) {
-				this.addSingleListener_(events[i], listener, opt_default);
-			}
-
-			return new EventHandle(this, events, listener);
-		};
-
-		/**
-   * Adds a listener to the end of the listeners array for a single event.
-   * @param {string} event
-   * @param {!Function} listener
-   * @param {boolean} opt_default Flag indicating if this listener is a default
-   *   action for this event. Default actions are run last, and only if no previous
-   *   listener call `preventDefault()` on the received event facade.
-   * @return {!EventHandle} Can be used to remove the listener.
-   * @param {Function=} opt_origin The original function that was added as a
-   *   listener, if there is any.
-   * @protected
-   */
-
-		EventEmitter.prototype.addSingleListener_ = function addSingleListener_(event, listener, opt_default, opt_origin) {
-			this.emit('newListener', event, listener);
-
-			if (!this.events_[event]) {
-				this.events_[event] = [];
-			}
-			this.events_[event].push({
-				default: opt_default,
-				fn: listener,
-				origin: opt_origin
-			});
-
-			var listeners = this.events_[event];
-			if (listeners.length > this.maxListeners_ && !listeners.warned) {
-				console.warn('Possible EventEmitter memory leak detected. %d listeners added ' + 'for event %s. Use emitter.setMaxListeners() to increase limit.', listeners.length, event);
-				listeners.warned = true;
-			}
-		};
-
-		/**
-   * Disposes of this instance's object references.
-   * @override
-   */
-
-		EventEmitter.prototype.disposeInternal = function disposeInternal() {
-			this.events_ = [];
-		};
-
-		/**
-   * Execute each of the listeners in order with the supplied arguments.
-   * @param {string} event
-   * @param {*} opt_args [arg1], [arg2], [...]
-   * @return {boolean} Returns true if event had listeners, false otherwise.
-   */
-
-		EventEmitter.prototype.emit = function emit(event) {
-			var args = array.slice(arguments, 1);
-			var listeners = (this.events_[event] || []).concat();
-
-			var facade;
-			if (this.getShouldUseFacade()) {
-				facade = {
-					preventDefault: function preventDefault() {
-						facade.preventedDefault = true;
-					},
-					target: this,
-					type: event
-				};
-				args.push(facade);
-			}
-
-			var defaultListeners = [];
-			for (var i = 0; i < listeners.length; i++) {
-				if (listeners[i].default) {
-					defaultListeners.push(listeners[i]);
-				} else {
-					listeners[i].fn.apply(this, args);
-				}
-			}
-			if (!facade || !facade.preventedDefault) {
-				for (var j = 0; j < defaultListeners.length; j++) {
-					defaultListeners[j].fn.apply(this, args);
-				}
-			}
-
-			if (event !== '*') {
-				this.emit.apply(this, ['*', event].concat(args));
-			}
-
-			return listeners.length > 0;
-		};
-
-		/**
-   * Gets the configuration option which determines if an event facade should
-   * be sent as a param of listeners when emitting events. If set to true, the
-   * facade will be passed as the first argument of the listener.
-   * @return {boolean}
-   */
-
-		EventEmitter.prototype.getShouldUseFacade = function getShouldUseFacade() {
-			return this.shouldUseFacade_;
-		};
-
-		/**
-   * Returns an array of listeners for the specified event.
-   * @param {string} event
-   * @return {Array} Array of listeners.
-   */
-
-		EventEmitter.prototype.listeners = function listeners(event) {
-			return (this.events_[event] || []).map(function (listener) {
-				return listener.fn;
-			});
-		};
-
-		/**
-   * Adds a listener that will be invoked a fixed number of times for the
-   * events. After each event is triggered the specified amount of times, the
-   * listener is removed for it.
-   * @param {!(Array|string)} events
-   * @param {number} amount The amount of times this event should be listened
-   * to.
-   * @param {!Function} listener
-   * @return {!EventHandle} Can be used to remove the listener.
-   */
-
-		EventEmitter.prototype.many = function many(events, amount, listener) {
-			events = this.normalizeEvents_(events);
-			for (var i = 0; i < events.length; i++) {
-				this.many_(events[i], amount, listener);
-			}
-
-			return new EventHandle(this, events, listener);
-		};
-
-		/**
-   * Adds a listener that will be invoked a fixed number of times for a single
-   * event. After the event is triggered the specified amount of times, the
-   * listener is removed.
-   * @param {string} event
-   * @param {number} amount The amount of times this event should be listened
-   * to.
-   * @param {!Function} listener
-   * @protected
-   */
-
-		EventEmitter.prototype.many_ = function many_(event, amount, listener) {
-			var self = this;
-
-			if (amount <= 0) {
-				return;
-			}
-
-			function handlerInternal() {
-				if (--amount === 0) {
-					self.removeListener(event, handlerInternal);
-				}
-				listener.apply(self, arguments);
-			}
-
-			self.addSingleListener_(event, handlerInternal, false, listener);
-		};
-
-		/**
-   * Checks if a listener object matches the given listener function. To match,
-   * it needs to either point to that listener or have it as its origin.
-   * @param {!Object} listenerObj
-   * @param {!Function} listener
-   * @return {boolean}
-   * @protected
-   */
-
-		EventEmitter.prototype.matchesListener_ = function matchesListener_(listenerObj, listener) {
-			return listenerObj.fn === listener || listenerObj.origin && listenerObj.origin === listener;
-		};
-
-		/**
-   * Converts the parameter to an array if only one event is given.
-   * @param  {!(Array|string)} events
-   * @return {!Array}
-   * @protected
-   */
-
-		EventEmitter.prototype.normalizeEvents_ = function normalizeEvents_(events) {
-			return core.isString(events) ? [events] : events;
-		};
-
-		/**
-   * Removes a listener for the specified events.
-   * Caution: changes array indices in the listener array behind the listener.
-   * @param {!(Array|string)} events
-   * @param {!Function} listener
-   * @return {!Object} Returns emitter, so calls can be chained.
-   */
-
-		EventEmitter.prototype.off = function off(events, listener) {
-			this.validateListener_(listener);
-
-			events = this.normalizeEvents_(events);
-			for (var i = 0; i < events.length; i++) {
-				var listenerObjs = this.events_[events[i]] || [];
-				this.removeMatchingListenerObjs_(listenerObjs, listener);
-			}
-
-			return this;
-		};
-
-		/**
-   * Adds a listener to the end of the listeners array for the specified events.
-   * @param {!(Array|string)} events
-   * @param {!Function} listener
-   * @return {!EventHandle} Can be used to remove the listener.
-   */
-
-		EventEmitter.prototype.on = function on() {
-			return this.addListener.apply(this, arguments);
-		};
-
-		/**
-   * Adds a one time listener for the events. This listener is invoked only the
-   * next time each event is fired, after which it is removed.
-   * @param {!(Array|string)} events
-   * @param {!Function} listener
-   * @return {!EventHandle} Can be used to remove the listener.
-   */
-
-		EventEmitter.prototype.once = function once(events, listener) {
-			return this.many(events, 1, listener);
-		};
-
-		/**
-   * Removes all listeners, or those of the specified events. It's not a good
-   * idea to remove listeners that were added elsewhere in the code,
-   * especially when it's on an emitter that you didn't create.
-   * @param {(Array|string)=} opt_events
-   * @return {!Object} Returns emitter, so calls can be chained.
-   */
-
-		EventEmitter.prototype.removeAllListeners = function removeAllListeners(opt_events) {
-			if (opt_events) {
-				var events = this.normalizeEvents_(opt_events);
-				for (var i = 0; i < events.length; i++) {
-					this.events_[events[i]] = null;
-				}
-			} else {
-				this.events_ = {};
-			}
-			return this;
-		};
-
-		/**
-   * Removes all listener objects from the given array that match the given
-   * listener function.
-   * @param {!Array.<Object>} listenerObjs
-   * @param {!Function} listener
-   * @protected
-   */
-
-		EventEmitter.prototype.removeMatchingListenerObjs_ = function removeMatchingListenerObjs_(listenerObjs, listener) {
-			for (var i = listenerObjs.length - 1; i >= 0; i--) {
-				if (this.matchesListener_(listenerObjs[i], listener)) {
-					listenerObjs.splice(i, 1);
-				}
-			}
-		};
-
-		/**
-   * Removes a listener for the specified events.
-   * Caution: changes array indices in the listener array behind the listener.
-   * @param {!(Array|string)} events
-   * @param {!Function} listener
-   * @return {!Object} Returns emitter, so calls can be chained.
-   */
-
-		EventEmitter.prototype.removeListener = function removeListener() {
-			return this.off.apply(this, arguments);
-		};
-
-		/**
-   * By default EventEmitters will print a warning if more than 10 listeners
-   * are added for a particular event. This is a useful default which helps
-   * finding memory leaks. Obviously not all Emitters should be limited to 10.
-   * This function allows that to be increased. Set to zero for unlimited.
-   * @param {number} max The maximum number of listeners.
-   * @return {!Object} Returns emitter, so calls can be chained.
-   */
-
-		EventEmitter.prototype.setMaxListeners = function setMaxListeners(max) {
-			this.maxListeners_ = max;
-			return this;
-		};
-
-		/**
-   * Sets the configuration option which determines if an event facade should
-   * be sent as a param of listeners when emitting events. If set to true, the
-   * facade will be passed as the first argument of the listener.
-   * @param {boolean} shouldUseFacade
-   * @return {!Object} Returns emitter, so calls can be chained.
-   */
-
-		EventEmitter.prototype.setShouldUseFacade = function setShouldUseFacade(shouldUseFacade) {
-			this.shouldUseFacade_ = shouldUseFacade;
-			return this;
-		};
-
-		/**
-   * Checks if the given listener is valid, throwing an exception when it's not.
-   * @param  {*} listener
-   * @protected
-   */
-
-		EventEmitter.prototype.validateListener_ = function validateListener_(listener) {
-			if (!core.isFunction(listener)) {
-				throw new TypeError('Listener must be a function');
-			}
-		};
-
-		return EventEmitter;
-	}(Disposable);
-
-	EventEmitter.prototype.registerMetalComponent && EventEmitter.prototype.registerMetalComponent(EventEmitter, 'EventEmitter')
-	this.launchpad.EventEmitter = EventEmitter;
-}).call(this);
-'use strict';
-
-(function () {
-	var core = this.launchpad.core;
-
 	var object = function () {
 		function object() {
 			babelHelpers.classCallCheck(this, object);
@@ -1254,21 +819,16 @@ babelHelpers;
    * @param {string} name The fully qualified name.
    * @param {object=} opt_obj The object within which to look; default is
    *     <code>window</code>.
-   * @return {?} The value (object or primitive) or, if not found, null.
+   * @return {?} The value (object or primitive) or, if not found, undefined.
    */
 
+
 		object.getObjectByName = function getObjectByName(name, opt_obj) {
+			var scope = opt_obj || window;
 			var parts = name.split('.');
-			var cur = opt_obj || window;
-			var part;
-			while (part = parts.shift()) {
-				if (core.isDefAndNotNull(cur[part])) {
-					cur = cur[part];
-				} else {
-					return null;
-				}
-			}
-			return cur;
+			return parts.reduce(function (part, key) {
+				return part[key];
+			}, scope);
 		};
 
 		/**
@@ -1278,6 +838,7 @@ babelHelpers;
    * @param {!function(string, *)} fn
    * @return {!Object}
    */
+
 
 		object.map = function map(obj, fn) {
 			var mappedObj = {};
@@ -1292,863 +853,6 @@ babelHelpers;
 	}();
 
 	this.launchpad.object = object;
-}).call(this);
-'use strict';
-
-(function () {
-	var EventHandle = this.launchpad.EventHandle;
-
-	/**
-  * This is a special EventHandle, that is responsible for dom events, instead
-  * of EventEmitter events.
-  * @extends {EventHandle}
-  */
-
-	var DomEventHandle = function (_EventHandle) {
-		babelHelpers.inherits(DomEventHandle, _EventHandle);
-
-		/**
-   * The constructor for `DomEventHandle`.
-   * @param {!EventEmitter} emitter Emitter the event was subscribed to.
-   * @param {string} event The name of the event that was subscribed to.
-   * @param {!Function} listener The listener subscribed to the event.
-   * @param {boolean} opt_capture Flag indicating if listener should be triggered
-   *   during capture phase, instead of during the bubbling phase. Defaults to false.
-   * @constructor
-   */
-
-		function DomEventHandle(emitter, event, listener, opt_capture) {
-			babelHelpers.classCallCheck(this, DomEventHandle);
-
-			var _this = babelHelpers.possibleConstructorReturn(this, _EventHandle.call(this, emitter, event, listener));
-
-			_this.capture_ = opt_capture;
-			return _this;
-		}
-
-		/**
-   * @inheritDoc
-   */
-
-		DomEventHandle.prototype.removeListener = function removeListener() {
-			this.emitter_.removeEventListener(this.event_, this.listener_, this.capture_);
-		};
-
-		return DomEventHandle;
-	}(EventHandle);
-
-	DomEventHandle.prototype.registerMetalComponent && DomEventHandle.prototype.registerMetalComponent(DomEventHandle, 'DomEventHandle')
-	this.launchpad.DomEventHandle = DomEventHandle;
-}).call(this);
-'use strict';
-
-(function () {
-	var core = this.launchpad.core;
-	var object = this.launchpad.object;
-	var DomEventHandle = this.launchpad.DomEventHandle;
-
-	var dom = function () {
-		function dom() {
-			babelHelpers.classCallCheck(this, dom);
-		}
-
-		/**
-   * Adds the requested CSS classes to an element.
-   * @param {!Element} element The element to add CSS classes to.
-   * @param {string} classes CSS classes to add.
-   */
-
-		dom.addClasses = function addClasses(element, classes) {
-			if (!core.isObject(element) || !core.isString(classes)) {
-				return;
-			}
-
-			if ('classList' in element) {
-				dom.addClassesWithNative_(element, classes);
-			} else {
-				dom.addClassesWithoutNative_(element, classes);
-			}
-		};
-
-		/**
-   * Adds the requested CSS classes to an element using classList.
-   * @param {!Element} element The element to add CSS classes to.
-   * @param {string} classes CSS classes to add.
-   * @protected
-   */
-
-		dom.addClassesWithNative_ = function addClassesWithNative_(element, classes) {
-			classes.split(' ').forEach(function (className) {
-				element.classList.add(className);
-			});
-		};
-
-		/**
-   * Adds the requested CSS classes to an element without using classList.
-   * @param {!Element} element The element to add CSS classes to.
-   * @param {string} classes CSS classes to add.
-   * @protected
-   */
-
-		dom.addClassesWithoutNative_ = function addClassesWithoutNative_(element, classes) {
-			var elementClassName = ' ' + element.className + ' ';
-			var classesToAppend = '';
-
-			classes = classes.split(' ');
-
-			for (var i = 0; i < classes.length; i++) {
-				var className = classes[i];
-
-				if (elementClassName.indexOf(' ' + className + ' ') === -1) {
-					classesToAppend += ' ' + className;
-				}
-			}
-
-			if (classesToAppend) {
-				element.className = element.className + classesToAppend;
-			}
-		};
-
-		/**
-   * Appends a child node with text or other nodes to a parent node. If
-   * child is a HTML string it will be automatically converted to a document
-   * fragment before appending it to the parent.
-   * @param {!Element} parent The node to append nodes to.
-   * @param {!(Element|NodeList|string)} child The thing to append to the parent.
-   * @return {!Element} The appended child.
-   */
-
-		dom.append = function append(parent, child) {
-			if (core.isString(child)) {
-				child = dom.buildFragment(child);
-			}
-			if (child instanceof NodeList) {
-				var childArr = Array.prototype.slice.call(child);
-				for (var i = 0; i < childArr.length; i++) {
-					parent.appendChild(childArr[i]);
-				}
-			} else {
-				parent.appendChild(child);
-			}
-			return child;
-		};
-
-		/**
-   * Helper for converting a HTML string into a document fragment.
-   * @param {string} htmlString The HTML string to convert.
-   * @return {!Element} The resulting document fragment.
-   */
-
-		dom.buildFragment = function buildFragment(htmlString) {
-			var tempDiv = document.createElement('div');
-			tempDiv.innerHTML = '<br>' + htmlString;
-			tempDiv.removeChild(tempDiv.firstChild);
-
-			var fragment = document.createDocumentFragment();
-			while (tempDiv.firstChild) {
-				fragment.appendChild(tempDiv.firstChild);
-			}
-			return fragment;
-		};
-
-		/**
-   * Checks if the first element contains the second one.
-   * @param {!Element} element1
-   * @param {!Element} element2
-   * @return {boolean}
-   */
-
-		dom.contains = function contains(element1, element2) {
-			if (core.isDocument(element1)) {
-				// document.contains is not defined on IE9, so call it on documentElement instead.
-				return element1.documentElement.contains(element2);
-			} else {
-				return element1.contains(element2);
-			}
-		};
-
-		/**
-   * Listens to the specified event on the given DOM element, but only calls the
-   * callback with the event when it triggered by elements that match the given
-   * selector.
-   * @param {!Element} element The container DOM element to listen to the event on.
-   * @param {string} eventName The name of the event to listen to.
-   * @param {string} selector The selector that matches the child elements that
-   *   the event should be triggered for.
-   * @param {!function(!Object)} callback Function to be called when the event is
-   *   triggered. It will receive the normalized event object.
-   * @return {!DomEventHandle} Can be used to remove the listener.
-   */
-
-		dom.delegate = function delegate(element, eventName, selector, callback) {
-			var customConfig = dom.customEvents[eventName];
-			if (customConfig && customConfig.delegate) {
-				eventName = customConfig.originalEvent;
-				callback = customConfig.handler.bind(customConfig, callback);
-			}
-			return dom.on(element, eventName, dom.handleDelegateEvent_.bind(null, selector, callback));
-		};
-
-		/**
-   * Inserts node in document as last element.
-   * @param {Element} node Element to remove children from.
-   */
-
-		dom.enterDocument = function enterDocument(node) {
-			dom.append(document.body, node);
-		};
-
-		/**
-   * Removes node from document.
-   * @param {Element} node Element to remove children from.
-   */
-
-		dom.exitDocument = function exitDocument(node) {
-			if (node.parentNode) {
-				node.parentNode.removeChild(node);
-			}
-		};
-
-		/**
-   * This is called when an event is triggered by a delegate listener (see
-   * `dom.delegate` for more details).
-   * @param {string} selector The selector or element that matches the child
-   *   elements that the event should be triggered for.
-   * @param {!function(!Object)} callback Function to be called when the event
-   *   is triggered. It will receive the normalized event object.
-   * @param {!Event} event The event payload.
-   * @return {boolean} False if at least one of the triggered callbacks returns
-   *   false, or true otherwise.
-   */
-
-		dom.handleDelegateEvent_ = function handleDelegateEvent_(selector, callback, event) {
-			dom.normalizeDelegateEvent_(event);
-
-			var currentElement = event.target;
-			var returnValue = true;
-
-			while (currentElement && !event.stopped) {
-				if (core.isString(selector) && dom.match(currentElement, selector)) {
-					event.delegateTarget = currentElement;
-					returnValue &= callback(event);
-				}
-				if (currentElement === event.currentTarget) {
-					break;
-				}
-				currentElement = currentElement.parentNode;
-			}
-			event.delegateTarget = null;
-
-			return returnValue;
-		};
-
-		/**
-   * Checks if the given element has the requested css class.
-   * @param {!Element} element
-   * @param {string} className
-   * @return {boolean}
-   */
-
-		dom.hasClass = function hasClass(element, className) {
-			if ('classList' in element) {
-				return dom.hasClassWithNative_(element, className);
-			} else {
-				return dom.hasClassWithoutNative_(element, className);
-			}
-		};
-
-		/**
-   * Checks if the given element has the requested css class using classList.
-   * @param {!Element} element
-   * @param {string} className
-   * @return {boolean}
-   * @protected
-   */
-
-		dom.hasClassWithNative_ = function hasClassWithNative_(element, className) {
-			return element.classList.contains(className);
-		};
-
-		/**
-   * Checks if the given element has the requested css class without using classList.
-   * @param {!Element} element
-   * @param {string} className
-   * @return {boolean}
-   * @protected
-   */
-
-		dom.hasClassWithoutNative_ = function hasClassWithoutNative_(element, className) {
-			return (' ' + element.className + ' ').indexOf(' ' + className + ' ') >= 0;
-		};
-
-		/**
-   * Checks if the given element is empty or not.
-   * @param {!Element} element
-   * @return {boolean}
-   */
-
-		dom.isEmpty = function isEmpty(element) {
-			return element.childNodes.length === 0;
-		};
-
-		/**
-   * Check if an element matches a given selector.
-   * @param {Element} element
-   * @param {string} selector
-   * @return {boolean}
-   */
-
-		dom.match = function match(element, selector) {
-			if (!element || element.nodeType !== 1) {
-				return false;
-			}
-
-			var p = Element.prototype;
-			var m = p.matches || p.webkitMatchesSelector || p.mozMatchesSelector || p.msMatchesSelector || p.oMatchesSelector;
-			if (m) {
-				return m.call(element, selector);
-			}
-
-			return dom.matchFallback_(element, selector);
-		};
-
-		/**
-   * Check if an element matches a given selector, using an internal implementation
-   * instead of calling existing javascript functions.
-   * @param {Element} element
-   * @param {string} selector
-   * @return {boolean}
-   * @protected
-   */
-
-		dom.matchFallback_ = function matchFallback_(element, selector) {
-			var nodes = document.querySelectorAll(selector, element.parentNode);
-			for (var i = 0; i < nodes.length; ++i) {
-				if (nodes[i] === element) {
-					return true;
-				}
-			}
-			return false;
-		};
-
-		/**
-   * Returns the next sibling of the given element that matches the specified
-   * selector, or null if there is none.
-   * @param {!Element} element
-   * @param {?string} selector
-   */
-
-		dom.next = function next(element, selector) {
-			do {
-				element = element.nextSibling;
-				if (element && dom.match(element, selector)) {
-					return element;
-				}
-			} while (element);
-			return null;
-		};
-
-		/**
-   * Normalizes the event payload for delegate listeners.
-   * @param {!Event} event
-   */
-
-		dom.normalizeDelegateEvent_ = function normalizeDelegateEvent_(event) {
-			event.stopPropagation = dom.stopPropagation_;
-			event.stopImmediatePropagation = dom.stopImmediatePropagation_;
-		};
-
-		/**
-   * Listens to the specified event on the given DOM element. This function normalizes
-   * DOM event payloads and functions so they'll work the same way on all supported
-   * browsers.
-   * @param {!Element|string} element The DOM element to listen to the event on, or
-   *   a selector that should be delegated on the entire document.
-   * @param {string} eventName The name of the event to listen to.
-   * @param {!function(!Object)} callback Function to be called when the event is
-   *   triggered. It will receive the normalized event object.
-   * @param {boolean} opt_capture Flag indicating if listener should be triggered
-   *   during capture phase, instead of during the bubbling phase. Defaults to false.
-   * @return {!DomEventHandle} Can be used to remove the listener.
-   */
-
-		dom.on = function on(element, eventName, callback, opt_capture) {
-			if (core.isString(element)) {
-				return dom.delegate(document, eventName, element, callback);
-			}
-			var customConfig = dom.customEvents[eventName];
-			if (customConfig && customConfig.event) {
-				eventName = customConfig.originalEvent;
-				callback = customConfig.handler.bind(customConfig, callback);
-			}
-			element.addEventListener(eventName, callback, opt_capture);
-			return new DomEventHandle(element, eventName, callback, opt_capture);
-		};
-
-		/**
-   * Listens to the specified event on the given DOM element once. This
-   * function normalizes DOM event payloads and functions so they'll work the
-   * same way on all supported browsers.
-   * @param {!Element} element The DOM element to listen to the event on.
-   * @param {string} eventName The name of the event to listen to.
-   * @param {!function(!Object)} callback Function to be called when the event
-   *   is triggered. It will receive the normalized event object.
-   * @return {!DomEventHandle} Can be used to remove the listener.
-   */
-
-		dom.once = function once(element, eventName, callback) {
-			var domEventHandle = this.on(element, eventName, function () {
-				domEventHandle.removeListener();
-				return callback.apply(this, arguments);
-			});
-			return domEventHandle;
-		};
-
-		/**
-   * Registers a custom event.
-   * @param {string} eventName The name of the custom event.
-   * @param {!Object} customConfig An object with information about how the event
-   *   should be handled.
-   */
-
-		dom.registerCustomEvent = function registerCustomEvent(eventName, customConfig) {
-			dom.customEvents[eventName] = customConfig;
-		};
-
-		/**
-   * Removes all the child nodes on a DOM node.
-   * @param {Element} node Element to remove children from.
-   */
-
-		dom.removeChildren = function removeChildren(node) {
-			var child;
-			while (child = node.firstChild) {
-				node.removeChild(child);
-			}
-		};
-
-		/**
-   * Removes the requested CSS classes from an element.
-   * @param {!Element} element The element to remove CSS classes from.
-   * @param {string} classes CSS classes to remove.
-   */
-
-		dom.removeClasses = function removeClasses(element, classes) {
-			if (!core.isObject(element) || !core.isString(classes)) {
-				return;
-			}
-
-			if ('classList' in element) {
-				dom.removeClassesWithNative_(element, classes);
-			} else {
-				dom.removeClassesWithoutNative_(element, classes);
-			}
-		};
-
-		/**
-   * Removes the requested CSS classes from an element using classList.
-   * @param {!Element} element The element to remove CSS classes from.
-   * @param {string} classes CSS classes to remove.
-   * @protected
-   */
-
-		dom.removeClassesWithNative_ = function removeClassesWithNative_(element, classes) {
-			classes.split(' ').forEach(function (className) {
-				element.classList.remove(className);
-			});
-		};
-
-		/**
-   * Removes the requested CSS classes from an element without using classList.
-   * @param {!Element} element The element to remove CSS classes from.
-   * @param {string} classes CSS classes to remove.
-   * @protected
-   */
-
-		dom.removeClassesWithoutNative_ = function removeClassesWithoutNative_(element, classes) {
-			var elementClassName = ' ' + element.className + ' ';
-
-			classes = classes.split(' ');
-
-			for (var i = 0; i < classes.length; i++) {
-				elementClassName = elementClassName.replace(' ' + classes[i] + ' ', ' ');
-			}
-
-			element.className = elementClassName.trim();
-		};
-
-		/**
-   * Replaces the first element with the second.
-   * @param {Element} element1
-   * @param {Element} element2
-   */
-
-		dom.replace = function replace(element1, element2) {
-			if (element1 && element2 && element1 !== element2 && element1.parentNode) {
-				element1.parentNode.insertBefore(element2, element1);
-				element1.parentNode.removeChild(element1);
-			}
-		};
-
-		/**
-   * The function that replaces `stopImmediatePropagation_` for events.
-   * @protected
-   */
-
-		dom.stopImmediatePropagation_ = function stopImmediatePropagation_() {
-			this.stopped = true;
-			Event.prototype.stopImmediatePropagation.call(this);
-		};
-
-		/**
-   * The function that replaces `stopPropagation` for events.
-   * @protected
-   */
-
-		dom.stopPropagation_ = function stopPropagation_() {
-			this.stopped = true;
-			Event.prototype.stopPropagation.call(this);
-		};
-
-		/**
-   * Checks if the given element supports the given event type.
-   * @param {!Element|string} element The DOM element or element tag name to check.
-   * @param {string} eventName The name of the event to check.
-   * @return {boolean}
-   */
-
-		dom.supportsEvent = function supportsEvent(element, eventName) {
-			if (dom.customEvents[eventName]) {
-				return true;
-			}
-
-			if (core.isString(element)) {
-				if (!elementsByTag[element]) {
-					elementsByTag[element] = document.createElement(element);
-				}
-				element = elementsByTag[element];
-			}
-			return 'on' + eventName in element;
-		};
-
-		/**
-   * Converts the given argument to a DOM element. Strings are assumed to
-   * be selectors, and so a matched element will be returned. If the arg
-   * is already a DOM element it will be the return value.
-   * @param {string|Element|Document} selectorOrElement
-   * @return {Element} The converted element, or null if none was found.
-   */
-
-		dom.toElement = function toElement(selectorOrElement) {
-			if (core.isElement(selectorOrElement) || core.isDocument(selectorOrElement)) {
-				return selectorOrElement;
-			} else if (core.isString(selectorOrElement)) {
-				if (selectorOrElement[0] === '#' && selectorOrElement.indexOf(' ') === -1) {
-					return document.getElementById(selectorOrElement.substr(1));
-				} else {
-					return document.querySelector(selectorOrElement);
-				}
-			} else {
-				return null;
-			}
-		};
-
-		/**
-   * Adds or removes one or more classes from an element. If any of the classes
-   * is present, it will be removed from the element, or added otherwise.
-   * @param {!Element} element The element which classes will be toggled.
-   * @param {string} classes The classes which have to added or removed from the element.
-   */
-
-		dom.toggleClasses = function toggleClasses(element, classes) {
-			if (!core.isObject(element) || !core.isString(classes)) {
-				return;
-			}
-
-			if ('classList' in element) {
-				dom.toggleClassesWithNative_(element, classes);
-			} else {
-				dom.toggleClassesWithoutNative_(element, classes);
-			}
-		};
-
-		/**
-   * Adds or removes one or more classes from an element using classList.
-   * If any of the classes is present, it will be removed from the element,
-   * or added otherwise.
-   * @param {!Element} element The element which classes will be toggled.
-   * @param {string} classes The classes which have to added or removed from the element.
-   */
-
-		dom.toggleClassesWithNative_ = function toggleClassesWithNative_(element, classes) {
-			classes.split(' ').forEach(function (className) {
-				element.classList.toggle(className);
-			});
-		};
-
-		/**
-   * Adds or removes one or more classes from an element without using classList.
-   * If any of the classes is present, it will be removed from the element,
-   * or added otherwise.
-   * @param {!Element} element The element which classes will be toggled.
-   * @param {string} classes The classes which have to added or removed from the element.
-   */
-
-		dom.toggleClassesWithoutNative_ = function toggleClassesWithoutNative_(element, classes) {
-			var elementClassName = ' ' + element.className + ' ';
-
-			classes = classes.split(' ');
-
-			for (var i = 0; i < classes.length; i++) {
-				var className = ' ' + classes[i] + ' ';
-				var classIndex = elementClassName.indexOf(className);
-
-				if (classIndex === -1) {
-					elementClassName = elementClassName + classes[i] + ' ';
-				} else {
-					elementClassName = elementClassName.substring(0, classIndex) + ' ' + elementClassName.substring(classIndex + className.length);
-				}
-			}
-
-			element.className = elementClassName.trim();
-		};
-
-		/**
-   * Triggers the specified event on the given element.
-   * NOTE: This should mostly be used for testing, not on real code.
-   * @param {!Element} element The node that should trigger the event.
-   * @param {string} eventName The name of the event to be triggred.
-   * @param {Object=} opt_eventObj An object with data that should be on the
-   *   triggered event's payload.
-   */
-
-		dom.triggerEvent = function triggerEvent(element, eventName, opt_eventObj) {
-			var eventObj = document.createEvent('HTMLEvents');
-			eventObj.initEvent(eventName, true, true);
-			object.mixin(eventObj, opt_eventObj);
-			element.dispatchEvent(eventObj);
-		};
-
-		return dom;
-	}();
-
-	var elementsByTag = {};
-	dom.customEvents = {};
-
-	this.launchpad.dom = dom;
-}).call(this);
-'use strict';
-
-(function () {
-	var core = this.launchpad.core;
-	var dom = this.launchpad.dom;
-	var Disposable = this.launchpad.Disposable;
-
-	/**
-  * EventEmitterProxy utility. It's responsible for linking two EventEmitter
-  * instances together, emitting events from the first emitter through the
-  * second one. That means that listening to a supported event on the target
-  * emitter will mean listening to it on the origin emitter as well.
-  * @param {EventEmitter | Element} originEmitter Events originated on this emitter
-  *   will be fired for the target emitter's listeners as well. Can be either a real
-  *   EventEmitter instance or a DOM element.
-  * @param {EventEmitter} targetEmitter Event listeners attached to this emitter
-  *   will also be triggered when the event is fired by the origin emitter.
-  * @param {Object} opt_blacklist Optional blacklist of events that should not be
-  *   proxied.
-  * @constructor
-  * @extends {Disposable}
-  */
-
-	var EventEmitterProxy = function (_Disposable) {
-		babelHelpers.inherits(EventEmitterProxy, _Disposable);
-
-		function EventEmitterProxy(originEmitter, targetEmitter, opt_blacklist, opt_whitelist) {
-			babelHelpers.classCallCheck(this, EventEmitterProxy);
-
-			/**
-    * Map of events that should not be proxied.
-    * @type {Object}
-    * @protected
-    */
-
-			var _this = babelHelpers.possibleConstructorReturn(this, _Disposable.call(this));
-
-			_this.blacklist_ = opt_blacklist || {};
-
-			/**
-    * The origin emitter. This emitter's events will be proxied through the
-    * target emitter.
-    * @type {EventEmitter}
-    * @protected
-    */
-			_this.originEmitter_ = originEmitter;
-
-			/**
-    * Holds a map of events from the origin emitter that are already being proxied.
-    * @type {Object}
-    * @protected
-    */
-			_this.proxiedEvents_ = {};
-
-			/**
-    * The target emitter. This emitter will emit all events that come from
-    * the origin emitter.
-    * @type {EventEmitter}
-    * @protected
-    */
-			_this.targetEmitter_ = targetEmitter;
-
-			/**
-    * Map of events that should be proxied. If whitelist is set blacklist is ignored.
-    * @type {Object}
-    * @protected
-    */
-			_this.whitelist_ = opt_whitelist;
-
-			_this.startProxy_();
-			return _this;
-		}
-
-		/**
-   * @inheritDoc
-   */
-
-		EventEmitterProxy.prototype.disposeInternal = function disposeInternal() {
-			var removeFnName = this.originEmitter_.removeEventListener ? 'removeEventListener' : 'removeListener';
-			for (var event in this.proxiedEvents_) {
-				this.originEmitter_[removeFnName](event, this.proxiedEvents_[event]);
-			}
-
-			this.proxiedEvents_ = null;
-			this.originEmitter_ = null;
-			this.targetEmitter_ = null;
-		};
-
-		/**
-   * Proxies the given event from the origin to the target emitter.
-   * @param {string} event
-   */
-
-		EventEmitterProxy.prototype.proxyEvent_ = function proxyEvent_(event) {
-			if (!this.shouldProxyEvent_(event)) {
-				return;
-			}
-
-			var self = this;
-			this.proxiedEvents_[event] = function () {
-				var args = [event].concat(Array.prototype.slice.call(arguments, 0));
-				self.targetEmitter_.emit.apply(self.targetEmitter_, args);
-			};
-
-			if (core.isElement(this.originEmitter_) || core.isDocument(this.originEmitter_)) {
-				dom.on(this.originEmitter_, event, this.proxiedEvents_[event]);
-			} else {
-				this.originEmitter_.on(event, this.proxiedEvents_[event]);
-			}
-		};
-
-		/**
-   * Checks if the given event should be proxied.
-   * @param {string} event
-   * @return {boolean}
-   * @protected
-   */
-
-		EventEmitterProxy.prototype.shouldProxyEvent_ = function shouldProxyEvent_(event) {
-			if (this.whitelist_ && !this.whitelist_[event]) {
-				return false;
-			}
-			if (this.blacklist_[event]) {
-				return false;
-			}
-			return !this.proxiedEvents_[event] && (!(this.originEmitter_.removeEventListener || this.originEmitter_.addEventListener) || dom.supportsEvent(this.originEmitter_, event));
-		};
-
-		/**
-   * Starts proxying all events from the origin to the target emitter.
-   * @protected
-   */
-
-		EventEmitterProxy.prototype.startProxy_ = function startProxy_() {
-			this.targetEmitter_.on('newListener', this.proxyEvent_.bind(this));
-		};
-
-		return EventEmitterProxy;
-	}(Disposable);
-
-	EventEmitterProxy.prototype.registerMetalComponent && EventEmitterProxy.prototype.registerMetalComponent(EventEmitterProxy, 'EventEmitterProxy')
-	this.launchpad.EventEmitterProxy = EventEmitterProxy;
-}).call(this);
-'use strict';
-
-(function () {
-	var Disposable = this.launchpad.Disposable;
-
-	/**
-  * EventHandler utility. It's useful for easily removing a group of
-  * listeners from different EventEmitter instances.
-  * @constructor
-  * @extends {Disposable}
-  */
-
-	var EventHandler = function (_Disposable) {
-		babelHelpers.inherits(EventHandler, _Disposable);
-
-		function EventHandler() {
-			babelHelpers.classCallCheck(this, EventHandler);
-
-			/**
-    * An array that holds the added event handles, so the listeners can be
-    * removed later.
-    * @type {Array.<EventHandle>}
-    * @protected
-    */
-
-			var _this = babelHelpers.possibleConstructorReturn(this, _Disposable.call(this));
-
-			_this.eventHandles_ = [];
-			return _this;
-		}
-
-		/**
-   * Adds event handles to be removed later through the `removeAllListeners`
-   * method.
-   * @param {...(!EventHandle)} var_args
-   */
-
-		EventHandler.prototype.add = function add() {
-			for (var i = 0; i < arguments.length; i++) {
-				this.eventHandles_.push(arguments[i]);
-			}
-		};
-
-		/**
-   * Disposes of this instance's object references.
-   * @override
-   */
-
-		EventHandler.prototype.disposeInternal = function disposeInternal() {
-			this.eventHandles_ = null;
-		};
-
-		/**
-   * Removes all listeners that have been added through the `add` method.
-   */
-
-		EventHandler.prototype.removeAllListeners = function removeAllListeners() {
-			for (var i = 0; i < this.eventHandles_.length; i++) {
-				this.eventHandles_[i].removeListener();
-			}
-
-			this.eventHandles_ = [];
-		};
-
-		return EventHandler;
-	}(Disposable);
-
-	EventHandler.prototype.registerMetalComponent && EventHandler.prototype.registerMetalComponent(EventHandler, 'EventHandler')
-	this.launchpad.EventHandler = EventHandler;
 }).call(this);
 'use strict';
 
@@ -2171,6 +875,17 @@ babelHelpers;
 		};
 
 		/**
+  * Returns a string with at least 64-bits of randomness.
+  * @return {string} A random string, e.g. sn1s7vb4gcic.
+  */
+
+
+		string.getRandomString = function getRandomString() {
+			var x = 2147483648;
+			return Math.floor(Math.random() * x).toString(36) + Math.abs(Math.floor(Math.random() * x) ^ Date.now()).toString(36);
+		};
+
+		/**
    * Calculates the hashcode for a string. The hashcode value is computed by
    * the sum algorithm: s[0]*31^(n-1) + s[1]*31^(n-2) + ... + s[n-1]. A nice
    * property of using 31 prime is that the multiplication can be replaced by
@@ -2179,6 +894,7 @@ babelHelpers;
    * @param {String} val Target string.
    * @return {Number} Returns the string hashcode.
    */
+
 
 		string.hashCode = function hashCode(val) {
 			var hash = 0;
@@ -2199,6 +915,7 @@ babelHelpers;
    * @return {string}
    */
 
+
 		string.replaceInterval = function replaceInterval(str, start, end, value) {
 			return str.substring(0, start) + value + str.substring(end);
 		};
@@ -2215,28 +932,21 @@ babelHelpers;
   var array = this.launchpad.array;
   var async = this.launchpad.async;
   var Disposable = this.launchpad.Disposable;
-  var EventEmitter = this.launchpad.EventEmitter;
-  var EventEmitterProxy = this.launchpad.EventEmitterProxy;
-  var EventHandle = this.launchpad.EventHandle;
-  var EventHandler = this.launchpad.EventHandler;
   var object = this.launchpad.object;
   var string = this.launchpad.string;
-  this.launchpadNamed.index = {};
-  this.launchpadNamed.index.core = core;
-  this.launchpadNamed.index.array = array;
-  this.launchpadNamed.index.async = async;
-  this.launchpadNamed.index.Disposable = Disposable;
-  this.launchpadNamed.index.EventEmitter = EventEmitter;
-  this.launchpadNamed.index.EventEmitterProxy = EventEmitterProxy;
-  this.launchpadNamed.index.EventHandle = EventHandle;
-  this.launchpadNamed.index.EventHandler = EventHandler;
-  this.launchpadNamed.index.object = object;
-  this.launchpadNamed.index.string = string;
+  this.launchpad.metal = core;
+  this.launchpadNamed.metal = this.launchpadNamed.metal || {};
+  this.launchpadNamed.metal.core = core;
+  this.launchpadNamed.metal.array = array;
+  this.launchpadNamed.metal.async = async;
+  this.launchpadNamed.metal.Disposable = Disposable;
+  this.launchpadNamed.metal.object = object;
+  this.launchpadNamed.metal.string = string;
 }).call(this);
 'use strict';
 
 (function () {
-	var core = this.launchpadNamed.index.core;
+	var core = this.launchpadNamed.metal.core;
 
 	/**
   * Class responsible for storing authorization information.
@@ -2270,6 +980,7 @@ babelHelpers;
    * @return {!Auth}
    */
 
+
 		Auth.create = function create(tokenOrUsername, opt_password) {
 			return new Auth(tokenOrUsername, opt_password);
 		};
@@ -2278,6 +989,7 @@ babelHelpers;
    * Checks if the password is set.
    * @return {boolean}
    */
+
 
 		Auth.prototype.hasPassword = function hasPassword() {
 			return this.password_ !== null;
@@ -2288,6 +1000,7 @@ babelHelpers;
    * @return {boolean}
    */
 
+
 		Auth.prototype.hasToken = function hasToken() {
 			return this.token_ !== null;
 		};
@@ -2296,6 +1009,7 @@ babelHelpers;
    * Checks if the username is set.
    * @return {boolean}
    */
+
 
 		Auth.prototype.hasUsername = function hasUsername() {
 			return this.username_ !== null;
@@ -2306,6 +1020,7 @@ babelHelpers;
    * @return {string}
    */
 
+
 		Auth.prototype.password = function password() {
 			return this.password_;
 		};
@@ -2315,6 +1030,7 @@ babelHelpers;
    * @return {string}
    */
 
+
 		Auth.prototype.token = function token() {
 			return this.token_;
 		};
@@ -2323,6 +1039,7 @@ babelHelpers;
    * Returns the username.
    * @return {string}
    */
+
 
 		Auth.prototype.username = function username() {
 			return this.username_;
@@ -2336,7 +1053,13 @@ babelHelpers;
 'use strict';
 
 (function () {
-	var Disposable = this.launchpadNamed.index.Disposable;
+	var Disposable = this.launchpadNamed.metal.Disposable;
+
+	/**
+  * A cached reference to the create function.
+  */
+
+	var create = Object.create;
 
 	/**
   * Case insensitive string Multimap implementation. Allows multiple values for
@@ -2352,8 +1075,8 @@ babelHelpers;
 
 			var _this = babelHelpers.possibleConstructorReturn(this, _Disposable.call(this));
 
-			_this.keys = {};
-			_this.values = {};
+			_this.keys = create(null);
+			_this.values = create(null);
 			return _this;
 		}
 
@@ -2363,6 +1086,7 @@ babelHelpers;
    * @param {*} value
    * @chainable
    */
+
 
 		MultiMap.prototype.add = function add(name, value) {
 			this.keys[name.toLowerCase()] = name;
@@ -2376,9 +1100,10 @@ babelHelpers;
    * @chainable
    */
 
+
 		MultiMap.prototype.clear = function clear() {
-			this.keys = {};
-			this.values = {};
+			this.keys = create(null);
+			this.values = create(null);
 			return this;
 		};
 
@@ -2389,6 +1114,7 @@ babelHelpers;
    * @chainable
    */
 
+
 		MultiMap.prototype.contains = function contains(name) {
 			return name.toLowerCase() in this.values;
 		};
@@ -2396,6 +1122,7 @@ babelHelpers;
 		/**
    * @inheritDoc
    */
+
 
 		MultiMap.prototype.disposeInternal = function disposeInternal() {
 			this.values = null;
@@ -2407,6 +1134,7 @@ babelHelpers;
    * @return {*}
    * @chainable
    */
+
 
 		MultiMap.prototype.get = function get(name) {
 			var values = this.values[name.toLowerCase()];
@@ -2421,6 +1149,7 @@ babelHelpers;
    * @return {Array.<*>}
    */
 
+
 		MultiMap.prototype.getAll = function getAll(name) {
 			return this.values[name.toLowerCase()];
 		};
@@ -2430,6 +1159,7 @@ babelHelpers;
    * @return {boolean}
    */
 
+
 		MultiMap.prototype.isEmpty = function isEmpty() {
 			return this.size() === 0;
 		};
@@ -2438,6 +1168,7 @@ babelHelpers;
    * Gets array of key names.
    * @return {Array.<string>}
    */
+
 
 		MultiMap.prototype.names = function names() {
 			var _this2 = this;
@@ -2453,6 +1184,7 @@ babelHelpers;
    * @chainable
    */
 
+
 		MultiMap.prototype.remove = function remove(name) {
 			delete this.keys[name.toLowerCase()];
 			delete this.values[name.toLowerCase()];
@@ -2467,6 +1199,7 @@ babelHelpers;
    * @chainable
    */
 
+
 		MultiMap.prototype.set = function set(name, value) {
 			this.keys[name.toLowerCase()] = name;
 			this.values[name.toLowerCase()] = [value];
@@ -2478,6 +1211,7 @@ babelHelpers;
    * @return {number}
    */
 
+
 		MultiMap.prototype.size = function size() {
 			return this.names().length;
 		};
@@ -2487,6 +1221,7 @@ babelHelpers;
    * @return {string}
    */
 
+
 		MultiMap.prototype.toString = function toString() {
 			return JSON.stringify(this.values);
 		};
@@ -2494,13 +1229,12 @@ babelHelpers;
 		return MultiMap;
 	}(Disposable);
 
-	MultiMap.prototype.registerMetalComponent && MultiMap.prototype.registerMetalComponent(MultiMap, 'MultiMap')
 	this.launchpad.MultiMap = MultiMap;
 }).call(this);
 'use strict';
 
 (function () {
-	var core = this.launchpadNamed.index.core;
+	var core = this.launchpadNamed.metal.core;
 	var MultiMap = this.launchpad.MultiMap;
 
 	/**
@@ -2523,6 +1257,7 @@ babelHelpers;
    * @chainable Chainable when used as setter.
    */
 
+
 		ClientMessage.prototype.body = function body(opt_body) {
 			if (core.isDef(opt_body)) {
 				this.body_ = opt_body;
@@ -2538,6 +1273,7 @@ babelHelpers;
    * @param {string} value
    * @chainable
    */
+
 
 		ClientMessage.prototype.header = function header(name, value) {
 			if (arguments.length !== 2) {
@@ -2558,6 +1294,7 @@ babelHelpers;
    * @chainable Chainable when used as setter.
    */
 
+
 		ClientMessage.prototype.headers = function headers(opt_headers) {
 			if (core.isDef(opt_headers)) {
 				if (opt_headers instanceof MultiMap) {
@@ -2574,6 +1311,7 @@ babelHelpers;
    * Removes the body.
    */
 
+
 		ClientMessage.prototype.removeBody = function removeBody() {
 			this.body_ = undefined;
 		};
@@ -2586,7 +1324,7 @@ babelHelpers;
 'use strict';
 
 (function () {
-	var core = this.launchpadNamed.index.core;
+	var core = this.launchpadNamed.metal.core;
 	var ClientMessage = this.launchpad.ClientMessage;
 	var MultiMap = this.launchpad.MultiMap;
 
@@ -2617,6 +1355,7 @@ babelHelpers;
    * @chainable Chainable when used as setter.
    */
 
+
 		ClientRequest.prototype.method = function method(opt_method) {
 			if (core.isDef(opt_method)) {
 				this.method_ = opt_method;
@@ -2632,6 +1371,7 @@ babelHelpers;
    * @param {string} value
    * @chainable
    */
+
 
 		ClientRequest.prototype.param = function param(name, value) {
 			if (arguments.length !== 2) {
@@ -2649,6 +1389,7 @@ babelHelpers;
    *   no new value was given. Otherwise returns the {@link ClientMessage}
    *   object itself, so calls can be chained.
    */
+
 
 		ClientRequest.prototype.params = function params(opt_params) {
 			if (core.isDef(opt_params)) {
@@ -2672,6 +1413,7 @@ babelHelpers;
    * @chainable Chainable when used as setter.
    */
 
+
 		ClientRequest.prototype.url = function url(opt_url) {
 			if (core.isDef(opt_url)) {
 				this.url_ = opt_url;
@@ -2683,8 +1425,6 @@ babelHelpers;
 		return ClientRequest;
 	}(ClientMessage);
 
-	ClientRequest.prototype.registerMetalComponent && ClientRequest.prototype.registerMetalComponent(ClientRequest, 'ClientRequest')
-
 	ClientRequest.DEFAULT_METHOD = 'GET';
 
 	this.launchpad.ClientRequest = ClientRequest;
@@ -2692,7 +1432,7 @@ babelHelpers;
 'use strict';
 
 (function () {
-	var core = this.launchpadNamed.index.core;
+	var core = this.launchpadNamed.metal.core;
 	var ClientMessage = this.launchpad.ClientMessage;
 
 	/**
@@ -2720,6 +1460,7 @@ babelHelpers;
    * @return {!ClientRequest}
    */
 
+
 		ClientResponse.prototype.request = function request() {
 			return this.clientRequest_;
 		};
@@ -2733,6 +1474,7 @@ babelHelpers;
    *   be chained.
    * @chainable Chainable when used as setter.
    */
+
 
 		ClientResponse.prototype.statusCode = function statusCode(opt_statusCode) {
 			if (core.isDef(opt_statusCode)) {
@@ -2752,6 +1494,7 @@ babelHelpers;
    * @chainable Chainable when used as setter.
    */
 
+
 		ClientResponse.prototype.statusText = function statusText(opt_statusText) {
 			if (core.isDef(opt_statusText)) {
 				this.statusText_ = opt_statusText;
@@ -2765,6 +1508,7 @@ babelHelpers;
    * @return {boolean}
    */
 
+
 		ClientResponse.prototype.succeeded = function succeeded() {
 			return this.statusCode() >= 200 && this.statusCode() <= 399;
 		};
@@ -2772,7 +1516,6 @@ babelHelpers;
 		return ClientResponse;
 	}(ClientMessage);
 
-	ClientResponse.prototype.registerMetalComponent && ClientResponse.prototype.registerMetalComponent(ClientResponse, 'ClientResponse')
 	this.launchpad.ClientResponse = ClientResponse;
 }).call(this);
 'use strict';
@@ -2833,6 +1576,7 @@ babelHelpers;
    * @return {!Object}
    */
 
+
 		Embodied.prototype.body = function body() {
 			return this.body_;
 		};
@@ -2846,6 +1590,7 @@ babelHelpers;
    * @static
    */
 
+
 		Embodied.toBody = function toBody(obj) {
 			return obj instanceof Embodied ? obj.body() : obj;
 		};
@@ -2854,6 +1599,7 @@ babelHelpers;
    * Gets the json string that represents this instance.
    * @return {string}
    */
+
 
 		Embodied.prototype.toString = function toString() {
 			return JSON.stringify(this.body());
@@ -2867,7 +1613,7 @@ babelHelpers;
 'use strict';
 
 (function () {
-	var core = this.launchpadNamed.index.core;
+	var core = this.launchpadNamed.metal.core;
 	var Embodied = this.launchpad.Embodied;
 
 	/**
@@ -2909,6 +1655,7 @@ babelHelpers;
    *   if the operator is not unary.
    */
 
+
 		FilterBody.prototype.add = function add(operator, opt_filter) {
 			if (opt_filter) {
 				this.addArrayOperator_(operator, opt_filter);
@@ -2924,6 +1671,7 @@ babelHelpers;
    * @protected
    */
 
+
 		FilterBody.prototype.addArrayOperator_ = function addArrayOperator_(operator, filter) {
 			if (!(this.body_[operator] instanceof Array)) {
 				this.createBody_(operator, [this.body_]);
@@ -2936,6 +1684,7 @@ babelHelpers;
    * @param {string} operator
    * @param {...*} filters A variable amount of filters to be composed.
    */
+
 
 		FilterBody.prototype.addMany = function addMany(operator) {
 			for (var _len = arguments.length, filters = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
@@ -2954,6 +1703,7 @@ babelHelpers;
    * @protected
    */
 
+
 		FilterBody.prototype.createBody_ = function createBody_(key, value) {
 			this.body_ = {};
 			this.body_[key] = value;
@@ -2963,6 +1713,7 @@ babelHelpers;
    * Gets the json object that represents this filter's body.
    * @return {!Object}
    */
+
 
 		FilterBody.prototype.getObject = function getObject() {
 			return this.body_;
@@ -3008,6 +1759,7 @@ babelHelpers;
    * @static
    */
 
+
 		Geo.circle = function circle(center, radius) {
 			return new Geo.Circle(center, radius);
 		};
@@ -3018,6 +1770,7 @@ babelHelpers;
    * @return {!Line}
    * @static
    */
+
 
 		Geo.line = function line() {
 			for (var _len = arguments.length, points = Array(_len), _key = 0; _key < _len; _key++) {
@@ -3035,6 +1788,7 @@ babelHelpers;
    * @static
    */
 
+
 		Geo.point = function point(lat, lon) {
 			return new Geo.Point(lat, lon);
 		};
@@ -3045,6 +1799,7 @@ babelHelpers;
    * @return {!Polygon}
    * @static
    */
+
 
 		Geo.polygon = function polygon() {
 			for (var _len2 = arguments.length, points = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
@@ -3061,6 +1816,7 @@ babelHelpers;
   * Class that represents a point coordinate.
   * @extends {Embodied}
   */
+
 
 	var Point = function (_Embodied) {
 		babelHelpers.inherits(Point, _Embodied);
@@ -3083,8 +1839,6 @@ babelHelpers;
 
 		return Point;
 	}(Embodied);
-
-	Point.prototype.registerMetalComponent && Point.prototype.registerMetalComponent(Point, 'Point')
 
 	Geo.Point = Point;
 
@@ -3123,8 +1877,6 @@ babelHelpers;
 		return Line;
 	}(Embodied);
 
-	Line.prototype.registerMetalComponent && Line.prototype.registerMetalComponent(Line, 'Line')
-
 	Geo.Line = Line;
 
 	/**
@@ -3159,14 +1911,13 @@ babelHelpers;
    * @return {!Array}
    */
 
+
 		BoundingBox.prototype.getPoints = function getPoints() {
 			return this.body_.coordinates;
 		};
 
 		return BoundingBox;
 	}(Embodied);
-
-	BoundingBox.prototype.registerMetalComponent && BoundingBox.prototype.registerMetalComponent(BoundingBox, 'BoundingBox')
 
 	Geo.BoundingBox = BoundingBox;
 
@@ -3203,6 +1954,7 @@ babelHelpers;
    * @return {*}
    */
 
+
 		Circle.prototype.getCenter = function getCenter() {
 			return this.body_.coordinates;
 		};
@@ -3212,14 +1964,13 @@ babelHelpers;
    * @return {string}
    */
 
+
 		Circle.prototype.getRadius = function getRadius() {
 			return this.body_.radius;
 		};
 
 		return Circle;
 	}(Embodied);
-
-	Circle.prototype.registerMetalComponent && Circle.prototype.registerMetalComponent(Circle, 'Circle')
 
 	Geo.Circle = Circle;
 
@@ -3256,6 +2007,7 @@ babelHelpers;
    * @protected
    */
 
+
 		Polygon.prototype.addCoordinates_ = function addCoordinates_() {
 			for (var _len4 = arguments.length, points = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
 				points[_key4] = arguments[_key4];
@@ -3272,6 +2024,7 @@ babelHelpers;
    * @chainnable
    */
 
+
 		Polygon.prototype.hole = function hole() {
 			this.addCoordinates_.apply(this, arguments);
 			return this;
@@ -3280,8 +2033,6 @@ babelHelpers;
 		return Polygon;
 	}(Embodied);
 
-	Polygon.prototype.registerMetalComponent && Polygon.prototype.registerMetalComponent(Polygon, 'Polygon')
-
 	Geo.Polygon = Polygon;
 
 	this.launchpad.Geo = Geo;
@@ -3289,7 +2040,7 @@ babelHelpers;
 'use strict';
 
 (function () {
-	var core = this.launchpadNamed.index.core;
+	var core = this.launchpadNamed.metal.core;
 	var Embodied = this.launchpad.Embodied;
 
 	/**
@@ -3328,6 +2079,7 @@ babelHelpers;
    * @static
    */
 
+
 		Range.from = function from(_from) {
 			return new Range(_from);
 		};
@@ -3340,6 +2092,7 @@ babelHelpers;
    * @static
    */
 
+
 		Range.range = function range(from, to) {
 			return new Range(from, to);
 		};
@@ -3351,6 +2104,7 @@ babelHelpers;
    * @static
    */
 
+
 		Range.to = function to(_to) {
 			return new Range(null, _to);
 		};
@@ -3358,13 +2112,12 @@ babelHelpers;
 		return Range;
 	}(Embodied);
 
-	Range.prototype.registerMetalComponent && Range.prototype.registerMetalComponent(Range, 'Range')
 	this.launchpad.Range = Range;
 }).call(this);
 'use strict';
 
 (function () {
-	var core = this.launchpadNamed.index.core;
+	var core = this.launchpadNamed.metal.core;
 	var Embodied = this.launchpad.Embodied;
 	var FilterBody = this.launchpad.FilterBody;
 	var Geo = this.launchpad.Geo;
@@ -3407,6 +2160,7 @@ babelHelpers;
    * @chainnable
    */
 
+
 		Filter.prototype.add = function add(operator, fieldOrFilter, opt_operatorOrValue, opt_value) {
 			var filter = fieldOrFilter ? Filter.toFilter(fieldOrFilter, opt_operatorOrValue, opt_value) : null;
 			this.body_.add(operator, filter);
@@ -3419,6 +2173,7 @@ babelHelpers;
    * @param {...*} filters A variable amount of filters to be composed.
    * @chainnable
    */
+
 
 		Filter.prototype.addMany = function addMany(operator) {
 			var _body_;
@@ -3440,6 +2195,7 @@ babelHelpers;
    * @chainnable
    */
 
+
 		Filter.prototype.and = function and(fieldOrFilter, opt_operatorOrValue, opt_value) {
 			return this.add('and', fieldOrFilter, opt_operatorOrValue, opt_value);
 		};
@@ -3453,6 +2209,7 @@ babelHelpers;
    * @return {!Filter}
    * @static
    */
+
 
 		Filter.any = function any(field) {
 			var values = Array.prototype.slice.call(arguments, 1);
@@ -3474,6 +2231,7 @@ babelHelpers;
    * @static
    */
 
+
 		Filter.boundingBox = function boundingBox(field, boxOrUpperLeft, opt_lowerRight) {
 			if (boxOrUpperLeft instanceof Geo.BoundingBox) {
 				return Filter.polygon.apply(Filter, [field].concat(babelHelpers.toConsumableArray(boxOrUpperLeft.getPoints())));
@@ -3486,6 +2244,7 @@ babelHelpers;
    * Gets the json object that represents this filter.
    * @return {!Object}
    */
+
 
 		Filter.prototype.body = function body() {
 			return this.body_.getObject();
@@ -3500,6 +2259,7 @@ babelHelpers;
    * @return {!Filter}
    * @static
    */
+
 
 		Filter.distance = function distance(field, locationOrCircle, opt_rangeOrDistance) {
 			var location = locationOrCircle;
@@ -3524,6 +2284,7 @@ babelHelpers;
    * @static
    */
 
+
 		Filter.distanceInternal_ = function distanceInternal_(field, location, range) {
 			var value = {
 				location: Embodied.toBody(location)
@@ -3546,6 +2307,7 @@ babelHelpers;
     * @static
    */
 
+
 		Filter.equal = function equal(field, value) {
 			return new Filter(field, '=', value);
 		};
@@ -3556,6 +2318,7 @@ babelHelpers;
    * @return {!Filter}
    * @static
    */
+
 
 		Filter.exists = function exists(field) {
 			return Filter.field(field, 'exists', null);
@@ -3572,6 +2335,7 @@ babelHelpers;
    * @return {!Filter}
    * @static
    */
+
 
 		Filter.fuzzy = function fuzzy(fieldOrQuery, opt_queryOrFuzziness, opt_fuzziness) {
 			return Filter.fuzzyInternal_('fuzzy', fieldOrQuery, opt_queryOrFuzziness, opt_fuzziness);
@@ -3591,6 +2355,7 @@ babelHelpers;
    * @protected
    * @static
    */
+
 
 		Filter.fuzzyInternal_ = function fuzzyInternal_(operator, fieldOrQuery, opt_queryOrFuzziness, opt_fuzziness) {
 			var arg2IsString = core.isString(opt_queryOrFuzziness);
@@ -3615,6 +2380,7 @@ babelHelpers;
     * @static
    */
 
+
 		Filter.gt = function gt(field, value) {
 			return new Filter(field, '>', value);
 		};
@@ -3626,6 +2392,7 @@ babelHelpers;
    * @return {!Filter}
     * @static
    */
+
 
 		Filter.gte = function gte(field, value) {
 			return new Filter(field, '>=', value);
@@ -3641,6 +2408,7 @@ babelHelpers;
    * @static
    */
 
+
 		Filter.match = function match(fieldOrQuery, opt_query) {
 			var field = core.isString(opt_query) ? fieldOrQuery : Filter.ALL;
 			var query = core.isString(opt_query) ? opt_query : fieldOrQuery;
@@ -3653,6 +2421,7 @@ babelHelpers;
    * @return {!Filter}
    * @static
    */
+
 
 		Filter.missing = function missing(field) {
 			return Filter.field(field, 'missing', null);
@@ -3668,6 +2437,7 @@ babelHelpers;
    * @static
    */
 
+
 		Filter.phrase = function phrase(fieldOrQuery, opt_query) {
 			var field = core.isString(opt_query) ? fieldOrQuery : Filter.ALL;
 			var query = core.isString(opt_query) ? opt_query : fieldOrQuery;
@@ -3681,6 +2451,7 @@ babelHelpers;
    * @return {!Filter}
    * @static
    */
+
 
 		Filter.polygon = function polygon(field) {
 			for (var _len2 = arguments.length, points = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
@@ -3703,6 +2474,7 @@ babelHelpers;
    * @static
    */
 
+
 		Filter.prefix = function prefix(fieldOrQuery, opt_query) {
 			var field = opt_query ? fieldOrQuery : Filter.ALL;
 			var query = opt_query ? opt_query : fieldOrQuery;
@@ -3717,6 +2489,7 @@ babelHelpers;
    * @return {!Filter}
    * @static
    */
+
 
 		Filter.range = function range(field, rangeOrMin, opt_max) {
 			var range = rangeOrMin;
@@ -3734,6 +2507,7 @@ babelHelpers;
     * @static
    */
 
+
 		Filter.regex = function regex(field, value) {
 			return new Filter(field, '~', value);
 		};
@@ -3745,6 +2519,7 @@ babelHelpers;
    * @return {!Filter}
    * @static
    */
+
 
 		Filter.shape = function shape(field) {
 			for (var _len3 = arguments.length, shapes = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
@@ -3771,6 +2546,7 @@ babelHelpers;
    * @static
    */
 
+
 		Filter.similar = function similar(fieldOrQuery, query) {
 			var field = core.isString(query) ? fieldOrQuery : Filter.ALL;
 			var value = {
@@ -3787,6 +2563,7 @@ babelHelpers;
     * @static
    */
 
+
 		Filter.lt = function lt(field, value) {
 			return new Filter(field, '<', value);
 		};
@@ -3798,6 +2575,7 @@ babelHelpers;
    * @return {!Filter}
     * @static
    */
+
 
 		Filter.lte = function lte(field, value) {
 			return new Filter(field, '<=', value);
@@ -3812,6 +2590,7 @@ babelHelpers;
    * @return {!Filter}
    * @static
    */
+
 
 		Filter.none = function none(field) {
 			var values = Array.prototype.slice.call(arguments, 1);
@@ -3829,6 +2608,7 @@ babelHelpers;
    * @static
    */
 
+
 		Filter.notEqual = function notEqual(field, value) {
 			return new Filter(field, '!=', value);
 		};
@@ -3842,6 +2622,7 @@ babelHelpers;
    * @return {!Filter}
    * @static
    */
+
 
 		Filter.not = function not(fieldOrFilter, opt_operatorOrValue, opt_value) {
 			return Filter.toFilter(fieldOrFilter, opt_operatorOrValue, opt_value).add('not');
@@ -3858,6 +2639,7 @@ babelHelpers;
     * @static
    */
 
+
 		Filter.field = function field(_field, operatorOrValue, opt_value) {
 			return new Filter(_field, operatorOrValue, opt_value);
 		};
@@ -3871,6 +2653,7 @@ babelHelpers;
    * @chainnable
    */
 
+
 		Filter.prototype.or = function or(fieldOrFilter, opt_operatorOrValue, opt_value) {
 			return this.add('or', fieldOrFilter, opt_operatorOrValue, opt_value);
 		};
@@ -3883,6 +2666,7 @@ babelHelpers;
    * @param {*=} opt_value The filter's value.
    * @return {!Filter}
    */
+
 
 		Filter.toFilter = function toFilter(fieldOrFilter, opt_operatorOrValue, opt_value) {
 			var filter = fieldOrFilter;
@@ -3901,7 +2685,7 @@ babelHelpers;
   * @static
   */
 
-	Filter.prototype.registerMetalComponent && Filter.prototype.registerMetalComponent(Filter, 'Filter')
+
 	Filter.ALL = '*';
 
 	this.launchpad.Filter = Filter;
@@ -3940,6 +2724,7 @@ babelHelpers;
    * @static
    */
 
+
 		Aggregation.avg = function avg(field) {
 			return Aggregation.field(field, 'avg');
 		};
@@ -3950,6 +2735,7 @@ babelHelpers;
    * @return {!Aggregation}
    * @static
    */
+
 
 		Aggregation.count = function count(field) {
 			return Aggregation.field(field, 'count');
@@ -3963,6 +2749,7 @@ babelHelpers;
    * @return {!DistanceAggregation}
    * @static
    */
+
 
 		Aggregation.distance = function distance(field, location) {
 			for (var _len = arguments.length, ranges = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
@@ -3979,6 +2766,7 @@ babelHelpers;
    * @static
    */
 
+
 		Aggregation.extendedStats = function extendedStats(field) {
 			return Aggregation.field(field, 'extendedStats');
 		};
@@ -3987,6 +2775,7 @@ babelHelpers;
    * Gets this aggregation's field.
    * @return {string}
    */
+
 
 		Aggregation.prototype.getField = function getField() {
 			return this.field_;
@@ -3997,6 +2786,7 @@ babelHelpers;
    * @return {string}
    */
 
+
 		Aggregation.prototype.getOperator = function getOperator() {
 			return this.operator_;
 		};
@@ -4005,6 +2795,7 @@ babelHelpers;
    * Gets this aggregation's value.
    * @return {*}
    */
+
 
 		Aggregation.prototype.getValue = function getValue() {
 			return this.value_;
@@ -4018,6 +2809,7 @@ babelHelpers;
    * @static
    */
 
+
 		Aggregation.histogram = function histogram(field, interval) {
 			return new Aggregation(field, 'histogram', interval);
 		};
@@ -4028,6 +2820,7 @@ babelHelpers;
    * @return {!Aggregation}
    * @static
    */
+
 
 		Aggregation.max = function max(field) {
 			return Aggregation.field(field, 'max');
@@ -4040,6 +2833,7 @@ babelHelpers;
    * @static
    */
 
+
 		Aggregation.min = function min(field) {
 			return Aggregation.field(field, 'min');
 		};
@@ -4050,6 +2844,7 @@ babelHelpers;
    * @return {!Aggregation}
    * @static
    */
+
 
 		Aggregation.missing = function missing(field) {
 			return Aggregation.field(field, 'missing');
@@ -4063,6 +2858,7 @@ babelHelpers;
    * @static
    */
 
+
 		Aggregation.field = function field(_field, operator) {
 			return new Aggregation(_field, operator);
 		};
@@ -4074,6 +2870,7 @@ babelHelpers;
    * @return {!RangeAggregation}
    * @static
    */
+
 
 		Aggregation.range = function range(field) {
 			for (var _len2 = arguments.length, ranges = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
@@ -4090,6 +2887,7 @@ babelHelpers;
    * @static
    */
 
+
 		Aggregation.stats = function stats(field) {
 			return Aggregation.field(field, 'stats');
 		};
@@ -4100,6 +2898,7 @@ babelHelpers;
    * @return {!Aggregation}
    * @static
    */
+
 
 		Aggregation.sum = function sum(field) {
 			return Aggregation.field(field, 'sum');
@@ -4112,6 +2911,7 @@ babelHelpers;
    * @static
    */
 
+
 		Aggregation.terms = function terms(field) {
 			return Aggregation.field(field, 'terms');
 		};
@@ -4123,6 +2923,7 @@ babelHelpers;
   * Class that represents a distance aggregation.
   * @extends {Aggregation}
   */
+
 
 	var DistanceAggregation = function (_Aggregation) {
 		babelHelpers.inherits(DistanceAggregation, _Aggregation);
@@ -4159,6 +2960,7 @@ babelHelpers;
    * @chainnable
    */
 
+
 		DistanceAggregation.prototype.range = function range(rangeOrFrom, opt_to) {
 			var range = rangeOrFrom;
 			if (!(range instanceof Range)) {
@@ -4174,6 +2976,7 @@ babelHelpers;
    * @chainnable
    */
 
+
 		DistanceAggregation.prototype.unit = function unit(_unit) {
 			this.value_.unit = _unit;
 			return this;
@@ -4181,8 +2984,6 @@ babelHelpers;
 
 		return DistanceAggregation;
 	}(Aggregation);
-
-	DistanceAggregation.prototype.registerMetalComponent && DistanceAggregation.prototype.registerMetalComponent(DistanceAggregation, 'DistanceAggregation')
 
 	Aggregation.DistanceAggregation = DistanceAggregation;
 
@@ -4223,6 +3024,7 @@ babelHelpers;
    * @chainnable
    */
 
+
 		RangeAggregation.prototype.range = function range(rangeOrFrom, opt_to) {
 			var range = rangeOrFrom;
 			if (!(range instanceof Range)) {
@@ -4235,8 +3037,6 @@ babelHelpers;
 		return RangeAggregation;
 	}(Aggregation);
 
-	RangeAggregation.prototype.registerMetalComponent && RangeAggregation.prototype.registerMetalComponent(RangeAggregation, 'RangeAggregation')
-
 	Aggregation.RangeAggregation = RangeAggregation;
 
 	this.launchpad.Aggregation = Aggregation;
@@ -4244,7 +3044,7 @@ babelHelpers;
 'use strict';
 
 (function () {
-	var core = this.launchpadNamed.index.core;
+	var core = this.launchpadNamed.metal.core;
 	var Embodied = this.launchpad.Embodied;
 	var Filter = this.launchpad.Filter;
 	var Aggregation = this.launchpad.Aggregation;
@@ -4282,6 +3082,7 @@ babelHelpers;
    * @static
    */
 
+
 		Query.count = function count() {
 			return new Query().type('count');
 		};
@@ -4291,6 +3092,7 @@ babelHelpers;
    * @return {!Query}
    * @static
    */
+
 
 		Query.fetch = function fetch() {
 			return new Query().type('fetch');
@@ -4306,6 +3108,7 @@ babelHelpers;
    * @static
    */
 
+
 		Query.filter = function filter(fieldOrFilter, opt_operatorOrValue, opt_value) {
 			return new Query().filter(fieldOrFilter, opt_operatorOrValue, opt_value);
 		};
@@ -4318,6 +3121,7 @@ babelHelpers;
    * @static
    */
 
+
 		Query.offset = function offset(_offset) {
 			return new Query().offset(_offset);
 		};
@@ -4329,6 +3133,7 @@ babelHelpers;
    * @static
    */
 
+
 		Query.highlight = function highlight(field) {
 			return new Query().highlight(field);
 		};
@@ -4339,6 +3144,7 @@ babelHelpers;
    * @return {!Query}
    * @static
    */
+
 
 		Query.limit = function limit(_limit) {
 			return new Query().limit(_limit);
@@ -4360,6 +3166,7 @@ babelHelpers;
    * @static
    */
 
+
 		Query.search = function search(filterOrTextOrField, opt_textOrOperator, opt_value) {
 			return new Query().search(filterOrTextOrField, opt_textOrOperator, opt_value);
 		};
@@ -4374,6 +3181,7 @@ babelHelpers;
    * @static
    */
 
+
 		Query.sort = function sort(field, opt_direction) {
 			return new Query().sort(field, opt_direction);
 		};
@@ -4384,6 +3192,7 @@ babelHelpers;
    * @return {!Query}
    * @static
    */
+
 
 		Query.type = function type(_type) {
 			return new Query().type(_type);
@@ -4397,6 +3206,7 @@ babelHelpers;
    * @param {string=} opt_operator The aggregation operator.
    * @chainnable
    */
+
 
 		Query.prototype.aggregate = function aggregate(name, aggregationOrField, opt_operator) {
 			var aggregation = aggregationOrField;
@@ -4426,6 +3236,7 @@ babelHelpers;
    * @chainnable
    */
 
+
 		Query.prototype.count = function count() {
 			return this.type('count');
 		};
@@ -4434,6 +3245,7 @@ babelHelpers;
    * Sets this query's type to "fetch".
    * @chainnable
    */
+
 
 		Query.prototype.fetch = function fetch() {
 			return this.type('fetch');
@@ -4447,6 +3259,7 @@ babelHelpers;
    * @param {*=} opt_value The filter's value.
    * @chainnable
    */
+
 
 		Query.prototype.filter = function filter(fieldOrFilter, opt_operatorOrValue, opt_value) {
 			var filter = Filter.toFilter(fieldOrFilter, opt_operatorOrValue, opt_value);
@@ -4464,6 +3277,7 @@ babelHelpers;
    * @chainnable
    */
 
+
 		Query.prototype.offset = function offset(_offset2) {
 			this.body_.offset = _offset2;
 			return this;
@@ -4474,6 +3288,7 @@ babelHelpers;
    * @param {string} field The field's name.
    * @chainnable
    */
+
 
 		Query.prototype.highlight = function highlight(field) {
 			if (!this.body_.highlight) {
@@ -4489,6 +3304,7 @@ babelHelpers;
    * @param {number} limit The max amount of entries that this query should return.
    * @chainnable
    */
+
 
 		Query.prototype.limit = function limit(_limit2) {
 			this.body_.limit = _limit2;
@@ -4509,6 +3325,7 @@ babelHelpers;
    *   only be passed if an operator was passed as the second argument.
    * @chainnable
    */
+
 
 		Query.prototype.search = function search(filterOrTextOrField, opt_textOrOperator, opt_value) {
 			var filter = filterOrTextOrField;
@@ -4535,6 +3352,7 @@ babelHelpers;
    * @chainnable
    */
 
+
 		Query.prototype.sort = function sort(field, opt_direction) {
 			if (!this.body_.sort) {
 				this.body_.sort = [];
@@ -4551,6 +3369,7 @@ babelHelpers;
    * @chainnable
    */
 
+
 		Query.prototype.type = function type(_type2) {
 			this.body_.type = _type2;
 			return this;
@@ -4559,16 +3378,65 @@ babelHelpers;
 		return Query;
 	}(Embodied);
 
-	Query.prototype.registerMetalComponent && Query.prototype.registerMetalComponent(Query, 'Query')
 	this.launchpad.Query = Query;
 }).call(this);
 'use strict';
 
+/**
+ * Parses the given uri string into an object.
+ * @param {*=} opt_uri Optional string URI to parse
+ */
+
 (function () {
-	var core = this.launchpadNamed.index.core;
+	function parseFromAnchor(opt_uri) {
+		var link = document.createElement('a');
+		link.href = opt_uri;
+		return {
+			hash: link.hash,
+			hostname: link.hostname,
+			password: link.password,
+			pathname: link.pathname[0] === '/' ? link.pathname : '/' + link.pathname,
+			port: link.port,
+			protocol: link.protocol,
+			search: link.search,
+			username: link.username
+		};
+	}
+
+	this.launchpad.parseFromAnchor = parseFromAnchor;
+}).call(this);
+'use strict';
+
+(function () {
+	var core = this.launchpadNamed.metal.core;
+	var parseFromAnchor = this.launchpad.parseFromAnchor;
+
+	/**
+  * Parses the given uri string into an object. The URL function will be used
+  * when present, otherwise we'll fall back to the anchor node element.
+  * @param {*=} opt_uri Optional string URI to parse
+  */
+
+	function parse(opt_uri) {
+		if (core.isFunction(URL) && URL.length) {
+			return new URL(opt_uri);
+		} else {
+			return parseFromAnchor(opt_uri);
+		}
+	}
+
+	this.launchpad.parse = parse;
+}).call(this);
+'use strict';
+
+(function () {
+	var core = this.launchpadNamed.metal.core;
+	var string = this.launchpadNamed.metal.string;
+	var parse = this.launchpad.parse;
 	var MultiMap = this.launchpad.MultiMap;
 
-	var parseFn_;
+
+	var parseFn_ = parse;
 
 	var Uri = function () {
 
@@ -4576,13 +3444,13 @@ babelHelpers;
    * This class contains setters and getters for the parts of the URI.
    * The following figure displays an example URIs and their component parts.
    *
-   *                                              path
-   *	                                         ┌───┴────┐
-   *	  abc://username:password@example.com:123/path/data?key=value#fragid1
-   *	  └┬┘   └───────┬───────┘ └────┬────┘ └┬┘           └───┬───┘ └──┬──┘
-   * protocol  user information   hostname  port            search    hash
-   *                            └──────┬───────┘
-   *                                  host
+   *                                  path
+   *	                             ┌───┴────┐
+   *	  abc://example.com:123/path/data?key=value#fragid1
+   *	  └┬┘   └────┬────┘ └┬┘           └───┬───┘ └──┬──┘
+   * protocol  hostname  port            search    hash
+   *          └──────┬───────┘
+   *                host
    *
    * @param {*=} opt_uri Optional string URI to parse
    * @constructor
@@ -4603,6 +3471,7 @@ babelHelpers;
    * @chainable
    */
 
+
 		Uri.prototype.addParametersFromMultiMap = function addParametersFromMultiMap(multimap) {
 			var _this = this;
 
@@ -4621,6 +3490,7 @@ babelHelpers;
    * @chainable
    */
 
+
 		Uri.prototype.addParameterValue = function addParameterValue(name, value) {
 			this.ensureQueryInitialized_();
 			if (core.isDef(value)) {
@@ -4637,6 +3507,7 @@ babelHelpers;
    * @chainable
    */
 
+
 		Uri.prototype.addParameterValues = function addParameterValues(name, values) {
 			var _this2 = this;
 
@@ -4651,6 +3522,7 @@ babelHelpers;
    * extracted from URI search part.
    * @protected
    */
+
 
 		Uri.prototype.ensureQueryInitialized_ = function ensureQueryInitialized_() {
 			var _this3 = this;
@@ -4670,7 +3542,7 @@ babelHelpers;
 					var value = _param$split2[1];
 
 					if (core.isDef(value)) {
-						value = decodeURIComponent(value);
+						value = Uri.urlDecode(value);
 					}
 					_this3.addParameterValue(key, value);
 				});
@@ -4682,6 +3554,7 @@ babelHelpers;
    * @return {string}
    */
 
+
 		Uri.prototype.getHash = function getHash() {
 			return this.url.hash || '';
 		};
@@ -4691,11 +3564,12 @@ babelHelpers;
    * @return {string}
    */
 
+
 		Uri.prototype.getHost = function getHost() {
 			var host = this.getHostname();
 			if (host) {
 				var port = this.getPort();
-				if (port) {
+				if (port && port !== '80') {
 					host += ':' + port;
 				}
 			}
@@ -4706,6 +3580,7 @@ babelHelpers;
    * Gets the hostname part of uri without protocol and port.
    * @return {string}
    */
+
 
 		Uri.prototype.getHostname = function getHostname() {
 			var hostname = this.url.hostname;
@@ -4719,6 +3594,7 @@ babelHelpers;
    * Gets the origin part of uri. E.g. <code>http://[hostname]:[port]</code>.
    * @return {string}
    */
+
 
 		Uri.prototype.getOrigin = function getOrigin() {
 			var host = this.getHost();
@@ -4737,6 +3613,7 @@ babelHelpers;
    *   string.
    */
 
+
 		Uri.prototype.getParameterValue = function getParameterValue(name) {
 			this.ensureQueryInitialized_();
 			return this.query.get(name);
@@ -4750,6 +3627,7 @@ babelHelpers;
    *   query parameter values.
    */
 
+
 		Uri.prototype.getParameterValues = function getParameterValues(name) {
 			this.ensureQueryInitialized_();
 			return this.query.getAll(name);
@@ -4761,24 +3639,27 @@ babelHelpers;
    *   strings.
    */
 
+
 		Uri.prototype.getParameterNames = function getParameterNames() {
 			this.ensureQueryInitialized_();
 			return this.query.names();
 		};
 
 		/**
-   * Gets the password part of uri.
-   * @return {string}
+   * Gets the function currently being used to parse URIs.
+   * @return {!function()}
    */
 
-		Uri.prototype.getPassword = function getPassword() {
-			return this.url.password;
+
+		Uri.getParseFn = function getParseFn() {
+			return parseFn_;
 		};
 
 		/**
    * Gets the pathname part of uri.
    * @return {string}
    */
+
 
 		Uri.prototype.getPathname = function getPathname() {
 			return this.url.pathname;
@@ -4789,6 +3670,7 @@ babelHelpers;
    * @return {string}
    */
 
+
 		Uri.prototype.getPort = function getPort() {
 			return this.url.port;
 		};
@@ -4797,6 +3679,7 @@ babelHelpers;
    * Gets the protocol part of uri. E.g. <code>http:</code>.
    * @return {string}
    */
+
 
 		Uri.prototype.getProtocol = function getProtocol() {
 			return this.url.protocol;
@@ -4807,6 +3690,7 @@ babelHelpers;
    * parameters.
    * @return {string}
    */
+
 
 		Uri.prototype.getSearch = function getSearch() {
 			var _this4 = this;
@@ -4830,12 +3714,26 @@ babelHelpers;
 		};
 
 		/**
-   * Gets the username part of uri.
-   * @return {string}
+   * Checks if uri contains the parameter.
+   * @param {string} name
+   * @return {boolean}
    */
 
-		Uri.prototype.getUsername = function getUsername() {
-			return this.url.username;
+
+		Uri.prototype.hasParameter = function hasParameter(name) {
+			this.ensureQueryInitialized_();
+			return this.query.contains(name);
+		};
+
+		/**
+   * Makes this URL unique by adding a random param to it. Useful for avoiding
+   * cache.
+   */
+
+
+		Uri.prototype.makeUnique = function makeUnique() {
+			this.setParameterValue(Uri.RANDOM_PARAM, string.getRandomString());
+			return this;
 		};
 
 		/**
@@ -4845,10 +3743,16 @@ babelHelpers;
    * @return {string} URI with protocol and hostname placeholder.
    */
 
+
 		Uri.prototype.maybeAddProtocolAndHostname_ = function maybeAddProtocolAndHostname_(opt_uri) {
 			var url = opt_uri;
-			if (opt_uri.indexOf('://') === -1) {
-				url = Uri.DEFAULT_PROTOCOL + '//';
+			if (opt_uri.indexOf('://') === -1 && opt_uri.indexOf('javascript:') !== 0) {
+				// jshint ignore:line
+
+				url = Uri.DEFAULT_PROTOCOL;
+				if (opt_uri[0] !== '/' || opt_uri[1] !== '/') {
+					url += '//';
+				}
 
 				switch (opt_uri.charAt(0)) {
 					case '.':
@@ -4860,7 +3764,9 @@ babelHelpers;
 						break;
 					case '':
 					case '/':
-						url += Uri.HOSTNAME_PLACEHOLDER;
+						if (opt_uri[1] !== '/') {
+							url += Uri.HOSTNAME_PLACEHOLDER;
+						}
 						url += opt_uri;
 						break;
 					default:
@@ -4871,17 +3777,27 @@ babelHelpers;
 		};
 
 		/**
+   * Normalizes the parsed object to be in the expected standard.
+   * @param {!Object}
+   */
+
+
+		Uri.normalizeObject = function normalizeObject(parsed) {
+			var length = parsed.pathname ? parsed.pathname.length : 0;
+			if (length > 1 && parsed.pathname[length - 1] === '/') {
+				parsed.pathname = parsed.pathname.substr(0, length - 1);
+			}
+			return parsed;
+		};
+
+		/**
    * Parses the given uri string into an object.
    * @param {*=} opt_uri Optional string URI to parse
    */
 
+
 		Uri.parse = function parse(opt_uri) {
-			if (!parseFn_) {
-				parseFn_ = function parseFn_(uri) {
-					return new URL(uri);
-				};
-			}
-			return parseFn_(opt_uri);
+			return Uri.normalizeObject(parseFn_(opt_uri));
 		};
 
 		/**
@@ -4890,9 +3806,21 @@ babelHelpers;
    * @chainable
    */
 
+
 		Uri.prototype.removeParameter = function removeParameter(name) {
 			this.ensureQueryInitialized_();
 			this.query.remove(name);
+			return this;
+		};
+
+		/**
+   * Removes uniqueness parameter of the uri.
+   * @chainable
+   */
+
+
+		Uri.prototype.removeUnique = function removeUnique() {
+			this.removeParameter(Uri.RANDOM_PARAM);
 			return this;
 		};
 
@@ -4901,6 +3829,7 @@ babelHelpers;
    * @param {string} hash
    * @chainable
    */
+
 
 		Uri.prototype.setHash = function setHash(hash) {
 			this.url.hash = hash;
@@ -4912,6 +3841,7 @@ babelHelpers;
    * @param {string} hostname
    * @chainable
    */
+
 
 		Uri.prototype.setHostname = function setHostname(hostname) {
 			this.url.hostname = hostname;
@@ -4925,6 +3855,7 @@ babelHelpers;
    * @param {*} value The new value.
    * @chainable
    */
+
 
 		Uri.prototype.setParameterValue = function setParameterValue(name, value) {
 			this.removeParameter(name);
@@ -4940,6 +3871,7 @@ babelHelpers;
    * @chainable
    */
 
+
 		Uri.prototype.setParameterValues = function setParameterValues(name, values) {
 			var _this5 = this;
 
@@ -4951,21 +3883,11 @@ babelHelpers;
 		};
 
 		/**
-   * Sets the password.
-   * @param {string} password
-   * @chainable
-   */
-
-		Uri.prototype.setPassword = function setPassword(password) {
-			this.url.password = password;
-			return this;
-		};
-
-		/**
    * Sets the pathname.
    * @param {string} pathname
    * @chainable
    */
+
 
 		Uri.prototype.setPathname = function setPathname(pathname) {
 			this.url.pathname = pathname;
@@ -4978,6 +3900,7 @@ babelHelpers;
    * @chainable
    */
 
+
 		Uri.prototype.setPort = function setPort(port) {
 			this.url.port = port;
 			return this;
@@ -4989,6 +3912,7 @@ babelHelpers;
    * @param {!function()} parseFn
    */
 
+
 		Uri.setParseFn = function setParseFn(parseFn) {
 			parseFn_ = parseFn;
 		};
@@ -4999,19 +3923,12 @@ babelHelpers;
    * @chainable
    */
 
+
 		Uri.prototype.setProtocol = function setProtocol(protocol) {
 			this.url.protocol = protocol;
-			return this;
-		};
-
-		/**
-   * Sets the username.
-   * @param {string} username
-   * @chainable
-   */
-
-		Uri.prototype.setUsername = function setUsername(username) {
-			this.url.username = username;
+			if (this.url.protocol[this.url.protocol.length - 1] !== ':') {
+				this.url.protocol += ':';
+			}
 			return this;
 		};
 
@@ -5020,16 +3937,12 @@ babelHelpers;
    * @override
    */
 
+
 		Uri.prototype.toString = function toString() {
 			var href = '';
 			var host = this.getHost();
 			if (host) {
 				href += this.getProtocol() + '//';
-				var username = this.getUsername();
-				var password = this.getPassword();
-				if (username && password) {
-					href += username + ':' + password + '@';
-				}
 			}
 			href += host + this.getPathname() + this.getSearch() + this.getHash();
 			return href;
@@ -5041,6 +3954,7 @@ babelHelpers;
    * @param {...string} ...paths Any number of paths to be joined with the base url.
    * @static
    */
+
 
 		Uri.joinPaths = function joinPaths(basePath) {
 			for (var _len = arguments.length, paths = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
@@ -5056,24 +3970,44 @@ babelHelpers;
 			return [basePath].concat(paths).join('/').replace(/\/$/, '');
 		};
 
+		/**
+   * URL-decodes the string. We need to specially handle '+'s because
+   * the javascript library doesn't convert them to spaces.
+   * @param {string} str The string to url decode.
+   * @return {string} The decoded {@code str}.
+   */
+
+
+		Uri.urlDecode = function urlDecode(str) {
+			return decodeURIComponent(str.replace(/\+/g, ' '));
+		};
+
 		return Uri;
 	}();
 
 	/**
   * Default protocol value.
-  * @type {String}
+  * @type {string}
   * @default http:
   * @static
   */
+
 
 	Uri.DEFAULT_PROTOCOL = 'http:';
 
 	/**
   * Hostname placeholder. Relevant to internal usage only.
-  * @type {String}
+  * @type {string}
   * @static
   */
 	Uri.HOSTNAME_PLACEHOLDER = 'hostname' + Date.now();
+
+	/**
+  * Name used by the param generated by `makeUnique`.
+  * @type {string}
+  * @static
+  */
+	Uri.RANDOM_PARAM = 'zx';
 
 	this.launchpad.Uri = Uri;
 }).call(this);
@@ -5090,8 +4024,8 @@ babelHelpers;
 'use strict';
 
 (function () {
-  var core = this.launchpadNamed.index.core;
-  var async = this.launchpadNamed.index.async;
+  var core = this.launchpadNamed.metal.core;
+  var async = this.launchpadNamed.metal.async;
 
   /**
    * Provides a more strict interface for Thenables in terms of
@@ -5318,13 +4252,13 @@ babelHelpers;
   };
 
   /**
-   * @define {number} The delay in milliseconds before a rejected Promise's reason
-   * is passed to the rejection handler. By default, the rejection handler
-   * rethrows the rejection reason so that it appears in the developer console or
+   * The delay in milliseconds before a rejected Promise's reason is passed to
+   * the rejection handler. By default, the rejection handler rethrows the
+   * rejection reason so that it appears in the developer console or
    * {@code window.onerror} handler.
-   *
    * Rejections are rethrown as quickly as possible by default. A negative value
    * disables rejection handling entirely.
+   * @type {number}
    */
   CancellablePromise.UNHANDLED_REJECTION_DELAY = 0;
 
@@ -5994,14 +4928,14 @@ babelHelpers;
   /** @override */
   CancellablePromise.CancellationError.prototype.name = 'cancel';
 
-  this.launchpadNamed.Promise = {};
+  this.launchpadNamed.Promise = this.launchpadNamed.Promise || {};
   this.launchpadNamed.Promise.CancellablePromise = CancellablePromise;
   this.launchpad.Promise = CancellablePromise;
 }).call(this);
 'use strict';
 
 (function () {
-	var core = this.launchpadNamed.index.core;
+	var core = this.launchpadNamed.metal.core;
 	var Uri = this.launchpad.Uri;
 	var Promise = this.launchpadNamed.Promise.CancellablePromise;
 
@@ -6052,6 +4986,7 @@ babelHelpers;
    * @return {Promise} Deferred ajax request.
    * @protected
    */
+
 
 		Ajax.request = function request(url, method, body, opt_headers, opt_params, opt_timeout, opt_sync) {
 			var request = new XMLHttpRequest();
@@ -6172,7 +5107,6 @@ babelHelpers;
 		return AjaxTransport;
 	}(Transport);
 
-	AjaxTransport.prototype.registerMetalComponent && AjaxTransport.prototype.registerMetalComponent(AjaxTransport, 'AjaxTransport')
 	this.launchpad.AjaxTransport = AjaxTransport;
 }).call(this);
 'use strict';
@@ -6196,6 +5130,7 @@ babelHelpers;
    * Returns {@link TransportFactory} instance.
    */
 
+
 		TransportFactory.instance = function instance() {
 			if (!TransportFactory.instance_) {
 				TransportFactory.instance_ = new TransportFactory();
@@ -6208,6 +5143,7 @@ babelHelpers;
    * @param {string} implementationName
    * @return {!Transport}
    */
+
 
 		TransportFactory.prototype.get = function get(implementationName) {
 			var TransportClass = this.transports[implementationName];
@@ -6228,6 +5164,7 @@ babelHelpers;
    * @return {!Transport}
    */
 
+
 		TransportFactory.prototype.getDefault = function getDefault() {
 			return this.get(TransportFactory.DEFAULT_TRANSPORT_NAME);
 		};
@@ -6244,7 +5181,7 @@ babelHelpers;
 'use strict';
 
 (function () {
-	var core = this.launchpadNamed.index.core;
+	var core = this.launchpadNamed.metal.core;
 	var Auth = this.launchpad.Auth;
 	var Base64 = this.launchpad.Base64;
 	var Embodied = this.launchpad.Embodied;
@@ -6254,6 +5191,7 @@ babelHelpers;
 	var ClientRequest = this.launchpad.ClientRequest;
 	var MultiMap = this.launchpad.MultiMap;
 	var Uri = this.launchpad.Uri;
+
 
 	var io;
 
@@ -6315,6 +5253,7 @@ babelHelpers;
    * @chainable
    */
 
+
 		Launchpad.prototype.aggregate = function aggregate(name, aggregationOrField, opt_operator) {
 			this.getOrCreateQuery_().aggregate(name, aggregationOrField, opt_operator);
 			return this;
@@ -6328,6 +5267,7 @@ babelHelpers;
    *   this should be the password.
    * @chainable
    */
+
 
 		Launchpad.prototype.auth = function auth(authOrTokenOrUsername, opt_password) {
 			this.auth_ = authOrTokenOrUsername;
@@ -6343,6 +5283,7 @@ babelHelpers;
    * @chainable
    */
 
+
 		Launchpad.prototype.body = function body(_body) {
 			this.body_ = _body;
 			return this;
@@ -6354,6 +5295,7 @@ babelHelpers;
    * @param {*} body
    * @protected
    */
+
 
 		Launchpad.prototype.convertBodyToParams_ = function convertBodyToParams_(clientRequest, body) {
 			if (core.isString(body)) {
@@ -6373,6 +5315,7 @@ babelHelpers;
    * @chainnable
    */
 
+
 		Launchpad.prototype.count = function count() {
 			this.getOrCreateQuery_().type('count');
 			return this;
@@ -6385,6 +5328,7 @@ babelHelpers;
    * @return {!ClientRequest} clientRequest
    * @protected
    */
+
 
 		Launchpad.prototype.createClientRequest_ = function createClientRequest_(method, body) {
 			var clientRequest = new ClientRequest();
@@ -6415,6 +5359,7 @@ babelHelpers;
    * @return {!ClientResponse} The decoded response.
    */
 
+
 		Launchpad.prototype.decode = function decode(clientResponse) {
 			if (Launchpad.isContentTypeJson(clientResponse)) {
 				try {
@@ -6430,6 +5375,7 @@ babelHelpers;
    * @return {!CancellablePromise}
    */
 
+
 		Launchpad.prototype.delete = function _delete(opt_body) {
 			return this.sendAsync('DELETE', opt_body);
 		};
@@ -6440,6 +5386,7 @@ babelHelpers;
    * @param {!ClientRequest} clientRequest The request object to encode.
    * @return {!ClientRequest} The encoded request.
    */
+
 
 		Launchpad.prototype.encode = function encode(clientRequest) {
 			var body = clientRequest.body();
@@ -6476,6 +5423,7 @@ babelHelpers;
    * @protected
    */
 
+
 		Launchpad.prototype.encodeParams_ = function encodeParams_(clientRequest) {
 			var params = clientRequest.params();
 			params.names().forEach(function (name) {
@@ -6500,6 +5448,7 @@ babelHelpers;
    * @chainable
    */
 
+
 		Launchpad.prototype.filter = function filter(fieldOrFilter, opt_operatorOrValue, opt_value) {
 			this.getOrCreateQuery_().filter(fieldOrFilter, opt_operatorOrValue, opt_value);
 			return this;
@@ -6513,6 +5462,7 @@ babelHelpers;
    * @param {*} value
    * @chainable
    */
+
 
 		Launchpad.prototype.form = function form(name, value) {
 			if (typeof FormData === 'undefined') {
@@ -6532,6 +5482,7 @@ babelHelpers;
    * @return {!CancellablePromise}
    */
 
+
 		Launchpad.prototype.get = function get(opt_params) {
 			return this.sendAsync('GET', opt_params);
 		};
@@ -6542,6 +5493,7 @@ babelHelpers;
    * @return {!Query}
    * @protected
    */
+
 
 		Launchpad.prototype.getOrCreateQuery_ = function getOrCreateQuery_() {
 			if (!this.query_) {
@@ -6558,6 +5510,7 @@ babelHelpers;
    * @chainable
    */
 
+
 		Launchpad.prototype.header = function header(name, value) {
 			if (arguments.length !== 2) {
 				throw new Error('Invalid arguments');
@@ -6571,6 +5524,7 @@ babelHelpers;
    * @return {!MultiMap}
    */
 
+
 		Launchpad.prototype.headers = function headers() {
 			return this.headers_;
 		};
@@ -6580,6 +5534,7 @@ babelHelpers;
    * @param {string} field The field's name.
    * @chainable
    */
+
 
 		Launchpad.prototype.highlight = function highlight(field) {
 			this.getOrCreateQuery_().highlight(field);
@@ -6592,6 +5547,7 @@ babelHelpers;
    * @chainable
    */
 
+
 		Launchpad.prototype.limit = function limit(_limit) {
 			this.getOrCreateQuery_().limit(_limit);
 			return this;
@@ -6603,6 +5559,7 @@ babelHelpers;
    *   by this query.
    * @chainable
    */
+
 
 		Launchpad.prototype.offset = function offset(_offset) {
 			this.getOrCreateQuery_().offset(_offset);
@@ -6617,6 +5574,7 @@ babelHelpers;
    * @chainable
    */
 
+
 		Launchpad.prototype.param = function param(name, value) {
 			if (arguments.length !== 2) {
 				throw new Error('Invalid arguments');
@@ -6630,6 +5588,7 @@ babelHelpers;
    * @return {!MultiMap}
    */
 
+
 		Launchpad.prototype.params = function params() {
 			return this.params_;
 		};
@@ -6639,6 +5598,7 @@ babelHelpers;
    * @param {string=} opt_body Content to be sent as the request's body.
    * @return {!CancellablePromise}
    */
+
 
 		Launchpad.prototype.patch = function patch(opt_body) {
 			return this.sendAsync('PATCH', opt_body);
@@ -6650,6 +5610,7 @@ babelHelpers;
    * @param {...string} paths Any number of paths.
    * @return {!Launchpad} A new {@link Launchpad} instance for handling the given paths.
    */
+
 
 		Launchpad.prototype.path = function path() {
 			for (var _len2 = arguments.length, paths = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
@@ -6665,6 +5626,7 @@ babelHelpers;
    * @return {!CancellablePromise}
    */
 
+
 		Launchpad.prototype.post = function post(opt_body) {
 			return this.sendAsync('POST', opt_body);
 		};
@@ -6675,6 +5637,7 @@ babelHelpers;
    * @return {!CancellablePromise}
    */
 
+
 		Launchpad.prototype.put = function put(opt_body) {
 			return this.sendAsync('PUT', opt_body);
 		};
@@ -6684,6 +5647,7 @@ babelHelpers;
    * @param {!ClientRequest} clientRequest
    * @protected
    */
+
 
 		Launchpad.prototype.resolveAuthentication_ = function resolveAuthentication_(clientRequest) {
 			if (!this.auth_) {
@@ -6712,6 +5676,7 @@ babelHelpers;
    * @chainable
    */
 
+
 		Launchpad.prototype.search = function search(filterOrTextOrField, opt_textOrOperator, opt_value) {
 			this.getOrCreateQuery_().search(filterOrTextOrField, opt_textOrOperator, opt_value);
 			return this;
@@ -6724,6 +5689,7 @@ babelHelpers;
    * @param {string} body Content to be sent as the request's body.
    * @return {!CancellablePromise} Deferred request.
    */
+
 
 		Launchpad.prototype.sendAsync = function sendAsync(method, body) {
 			var transport = this.customTransport_ || TransportFactory.instance().getDefault();
@@ -6738,6 +5704,7 @@ babelHelpers;
    * @param {Object} socket implementation object.
    */
 
+
 		Launchpad.socket = function socket(_socket) {
 			io = _socket;
 		};
@@ -6750,6 +5717,7 @@ babelHelpers;
    * @chainnable
    */
 
+
 		Launchpad.prototype.sort = function sort(field, opt_direction) {
 			this.getOrCreateQuery_().sort(field, opt_direction);
 			return this;
@@ -6760,6 +5728,7 @@ babelHelpers;
    * @param {string} url The url that the client should use for sending requests.
    */
 
+
 		Launchpad.url = function url(_url) {
 			return new Launchpad(_url).use(this.customTransport_);
 		};
@@ -6767,6 +5736,7 @@ babelHelpers;
 		/**
    * Returns the URL used by this client.
    */
+
 
 		Launchpad.prototype.url = function url() {
 			return this.url_;
@@ -6776,6 +5746,7 @@ babelHelpers;
    * Specifies {@link Transport} implementation.
    * @param {!Transport} transport The transport implementation that should be used.
    */
+
 
 		Launchpad.prototype.use = function use(transport) {
 			this.customTransport_ = transport;
@@ -6797,6 +5768,7 @@ babelHelpers;
    * @return {!io} Socket IO reference. Server events can be listened on it.
    */
 
+
 		Launchpad.prototype.watch = function watch(opt_params, opt_options) {
 			if (typeof io === 'undefined') {
 				throw new Error('Socket.io client not loaded');
@@ -6809,7 +5781,7 @@ babelHelpers;
 			opt_options = opt_options || {
 				forceNew: true
 			};
-			opt_options.url = uri.getPathname() + uri.getSearch();
+			opt_options.query = 'url=' + encodeURIComponent(uri.getPathname() + uri.getSearch());
 			opt_options.path = opt_options.path || uri.getPathname();
 
 			return io(uri.getHost(), opt_options);
@@ -6821,6 +5793,7 @@ babelHelpers;
    * @return {Embodied}
    * @protected
    */
+
 
 		Launchpad.prototype.wrapWithQuery_ = function wrapWithQuery_(embodied) {
 			if (embodied instanceof Filter) {
@@ -6847,6 +5820,7 @@ babelHelpers;
   var Launchpad = this.launchpad.Launchpad;
   var Query = this.launchpad.Query;
   var Range = this.launchpad.Range;
+
 
   window.Filter = Filter;
   window.Geo = Geo;
