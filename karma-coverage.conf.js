@@ -1,4 +1,3 @@
-var fs = require('fs');
 var isparta = require('isparta');
 
 var babelOptions = {
