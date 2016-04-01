@@ -8,7 +8,7 @@
     "test": "gulp ci"
   },
   "main": "lib/env/node.js",
-  "browser": "src/env/browser.js",
+  "jsnext:main": "src/env/browser.js",
   "files": [
     "env",
     "lib",
