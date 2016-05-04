@@ -476,6 +476,19 @@ class Launchpad {
 	}
 
 	/**
+	 * Static factory for creating launchpad client for the given url.
+	 * @param {string} containerId The container id that the client should use
+	 *   for sending requests.
+	 */
+	static container(containerId) {
+		if (Launchpad.DOMAIN === null) {
+			return Launchpad.url('/');
+		}
+
+		return new Launchpad.url(containerId + '.' + Launchpad.DOMAIN);
+	}
+
+	/**
 	 * Returns the URL used by this client.
 	 */
 	url() {
@@ -541,5 +554,12 @@ Launchpad.isContentTypeJson = function(clientMessage) {
 	var contentType = clientMessage.headers().get('content-type') || '';
 	return contentType.indexOf('application/json') === 0;
 };
+
+/**
+ * The project domain to be used on container requests.
+ * @type {string}
+ * @static
+ */
+Launchpad.DOMAIN = null;
 
 export default Launchpad;

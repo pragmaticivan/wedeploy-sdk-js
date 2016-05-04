@@ -66,6 +66,18 @@ describe('Launchpad', function() {
 		assert.strictEqual(parent.customTransport_, child.customTransport_);
 	});
 
+	it('should resolve container url to empty when project domain is not set', function() {
+		var parent = Launchpad.container('containerId');
+		assert.strictEqual('', parent.url());
+	});
+
+	it('should resolve container url', function() {
+		Launchpad.DOMAIN = 'projectId.liferay.io';
+		var parent = Launchpad.container('containerId');
+		assert.strictEqual('containerId.projectId.liferay.io', parent.url());
+		Launchpad.DOMAIN = null;
+	});
+
 	it('should send DELETE request', function(done) {
 		RequestMock.intercept('DELETE', 'http://localhost/url', '"body"').reply(200);
 		Launchpad.url('http://localhost/url')
