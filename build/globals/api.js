@@ -849,6 +849,32 @@ babelHelpers;
 			return mappedObj;
 		};
 
+		/**
+   * Checks if the two given objects are equal. This is done via a shallow
+   * check, including only the keys directly contained by the 2 objects.
+   * @return {boolean}
+   */
+
+
+		object.shallowEqual = function shallowEqual(obj1, obj2) {
+			if (obj1 === obj2) {
+				return true;
+			}
+
+			var keys1 = Object.keys(obj1);
+			var keys2 = Object.keys(obj2);
+			if (keys1.length !== keys2.length) {
+				return false;
+			}
+
+			for (var i = 0; i < keys1.length; i++) {
+				if (obj1[keys1[i]] !== obj2[keys1[i]]) {
+					return false;
+				}
+			}
+			return true;
+		};
+
 		return object;
 	}();
 
@@ -872,6 +898,18 @@ babelHelpers;
 
 		string.collapseBreakingSpaces = function collapseBreakingSpaces(str) {
 			return str.replace(/[\t\r\n ]+/g, ' ').replace(/^[\t\r\n ]+|[\t\r\n ]+$/g, '');
+		};
+
+		/**
+  * Escapes characters in the string that are not safe to use in a RegExp.
+  * @param {*} str The string to escape. If not a string, it will be casted
+  *     to one.
+  * @return {string} A RegExp safe, escaped copy of {@code s}.
+  */
+
+
+		string.escapeRegex = function escapeRegex(str) {
+			return String(str).replace(/([-()\[\]{}+?*.$\^|,:#<!\\])/g, '\\$1').replace(/\x08/g, '\\x08');
 		};
 
 		/**
@@ -5734,6 +5772,21 @@ babelHelpers;
 		};
 
 		/**
+   * Static factory for creating launchpad client for the given url.
+   * @param {string} containerId The container id that the client should use
+   *   for sending requests.
+   */
+
+
+		Launchpad.container = function container(containerId) {
+			if (Launchpad.DOMAIN === null) {
+				return Launchpad.url('/');
+			}
+
+			return new Launchpad.url(containerId + '.' + Launchpad.DOMAIN);
+		};
+
+		/**
    * Returns the URL used by this client.
    */
 
@@ -5809,6 +5862,13 @@ babelHelpers;
 		var contentType = clientMessage.headers().get('content-type') || '';
 		return contentType.indexOf('application/json') === 0;
 	};
+
+	/**
+  * The project domain to be used on container requests.
+  * @type {string}
+  * @static
+  */
+	Launchpad.DOMAIN = null;
 
 	this.launchpad.Launchpad = Launchpad;
 }).call(this);
