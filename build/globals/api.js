@@ -5021,12 +5021,13 @@ babelHelpers;
    * @param {MultiMap=} opt_params
    * @param {number=} opt_timeout
    * @param {boolean=} opt_sync
+   * @param {boolean=} opt_withCredentials
    * @return {Promise} Deferred ajax request.
    * @protected
    */
 
 
-		Ajax.request = function request(url, method, body, opt_headers, opt_params, opt_timeout, opt_sync) {
+		Ajax.request = function request(url, method, body, opt_headers, opt_params, opt_timeout, opt_sync, opt_withCredentials) {
 			var request = new XMLHttpRequest();
 
 			var promise = new Promise(function (resolve, reject) {
@@ -5054,6 +5055,10 @@ babelHelpers;
 			}
 
 			request.open(method, url, !opt_sync);
+
+			if (opt_withCredentials) {
+				request.withCredentials = true;
+			}
 
 			if (opt_headers) {
 				opt_headers.names().forEach(function (name) {
@@ -5128,7 +5133,7 @@ babelHelpers;
    */
 
 		AjaxTransport.prototype.send = function send(clientRequest) {
-			var deferred = Ajax.request(clientRequest.url(), clientRequest.method(), clientRequest.body(), clientRequest.headers(), clientRequest.params(), null, false);
+			var deferred = Ajax.request(clientRequest.url(), clientRequest.method(), clientRequest.body(), clientRequest.headers(), clientRequest.params(), null, false, true);
 
 			return deferred.then(function (response) {
 				var clientResponse = new ClientResponse(clientRequest);
