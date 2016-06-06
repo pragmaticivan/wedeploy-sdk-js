@@ -22,7 +22,7 @@ if (typeof window !== 'undefined') {
  * The main class for making api requests. Sending requests returns a promise that is
  * resolved when the response arrives. Usage example:
  * ```javascript
- * Launchpad
+ * WeDeploy
  *   .url('/data/tasks')
  *   .post({desc: 'Buy milkl'})
  *   .then(function(response) {
@@ -31,16 +31,16 @@ if (typeof window !== 'undefined') {
  *   });
  * ```
  */
-class Launchpad {
+class WeDeploy {
 	/**
-	 * Launchpad constructor function.
+	 * WeDeploy constructor function.
 	 * @param {string} url The base url.
 	 * @param {...string} paths Any amount of paths to be appended to the base url.
 	 * @constructor
 	 */
 	constructor(url, ...paths) {
 		if (arguments.length === 0) {
-			throw new Error('Invalid arguments, try `new Launchpad(baseUrl, url)`');
+			throw new Error('Invalid arguments, try `new WeDeploy(baseUrl, url)`');
 		}
 
 		this.auth_ = null;
@@ -155,7 +155,7 @@ class Launchpad {
 	 * @return {!ClientResponse} The decoded response.
 	 */
 	decode(clientResponse) {
-		if (Launchpad.isContentTypeJson(clientResponse)) {
+		if (WeDeploy.isContentTypeJson(clientResponse)) {
 			try {
 				clientResponse.body(JSON.parse(clientResponse.body()));
 			} catch (err) {}
@@ -197,7 +197,7 @@ class Launchpad {
 			clientRequest.headers().remove('content-type');
 		} else if (body instanceof Embodied) {
 			clientRequest.body(body.toString());
-		} else if (Launchpad.isContentTypeJson(clientRequest)) {
+		} else if (WeDeploy.isContentTypeJson(clientRequest)) {
 			clientRequest.body(JSON.stringify(clientRequest.body()));
 		}
 
@@ -369,13 +369,13 @@ class Launchpad {
 	}
 
 	/**
-	 * Creates a new {@link Launchpad} instance for handling the url resulting in the
+	 * Creates a new {@link WeDeploy} instance for handling the url resulting in the
 	 * union of the current url with the given paths.
 	 * @param {...string} paths Any number of paths.
-	 * @return {!Launchpad} A new {@link Launchpad} instance for handling the given paths.
+	 * @return {!WeDeploy} A new {@link WeDeploy} instance for handling the given paths.
 	 */
 	path(...paths) {
-		return new Launchpad(this.url(), ...paths).use(this.customTransport_);
+		return new WeDeploy(this.url(), ...paths).use(this.customTransport_);
 	}
 
 	/**
@@ -468,24 +468,24 @@ class Launchpad {
 	}
 
 	/**
-	 * Static factory for creating launchpad client for the given url.
+	 * Static factory for creating WeDeploy client for the given url.
 	 * @param {string} url The url that the client should use for sending requests.
 	 */
 	static url(url) {
-		return new Launchpad(url).use(this.customTransport_);
+		return new WeDeploy(url).use(this.customTransport_);
 	}
 
 	/**
-	 * Static factory for creating launchpad client for the given url.
+	 * Static factory for creating WeDeploy client for the given url.
 	 * @param {string} containerId The container id that the client should use
 	 *   for sending requests.
 	 */
 	static container(containerId) {
-		if (Launchpad.DOMAIN === null) {
-			return Launchpad.url('/');
+		if (WeDeploy.DOMAIN === null) {
+			return WeDeploy.url('/');
 		}
 
-		return new Launchpad.url(containerId + '.' + Launchpad.DOMAIN);
+		return new WeDeploy.url(containerId + '.' + WeDeploy.DOMAIN);
 	}
 
 	/**
@@ -509,7 +509,7 @@ class Launchpad {
 	 * constructor will be provided:
 	 *
 	 * ```javascript
-	 * Launchpad.url('http://domain:8080/path/a').watch({id: 'myId'}, {foo: true});
+	 * WeDeploy.url('http://domain:8080/path/a').watch({id: 'myId'}, {foo: true});
 	 * // Equals:
 	 * io('domain:8080/?url=path%2Fa%3Fid%3DmyId', {foo: true});
 	 * ```
@@ -550,7 +550,7 @@ class Launchpad {
 	}
 }
 
-Launchpad.isContentTypeJson = function(clientMessage) {
+WeDeploy.isContentTypeJson = function(clientMessage) {
 	var contentType = clientMessage.headers().get('content-type') || '';
 	return contentType.indexOf('application/json') === 0;
 };
@@ -560,6 +560,6 @@ Launchpad.isContentTypeJson = function(clientMessage) {
  * @type {string}
  * @static
  */
-Launchpad.DOMAIN = null;
+WeDeploy.DOMAIN = null;
 
-export default Launchpad;
+export default WeDeploy;

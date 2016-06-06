@@ -1,7 +1,7 @@
 {
   "name": "api.js",
   "version": "0.0.0",
-  "description": "Launchpad Api",
+  "description": "WeDeploy Api",
   "scripts": {
     "compile": "babel --presets es2015 -d lib/ src/",
     "install": "npm run compile",

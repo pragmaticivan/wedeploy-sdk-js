@@ -1,13 +1,13 @@
-# Launchpad api client for JavaScript [![Build Status](http://img.shields.io/travis/launchpad-project/api.js/master.svg?style=flat)](https://travis-ci.org/launchpad-project/api.js)
+# WeDeploy api client for JavaScript [![Build Status](http://img.shields.io/travis/wedeploy/api.js/master.svg?style=flat)](https://travis-ci.org/wedeploy/api.js)
 
-[![Sauce Test Status](https://saucelabs.com/browser-matrix/launchpad-api.svg)](https://travis-ci.org/launchpad-project/launchpad-client)
+[![Sauce Test Status](https://saucelabs.com/browser-matrix/launchpad-api.svg)](https://travis-ci.org/wedeploy/api-js)
 
 ## Usage
 
 Post
 
 ```javascript
-Launchpad
+WeDeploy
     .url('/data/tasks')
     .post({ desc: 'Buy milk' });
 ```
@@ -15,7 +15,7 @@ Launchpad
 Get
 
 ```javascript
-Launchpad
+WeDeploy
    .url('/data/tasks')
    .get()
    .then(function(clientResponse) {

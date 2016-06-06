@@ -5,7 +5,7 @@ import Transport from '../Transport';
 import ClientResponse from '../ClientResponse';
 
 /**
- * The implementation of an ajax transport to be used with {@link Launchpad}.
+ * The implementation of an ajax transport to be used with {@link WeDeploy}.
  * @extends {Transport}
  */
 class AjaxTransport extends Transport {

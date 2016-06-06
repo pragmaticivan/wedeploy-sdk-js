@@ -5,7 +5,7 @@ var runSequence = require('run-sequence');
 var metal = require('gulp-metal');
 
 metal.registerTasks({
-	globalName: 'launchpad',
+	globalName: 'wedeploy',
 	buildSrc: ['src/**/!(node)/*.js', '!src/env/node.js'],
 	bundleFileName: 'api.js',
 	testNodeSrc: [

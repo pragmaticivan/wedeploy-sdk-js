@@ -4,12 +4,12 @@ import io from 'socket.io-client';
 import Filter from '../api-query/Filter';
 import Geo from '../api-query/Geo';
 import Query from '../api-query/Query';
-import Launchpad from '../api/Launchpad';
+import WeDeploy from '../api/WeDeploy';
 import NodeTransport from '../api/node/NodeTransport';
 import Range from '../api-query/Range';
 import TransportFactory from '../api/TransportFactory';
 
 TransportFactory[TransportFactory.DEFAULT_TRANSPORT_NAME] = NodeTransport;
-Launchpad.socket(io);
+WeDeploy.socket(io);
 
-export { Launchpad, Filter, Geo, Query, Range };
+export { WeDeploy, Filter, Geo, Query, Range };
