@@ -1,4 +1,4 @@
-# WeDeploy api client for JavaScript [![Build Status](http://img.shields.io/travis/wedeploy/api.js/master.svg?style=flat)](https://travis-ci.org/wedeploy/api.js)
+# WeDeploy api client for JavaScript [![Build Status](http://img.shields.io/travis/wedeploy/api-js/master.svg?style=flat)](https://travis-ci.org/wedeploy/api-js)
 
 [![Sauce Test Status](https://saucelabs.com/browser-matrix/launchpad-api.svg)](https://travis-ci.org/wedeploy/api-js)
 
