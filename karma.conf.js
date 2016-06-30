@@ -1,5 +1,8 @@
+var babelPresetMetal = require('babel-preset-metal');
+var babelPresetMetalResolveSource = require('babel-preset-metal-resolve-source');
+
 var babelOptions = {
-	presets: ['metal'],
+	presets: [babelPresetMetalResolveSource, babelPresetMetal],
 	sourceMap: 'both'
 };
 
