@@ -1,7 +1,7 @@
 'use strict';
 
 import ClientRequest from '../../../src/api/ClientRequest';
-import MultiMap from 'metal-multimap';
+import { MultiMap } from 'metal-structs';
 import NodeTransport from '../../../src/api/node/NodeTransport';
 
 describe('NodeTransport', function() {

@@ -1,7 +1,7 @@
 'use strict';
 
 import { core } from 'metal';
-import MultiMap from 'metal-multimap';
+import { MultiMap } from 'metal-structs';
 
 /**
  * Represents a client message (e.g. a request or a response).

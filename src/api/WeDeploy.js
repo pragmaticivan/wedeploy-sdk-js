@@ -8,7 +8,7 @@ import Filter from '../api-query/Filter';
 import Query from '../api-query/Query';
 import TransportFactory from './TransportFactory';
 import ClientRequest from './ClientRequest';
-import MultiMap from 'metal-multimap';
+import { MultiMap } from 'metal-structs';
 import Uri from 'metal-uri';
 
 var io;
