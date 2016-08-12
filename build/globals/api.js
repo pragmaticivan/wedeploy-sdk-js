@@ -110,7 +110,6 @@ babelHelpers;
    * @type {!Function}
    * @throws {Error} when invoked to indicate the method should be overridden.
    */
-
 		core.abstractMethod = function abstractMethod() {
 			throw Error('Unimplemented abstract method');
 		};
@@ -157,15 +156,21 @@ babelHelpers;
    * mutated with an unique id. Consecutive calls with the same object
    * reference won't mutate the object again, instead the current object uid
    * returns. See {@link core.UID_PROPERTY}.
-   * @type {opt_object} Optional object to be mutated with the uid. If not
-   *     specified this method only returns the uid.
+   * @param {Object=} opt_object Optional object to be mutated with the uid. If
+   *     not specified this method only returns the uid.
+   * @param {boolean=} opt_noInheritance Optional flag indicating if this
+   *     object's uid property can be inherited from parents or not.
    * @throws {Error} when invoked to indicate the method should be overridden.
    */
 
 
-		core.getUid = function getUid(opt_object) {
+		core.getUid = function getUid(opt_object, opt_noInheritance) {
 			if (opt_object) {
-				return opt_object[core.UID_PROPERTY] || (opt_object[core.UID_PROPERTY] = core.uniqueIdCounter_++);
+				var id = opt_object[core.UID_PROPERTY];
+				if (opt_noInheritance && !opt_object.hasOwnProperty(core.UID_PROPERTY)) {
+					id = null;
+				}
+				return id || (opt_object[core.UID_PROPERTY] = core.uniqueIdCounter_++);
 			}
 			return core.uniqueIdCounter_++;
 		};
@@ -206,7 +211,7 @@ babelHelpers;
 		/**
    * Returns true if value is not undefined or null.
    * @param {*} val
-   * @return {Boolean}
+   * @return {boolean}
    */
 
 
@@ -217,7 +222,7 @@ babelHelpers;
 		/**
    * Returns true if value is a document.
    * @param {*} val
-   * @return {Boolean}
+   * @return {boolean}
    */
 
 
@@ -228,7 +233,7 @@ babelHelpers;
 		/**
    * Returns true if value is a dom element.
    * @param {*} val
-   * @return {Boolean}
+   * @return {boolean}
    */
 
 
@@ -250,7 +255,7 @@ babelHelpers;
 		/**
    * Returns true if value is null.
    * @param {*} val
-   * @return {Boolean}
+   * @return {boolean}
    */
 
 
@@ -272,7 +277,7 @@ babelHelpers;
 		/**
    * Returns true if value is a window.
    * @param {*} val
-   * @return {Boolean}
+   * @return {boolean}
    */
 
 
@@ -296,7 +301,7 @@ babelHelpers;
 		/**
    * Returns true if value is a Promise.
    * @param {*} val
-   * @return {Boolean}
+   * @return {boolean}
    */
 
 
@@ -307,12 +312,12 @@ babelHelpers;
 		/**
    * Returns true if value is a string.
    * @param {*} val
-   * @return {Boolean}
+   * @return {boolean}
    */
 
 
 		core.isString = function isString(val) {
-			return typeof val === 'string';
+			return typeof val === 'string' || val instanceof String;
 		};
 
 		/**
@@ -388,7 +393,6 @@ babelHelpers;
    * @param {!Array<*>} arr2
    * @return {boolean}
    */
-
 		array.equal = function equal(arr1, arr2) {
 			if (arr1.length !== arr2.length) {
 				return false;
@@ -802,7 +806,6 @@ babelHelpers;
    * @param {...Object} var_args The objects from which values will be copied.
    * @return {Object} Returns the target object reference.
    */
-
 		object.mixin = function mixin(target) {
 			var key, source;
 			for (var i = 1; i < arguments.length; i++) {
@@ -895,7 +898,6 @@ babelHelpers;
    * @param {string} str A string in which to collapse spaces.
    * @return {string} Copy of the string with normalized breaking spaces.
    */
-
 		string.collapseBreakingSpaces = function collapseBreakingSpaces(str) {
 			return str.replace(/[\t\r\n ]+/g, ' ').replace(/^[\t\r\n ]+|[\t\r\n ]+$/g, '');
 		};
@@ -999,7 +1001,6 @@ babelHelpers;
    *   this should be the password.
    * @constructor
    */
-
 		function Auth(tokenOrUsername) {
 			var opt_password = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 			babelHelpers.classCallCheck(this, Auth);
@@ -1272,8 +1273,267 @@ babelHelpers;
 'use strict';
 
 (function () {
+	var array = this.wedeployNamed.metal.array;
+
+	/**
+  * Generic tree node data structure with arbitrary number of child nodes.
+  * @param {V} value Value.
+  * @constructor
+  */
+
+	var TreeNode = function () {
+		function TreeNode(value) {
+			babelHelpers.classCallCheck(this, TreeNode);
+
+			/**
+    * The value.
+    * @private {V}
+    */
+			this.value_ = value;
+
+			/**
+    * Reference to the parent node or null if it has no parent.
+    * @private {TreeNode}
+    */
+			this.parent_ = null;
+
+			/**
+    * Child nodes or null in case of leaf node.
+    * @private {Array<!TreeNode>}
+    */
+			this.children_ = null;
+		}
+
+		/**
+   * Appends a child node to this node.
+   * @param {!TreeNode} child Orphan child node.
+   */
+
+
+		TreeNode.prototype.addChild = function addChild(child) {
+			assertChildHasNoParent(child);
+			child.setParent(this);
+			this.children_ = this.children_ || [];
+			this.children_.push(child);
+		};
+
+		/**
+   * Tells whether this node is the ancestor of the given node.
+   * @param {!TreeNode} node A node.
+   * @return {boolean} Whether this node is the ancestor of {@code node}.
+   */
+
+
+		TreeNode.prototype.contains = function contains(node) {
+			var current = node.getParent();
+			while (current) {
+				if (current === this) {
+					return true;
+				}
+				current = current.getParent();
+			}
+			return false;
+		};
+
+		/**
+   * @return {!Array<TreeNode>} All ancestor nodes in bottom-up order.
+   */
+
+
+		TreeNode.prototype.getAncestors = function getAncestors() {
+			var ancestors = [];
+			var node = this.getParent();
+			while (node) {
+				ancestors.push(node);
+				node = node.getParent();
+			}
+			return ancestors;
+		};
+
+		/**
+   * Gets the child node of this node at the given index.
+   * @param {number} index Child index.
+   * @return {?TreeNode} The node at the given index
+   * or null if not found.
+   */
+
+
+		TreeNode.prototype.getChildAt = function getChildAt(index) {
+			return this.getChildren()[index] || null;
+		};
+
+		/**
+   * @return {?Array<!TreeNode>} Child nodes or null in case of leaf node.
+   */
+
+
+		TreeNode.prototype.getChildren = function getChildren() {
+			return this.children_ || TreeNode.EMPTY_ARRAY;
+		};
+
+		/**
+   * @return {number} The number of children.
+   */
+
+
+		TreeNode.prototype.getChildCount = function getChildCount() {
+			return this.getChildren().length;
+		};
+
+		/**
+   * @return {number} The number of ancestors of the node.
+   */
+
+
+		TreeNode.prototype.getDepth = function getDepth() {
+			var depth = 0;
+			var node = this;
+			while (node.getParent()) {
+				depth++;
+				node = node.getParent();
+			}
+			return depth;
+		};
+
+		/**
+   * @return {?TreeNode} Parent node or null if it has no parent.
+   */
+
+
+		TreeNode.prototype.getParent = function getParent() {
+			return this.parent_;
+		};
+
+		/**
+   * @return {!TreeNode} The root of the tree structure, i.e. the farthest
+   * ancestor of the node or the node itself if it has no parents.
+   */
+
+
+		TreeNode.prototype.getRoot = function getRoot() {
+			var root = this;
+			while (root.getParent()) {
+				root = root.getParent();
+			}
+			return root;
+		};
+
+		/**
+   * Gets the value.
+   * @return {V} The value.
+   */
+
+
+		TreeNode.prototype.getValue = function getValue() {
+			return this.value_;
+		};
+
+		/**
+   * @return {boolean} Whether the node is a leaf node.
+   */
+
+
+		TreeNode.prototype.isLeaf = function isLeaf() {
+			return !this.getChildCount();
+		};
+
+		/**
+   * Removes the given child node of this node.
+   * @param {TreeNode} child The node to remove.
+   * @return {TreeNode} The removed node if any, null otherwise.
+   */
+
+
+		TreeNode.prototype.removeChild = function removeChild(child) {
+			if (array.remove(this.getChildren(), child)) {
+				return child;
+			}
+			return null;
+		};
+
+		/**
+   * Sets the parent node of this node. The callers must ensure that the
+   * parent node and only that has this node among its children.
+   * @param {TreeNode} parent The parent to set. If null, the node will be
+   * detached from the tree.
+   * @protected
+   */
+
+
+		TreeNode.prototype.setParent = function setParent(parent) {
+			this.parent_ = parent;
+		};
+
+		/**
+   * Traverses the subtree. The first callback starts with this node,
+   * and visits the descendant nodes depth-first, in preorder.
+   * The second callback, starts with deepest child then visits
+   * the ancestor nodes depth-first, in postorder. E.g.
+   *
+   *  	 A
+   *    / \
+   *   B   C
+   *  /   / \
+   * D   E   F
+   *
+   * preorder -> ['A', 'B', 'D', 'C', 'E', 'F']
+   * postorder -> ['D', 'B', 'E', 'F', 'C', 'A']
+   *
+   * @param {function=} opt_preorderFn The callback to execute when visiting a node.
+   * @param {function=} opt_postorderFn The callback to execute before leaving a node.
+   */
+
+
+		TreeNode.prototype.traverse = function traverse(opt_preorderFn, opt_postorderFn) {
+			if (opt_preorderFn) {
+				opt_preorderFn(this);
+			}
+			this.getChildren().forEach(function (child) {
+				return child.traverse(opt_preorderFn, opt_postorderFn);
+			});
+			if (opt_postorderFn) {
+				opt_postorderFn(this);
+			}
+		};
+
+		return TreeNode;
+	}();
+
+	/**
+  * Constant for empty array to avoid unnecessary allocations.
+  * @private
+  */
+
+
+	TreeNode.EMPTY_ARRAY = [];
+
+	/**
+  * Asserts that child has no parent.
+  * @param {TreeNode} child A child.
+  * @private
+  */
+	var assertChildHasNoParent = function assertChildHasNoParent(child) {
+		if (child.getParent()) {
+			throw new Error('Cannot add child with parent.');
+		}
+	};
+
+	this.wedeploy.TreeNode = TreeNode;
+}).call(this);
+'use strict';
+
+(function () {
+  var MultiMap = this.wedeploy.MultiMap;
+  var TreeNode = this.wedeploy.TreeNode;
+  this.wedeployNamed.structs = this.wedeployNamed.structs || {};
+  this.wedeployNamed.structs.MultiMap = MultiMap;
+  this.wedeployNamed.structs.TreeNode = TreeNode;
+}).call(this);
+'use strict';
+
+(function () {
 	var core = this.wedeployNamed.metal.core;
-	var MultiMap = this.wedeploy.MultiMap;
+	var MultiMap = this.wedeployNamed.structs.MultiMap;
 
 	/**
   * Represents a client message (e.g. a request or a response).
@@ -1364,7 +1624,7 @@ babelHelpers;
 (function () {
 	var core = this.wedeployNamed.metal.core;
 	var ClientMessage = this.wedeploy.ClientMessage;
-	var MultiMap = this.wedeploy.MultiMap;
+	var MultiMap = this.wedeployNamed.structs.MultiMap;
 
 	/**
   * Represents a client request object.
@@ -1574,7 +1834,6 @@ babelHelpers;
    * @param {!ClientRequest} clientRequest
    * @return {!Promise} Deferred request.
    */
-
 		Transport.prototype.send = function send() {};
 
 		return Transport;
@@ -1635,7 +1894,7 @@ babelHelpers;
 	var core = this.wedeployNamed.metal.core;
 	var string = this.wedeployNamed.metal.string;
 	var parse = this.wedeploy.parse;
-	var MultiMap = this.wedeploy.MultiMap;
+	var MultiMap = this.wedeployNamed.structs.MultiMap;
 
 
 	var parseFn_ = parse;
@@ -1657,7 +1916,6 @@ babelHelpers;
    * @param {*=} opt_uri Optional string URI to parse
    * @constructor
    */
-
 		function Uri() {
 			var opt_uri = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
 			babelHelpers.classCallCheck(this, Uri);
@@ -3155,7 +3413,6 @@ babelHelpers;
    * @param {string} allHeaders All headers as string.
    * @return {!Array.<Object<string, string>>}
    */
-
 		Ajax.parseResponseHeaders = function parseResponseHeaders(allHeaders) {
 			var headers = [];
 			if (!allHeaders) {
@@ -3192,6 +3449,9 @@ babelHelpers;
 
 
 		Ajax.request = function request(url, method, body, opt_headers, opt_params, opt_timeout, opt_sync, opt_withCredentials) {
+			url = url || '';
+			method = method || 'GET';
+
 			var request = new XMLHttpRequest();
 
 			var promise = new Promise(function (resolve, reject) {
@@ -3269,7 +3529,6 @@ babelHelpers;
 		/**
    * @inheritDoc
    */
-
 		AjaxTransport.prototype.send = function send(clientRequest) {
 			var deferred = Ajax.request(clientRequest.url(), clientRequest.method(), clientRequest.body(), clientRequest.headers(), clientRequest.params(), null, false, true);
 
@@ -3378,7 +3637,6 @@ babelHelpers;
    * @return {string}
    * @static
    */
-
 		Base64.encodeString = function encodeString(string) {
 			if (typeof btoa === 'function') {
 				return btoa(string);
@@ -3405,7 +3663,6 @@ babelHelpers;
    * Constructs a Embodied instance.
    * @constructor
    */
-
 		function Embodied() {
 			babelHelpers.classCallCheck(this, Embodied);
 
@@ -3472,7 +3729,6 @@ babelHelpers;
    * @param {*=} opt_value The filter's value.
    * @constructor
    */
-
 		function FilterBody(field, operatorOrValue, opt_value) {
 			babelHelpers.classCallCheck(this, FilterBody);
 
@@ -3587,7 +3843,6 @@ babelHelpers;
    * @return {!BoundingBox}
    * @static
    */
-
 		Geo.boundingBox = function boundingBox(upperLeft, lowerRight) {
 			return new Geo.BoundingBox(upperLeft, lowerRight);
 		};
@@ -3668,7 +3923,6 @@ babelHelpers;
    * @param {number} lon The longitude coordinate
    * @constructor
    */
-
 		function Point(lat, lon) {
 			babelHelpers.classCallCheck(this, Point);
 
@@ -3696,7 +3950,6 @@ babelHelpers;
    * @param {...*} points This line's points.
    * @constructor
    */
-
 		function Line() {
 			babelHelpers.classCallCheck(this, Line);
 
@@ -3734,7 +3987,6 @@ babelHelpers;
    * @param {*} lowerRight The lower right point.
    * @constructor
    */
-
 		function BoundingBox(upperLeft, lowerRight) {
 			babelHelpers.classCallCheck(this, BoundingBox);
 
@@ -3776,7 +4028,6 @@ babelHelpers;
    * @param {string} radius The circle's radius.
    * @constructor
    */
-
 		function Circle(center, radius) {
 			babelHelpers.classCallCheck(this, Circle);
 
@@ -3828,7 +4079,6 @@ babelHelpers;
    * @param {...*} points This polygon's points.
    * @constructor
    */
-
 		function Polygon() {
 			babelHelpers.classCallCheck(this, Polygon);
 
@@ -3898,7 +4148,6 @@ babelHelpers;
    * @param {*} opt_to
    * @constructor
    */
-
 		function Range(from, opt_to) {
 			babelHelpers.classCallCheck(this, Range);
 
@@ -3981,7 +4230,6 @@ babelHelpers;
    * @param {*=} opt_value The filter's value.
    * @constructor
    */
-
 		function Filter(field, operatorOrValue, opt_value) {
 			babelHelpers.classCallCheck(this, Filter);
 
@@ -4549,7 +4797,6 @@ babelHelpers;
    * @param {*=} opt_value The aggregation value.
    * @constructor
    */
-
 		function Aggregation(field, operator, opt_value) {
 			babelHelpers.classCallCheck(this, Aggregation);
 
@@ -4776,7 +5023,6 @@ babelHelpers;
    * @param {...!Range} ranges The aggregation ranges.
    * @constructor
    */
-
 		function DistanceAggregation(field, location) {
 			babelHelpers.classCallCheck(this, DistanceAggregation);
 
@@ -4842,7 +5088,6 @@ babelHelpers;
    * @param {...!Range} ranges The aggregation ranges.
    * @constructor
    */
-
 		function RangeAggregation(field) {
 			babelHelpers.classCallCheck(this, RangeAggregation);
 
@@ -4912,7 +5157,6 @@ babelHelpers;
    * @return {!Query}
    * @static
    */
-
 		Query.aggregate = function aggregate(name, aggregationOrField, opt_operator) {
 			return new Query().aggregate(name, aggregationOrField, opt_operator);
 		};
@@ -5232,7 +5476,7 @@ babelHelpers;
 	var Query = this.wedeploy.Query;
 	var TransportFactory = this.wedeploy.TransportFactory;
 	var ClientRequest = this.wedeploy.ClientRequest;
-	var MultiMap = this.wedeploy.MultiMap;
+	var MultiMap = this.wedeployNamed.structs.MultiMap;
 	var Uri = this.wedeploy.Uri;
 
 
@@ -5264,7 +5508,6 @@ babelHelpers;
    * @param {...string} paths Any amount of paths to be appended to the base url.
    * @constructor
    */
-
 		function WeDeploy(url) {
 			for (var _len = arguments.length, paths = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
 				paths[_key - 1] = arguments[_key];
