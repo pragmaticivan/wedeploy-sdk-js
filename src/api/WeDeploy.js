@@ -1,5 +1,6 @@
 'use strict';
 
+import globals from '../globals/globals';
 import { core } from 'metal';
 import Auth from './auth/Auth';
 import Base64 from '../crypt/Base64';
@@ -13,9 +14,9 @@ import Uri from 'metal-uri';
 
 var io;
 
-// Optimistic initialization of `io` reference from global `window.io`.
-if (typeof window !== 'undefined') {
-	io = window.io;
+// Optimistic initialization of `io` reference from global `globals.window.io`.
+if (typeof globals.window !== 'undefined') {
+	io = globals.window.io;
 }
 
 /**
