@@ -1,6 +1,6 @@
 'use strict';
 
-import Auth from '../../src/api/Auth';
+import Auth from '../../src/api/auth/Auth';
 import Embodied from '../../src/api-query/Embodied';
 import Filter from '../../src/api-query/Filter';
 import WeDeploy from '../../src/api/WeDeploy';

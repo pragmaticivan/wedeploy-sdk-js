@@ -1,6 +1,6 @@
 'use strict';
 
-import Auth from '../../src/api/Auth';
+import Auth from '../../../src/api/auth/Auth';
 
 describe('Auth', function() {
 	it('should create Auth instance with a token', function() {

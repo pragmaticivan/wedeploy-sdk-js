@@ -1,7 +1,7 @@
 'use strict';
 
 import { core } from 'metal';
-import Auth from './Auth';
+import Auth from './auth/Auth';
 import Base64 from '../crypt/Base64';
 import Embodied from '../api-query/Embodied';
 import Filter from '../api-query/Filter';
