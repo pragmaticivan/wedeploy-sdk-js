@@ -66,18 +66,6 @@ describe('WeDeploy', function() {
 		assert.strictEqual(parent.customTransport_, child.customTransport_);
 	});
 
-	it('should resolve container url to empty when project domain is not set', function() {
-		var parent = WeDeploy.container('containerId');
-		assert.strictEqual('', parent.url());
-	});
-
-	it('should resolve container url', function() {
-		WeDeploy.DOMAIN = 'projectId.liferay.io';
-		var parent = WeDeploy.container('containerId');
-		assert.strictEqual('containerId.projectId.liferay.io', parent.url());
-		WeDeploy.DOMAIN = null;
-	});
-
 	it('should send DELETE request', function(done) {
 		RequestMock.intercept('DELETE', 'http://localhost/url', '"body"').reply(200);
 		WeDeploy.url('http://localhost/url')

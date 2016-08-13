@@ -476,19 +476,6 @@ class WeDeploy {
 	}
 
 	/**
-	 * Static factory for creating WeDeploy client for the given url.
-	 * @param {string} containerId The container id that the client should use
-	 *   for sending requests.
-	 */
-	static container(containerId) {
-		if (WeDeploy.DOMAIN === null) {
-			return WeDeploy.url('/');
-		}
-
-		return new WeDeploy.url(containerId + '.' + WeDeploy.DOMAIN);
-	}
-
-	/**
 	 * Returns the URL used by this client.
 	 */
 	url() {
@@ -554,12 +541,5 @@ WeDeploy.isContentTypeJson = function(clientMessage) {
 	var contentType = clientMessage.headers().get('content-type') || '';
 	return contentType.indexOf('application/json') === 0;
 };
-
-/**
- * The project domain to be used on container requests.
- * @type {string}
- * @static
- */
-WeDeploy.DOMAIN = null;
 
 export default WeDeploy;
