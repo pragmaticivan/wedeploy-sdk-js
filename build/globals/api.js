@@ -4710,7 +4710,7 @@ babelHelpers;
 			var _this5 = this;
 
 			assertUserSignedIn(this.currentUser);
-			return this.wedeployClient.url(this.authUrl).path('/oauth/revoke').param('access_token', this.currentUser.token).get().then(function (response) {
+			return this.wedeployClient.url(this.authUrl).path('/oauth/revoke').param('token', this.currentUser.token).get().then(function (response) {
 				return assertResponseSucceeded(response);
 			}).then(function (response) {
 				_this5.unloadCurrentUser();
