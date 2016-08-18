@@ -217,7 +217,7 @@ class AuthApiHelper {
 		return this.wedeployClient
 			.url(this.authUrl)
 			.path('/oauth/revoke')
-			.param('access_token', this.currentUser.token)
+			.param('token', this.currentUser.token)
 			.get()
 			.then(response => assertResponseSucceeded(response))
 			.then(response => {
