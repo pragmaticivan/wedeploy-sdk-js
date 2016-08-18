@@ -3843,12 +3843,25 @@ babelHelpers;
 			this.wedeployClient = wedeployClient;
 		};
 
+		/**
+   * Updates the user.
+   * @param {!object} data
+   * @return {CompletableFuture}
+   */
+
+
 		Auth.prototype.updateUser = function updateUser(data) {
 			assertObject(data, 'User data must be specified as object');
 			return this.wedeployClient.url(this.wedeployClient.authUrl_).path('/users').auth(this).patch(data).then(function (response) {
 				return assertResponseSucceeded(response);
 			});
 		};
+
+		/**
+   * Deletes the current user.
+   * @return {CompletableFuture}
+   */
+
 
 		Auth.prototype.deleteUser = function deleteUser() {
 			assertDefAndNotNull(this.id, 'Cannot delete user without id');
