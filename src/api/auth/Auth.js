@@ -2,22 +2,31 @@
 
 import { core } from 'metal';
 
+import { assertDefAndNotNull, assertObject, assertResponseSucceeded } from '../assertions';
+
 /**
  * Class responsible for storing authorization information.
  */
 class Auth {
 	/**
 	 * Constructs an {@link Auth} instance.
-	 * @param {string} tokenOrUsername Either the authorization token, or
+	 * @param {string} tokenOrEmail Either the authorization token, or
 	 *   the username.
 	 * @param {string=} opt_password If a username is given as the first param,
 	 *   this should be the password.
 	 * @constructor
 	 */
-	constructor(tokenOrUsername, opt_password = null) {
-		this.token_ = core.isString(opt_password) ? null : tokenOrUsername;
-		this.username_ = core.isString(opt_password) ? tokenOrUsername : null;
-		this.password_ = opt_password;
+	constructor(tokenOrEmail, opt_password = null) {
+		this.token = core.isString(opt_password) ? null : tokenOrEmail;
+		this.email = core.isString(opt_password) ? tokenOrEmail : null;
+		this.password = opt_password;
+
+		this.createdAt = null;
+		this.id = null;
+		this.name = null;
+		this.photoUrl = null;
+		this.authUrl = null;
+		this.wedeployClient = null;
 	}
 
 	/**
@@ -33,11 +42,123 @@ class Auth {
 	}
 
 	/**
+	 * Gets the auth url bound to this auth reference.
+	 * @return {string}
+	 */
+	getAuthUrl() {
+		return this.authUrl;
+	}
+
+	/**
+	 * Gets the created at date.
+	 * @return {string}
+	 */
+	getCreatedAt() {
+		return this.createdAt;
+	}
+
+	/**
+	 * Gets the email.
+	 * @return {string}
+	 */
+	getEmail() {
+		return this.email;
+	}
+
+	/**
+	 * Gets the id.
+	 * @return {string}
+	 */
+	getId() {
+		return this.id;
+	}
+
+	/**
+	 * Gets the name.
+	 * @return {string}
+	 */
+	getName() {
+		return this.name;
+	}
+
+	/**
+	 * Gets the password.
+	 * @return {string}
+	 */
+	getPassword() {
+		return this.password;
+	}
+
+	/**
+	 * Gets the photo url.
+	 * @return {string}
+	 */
+	getPhotoUrl() {
+		return this.photoUrl;
+	}
+
+	/**
+	 * Gets the token.
+	 * @return {string}
+	 */
+	getToken() {
+		return this.token;
+	}
+
+	/**
+	 * Checks if auth url is set.
+	 * @return {boolean}
+	 */
+	hasAuthUrl() {
+		return core.isDefAndNotNull(this.authUrl);
+	}
+
+	/**
+	 * Checks if created at is set.
+	 * @return {boolean}
+	 */
+	hasCreatedAt() {
+		return core.isDefAndNotNull(this.createdAt);
+	}
+
+	/**
+	 * Checks if the email is set.
+	 * @return {boolean}
+	 */
+	hasEmail() {
+		return core.isDefAndNotNull(this.email);
+	}
+
+	/**
+	 * Checks if the id is set.
+	 * @return {boolean}
+	 */
+	hasId() {
+		return core.isDefAndNotNull(this.id);
+	}
+
+	/**
+	 * Checks if the name is set.
+	 * @return {boolean}
+	 */
+	hasName() {
+		return core.isDefAndNotNull(this.name);
+	}
+
+	/**
 	 * Checks if the password is set.
 	 * @return {boolean}
 	 */
 	hasPassword() {
-		return this.password_ !== null;
+		return core.isDefAndNotNull(this.password);
+	}
+
+	/**
+	 * Checks if the photo url is set.
+	 * @return {boolean}
+	 */
+	hasPhotoUrl() {
+		return core.isDefAndNotNull(this.photoUrl);
 	}
 
 	/**
@@ -45,39 +166,97 @@ class Auth {
 	 * @return {boolean}
 	 */
 	hasToken() {
-		return this.token_ !== null;
+		return core.isDefAndNotNull(this.token);
 	}
 
 	/**
-	 * Checks if the username is set.
-	 * @return {boolean}
+	 * Sets auth url.
+	 * @param {string} authUrl
 	 */
-	hasUsername() {
-		return this.username_ !== null;
+	setAuthUrl(authUrl) {
+		this.authUrl = authUrl;
 	}
 
 	/**
-	 * Returns the password.
-	 * @return {string}
+	 * Sets created at.
+	 * @param {string} createdAt
 	 */
-	password() {
-		return this.password_;
+	setCreatedAt(createdAt) {
+		this.createdAt = createdAt;
 	}
 
 	/**
-	 * Returns the token.
-	 * @return {string}
+	 * Sets the email.
+	 * @param {string} email
 	 */
-	token() {
-		return this.token_;
+	setEmail(email) {
+		this.email = email;
 	}
 
 	/**
-	 * Returns the username.
-	 * @return {string}
+	 * Sets the id.
+	 * @param {string} id
 	 */
-	username() {
-		return this.username_;
+	setId(id) {
+		this.id = id;
+	}
+
+	/**
+	 * Sets the name.
+	 * @param {string} name
+	 */
+	setName(name) {
+		this.name = name;
+	}
+
+	/**
+	 * Sets the password.
+	 * @param {string} password
+	 */
+	setPassword(password) {
+		this.password = password;
+	}
+
+	/**
+	 * Sets the photo url.
+	 * @param {string} photoUrl
+	 */
+	setPhotoUrl(photoUrl) {
+		this.photoUrl = photoUrl;
+	}
+
+	/**
+	 * Sets the token.
+	 * @param {string} token
+	 */
+	setToken(token) {
+		this.token = token;
+	}
+
+	setWedeployClient(wedeployClient) {
+		this.wedeployClient = wedeployClient;
+	}
+
+	updateUser(data) {
+		assertDefAndNotNull(this.authUrl, 'Auth not bound to any auth url');
+		assertObject(data, 'User data must be specified as object');
+		return this.wedeployClient
+			.url(this.authUrl)
+			.path('/users')
+			.auth(this)
+			.patch(data)
+			.then(response => assertResponseSucceeded(response));
+	}
+
+	deleteUser() {
+		assertDefAndNotNull(this.authUrl, 'Auth not bound to any auth url');
+		assertDefAndNotNull(this.id, 'Cannot delete user without id');
+		return this.wedeployClient
+			.url(this.authUrl)
+			.path('/users', this.id)
+			.auth(this)
+			.delete()
+			.then(response => assertResponseSucceeded(response));
 	}
 }
 

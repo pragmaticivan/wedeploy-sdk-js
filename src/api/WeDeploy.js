@@ -3,6 +3,7 @@
 import globals from '../globals/globals';
 import { core } from 'metal';
 import Auth from './auth/Auth';
+import AuthApiHelper from './auth/AuthApiHelper';
 import Base64 from '../crypt/Base64';
 import Embodied from '../api-query/Embodied';
 import Filter from '../api-query/Filter';
@@ -70,18 +71,28 @@ class WeDeploy {
 
 	/**
 	 * Adds authorization information to this request.
-	 * @param {!Auth|string} authOrTokenOrUsername Either an {@link Auth} instance,
-	 *   an authorization token, or the username.
-	 * @param {string=} opt_password If a username is given as the first param,
+	 * @param {!Auth|string} authOrTokenOrEmail Either an {@link Auth} instance,
+	 *   an authorization token, or the email.
+	 * @param {string=} opt_password If a email is given as the first param,
 	 *   this should be the password.
 	 * @chainable
 	 */
-	auth(authOrTokenOrUsername, opt_password) {
-		this.auth_ = authOrTokenOrUsername;
+	auth(authOrTokenOrEmail, opt_password) {
+		this.auth_ = authOrTokenOrEmail;
 		if (!(this.auth_ instanceof Auth)) {
-			this.auth_ = Auth.create(authOrTokenOrUsername, opt_password);
+			this.auth_ = Auth.create(authOrTokenOrEmail, opt_password);
 		}
 		return this;
+	}
+
+	/**
+	 * Static factory for creating WeDeploy auth for the given url.
+	 * @param {string=} opt_authUrl The url that points to the auth service.
+	 */
+	static auth(opt_authUrl) {
+		var auth = new AuthApiHelper(opt_authUrl);
+		auth.setWedeployClient(WeDeploy);
+		return auth;
 	}
 
 	/**
@@ -407,9 +418,9 @@ class WeDeploy {
 			return;
 		}
 		if (this.auth_.hasToken()) {
-			clientRequest.header('Authorization', 'Bearer ' + this.auth_.token());
+			clientRequest.header('Authorization', 'Bearer ' + this.auth_.token);
 		} else {
-			var credentials = this.auth_.username() + ':' + this.auth_.password();
+			var credentials = this.auth_.email + ':' + this.auth_.password;
 			clientRequest.header('Authorization', 'Basic ' + Base64.encodeString(credentials));
 		}
 	}

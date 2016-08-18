@@ -8,7 +8,7 @@ describe('AjaxTransport', function() {
 	afterEach(RequestMock.teardown);
 
 	it('should cancel send request to an url', function(done) {
-		RequestMock.intercept('GET', '/url').reply(200);
+		RequestMock.intercept().reply(200);
 		var transport = new AjaxTransport();
 		var clientRequest = new ClientRequest();
 		clientRequest.url('/url');
@@ -24,7 +24,7 @@ describe('AjaxTransport', function() {
 	});
 
 	it('should fail on transport error', function(done) {
-		RequestMock.intercept('GET', '/url').reply(200);
+		RequestMock.intercept().reply(200);
 		var transport = new AjaxTransport();
 		var clientRequest = new ClientRequest();
 		clientRequest.url('/url');

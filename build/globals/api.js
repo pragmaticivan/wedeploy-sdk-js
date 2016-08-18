@@ -986,112 +986,6 @@ babelHelpers;
 'use strict';
 
 (function () {
-	var core = this.wedeployNamed.metal.core;
-
-	/**
-  * Class responsible for storing authorization information.
-  */
-
-	var Auth = function () {
-		/**
-   * Constructs an {@link Auth} instance.
-   * @param {string} tokenOrUsername Either the authorization token, or
-   *   the username.
-   * @param {string=} opt_password If a username is given as the first param,
-   *   this should be the password.
-   * @constructor
-   */
-		function Auth(tokenOrUsername) {
-			var opt_password = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
-			babelHelpers.classCallCheck(this, Auth);
-
-			this.token_ = core.isString(opt_password) ? null : tokenOrUsername;
-			this.username_ = core.isString(opt_password) ? tokenOrUsername : null;
-			this.password_ = opt_password;
-		}
-
-		/**
-   * Constructs an {@link Auth} instance.
-   * @param {string} tokenOrUsername Either the authorization token, or
-   *   the username.
-   * @param {string=} opt_password If a username is given as the first param,
-   *   this should be the password.
-   * @return {!Auth}
-   */
-
-
-		Auth.create = function create(tokenOrUsername, opt_password) {
-			return new Auth(tokenOrUsername, opt_password);
-		};
-
-		/**
-   * Checks if the password is set.
-   * @return {boolean}
-   */
-
-
-		Auth.prototype.hasPassword = function hasPassword() {
-			return this.password_ !== null;
-		};
-
-		/**
-   * Checks if the token is set.
-   * @return {boolean}
-   */
-
-
-		Auth.prototype.hasToken = function hasToken() {
-			return this.token_ !== null;
-		};
-
-		/**
-   * Checks if the username is set.
-   * @return {boolean}
-   */
-
-
-		Auth.prototype.hasUsername = function hasUsername() {
-			return this.username_ !== null;
-		};
-
-		/**
-   * Returns the password.
-   * @return {string}
-   */
-
-
-		Auth.prototype.password = function password() {
-			return this.password_;
-		};
-
-		/**
-   * Returns the token.
-   * @return {string}
-   */
-
-
-		Auth.prototype.token = function token() {
-			return this.token_;
-		};
-
-		/**
-   * Returns the username.
-   * @return {string}
-   */
-
-
-		Auth.prototype.username = function username() {
-			return this.username_;
-		};
-
-		return Auth;
-	}();
-
-	this.wedeploy.Auth = Auth;
-}).call(this);
-'use strict';
-
-(function () {
 	var Disposable = this.wedeployNamed.metal.Disposable;
 
 	/**
@@ -3620,6 +3514,1250 @@ babelHelpers;
 }).call(this);
 'use strict';
 
+(function () {
+	var globals = {};
+
+	if (typeof window !== 'undefined') {
+		globals.window = window;
+	}
+
+	if (typeof document !== 'undefined') {
+		globals.document = document;
+	}
+
+	this.wedeploy.globals = globals;
+}).call(this);
+'use strict';
+
+(function () {
+	var core = this.wedeployNamed.metal.core;
+	var globals = this.wedeploy.globals;
+
+
+	function assertBrowserEnvironment() {
+		if (!globals.window) {
+			throw new Error('Sign-in type not supported in this environment');
+		}
+	}
+
+	function assertDefAndNotNull(value, errorMessage) {
+		if (!core.isDefAndNotNull(value)) {
+			throw new Error(errorMessage);
+		}
+	}
+
+	function assertFunction(value, errorMessage) {
+		if (!core.isFunction(value)) {
+			throw new Error(errorMessage);
+		}
+	}
+
+	function assertObject(value, errorMessage) {
+		if (!core.isObject(value)) {
+			throw new Error(errorMessage);
+		}
+	}
+
+	function assertResponseSucceeded(response) {
+		if (!response.succeeded()) {
+			throw response.body();
+		}
+		return response;
+	}
+
+	function assertUserSignedIn(user) {
+		if (!core.isDefAndNotNull(user)) {
+			throw new Error('You must be signed-in to perform this operation');
+		}
+	}
+
+	this.wedeployNamed.assertions = this.wedeployNamed.assertions || {};
+	this.wedeployNamed.assertions.assertBrowserEnvironment = assertBrowserEnvironment;
+	this.wedeployNamed.assertions.assertDefAndNotNull = assertDefAndNotNull;
+	this.wedeployNamed.assertions.assertFunction = assertFunction;
+	this.wedeployNamed.assertions.assertObject = assertObject;
+	this.wedeployNamed.assertions.assertResponseSucceeded = assertResponseSucceeded;
+	this.wedeployNamed.assertions.assertUserSignedIn = assertUserSignedIn;
+}).call(this);
+'use strict';
+
+(function () {
+	var core = this.wedeployNamed.metal.core;
+	var assertDefAndNotNull = this.wedeployNamed.assertions.assertDefAndNotNull;
+	var assertObject = this.wedeployNamed.assertions.assertObject;
+	var assertResponseSucceeded = this.wedeployNamed.assertions.assertResponseSucceeded;
+
+	/**
+  * Class responsible for storing authorization information.
+  */
+
+	var Auth = function () {
+		/**
+   * Constructs an {@link Auth} instance.
+   * @param {string} tokenOrEmail Either the authorization token, or
+   *   the username.
+   * @param {string=} opt_password If a username is given as the first param,
+   *   this should be the password.
+   * @constructor
+   */
+		function Auth(tokenOrEmail) {
+			var opt_password = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+			babelHelpers.classCallCheck(this, Auth);
+
+			this.token = core.isString(opt_password) ? null : tokenOrEmail;
+			this.email = core.isString(opt_password) ? tokenOrEmail : null;
+			this.password = opt_password;
+
+			this.createdAt = null;
+			this.id = null;
+			this.name = null;
+			this.photoUrl = null;
+			this.authUrl = null;
+			this.wedeployClient = null;
+		}
+
+		/**
+   * Constructs an {@link Auth} instance.
+   * @param {string} tokenOrUsername Either the authorization token, or
+   *   the username.
+   * @param {string=} opt_password If a username is given as the first param,
+   *   this should be the password.
+   * @return {!Auth}
+   */
+
+
+		Auth.create = function create(tokenOrUsername, opt_password) {
+			return new Auth(tokenOrUsername, opt_password);
+		};
+
+		/**
+   * Gets the auth url bound to this auth reference.
+   * @return {string}
+   */
+
+
+		Auth.prototype.getAuthUrl = function getAuthUrl() {
+			return this.authUrl;
+		};
+
+		/**
+   * Gets the created at date.
+   * @return {string}
+   */
+
+
+		Auth.prototype.getCreatedAt = function getCreatedAt() {
+			return this.createdAt;
+		};
+
+		/**
+   * Gets the email.
+   * @return {string}
+   */
+
+
+		Auth.prototype.getEmail = function getEmail() {
+			return this.email;
+		};
+
+		/**
+   * Gets the id.
+   * @return {string}
+   */
+
+
+		Auth.prototype.getId = function getId() {
+			return this.id;
+		};
+
+		/**
+   * Gets the name.
+   * @return {string}
+   */
+
+
+		Auth.prototype.getName = function getName() {
+			return this.name;
+		};
+
+		/**
+   * Gets the password.
+   * @return {string}
+   */
+
+
+		Auth.prototype.getPassword = function getPassword() {
+			return this.password;
+		};
+
+		/**
+   * Gets the photo url.
+   * @return {string}
+   */
+
+
+		Auth.prototype.getPhotoUrl = function getPhotoUrl() {
+			return this.photoUrl;
+		};
+
+		/**
+   * Gets the token.
+   * @return {string}
+   */
+
+
+		Auth.prototype.getToken = function getToken() {
+			return this.token;
+		};
+
+		/**
+   * Checks if auth url is set.
+   * @return {boolean}
+   */
+
+
+		Auth.prototype.hasAuthUrl = function hasAuthUrl() {
+			return core.isDefAndNotNull(this.authUrl);
+		};
+
+		/**
+   * Checks if created at is set.
+   * @return {boolean}
+   */
+
+
+		Auth.prototype.hasCreatedAt = function hasCreatedAt() {
+			return core.isDefAndNotNull(this.createdAt);
+		};
+
+		/**
+   * Checks if the email is set.
+   * @return {boolean}
+   */
+
+
+		Auth.prototype.hasEmail = function hasEmail() {
+			return core.isDefAndNotNull(this.email);
+		};
+
+		/**
+   * Checks if the id is set.
+   * @return {boolean}
+   */
+
+
+		Auth.prototype.hasId = function hasId() {
+			return core.isDefAndNotNull(this.id);
+		};
+
+		/**
+   * Checks if the name is set.
+   * @return {boolean}
+   */
+
+
+		Auth.prototype.hasName = function hasName() {
+			return core.isDefAndNotNull(this.name);
+		};
+
+		/**
+   * Checks if the password is set.
+   * @return {boolean}
+   */
+
+
+		Auth.prototype.hasPassword = function hasPassword() {
+			return core.isDefAndNotNull(this.password);
+		};
+
+		/**
+   * Checks if the photo url is set.
+   * @return {boolean}
+   */
+
+
+		Auth.prototype.hasPhotoUrl = function hasPhotoUrl() {
+			return core.isDefAndNotNull(this.photoUrl);
+		};
+
+		/**
+   * Checks if the token is set.
+   * @return {boolean}
+   */
+
+
+		Auth.prototype.hasToken = function hasToken() {
+			return core.isDefAndNotNull(this.token);
+		};
+
+		/**
+   * Sets auth url.
+   * @param {string} authUrl
+   */
+
+
+		Auth.prototype.setAuthUrl = function setAuthUrl(authUrl) {
+			this.authUrl = authUrl;
+		};
+
+		/**
+   * Sets created at.
+   * @param {string} createdAt
+   */
+
+
+		Auth.prototype.setCreatedAt = function setCreatedAt(createdAt) {
+			this.createdAt = createdAt;
+		};
+
+		/**
+   * Sets the email.
+   * @param {string} email
+   */
+
+
+		Auth.prototype.setEmail = function setEmail(email) {
+			this.email = email;
+		};
+
+		/**
+   * Sets the id.
+   * @param {string} id
+   */
+
+
+		Auth.prototype.setId = function setId(id) {
+			this.id = id;
+		};
+
+		/**
+   * Sets the name.
+   * @param {string} name
+   */
+
+
+		Auth.prototype.setName = function setName(name) {
+			this.name = name;
+		};
+
+		/**
+   * Sets the password.
+   * @param {string} password
+   */
+
+
+		Auth.prototype.setPassword = function setPassword(password) {
+			this.password = password;
+		};
+
+		/**
+   * Sets the photo url.
+   * @param {string} photoUrl
+   */
+
+
+		Auth.prototype.setPhotoUrl = function setPhotoUrl(photoUrl) {
+			this.photoUrl = photoUrl;
+		};
+
+		/**
+   * Sets the token.
+   * @param {string} token
+   */
+
+
+		Auth.prototype.setToken = function setToken(token) {
+			this.token = token;
+		};
+
+		Auth.prototype.setWedeployClient = function setWedeployClient(wedeployClient) {
+			this.wedeployClient = wedeployClient;
+		};
+
+		Auth.prototype.updateUser = function updateUser(data) {
+			assertDefAndNotNull(this.authUrl, 'Auth not bound to any auth url');
+			assertObject(data, 'User data must be specified as object');
+			return this.wedeployClient.url(this.authUrl).path('/users').auth(this).patch(data).then(function (response) {
+				return assertResponseSucceeded(response);
+			});
+		};
+
+		Auth.prototype.deleteUser = function deleteUser() {
+			assertDefAndNotNull(this.authUrl, 'Auth not bound to any auth url');
+			assertDefAndNotNull(this.id, 'Cannot delete user without id');
+			return this.wedeployClient.url(this.authUrl).path('/users', this.id).auth(this).delete().then(function (response) {
+				return assertResponseSucceeded(response);
+			});
+		};
+
+		return Auth;
+	}();
+
+	this.wedeploy.Auth = Auth;
+}).call(this);
+'use strict';
+
+(function () {
+	var core = this.wedeployNamed.metal.core;
+	var Uri = this.wedeploy.Uri;
+
+	/**
+  * Class responsible for encapsulate provider information.
+  */
+
+	var AuthProvider = function () {
+		/**
+   * Constructs an {@link AuthProvider} instance.
+   * @constructor
+   */
+		function AuthProvider() {
+			babelHelpers.classCallCheck(this, AuthProvider);
+
+			this.provider = null;
+			this.providerScope = null;
+			this.redirectUri = null;
+			this.scope = null;
+		}
+
+		/**
+   * Checks if provider is defined and not null.
+   * @return {boolean}
+   */
+
+
+		AuthProvider.prototype.hasProvider = function hasProvider() {
+			return core.isDefAndNotNull(this.provider);
+		};
+
+		/**
+   * Checks if scope is defined and not null.
+   * @return {boolean}
+   */
+
+
+		AuthProvider.prototype.hasProviderScope = function hasProviderScope() {
+			return core.isDefAndNotNull(this.providerScope);
+		};
+
+		/**
+   * Checks if redirect uri is defined and not null.
+   * @return {boolean}
+   */
+
+
+		AuthProvider.prototype.hasRedirectUri = function hasRedirectUri() {
+			return core.isDefAndNotNull(this.redirectUri);
+		};
+
+		/**
+   * Checks if scope is defined and not null.
+   * @return {boolean}
+   */
+
+
+		AuthProvider.prototype.hasScope = function hasScope() {
+			return core.isDefAndNotNull(this.scope);
+		};
+
+		/**
+   * Makes authorization url.
+   * @return {string=} Authorization url.
+   */
+
+
+		AuthProvider.prototype.makeAuthorizationUrl = function makeAuthorizationUrl(opt_authUrl) {
+			var uri = new Uri(opt_authUrl);
+
+			uri.setPathname('/oauth/authorize');
+
+			if (this.hasProvider()) {
+				uri.setParameterValue('provider', this.getProvider());
+			}
+			if (this.hasProviderScope()) {
+				uri.setParameterValue('provider_scope', this.getProviderScope());
+			}
+			if (this.hasRedirectUri()) {
+				uri.setParameterValue('redirect_uri', this.getRedirectUri());
+			}
+			if (this.hasScope()) {
+				uri.setParameterValue('scope', this.getScope());
+			}
+
+			return uri.toString();
+		};
+
+		/**
+   * Gets provider name.
+   * @return {string=} Provider name.
+   */
+
+
+		AuthProvider.prototype.getProvider = function getProvider() {
+			return this.provider;
+		};
+
+		/**
+   * Gets provider scope.
+   * @return {string=} String with scopes.
+   */
+
+
+		AuthProvider.prototype.getProviderScope = function getProviderScope() {
+			return this.providerScope;
+		};
+
+		/**
+   * Gets redirect uri.
+   * @return {string=}.
+   */
+
+
+		AuthProvider.prototype.getRedirectUri = function getRedirectUri() {
+			return this.redirectUri;
+		};
+
+		/**
+   * Gets scope.
+   * @return {string=} String with scopes.
+   */
+
+
+		AuthProvider.prototype.getScope = function getScope() {
+			return this.scope;
+		};
+
+		/**
+   * Sets provider scope.
+   * @param {string=} scope Scope string. Separate by space for multiple
+   *   scopes, e.g. "scope1 scope2".
+   */
+
+
+		AuthProvider.prototype.setProviderScope = function setProviderScope(providerScope) {
+			assertStringIfDefAndNotNull(providerScope, 'Provider scope must be a string');
+			this.providerScope = providerScope;
+		};
+
+		/**
+   * Sets redirect uri.
+   * @param {string=} redirectUri.
+   */
+
+
+		AuthProvider.prototype.setRedirectUri = function setRedirectUri(redirectUri) {
+			assertStringIfDefAndNotNull(redirectUri, 'Redirect uri must be a string');
+			this.redirectUri = redirectUri;
+		};
+
+		/**
+   * Sets scope.
+   * @param {string=} scope Scope string. Separate by space for multiple
+   *   scopes, e.g. "scope1 scope2".
+   */
+
+
+		AuthProvider.prototype.setScope = function setScope(scope) {
+			assertStringIfDefAndNotNull(scope, 'Scope must be a string');
+			this.scope = scope;
+		};
+
+		return AuthProvider;
+	}();
+
+	function assertStringIfDefAndNotNull(value, errorMessage) {
+		if (core.isDefAndNotNull(value) && !core.isString(value)) {
+			throw new Error(errorMessage);
+		}
+	}
+
+	this.wedeploy.AuthProvider = AuthProvider;
+}).call(this);
+'use strict';
+
+(function () {
+	var AuthProvider = this.wedeploy.AuthProvider;
+
+	/**
+  * Github auth provider implementation.
+  */
+
+	var GithubAuthProvider = function (_AuthProvider) {
+		babelHelpers.inherits(GithubAuthProvider, _AuthProvider);
+
+		/**
+   * Constructs an {@link GithubAuthProvider} instance.
+   * @constructor
+   */
+		function GithubAuthProvider() {
+			babelHelpers.classCallCheck(this, GithubAuthProvider);
+
+			var _this = babelHelpers.possibleConstructorReturn(this, _AuthProvider.call(this));
+
+			_this.provider = GithubAuthProvider.PROVIDER;
+			return _this;
+		}
+
+		return GithubAuthProvider;
+	}(AuthProvider);
+
+	GithubAuthProvider.PROVIDER = 'github';
+
+	this.wedeploy.GithubAuthProvider = GithubAuthProvider;
+}).call(this);
+'use strict';
+
+(function () {
+	var AuthProvider = this.wedeploy.AuthProvider;
+
+	/**
+  * Google auth provider implementation.
+  */
+
+	var GoogleAuthProvider = function (_AuthProvider) {
+		babelHelpers.inherits(GoogleAuthProvider, _AuthProvider);
+
+		/**
+   * Constructs an {@link GoogleAuthProvider} instance.
+   * @constructor
+   */
+		function GoogleAuthProvider() {
+			babelHelpers.classCallCheck(this, GoogleAuthProvider);
+
+			var _this = babelHelpers.possibleConstructorReturn(this, _AuthProvider.call(this));
+
+			_this.provider = GoogleAuthProvider.PROVIDER;
+			return _this;
+		}
+
+		return GoogleAuthProvider;
+	}(AuthProvider);
+
+	GoogleAuthProvider.PROVIDER = 'google';
+
+	this.wedeploy.GoogleAuthProvider = GoogleAuthProvider;
+}).call(this);
+'use strict';
+
+/* jshint ignore:start */
+
+/**
+ * Abstract interface for storing and retrieving data using some persistence
+ * mechanism.
+ * @constructor
+ */
+
+(function () {
+	var StorageMechanism = function () {
+		function StorageMechanism() {
+			babelHelpers.classCallCheck(this, StorageMechanism);
+		}
+
+		/**
+   * Clear all items from the data storage.
+   */
+		StorageMechanism.prototype.clear = function clear() {
+			throw Error('Unimplemented abstract method');
+		};
+
+		/**
+   * Sets an item in the data storage.
+   * @param {string} key The key to set.
+   * @param {*} value The value to serialize to a string and save.
+   */
+
+
+		StorageMechanism.prototype.set = function set(key, value) {
+			throw Error('Unimplemented abstract method');
+		};
+
+		/**
+   * Gets an item from the data storage.
+   * @param {string} key The key to get.
+   * @return {*} Deserialized value or undefined if not found.
+   */
+
+
+		StorageMechanism.prototype.get = function get(key) {
+			throw Error('Unimplemented abstract method');
+		};
+
+		/**
+   * Returns the list of keys stored in the Storage object.
+   * @param {!Array<string>} keys
+   */
+
+
+		StorageMechanism.prototype.keys = function keys() {
+			throw Error('Unimplemented abstract method');
+		};
+
+		/**
+   * Removes an item from the data storage.
+   * @param {string} key The key to remove.
+   */
+
+
+		StorageMechanism.prototype.remove = function remove(key) {
+			throw Error('Unimplemented abstract method');
+		};
+
+		/**
+   * Returns the number of data items stored in the Storage object.
+   * @return {number}
+   */
+
+
+		StorageMechanism.prototype.size = function size() {
+			throw Error('Unimplemented abstract method');
+		};
+
+		return StorageMechanism;
+	}();
+
+	this.wedeploy.StorageMechanism = StorageMechanism;
+
+	/* jshint ignore:end */
+}).call(this);
+'use strict';
+
+(function () {
+	var core = this.wedeploy.metal;
+	var StorageMechanism = this.wedeploy.StorageMechanism;
+
+	var Storage = function () {
+
+		/**
+   * Provides a convenient API for data persistence using a selected data
+   * storage mechanism.
+   * @param {!StorageMechanism} mechanism The underlying storage mechanism.
+   * @constructor
+   */
+		function Storage(mechanism) {
+			babelHelpers.classCallCheck(this, Storage);
+
+			assertMechanismDefAndNotNull(mechanism);
+			assertMechanismIntanceOf(mechanism);
+
+			/**
+    * The mechanism used to persist key-value pairs.
+    * @type {StorageMechanism}
+    * @protected
+    */
+			this.mechanism = mechanism;
+		}
+
+		/**
+   * Clear all items from the data storage.
+   */
+
+
+		Storage.prototype.clear = function clear() {
+			this.mechanism.clear();
+		};
+
+		/**
+   * Sets an item in the data storage.
+   * @param {string} key The key to set.
+   * @param {*} value The value to serialize to a string and save.
+   */
+
+
+		Storage.prototype.set = function set(key, value) {
+			if (!core.isDef(value)) {
+				this.mechanism.remove(key);
+				return;
+			}
+			this.mechanism.set(key, JSON.stringify(value));
+		};
+
+		/**
+   * Gets an item from the data storage.
+   * @param {string} key The key to get.
+   * @return {*} Deserialized value or undefined if not found.
+   */
+
+
+		Storage.prototype.get = function get(key) {
+			var json;
+			try {
+				json = this.mechanism.get(key);
+			} catch (e) {
+				return undefined;
+			}
+			if (core.isNull(json)) {
+				return undefined;
+			}
+			try {
+				return JSON.parse(json);
+			} catch (e) {
+				throw Storage.ErrorCode.INVALID_VALUE;
+			}
+		};
+
+		/**
+   * Returns the list of keys stored in the Storage object.
+   * @param {!Array<string>} keys
+   */
+
+
+		Storage.prototype.keys = function keys() {
+			return this.mechanism.keys();
+		};
+
+		/**
+   * Removes an item from the data storage.
+   * @param {string} key The key to remove.
+   */
+
+
+		Storage.prototype.remove = function remove(key) {
+			this.mechanism.remove(key);
+		};
+
+		/**
+   * Returns the number of data items stored in the Storage object.
+   * @return {number}
+   */
+
+
+		Storage.prototype.size = function size() {
+			return this.mechanism.size();
+		};
+
+		/**
+   * Returns the list of values stored in the Storage object.
+   * @param {!Array<string>} values
+   */
+
+
+		Storage.prototype.values = function values() {
+			var _this = this;
+
+			return this.keys().map(function (key) {
+				return _this.get(key);
+			});
+		};
+
+		return Storage;
+	}();
+
+	/**
+  * Errors thrown by the storage.
+  * @enum {string}
+  */
+
+
+	Storage.ErrorCode = {
+		INVALID_VALUE: 'Storage: Invalid value was encountered'
+	};
+
+	function assertMechanismDefAndNotNull(mechanism) {
+		if (!core.isDefAndNotNull(mechanism)) {
+			throw Error('Storage mechanism is required');
+		}
+	}
+
+	function assertMechanismIntanceOf(mechanism) {
+		if (!(mechanism instanceof StorageMechanism)) {
+			throw Error('Storage mechanism must me an implementation of StorageMechanism');
+		}
+	}
+
+	this.wedeploy.Storage = Storage;
+}).call(this);
+'use strict';
+
+(function () {
+	var StorageMechanism = this.wedeploy.StorageMechanism;
+
+	/**
+  * Abstract interface for storing and retrieving data using some persistence
+  * mechanism.
+  * @constructor
+  */
+
+	var LocalStorageMechanism = function (_StorageMechanism) {
+		babelHelpers.inherits(LocalStorageMechanism, _StorageMechanism);
+
+		function LocalStorageMechanism() {
+			babelHelpers.classCallCheck(this, LocalStorageMechanism);
+			return babelHelpers.possibleConstructorReturn(this, _StorageMechanism.apply(this, arguments));
+		}
+
+		/**
+   * Returns reference for global local storage. by default
+   */
+		LocalStorageMechanism.prototype.storage = function storage() {
+			return LocalStorageMechanism.globals.localStorage;
+		};
+
+		/**
+   * @inheritDoc
+   */
+
+
+		LocalStorageMechanism.prototype.clear = function clear() {
+			this.storage().clear();
+		};
+
+		/**
+   * @inheritDoc
+   */
+
+
+		LocalStorageMechanism.prototype.keys = function keys() {
+			return Object.keys(this.storage());
+		};
+
+		/**
+   * @inheritDoc
+   */
+
+
+		LocalStorageMechanism.prototype.get = function get(key) {
+			return this.storage().getItem(key);
+		};
+
+		/**
+   * @inheritDoc
+   */
+
+
+		LocalStorageMechanism.prototype.remove = function remove(key) {
+			this.storage().removeItem(key);
+		};
+
+		/**
+   * @inheritDoc
+   */
+
+
+		LocalStorageMechanism.prototype.set = function set(key, value) {
+			this.storage().setItem(key, value);
+		};
+
+		/**
+   * @inheritDoc
+   */
+
+
+		LocalStorageMechanism.prototype.size = function size() {
+			return this.storage().length;
+		};
+
+		return LocalStorageMechanism;
+	}(StorageMechanism);
+
+	LocalStorageMechanism.globals = {
+		localStorage: window.localStorage
+	};
+
+	this.wedeploy.LocalStorageMechanism = LocalStorageMechanism;
+}).call(this);
+'use strict';
+
+(function () {
+  var Storage = this.wedeploy.Storage;
+  var StorageMechanism = this.wedeploy.StorageMechanism;
+  var LocalStorageMechanism = this.wedeploy.LocalStorageMechanism;
+  this.wedeployNamed.storage = this.wedeployNamed.storage || {};
+  this.wedeployNamed.storage.Storage = Storage;
+  this.wedeployNamed.storage.StorageMechanism = StorageMechanism;
+  this.wedeployNamed.storage.LocalStorageMechanism = LocalStorageMechanism;
+}).call(this);
+'use strict';
+
+(function () {
+	var Auth = this.wedeploy.Auth;
+	var GithubAuthProvider = this.wedeploy.GithubAuthProvider;
+	var globals = this.wedeploy.globals;
+	var GoogleAuthProvider = this.wedeploy.GoogleAuthProvider;
+	var Storage = this.wedeployNamed.storage.Storage;
+	var LocalStorageMechanism = this.wedeployNamed.storage.LocalStorageMechanism;
+	var assertDefAndNotNull = this.wedeployNamed.assertions.assertDefAndNotNull;
+	var assertFunction = this.wedeployNamed.assertions.assertFunction;
+	var assertObject = this.wedeployNamed.assertions.assertObject;
+	var assertUserSignedIn = this.wedeployNamed.assertions.assertUserSignedIn;
+	var assertBrowserEnvironment = this.wedeployNamed.assertions.assertBrowserEnvironment;
+	var assertResponseSucceeded = this.wedeployNamed.assertions.assertResponseSucceeded;
+
+	/**
+  * Class responsible for encapsulate auth api calls.
+  */
+
+	var AuthApiHelper = function () {
+		/**
+   * Constructs an {@link AuthApiHelper} instance.
+   * @param {string=} opt_authUrl The url that points to the auth service.
+   * @constructor
+   */
+		function AuthApiHelper(opt_authUrl) {
+			babelHelpers.classCallCheck(this, AuthApiHelper);
+
+			this.authUrl = opt_authUrl;
+			this.currentUser = null;
+			this.onSignInCallback = null;
+			this.wedeployClient = null;
+			this.storage = new Storage(new LocalStorageMechanism());
+
+			this.maybeLoadCurrentUserFromLocalStorage();
+
+			this.provider = {
+				Google: GoogleAuthProvider,
+				Github: GithubAuthProvider
+			};
+		}
+
+		/**
+   * Creates user.
+   * @param {!object} data The data to be used to create the user.
+   * @return {CancellablePromise}
+   */
+
+
+		AuthApiHelper.prototype.createUser = function createUser(data) {
+			var _this = this;
+
+			assertObject(data, 'User data must be specified as object');
+			return this.wedeployClient.url(this.authUrl).path('/users').post(data).then(function (response) {
+				return assertResponseSucceeded(response);
+			}).then(function (response) {
+				return _this.makeUserAuthFromData(response.body());
+			});
+		};
+
+		/**
+   * Gets the current browser url without the fragment part.
+   * @return {!string}
+   * @protected
+   */
+
+
+		AuthApiHelper.prototype.getHrefWithoutFragment_ = function getHrefWithoutFragment_() {
+			var location = globals.window.location;
+			return location.protocol + '//' + location.host + location.pathname + (location.search ? location.search : '');
+		};
+
+		/**
+   * Gets the access token from the url fragment and removes it.
+   * @return {?string}
+   * @protected
+   */
+
+
+		AuthApiHelper.prototype.getRedirectAccessToken_ = function getRedirectAccessToken_() {
+			if (globals.window) {
+				var fragment = globals.window.location.hash;
+				if (fragment.indexOf('#access_token=') === 0) {
+					globals.window.location.hash = '';
+					return fragment.substring(14);
+				}
+			}
+			return null;
+		};
+
+		/**
+   * Gets user by id.
+   * @param {!string} userId
+   * @return {CancellablePromise}
+   */
+
+
+		AuthApiHelper.prototype.getUser = function getUser(userId) {
+			assertDefAndNotNull(userId, 'User userId must be specified');
+			assertUserSignedIn(this.currentUser);
+			return this.wedeployClient.url(this.authUrl).path('/users', userId).auth(this.currentUser.token).get().then(function (response) {
+				return assertResponseSucceeded(response);
+			});
+		};
+
+		/**
+   * Loads current user. Requires a user token as argument.
+   * @param {!string} token
+   * @return {CancellablePromise}
+   */
+
+
+		AuthApiHelper.prototype.loadCurrentUser = function loadCurrentUser(token) {
+			var _this2 = this;
+
+			assertDefAndNotNull(token, 'User token must be specified');
+			return this.wedeployClient.url(this.authUrl).path('/user').auth(token).get().then(function (response) {
+				var data = response.body();
+				data.token = token;
+				_this2.currentUser = _this2.makeUserAuthFromData(data);
+				_this2.storage.set('currentUser', data);
+				return _this2.currentUser;
+			});
+		};
+
+		/**
+   * Makes user Auth from data object.
+   * @param {object} data
+   * @return {Auth}
+   * @protected
+   */
+
+
+		AuthApiHelper.prototype.makeUserAuthFromData = function makeUserAuthFromData(data) {
+			var auth = new Auth();
+			auth.setWedeployClient(this.wedeployClient);
+			auth.setAuthUrl(this.authUrl);
+			auth.setCreatedAt(data.createdAt);
+			auth.setEmail(data.email);
+			auth.setId(data.id);
+			auth.setName(data.name);
+			auth.setPhotoUrl(data.photoUrl);
+			auth.setToken(data.token);
+			return auth;
+		};
+
+		/**
+   * If key <code>currentUser</code> is present on <code>localStorage</code>
+   * uses it as <code>this.currentUser</code>.
+   * @return {[type]} [description]
+   */
+
+
+		AuthApiHelper.prototype.maybeLoadCurrentUserFromLocalStorage = function maybeLoadCurrentUserFromLocalStorage() {
+			var currentUser = this.storage.get('currentUser');
+			if (currentUser) {
+				this.currentUser = this.makeUserAuthFromData(currentUser);
+			}
+		};
+
+		/**
+   * Fires passed callback when a user sign-in. Note that it keeps only the
+   * last callback passed.
+   * @param {!Function} callback
+   */
+
+
+		AuthApiHelper.prototype.onSignIn = function onSignIn(callback) {
+			var _this3 = this;
+
+			assertFunction(callback, 'Sign-in callback must be a function');
+			this.onSignInCallback = callback;
+			var redirectAccessToken = this.getRedirectAccessToken_();
+			if (redirectAccessToken) {
+				this.loadCurrentUser(redirectAccessToken).then(function () {
+					return _this3.onSignInCallback.call(_this3, _this3.currentUser);
+				});
+			}
+		};
+
+		/**
+   * Sends password reset email to the specified email if found in database.
+   * For security reasons call do not fail if email not found.
+   * @param {!string} email
+   * @return {CancellablePromise}
+   */
+
+
+		AuthApiHelper.prototype.sendPasswordResetEmail = function sendPasswordResetEmail(email) {
+			assertDefAndNotNull(email, 'Send password reset email must be specified');
+			return this.wedeployClient.url(this.authUrl).path('/user/recover').param('email', email).post().then(function (response) {
+				return assertResponseSucceeded(response);
+			});
+		};
+
+		/**
+   * Signs in using email and password.
+   * @param {!string} email
+   * @param {!string} password
+   * @return {CancellablePromise}
+   */
+
+
+		AuthApiHelper.prototype.signInWithEmailAndPassword = function signInWithEmailAndPassword(email, password) {
+			var _this4 = this;
+
+			assertDefAndNotNull(email, 'Sign-in email must be specified');
+			assertDefAndNotNull(password, 'Sign-in password must be specified');
+
+			return this.wedeployClient.url(this.authUrl).path('/oauth/token').param('grant_type', 'password').param('username', email).param('password', password).get().then(function (response) {
+				return assertResponseSucceeded(response);
+			}).then(function (response) {
+				return _this4.loadCurrentUser(response.body().access_token);
+			});
+		};
+
+		/**
+   * Signs in with redirect. Some providers and environment may not support
+   * this flow.
+   * @param {AuthProvider} provider
+   */
+
+
+		AuthApiHelper.prototype.signInWithRedirect = function signInWithRedirect(provider) {
+			assertBrowserEnvironment();
+			assertDefAndNotNull(provider, 'Sign-in provider must be defined');
+			assertSupportedProvider(provider);
+
+			if (!provider.hasRedirectUri()) {
+				provider.setRedirectUri(this.getHrefWithoutFragment_());
+			}
+			globals.window.location.href = provider.makeAuthorizationUrl(this.authUrl);
+		};
+
+		/**
+   * Signs out <code>currentUser</code> and removes from <code>localStorage</code>.
+   * @return {[type]} [description]
+   */
+
+
+		AuthApiHelper.prototype.signOut = function signOut() {
+			var _this5 = this;
+
+			assertUserSignedIn(this.currentUser);
+			return this.wedeployClient.url(this.authUrl).path('/oauth/revoke').param('access_token', this.currentUser.token).get().then(function (response) {
+				return assertResponseSucceeded(response);
+			}).then(function (response) {
+				_this5.unloadCurrentUser();
+				return response;
+			});
+		};
+
+		/**
+   * Sets reference for <code>WeDeploy</code> class to be used for internal
+   * requests.
+   * @param {WeDeploy} wedeployClient
+   */
+
+
+		AuthApiHelper.prototype.setWedeployClient = function setWedeployClient(wedeployClient) {
+			this.wedeployClient = wedeployClient;
+		};
+
+		/**
+   * Unloads all information for <code>currentUser</code> and removes from
+   * <code>localStorage</code> if present.
+   * @return {[type]} [description]
+   */
+
+
+		AuthApiHelper.prototype.unloadCurrentUser = function unloadCurrentUser() {
+			this.currentUser = null;
+			this.storage.remove('currentUser');
+		};
+
+		return AuthApiHelper;
+	}();
+
+	function assertSupportedProvider(provider) {
+		switch (provider.constructor.PROVIDER) {
+			case GithubAuthProvider.PROVIDER:
+			case GoogleAuthProvider.PROVIDER:
+				break;
+			default:
+				throw new Error('Sign-in provider not supported');
+		}
+	}
+
+	this.wedeploy.AuthApiHelper = AuthApiHelper;
+}).call(this);
+'use strict';
+
 /**
  * Abstraction layer for string to base64 conversion
  * reference: https://github.com/nodejs/node/issues/3462
@@ -5468,8 +6606,10 @@ babelHelpers;
 'use strict';
 
 (function () {
+	var globals = this.wedeploy.globals;
 	var core = this.wedeployNamed.metal.core;
 	var Auth = this.wedeploy.Auth;
+	var AuthApiHelper = this.wedeploy.AuthApiHelper;
 	var Base64 = this.wedeploy.Base64;
 	var Embodied = this.wedeploy.Embodied;
 	var Filter = this.wedeploy.Filter;
@@ -5482,9 +6622,9 @@ babelHelpers;
 
 	var io;
 
-	// Optimistic initialization of `io` reference from global `window.io`.
-	if (typeof window !== 'undefined') {
-		io = window.io;
+	// Optimistic initialization of `io` reference from global `globals.window.io`.
+	if (typeof globals.window !== 'undefined') {
+		io = globals.window.io;
 	}
 
 	/**
@@ -5547,20 +6687,32 @@ babelHelpers;
 
 		/**
    * Adds authorization information to this request.
-   * @param {!Auth|string} authOrTokenOrUsername Either an {@link Auth} instance,
-   *   an authorization token, or the username.
-   * @param {string=} opt_password If a username is given as the first param,
+   * @param {!Auth|string} authOrTokenOrEmail Either an {@link Auth} instance,
+   *   an authorization token, or the email.
+   * @param {string=} opt_password If a email is given as the first param,
    *   this should be the password.
    * @chainable
    */
 
 
-		WeDeploy.prototype.auth = function auth(authOrTokenOrUsername, opt_password) {
-			this.auth_ = authOrTokenOrUsername;
+		WeDeploy.prototype.auth = function auth(authOrTokenOrEmail, opt_password) {
+			this.auth_ = authOrTokenOrEmail;
 			if (!(this.auth_ instanceof Auth)) {
-				this.auth_ = Auth.create(authOrTokenOrUsername, opt_password);
+				this.auth_ = Auth.create(authOrTokenOrEmail, opt_password);
 			}
 			return this;
+		};
+
+		/**
+   * Static factory for creating WeDeploy auth for the given url.
+   * @param {string=} opt_authUrl The url that points to the auth service.
+   */
+
+
+		WeDeploy.auth = function auth(opt_authUrl) {
+			var auth = new AuthApiHelper(opt_authUrl);
+			auth.setWedeployClient(WeDeploy);
+			return auth;
 		};
 
 		/**
@@ -5940,9 +7092,9 @@ babelHelpers;
 				return;
 			}
 			if (this.auth_.hasToken()) {
-				clientRequest.header('Authorization', 'Bearer ' + this.auth_.token());
+				clientRequest.header('Authorization', 'Bearer ' + this.auth_.token);
 			} else {
-				var credentials = this.auth_.username() + ':' + this.auth_.password();
+				var credentials = this.auth_.email + ':' + this.auth_.password;
 				clientRequest.header('Authorization', 'Basic ' + Base64.encodeString(credentials));
 			}
 		};
@@ -6017,21 +7169,6 @@ babelHelpers;
 
 		WeDeploy.url = function url(_url) {
 			return new WeDeploy(_url).use(this.customTransport_);
-		};
-
-		/**
-   * Static factory for creating WeDeploy client for the given url.
-   * @param {string} containerId The container id that the client should use
-   *   for sending requests.
-   */
-
-
-		WeDeploy.container = function container(containerId) {
-			if (WeDeploy.DOMAIN === null) {
-				return WeDeploy.url('/');
-			}
-
-			return new WeDeploy.url(containerId + '.' + WeDeploy.DOMAIN);
 		};
 
 		/**
@@ -6111,18 +7248,12 @@ babelHelpers;
 		return contentType.indexOf('application/json') === 0;
 	};
 
-	/**
-  * The project domain to be used on container requests.
-  * @type {string}
-  * @static
-  */
-	WeDeploy.DOMAIN = null;
-
 	this.wedeploy.WeDeploy = WeDeploy;
 }).call(this);
 'use strict';
 
 (function () {
+  var globals = this.wedeploy.globals;
   var Filter = this.wedeploy.Filter;
   var Geo = this.wedeploy.Geo;
   var WeDeploy = this.wedeploy.WeDeploy;
@@ -6130,11 +7261,11 @@ babelHelpers;
   var Range = this.wedeploy.Range;
 
 
-  window.Filter = Filter;
-  window.Geo = Geo;
-  window.Query = Query;
-  window.Range = Range;
-  window.WeDeploy = WeDeploy;
+  globals.window.Filter = Filter;
+  globals.window.Geo = Geo;
+  globals.window.Query = Query;
+  globals.window.Range = Range;
+  globals.window.WeDeploy = WeDeploy;
 }).call(this);
 }).call(this);
 //# sourceMappingURL=api.js.map

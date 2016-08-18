@@ -8,7 +8,7 @@ describe('Transport', function() {
 	afterEach(RequestMock.teardown);
 
 	it('should send request to an url', function(done) {
-		RequestMock.intercept('GET', 'http://localhost/url').reply(200);
+		RequestMock.intercept().reply(200);
 		var transport = TransportFactory.instance().getDefault();
 		var clientRequest = new ClientRequest();
 		clientRequest.url('http://localhost/url');
@@ -19,7 +19,7 @@ describe('Transport', function() {
 	});
 
 	it('should send request with different http method', function(done) {
-		RequestMock.intercept('POST', 'http://localhost/url').reply(200);
+		RequestMock.intercept().reply(200);
 		var transport = TransportFactory.instance().getDefault();
 		var clientRequest = new ClientRequest();
 		clientRequest.url('http://localhost/url');
@@ -31,7 +31,7 @@ describe('Transport', function() {
 	});
 
 	it('should send request with body', function(done) {
-		RequestMock.intercept('GET', 'http://localhost/url').reply(200, 'responseBody');
+		RequestMock.intercept().reply(200, 'responseBody');
 		var transport = TransportFactory.instance().getDefault();
 		var clientRequest = new ClientRequest();
 		clientRequest.url('http://localhost/url');
@@ -44,7 +44,7 @@ describe('Transport', function() {
 	});
 
 	it('should send request with query string', function(done) {
-		RequestMock.intercept('GET', 'http://localhost/url?query=1').reply(200);
+		RequestMock.intercept().reply(200);
 		var transport = TransportFactory.instance().getDefault();
 		var clientRequest = new ClientRequest();
 		clientRequest.url('http://localhost/url');
@@ -56,7 +56,7 @@ describe('Transport', function() {
 	});
 
 	it('should send request with header', function(done) {
-		RequestMock.intercept('GET', 'http://localhost/url').reply(200);
+		RequestMock.intercept().reply(200);
 		var transport = TransportFactory.instance().getDefault();
 		var clientRequest = new ClientRequest();
 		clientRequest.url('http://localhost/url');
@@ -68,7 +68,7 @@ describe('Transport', function() {
 	});
 
 	it('should send request with multiple header of same name', function(done) {
-		RequestMock.intercept('GET', 'http://localhost/url').reply(200);
+		RequestMock.intercept().reply(200);
 		var transport = TransportFactory.instance().getDefault();
 		var clientRequest = new ClientRequest();
 		clientRequest.url('http://localhost/url');
@@ -82,7 +82,7 @@ describe('Transport', function() {
 	});
 
 	it('should response with headers', function(done) {
-		RequestMock.intercept('GET', 'http://localhost/url').reply(200, undefined, {
+		RequestMock.intercept().reply(200, undefined, {
 			'content-type': 'application/json'
 		});
 		var transport = TransportFactory.instance().getDefault();
@@ -95,7 +95,7 @@ describe('Transport', function() {
 	});
 
 	it('should response success with any status code', function(done) {
-		RequestMock.intercept('GET', 'http://localhost/url').reply(500);
+		RequestMock.intercept().reply(500);
 		var transport = TransportFactory.instance().getDefault();
 		var clientRequest = new ClientRequest();
 		clientRequest.url('http://localhost/url');
