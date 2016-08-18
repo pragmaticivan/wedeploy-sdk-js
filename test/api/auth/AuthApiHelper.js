@@ -9,12 +9,18 @@ import WeDeploy from '../../../src/api/WeDeploy';
 
 describe('AuthApiHelper', function() {
 	afterEach(function() {
+		WeDeploy.auth_ = null;
 		globals.window = window;
 		RequestMock.teardown();
 	});
 
 	beforeEach(function() {
 		RequestMock.setup();
+	});
+
+	it('should WeDeploy.auth() returns same instance', function() {
+		var auth = WeDeploy.auth();
+		assert.strictEqual(auth, WeDeploy.auth());
 	});
 
 	it('should map providers', function() {
@@ -162,7 +168,6 @@ describe('AuthApiHelper', function() {
 			.createUser({})
 			.then((user) => {
 				assert.ok(user instanceof Auth);
-				assert.strictEqual('http://auth', user.getAuthUrl());
 				done();
 			});
 	});
@@ -338,7 +343,6 @@ describe('AuthApiHelper', function() {
 			.loadCurrentUser('token')
 			.then((user) => {
 				assert.ok(user instanceof Auth);
-				assert.strictEqual('http://auth', user.authUrl);
 				assert.strictEqual('createdAt', user.createdAt);
 				assert.strictEqual('email', user.email);
 				assert.strictEqual('id', user.id);

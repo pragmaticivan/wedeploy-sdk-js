@@ -32,26 +32,22 @@ describe('Auth', function() {
 
 	it('should create Auth instance and set other fields', function() {
 		var auth = Auth.create();
-		auth.setAuthUrl('authUrl');
 		auth.setCreatedAt('createdAt');
 		auth.setId('id');
 		auth.setName('name');
 		auth.setPassword('password');
 		auth.setPhotoUrl('photoUrl');
-		assert.ok(auth.hasAuthUrl());
 		assert.ok(auth.hasCreatedAt());
 		assert.ok(auth.hasId());
 		assert.ok(auth.hasName());
 		assert.ok(auth.hasPassword());
 		assert.ok(auth.hasPhotoUrl());
-		assert.strictEqual('authUrl', auth.authUrl);
 		assert.strictEqual('createdAt', auth.createdAt);
 		assert.strictEqual('id', auth.id);
 		assert.strictEqual('name', auth.name);
 		assert.strictEqual('password', auth.password);
 		assert.strictEqual('photoUrl', auth.photoUrl);
 		assert.strictEqual('createdAt', auth.getCreatedAt());
-		assert.strictEqual('authUrl', auth.getAuthUrl());
 		assert.strictEqual('id', auth.getId());
 		assert.strictEqual('name', auth.getName());
 		assert.strictEqual('password', auth.getPassword());
@@ -61,20 +57,17 @@ describe('Auth', function() {
 	it('should throws exception when calling updateUser without data', function() {
 		var auth = Auth.create();
 		auth.setWedeployClient(WeDeploy);
-		auth.setAuthUrl('http://auth');
 		assert.throws(() => auth.updateUser(), Error);
 	});
 
 	it('should throws exception when calling updateUser without data', function() {
 		var auth = Auth.create();
 		auth.setWedeployClient(WeDeploy);
-		auth.setAuthUrl('http://auth');
 		assert.throws(() => auth.updateUser(), Error);
 	});
 
 	it('should call updateUser successfully', function(done) {
 		var auth = Auth.create();
-		auth.setAuthUrl('http://auth');
 		auth.setWedeployClient(WeDeploy);
 		RequestMock.intercept().reply(200);
 		auth
@@ -84,7 +77,6 @@ describe('Auth', function() {
 
 	it('should call updateUser unsuccessfully', function(done) {
 		var auth = Auth.create();
-		auth.setAuthUrl('http://auth');
 		auth.setWedeployClient(WeDeploy);
 		RequestMock.intercept().reply(400);
 		auth
@@ -94,7 +86,6 @@ describe('Auth', function() {
 
 	it('should call updateUser unsuccessfully with error response as reason', function(done) {
 		var auth = Auth.create();
-		auth.setAuthUrl('http://auth');
 		auth.setWedeployClient(WeDeploy);
 		auth.currentUser = {};
 		var responseErrorObject = {
@@ -113,14 +104,12 @@ describe('Auth', function() {
 
 	it('should throws exception when calling deleteUser without user having id', function() {
 		var auth = Auth.create();
-		auth.setAuthUrl('http://auth');
 		auth.setWedeployClient(WeDeploy);
 		assert.throws(() => auth.deleteUser(), Error);
 	});
 
 	it('should call deleteUser successfully', function(done) {
 		var auth = Auth.create();
-		auth.setAuthUrl('http://auth');
 		auth.setId('id');
 		auth.setWedeployClient(WeDeploy);
 		RequestMock.intercept().reply(200);
@@ -131,7 +120,6 @@ describe('Auth', function() {
 
 	it('should call deleteUser unsuccessfully', function(done) {
 		var auth = Auth.create();
-		auth.setAuthUrl('http://auth');
 		auth.setId('id');
 		auth.setWedeployClient(WeDeploy);
 		RequestMock.intercept().reply(400);
@@ -142,7 +130,6 @@ describe('Auth', function() {
 
 	it('should call deleteUser unsuccessfully with error response as reason', function(done) {
 		var auth = Auth.create();
-		auth.setAuthUrl('http://auth');
 		auth.setId('id');
 		auth.setWedeployClient(WeDeploy);
 		var responseErrorObject = {

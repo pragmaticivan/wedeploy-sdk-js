@@ -90,9 +90,14 @@ class WeDeploy {
 	 * @param {string=} opt_authUrl The url that points to the auth service.
 	 */
 	static auth(opt_authUrl) {
-		var auth = new AuthApiHelper(opt_authUrl);
-		auth.setWedeployClient(WeDeploy);
-		return auth;
+		if (core.isString(opt_authUrl)) {
+			WeDeploy.authUrl_ = opt_authUrl;
+		}
+		if (!WeDeploy.auth_) {
+			WeDeploy.auth_ = new AuthApiHelper();
+			WeDeploy.auth_.setWedeployClient(WeDeploy);
+		}
+		return WeDeploy.auth_;
 	}
 
 	/**
@@ -553,5 +558,8 @@ WeDeploy.isContentTypeJson = function(clientMessage) {
 	var contentType = clientMessage.headers().get('content-type') || '';
 	return contentType.indexOf('application/json') === 0;
 };
+
+WeDeploy.auth_ = null;
+WeDeploy.authUrl_ = '';
 
 export default WeDeploy;

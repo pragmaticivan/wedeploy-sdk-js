@@ -14,11 +14,9 @@ import { assertDefAndNotNull, assertFunction, assertObject, assertUserSignedIn, 
 class AuthApiHelper {
 	/**
 	 * Constructs an {@link AuthApiHelper} instance.
-	 * @param {string=} opt_authUrl The url that points to the auth service.
 	 * @constructor
 	 */
-	constructor(opt_authUrl) {
-		this.authUrl = opt_authUrl;
+	constructor() {
 		this.currentUser = null;
 		this.onSignInCallback = null;
 		this.wedeployClient = null;
@@ -40,7 +38,7 @@ class AuthApiHelper {
 	createUser(data) {
 		assertObject(data, 'User data must be specified as object');
 		return this.wedeployClient
-			.url(this.authUrl)
+			.url(this.wedeployClient.authUrl_)
 			.path('/users')
 			.post(data)
 			.then(response => assertResponseSucceeded(response))
@@ -82,7 +80,7 @@ class AuthApiHelper {
 		assertDefAndNotNull(userId, 'User userId must be specified');
 		assertUserSignedIn(this.currentUser);
 		return this.wedeployClient
-			.url(this.authUrl)
+			.url(this.wedeployClient.authUrl_)
 			.path('/users', userId)
 			.auth(this.currentUser.token)
 			.get()
@@ -97,7 +95,7 @@ class AuthApiHelper {
 	loadCurrentUser(token) {
 		assertDefAndNotNull(token, 'User token must be specified');
 		return this.wedeployClient
-			.url(this.authUrl)
+			.url(this.wedeployClient.authUrl_)
 			.path('/user')
 			.auth(token)
 			.get()
@@ -119,7 +117,6 @@ class AuthApiHelper {
 	makeUserAuthFromData(data) {
 		var auth = new Auth();
 		auth.setWedeployClient(this.wedeployClient);
-		auth.setAuthUrl(this.authUrl);
 		auth.setCreatedAt(data.createdAt);
 		auth.setEmail(data.email);
 		auth.setId(data.id);
@@ -164,7 +161,7 @@ class AuthApiHelper {
 	sendPasswordResetEmail(email) {
 		assertDefAndNotNull(email, 'Send password reset email must be specified');
 		return this.wedeployClient
-			.url(this.authUrl)
+			.url(this.wedeployClient.authUrl_)
 			.path('/user/recover')
 			.param('email', email)
 			.post()
@@ -182,7 +179,7 @@ class AuthApiHelper {
 		assertDefAndNotNull(password, 'Sign-in password must be specified');
 
 		return this.wedeployClient
-			.url(this.authUrl)
+			.url(this.wedeployClient.authUrl_)
 			.path('/oauth/token')
 			.param('grant_type', 'password')
 			.param('username', email)
@@ -205,7 +202,7 @@ class AuthApiHelper {
 		if (!provider.hasRedirectUri()) {
 			provider.setRedirectUri(this.getHrefWithoutFragment_());
 		}
-		globals.window.location.href = provider.makeAuthorizationUrl(this.authUrl);
+		globals.window.location.href = provider.makeAuthorizationUrl(this.wedeployClient.authUrl_);
 	}
 
 	/**
@@ -215,7 +212,7 @@ class AuthApiHelper {
 	signOut() {
 		assertUserSignedIn(this.currentUser);
 		return this.wedeployClient
-			.url(this.authUrl)
+			.url(this.wedeployClient.authUrl_)
 			.path('/oauth/revoke')
 			.param('token', this.currentUser.token)
 			.get()

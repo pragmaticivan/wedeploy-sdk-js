@@ -25,7 +25,6 @@ class Auth {
 		this.id = null;
 		this.name = null;
 		this.photoUrl = null;
-		this.authUrl = null;
 		this.wedeployClient = null;
 	}
 
@@ -39,14 +38,6 @@ class Auth {
 	 */
 	static create(tokenOrUsername, opt_password) {
 		return new Auth(tokenOrUsername, opt_password);
-	}
-
-	/**
-	 * Gets the auth url bound to this auth reference.
-	 * @return {string}
-	 */
-	getAuthUrl() {
-		return this.authUrl;
 	}
 
 	/**
@@ -106,14 +97,6 @@ class Auth {
 	}
 
 	/**
-	 * Checks if auth url is set.
-	 * @return {boolean}
-	 */
-	hasAuthUrl() {
-		return core.isDefAndNotNull(this.authUrl);
-	}
-
-	/**
 	 * Checks if created at is set.
 	 * @return {boolean}
 	 */
@@ -167,14 +150,6 @@ class Auth {
 	 */
 	hasToken() {
 		return core.isDefAndNotNull(this.token);
-	}
-
-	/**
-	 * Sets auth url.
-	 * @param {string} authUrl
-	 */
-	setAuthUrl(authUrl) {
-		this.authUrl = authUrl;
 	}
 
 	/**
@@ -238,10 +213,9 @@ class Auth {
 	}
 
 	updateUser(data) {
-		assertDefAndNotNull(this.authUrl, 'Auth not bound to any auth url');
 		assertObject(data, 'User data must be specified as object');
 		return this.wedeployClient
-			.url(this.authUrl)
+			.url(this.wedeployClient.authUrl_)
 			.path('/users')
 			.auth(this)
 			.patch(data)
@@ -249,10 +223,9 @@ class Auth {
 	}
 
 	deleteUser() {
-		assertDefAndNotNull(this.authUrl, 'Auth not bound to any auth url');
 		assertDefAndNotNull(this.id, 'Cannot delete user without id');
 		return this.wedeployClient
-			.url(this.authUrl)
+			.url(this.wedeployClient.authUrl_)
 			.path('/users', this.id)
 			.auth(this)
 			.delete()
