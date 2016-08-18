@@ -4457,12 +4457,14 @@ babelHelpers;
    * Constructs an {@link AuthApiHelper} instance.
    * @constructor
    */
-		function AuthApiHelper() {
+		function AuthApiHelper(wedeployClient) {
 			babelHelpers.classCallCheck(this, AuthApiHelper);
+
+			assertDefAndNotNull(wedeployClient, 'WeDeploy client reference must be specified');
 
 			this.currentUser = null;
 			this.onSignInCallback = null;
-			this.wedeployClient = null;
+			this.wedeployClient = wedeployClient;
 			this.storage = new Storage(new LocalStorageMechanism());
 
 			this.maybeLoadCurrentUserFromLocalStorage();
@@ -4680,17 +4682,6 @@ babelHelpers;
 				_this5.unloadCurrentUser();
 				return response;
 			});
-		};
-
-		/**
-   * Sets reference for <code>WeDeploy</code> class to be used for internal
-   * requests.
-   * @param {WeDeploy} wedeployClient
-   */
-
-
-		AuthApiHelper.prototype.setWedeployClient = function setWedeployClient(wedeployClient) {
-			this.wedeployClient = wedeployClient;
 		};
 
 		/**
@@ -6678,8 +6669,7 @@ babelHelpers;
 				WeDeploy.authUrl_ = opt_authUrl;
 			}
 			if (!WeDeploy.auth_) {
-				WeDeploy.auth_ = new AuthApiHelper();
-				WeDeploy.auth_.setWedeployClient(WeDeploy);
+				WeDeploy.auth_ = new AuthApiHelper(WeDeploy);
 			}
 			return WeDeploy.auth_;
 		};
