@@ -16,10 +16,12 @@ class AuthApiHelper {
 	 * Constructs an {@link AuthApiHelper} instance.
 	 * @constructor
 	 */
-	constructor() {
+	constructor(wedeployClient) {
+		assertDefAndNotNull(wedeployClient, 'WeDeploy client reference must be specified');
+
 		this.currentUser = null;
 		this.onSignInCallback = null;
-		this.wedeployClient = null;
+		this.wedeployClient = wedeployClient;
 		this.storage = new Storage(new LocalStorageMechanism());
 
 		this.maybeLoadCurrentUserFromLocalStorage();
@@ -221,15 +223,6 @@ class AuthApiHelper {
 				this.unloadCurrentUser();
 				return response;
 			});
-	}
-
-	/**
-	 * Sets reference for <code>WeDeploy</code> class to be used for internal
-	 * requests.
-	 * @param {WeDeploy} wedeployClient
-	 */
-	setWedeployClient(wedeployClient) {
-		this.wedeployClient = wedeployClient;
 	}
 
 	/**

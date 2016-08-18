@@ -10,7 +10,7 @@
 		var auth = WeDeploy.auth('http://auth.dashboard.wedeploy.me');
 		var githubProvider = new auth.provider.Github();
 		var googleProvider = new auth.provider.Google();
-		googleProvider.setProviderScope('profile');
+		googleProvider.setProviderScope('email');
 
 		auth.onSignIn(function(user) {
 			console.log('Sign-in', user);

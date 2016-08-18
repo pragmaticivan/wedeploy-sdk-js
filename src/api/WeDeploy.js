@@ -94,8 +94,7 @@ class WeDeploy {
 			WeDeploy.authUrl_ = opt_authUrl;
 		}
 		if (!WeDeploy.auth_) {
-			WeDeploy.auth_ = new AuthApiHelper();
-			WeDeploy.auth_.setWedeployClient(WeDeploy);
+			WeDeploy.auth_ = new AuthApiHelper(WeDeploy);
 		}
 		return WeDeploy.auth_;
 	}
