@@ -212,6 +212,11 @@ class Auth {
 		this.wedeployClient = wedeployClient;
 	}
 
+	/**
+	 * Updates the user.
+	 * @param {!object} data
+	 * @return {CompletableFuture}
+	 */
 	updateUser(data) {
 		assertObject(data, 'User data must be specified as object');
 		return this.wedeployClient
@@ -222,6 +227,10 @@ class Auth {
 			.then(response => assertResponseSucceeded(response));
 	}
 
+	/**
+	 * Deletes the current user.
+	 * @return {CompletableFuture}
+	 */
 	deleteUser() {
 		assertDefAndNotNull(this.id, 'Cannot delete user without id');
 		return this.wedeployClient
