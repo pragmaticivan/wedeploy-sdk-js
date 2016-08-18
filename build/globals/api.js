@@ -3612,7 +3612,6 @@ babelHelpers;
 			this.id = null;
 			this.name = null;
 			this.photoUrl = null;
-			this.authUrl = null;
 			this.wedeployClient = null;
 		}
 
@@ -3628,16 +3627,6 @@ babelHelpers;
 
 		Auth.create = function create(tokenOrUsername, opt_password) {
 			return new Auth(tokenOrUsername, opt_password);
-		};
-
-		/**
-   * Gets the auth url bound to this auth reference.
-   * @return {string}
-   */
-
-
-		Auth.prototype.getAuthUrl = function getAuthUrl() {
-			return this.authUrl;
 		};
 
 		/**
@@ -3711,16 +3700,6 @@ babelHelpers;
 		};
 
 		/**
-   * Checks if auth url is set.
-   * @return {boolean}
-   */
-
-
-		Auth.prototype.hasAuthUrl = function hasAuthUrl() {
-			return core.isDefAndNotNull(this.authUrl);
-		};
-
-		/**
    * Checks if created at is set.
    * @return {boolean}
    */
@@ -3788,16 +3767,6 @@ babelHelpers;
 
 		Auth.prototype.hasToken = function hasToken() {
 			return core.isDefAndNotNull(this.token);
-		};
-
-		/**
-   * Sets auth url.
-   * @param {string} authUrl
-   */
-
-
-		Auth.prototype.setAuthUrl = function setAuthUrl(authUrl) {
-			this.authUrl = authUrl;
 		};
 
 		/**
@@ -3875,17 +3844,15 @@ babelHelpers;
 		};
 
 		Auth.prototype.updateUser = function updateUser(data) {
-			assertDefAndNotNull(this.authUrl, 'Auth not bound to any auth url');
 			assertObject(data, 'User data must be specified as object');
-			return this.wedeployClient.url(this.authUrl).path('/users').auth(this).patch(data).then(function (response) {
+			return this.wedeployClient.url(this.wedeployClient.authUrl_).path('/users').auth(this).patch(data).then(function (response) {
 				return assertResponseSucceeded(response);
 			});
 		};
 
 		Auth.prototype.deleteUser = function deleteUser() {
-			assertDefAndNotNull(this.authUrl, 'Auth not bound to any auth url');
 			assertDefAndNotNull(this.id, 'Cannot delete user without id');
-			return this.wedeployClient.url(this.authUrl).path('/users', this.id).auth(this).delete().then(function (response) {
+			return this.wedeployClient.url(this.wedeployClient.authUrl_).path('/users', this.id).auth(this).delete().then(function (response) {
 				return assertResponseSucceeded(response);
 			});
 		};
@@ -4488,13 +4455,11 @@ babelHelpers;
 	var AuthApiHelper = function () {
 		/**
    * Constructs an {@link AuthApiHelper} instance.
-   * @param {string=} opt_authUrl The url that points to the auth service.
    * @constructor
    */
-		function AuthApiHelper(opt_authUrl) {
+		function AuthApiHelper() {
 			babelHelpers.classCallCheck(this, AuthApiHelper);
 
-			this.authUrl = opt_authUrl;
 			this.currentUser = null;
 			this.onSignInCallback = null;
 			this.wedeployClient = null;
@@ -4519,7 +4484,7 @@ babelHelpers;
 			var _this = this;
 
 			assertObject(data, 'User data must be specified as object');
-			return this.wedeployClient.url(this.authUrl).path('/users').post(data).then(function (response) {
+			return this.wedeployClient.url(this.wedeployClient.authUrl_).path('/users').post(data).then(function (response) {
 				return assertResponseSucceeded(response);
 			}).then(function (response) {
 				return _this.makeUserAuthFromData(response.body());
@@ -4566,7 +4531,7 @@ babelHelpers;
 		AuthApiHelper.prototype.getUser = function getUser(userId) {
 			assertDefAndNotNull(userId, 'User userId must be specified');
 			assertUserSignedIn(this.currentUser);
-			return this.wedeployClient.url(this.authUrl).path('/users', userId).auth(this.currentUser.token).get().then(function (response) {
+			return this.wedeployClient.url(this.wedeployClient.authUrl_).path('/users', userId).auth(this.currentUser.token).get().then(function (response) {
 				return assertResponseSucceeded(response);
 			});
 		};
@@ -4582,7 +4547,7 @@ babelHelpers;
 			var _this2 = this;
 
 			assertDefAndNotNull(token, 'User token must be specified');
-			return this.wedeployClient.url(this.authUrl).path('/user').auth(token).get().then(function (response) {
+			return this.wedeployClient.url(this.wedeployClient.authUrl_).path('/user').auth(token).get().then(function (response) {
 				var data = response.body();
 				data.token = token;
 				_this2.currentUser = _this2.makeUserAuthFromData(data);
@@ -4602,7 +4567,6 @@ babelHelpers;
 		AuthApiHelper.prototype.makeUserAuthFromData = function makeUserAuthFromData(data) {
 			var auth = new Auth();
 			auth.setWedeployClient(this.wedeployClient);
-			auth.setAuthUrl(this.authUrl);
 			auth.setCreatedAt(data.createdAt);
 			auth.setEmail(data.email);
 			auth.setId(data.id);
@@ -4656,7 +4620,7 @@ babelHelpers;
 
 		AuthApiHelper.prototype.sendPasswordResetEmail = function sendPasswordResetEmail(email) {
 			assertDefAndNotNull(email, 'Send password reset email must be specified');
-			return this.wedeployClient.url(this.authUrl).path('/user/recover').param('email', email).post().then(function (response) {
+			return this.wedeployClient.url(this.wedeployClient.authUrl_).path('/user/recover').param('email', email).post().then(function (response) {
 				return assertResponseSucceeded(response);
 			});
 		};
@@ -4675,7 +4639,7 @@ babelHelpers;
 			assertDefAndNotNull(email, 'Sign-in email must be specified');
 			assertDefAndNotNull(password, 'Sign-in password must be specified');
 
-			return this.wedeployClient.url(this.authUrl).path('/oauth/token').param('grant_type', 'password').param('username', email).param('password', password).get().then(function (response) {
+			return this.wedeployClient.url(this.wedeployClient.authUrl_).path('/oauth/token').param('grant_type', 'password').param('username', email).param('password', password).get().then(function (response) {
 				return assertResponseSucceeded(response);
 			}).then(function (response) {
 				return _this4.loadCurrentUser(response.body().access_token);
@@ -4697,7 +4661,7 @@ babelHelpers;
 			if (!provider.hasRedirectUri()) {
 				provider.setRedirectUri(this.getHrefWithoutFragment_());
 			}
-			globals.window.location.href = provider.makeAuthorizationUrl(this.authUrl);
+			globals.window.location.href = provider.makeAuthorizationUrl(this.wedeployClient.authUrl_);
 		};
 
 		/**
@@ -4710,7 +4674,7 @@ babelHelpers;
 			var _this5 = this;
 
 			assertUserSignedIn(this.currentUser);
-			return this.wedeployClient.url(this.authUrl).path('/oauth/revoke').param('token', this.currentUser.token).get().then(function (response) {
+			return this.wedeployClient.url(this.wedeployClient.authUrl_).path('/oauth/revoke').param('token', this.currentUser.token).get().then(function (response) {
 				return assertResponseSucceeded(response);
 			}).then(function (response) {
 				_this5.unloadCurrentUser();
@@ -6710,9 +6674,14 @@ babelHelpers;
 
 
 		WeDeploy.auth = function auth(opt_authUrl) {
-			var auth = new AuthApiHelper(opt_authUrl);
-			auth.setWedeployClient(WeDeploy);
-			return auth;
+			if (core.isString(opt_authUrl)) {
+				WeDeploy.authUrl_ = opt_authUrl;
+			}
+			if (!WeDeploy.auth_) {
+				WeDeploy.auth_ = new AuthApiHelper();
+				WeDeploy.auth_.setWedeployClient(WeDeploy);
+			}
+			return WeDeploy.auth_;
 		};
 
 		/**
@@ -7247,6 +7216,9 @@ babelHelpers;
 		var contentType = clientMessage.headers().get('content-type') || '';
 		return contentType.indexOf('application/json') === 0;
 	};
+
+	WeDeploy.auth_ = null;
+	WeDeploy.authUrl_ = '';
 
 	this.wedeploy.WeDeploy = WeDeploy;
 }).call(this);
