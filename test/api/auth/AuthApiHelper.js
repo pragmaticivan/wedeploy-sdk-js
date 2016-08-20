@@ -358,7 +358,7 @@ describe('AuthApiHelper', function() {
 		assert.throws(() => WeDeploy.auth().signIn({}), Error);
 	});
 
-	it('should invokes callback when calling onSignIn after a redirect', function() {
+	it('should invokes callback when after a sign-in redirect', function() {
 		globals.window = {
 			location: {
 				protocol: 'http:',
@@ -366,30 +366,26 @@ describe('AuthApiHelper', function() {
 				pathname: '/',
 				search: '?q=1',
 				hash: '#access_token=xyz'
+			},
+			history: {
+				pushState: () => {
+					globals.window.location.hash = '';
+				}
 			}
 		};
-		var auth = WeDeploy.auth();
-		auth.loadCurrentUser = (token) => CancellablePromise.resolve(Auth.create(token));
 		assert.strictEqual('#access_token=xyz', globals.window.location.hash);
-		auth.onSignIn((user) => assert.ok('xyz', user.token));
+		WeDeploy.auth();
 		assert.strictEqual('', globals.window.location.hash);
 	});
 
-	it('should not invoke callback when calling onSignIn without redirect', function() {
+	it('should not invoke callback without sign-in redirect', function() {
 		globals.window = {
 			location: {
-				protocol: 'http:',
-				host: 'currentUrl',
-				pathname: '/',
-				search: '?q=1',
 				hash: ''
 			}
 		};
 		var auth = WeDeploy.auth();
-		auth.loadCurrentUser = (token) => Auth.create(token);
-		assert.strictEqual('', globals.window.location.hash);
 		auth.onSignIn(() => assert.fail());
-		assert.strictEqual('', globals.window.location.hash);
 	});
 
 	it('should invokes callback when calling onSignIn after a signInWithEmailAndPassword', function(done) {

@@ -24,7 +24,7 @@ class AuthApiHelper {
 		this.wedeployClient = wedeployClient;
 		this.storage = new Storage(new LocalStorageMechanism());
 
-		this.maybeLoadCurrentUserFromLocalStorage();
+		this.processSignIn_();
 
 		this.provider = {
 			Google: GoogleAuthProvider,
@@ -66,7 +66,6 @@ class AuthApiHelper {
 		if (globals.window) {
 			var fragment = globals.window.location.hash;
 			if (fragment.indexOf('#access_token=') === 0) {
-				globals.window.location.hash = '';
 				return fragment.substring(14);
 			}
 		}
@@ -132,21 +131,9 @@ class AuthApiHelper {
 	 * Calls the on sign in callback if set.
 	 * @protected
 	 */
-	maybeCallOnSignInCallback() {
+	maybeCallOnSignInCallback_() {
 		if (this.onSignInCallback) {
 			this.onSignInCallback.call(this, this.currentUser);
-		}
-	}
-
-	/**
-	 * If key <code>currentUser</code> is present on <code>localStorage</code>
-	 * uses it as <code>this.currentUser</code>.
-	 * @return {[type]} [description]
-	 */
-	maybeLoadCurrentUserFromLocalStorage() {
-		var currentUser = this.storage.get('currentUser');
-		if (currentUser) {
-			this.currentUser = this.makeUserAuthFromData(currentUser);
 		}
 	}
 
@@ -158,11 +145,33 @@ class AuthApiHelper {
 	onSignIn(callback) {
 		assertFunction(callback, 'Sign-in callback must be a function');
 		this.onSignInCallback = callback;
+	}
+
+	/**
+	 * Processes sign-in by detecting a presence of a fragment
+	 * <code>#access_token=</code> in the url or, alternatively, by local
+	 * storage current user.
+	 */
+	processSignIn_() {
 		var redirectAccessToken = this.getRedirectAccessToken_();
 		if (redirectAccessToken) {
+			this.removeUrlFragmentCompletely_();
 			this.loadCurrentUser(redirectAccessToken)
-				.then(() => this.maybeCallOnSignInCallback());
+				.then(() => this.maybeCallOnSignInCallback_());
+			return;
 		}
+		var currentUser = this.storage.get('currentUser');
+		if (currentUser) {
+			this.currentUser = this.makeUserAuthFromData(currentUser);
+		}
+	}
+
+	/**
+	 * Removes fragment from url by performing a push state to the current path.
+	 * @protected
+	 */
+	removeUrlFragmentCompletely_() {
+		globals.window.history.pushState({}, document.title, window.location.pathname + window.location.search);
 	}
 
 	/**
@@ -201,7 +210,7 @@ class AuthApiHelper {
 			.then(response => assertResponseSucceeded(response))
 			.then(response => this.loadCurrentUser(response.body().access_token))
 			.then((user) => {
-				this.maybeCallOnSignInCallback();
+				this.maybeCallOnSignInCallback_();
 				return user;
 			});
 	}
