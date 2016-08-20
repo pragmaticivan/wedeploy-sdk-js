@@ -386,9 +386,28 @@ describe('AuthApiHelper', function() {
 			}
 		};
 		var auth = WeDeploy.auth();
-		auth.loadCurrentUser = (token) => CancellablePromise.resolve(Auth.create(token));
+		auth.loadCurrentUser = (token) => Auth.create(token);
 		assert.strictEqual('', globals.window.location.hash);
 		auth.onSignIn(() => assert.fail());
 		assert.strictEqual('', globals.window.location.hash);
+	});
+
+	it('should invokes callback when calling onSignIn after a signInWithEmailAndPassword', function(done) {
+		var auth = WeDeploy.auth();
+		auth.loadCurrentUser = (token) => Auth.create(token);
+		var callback = sinon.stub();
+		auth.onSignIn(callback);
+		var data = {
+			access_token: 'xyz'
+		};
+		RequestMock.intercept().reply(200, JSON.stringify(data), {
+			'content-type': 'application/json'
+		});
+		auth
+			.signInWithEmailAndPassword('email@domain.com', 'password')
+			.then(() => {
+				assert.strictEqual(1, callback.callCount);
+				done();
+			});
 	});
 });

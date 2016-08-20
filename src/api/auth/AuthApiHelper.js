@@ -129,6 +129,16 @@ class AuthApiHelper {
 	}
 
 	/**
+	 * Calls the on sign in callback if set.
+	 * @protected
+	 */
+	maybeCallOnSignInCallback() {
+		if (this.onSignInCallback) {
+			this.onSignInCallback.call(this, this.currentUser);
+		}
+	}
+
+	/**
 	 * If key <code>currentUser</code> is present on <code>localStorage</code>
 	 * uses it as <code>this.currentUser</code>.
 	 * @return {[type]} [description]
@@ -150,7 +160,8 @@ class AuthApiHelper {
 		this.onSignInCallback = callback;
 		var redirectAccessToken = this.getRedirectAccessToken_();
 		if (redirectAccessToken) {
-			this.loadCurrentUser(redirectAccessToken).then(() => this.onSignInCallback.call(this, this.currentUser));
+			this.loadCurrentUser(redirectAccessToken)
+				.then(() => this.maybeCallOnSignInCallback());
 		}
 	}
 
@@ -188,7 +199,11 @@ class AuthApiHelper {
 			.param('password', password)
 			.get()
 			.then(response => assertResponseSucceeded(response))
-			.then(response => this.loadCurrentUser(response.body().access_token));
+			.then(response => this.loadCurrentUser(response.body().access_token))
+			.then((user) => {
+				this.maybeCallOnSignInCallback();
+				return user;
+			});
 	}
 
 	/**
