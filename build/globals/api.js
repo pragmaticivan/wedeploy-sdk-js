@@ -4480,7 +4480,7 @@ babelHelpers;
 			this.wedeployClient = wedeployClient;
 			this.storage = new Storage(new LocalStorageMechanism());
 
-			this.maybeLoadCurrentUserFromLocalStorage();
+			this.processSignIn_();
 
 			this.provider = {
 				Google: GoogleAuthProvider,
@@ -4529,7 +4529,6 @@ babelHelpers;
 			if (globals.window) {
 				var fragment = globals.window.location.hash;
 				if (fragment.indexOf('#access_token=') === 0) {
-					globals.window.location.hash = '';
 					return fragment.substring(14);
 				}
 			}
@@ -4592,16 +4591,14 @@ babelHelpers;
 		};
 
 		/**
-   * If key <code>currentUser</code> is present on <code>localStorage</code>
-   * uses it as <code>this.currentUser</code>.
-   * @return {[type]} [description]
+   * Calls the on sign in callback if set.
+   * @protected
    */
 
 
-		AuthApiHelper.prototype.maybeLoadCurrentUserFromLocalStorage = function maybeLoadCurrentUserFromLocalStorage() {
-			var currentUser = this.storage.get('currentUser');
-			if (currentUser) {
-				this.currentUser = this.makeUserAuthFromData(currentUser);
+		AuthApiHelper.prototype.maybeCallOnSignInCallback_ = function maybeCallOnSignInCallback_() {
+			if (this.onSignInCallback) {
+				this.onSignInCallback.call(this, this.currentUser);
 			}
 		};
 
@@ -4613,16 +4610,42 @@ babelHelpers;
 
 
 		AuthApiHelper.prototype.onSignIn = function onSignIn(callback) {
-			var _this3 = this;
-
 			assertFunction(callback, 'Sign-in callback must be a function');
 			this.onSignInCallback = callback;
+		};
+
+		/**
+   * Processes sign-in by detecting a presence of a fragment
+   * <code>#access_token=</code> in the url or, alternatively, by local
+   * storage current user.
+   */
+
+
+		AuthApiHelper.prototype.processSignIn_ = function processSignIn_() {
+			var _this3 = this;
+
 			var redirectAccessToken = this.getRedirectAccessToken_();
 			if (redirectAccessToken) {
+				this.removeUrlFragmentCompletely_();
 				this.loadCurrentUser(redirectAccessToken).then(function () {
-					return _this3.onSignInCallback.call(_this3, _this3.currentUser);
+					return _this3.maybeCallOnSignInCallback_();
 				});
+				return;
 			}
+			var currentUser = this.storage.get('currentUser');
+			if (currentUser) {
+				this.currentUser = this.makeUserAuthFromData(currentUser);
+			}
+		};
+
+		/**
+   * Removes fragment from url by performing a push state to the current path.
+   * @protected
+   */
+
+
+		AuthApiHelper.prototype.removeUrlFragmentCompletely_ = function removeUrlFragmentCompletely_() {
+			globals.window.history.pushState({}, document.title, window.location.pathname + window.location.search);
 		};
 
 		/**
@@ -4658,6 +4681,9 @@ babelHelpers;
 				return assertResponseSucceeded(response);
 			}).then(function (response) {
 				return _this4.loadCurrentUser(response.body().access_token);
+			}).then(function (user) {
+				_this4.maybeCallOnSignInCallback_();
+				return user;
 			});
 		};
 
