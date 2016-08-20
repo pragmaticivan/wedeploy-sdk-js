@@ -2,7 +2,6 @@
 
 import globals from '../../../src/globals/globals';
 import Auth from '../../../src/api/auth/Auth';
-import CancellablePromise from 'metal-promise';
 import GithubAuthProvider from '../../../src/api/auth/GithubAuthProvider';
 import GoogleAuthProvider from '../../../src/api/auth/GoogleAuthProvider';
 import WeDeploy from '../../../src/api/WeDeploy';
