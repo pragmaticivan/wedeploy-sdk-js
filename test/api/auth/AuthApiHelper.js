@@ -353,8 +353,13 @@ describe('AuthApiHelper', function() {
 	});
 
 	it('should throws exception when calling onSignIn without function callback', function() {
-		assert.throws(() => WeDeploy.auth().signIn(), Error);
-		assert.throws(() => WeDeploy.auth().signIn({}), Error);
+		assert.throws(() => WeDeploy.auth().onSignIn(), Error);
+		assert.throws(() => WeDeploy.auth().onSignIn({}), Error);
+	});
+
+	it('should throws exception when calling onSignOut without function callback', function() {
+		assert.throws(() => WeDeploy.auth().onSignOut(), Error);
+		assert.throws(() => WeDeploy.auth().onSignOut({}), Error);
 	});
 
 	it('should invokes callback when after a sign-in redirect', function() {
@@ -400,6 +405,19 @@ describe('AuthApiHelper', function() {
 		});
 		auth
 			.signInWithEmailAndPassword('email@domain.com', 'password')
+			.then(() => {
+				assert.strictEqual(1, callback.callCount);
+				done();
+			});
+	});
+
+	it('should invokes callback when calling onSignOut after a signOut', function(done) {
+		var auth = WeDeploy.auth();
+		var callback = sinon.stub();
+		auth.onSignOut(callback);
+		RequestMock.intercept().reply(200);
+		auth
+			.signOut()
 			.then(() => {
 				assert.strictEqual(1, callback.callCount);
 				done();

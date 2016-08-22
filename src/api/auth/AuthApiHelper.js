@@ -21,6 +21,7 @@ class AuthApiHelper {
 
 		this.currentUser = null;
 		this.onSignInCallback = null;
+		this.onSignOutCallback = null;
 		this.wedeployClient = wedeployClient;
 		this.storage = new Storage(new LocalStorageMechanism());
 
@@ -138,6 +139,16 @@ class AuthApiHelper {
 	}
 
 	/**
+	 * Calls the on sign out callback if set.
+	 * @protected
+	 */
+	maybeCallOnSignOutCallback_() {
+		if (this.onSignOutCallback) {
+			this.onSignOutCallback.call(this, this.currentUser);
+		}
+	}
+
+	/**
 	 * Fires passed callback when a user sign-in. Note that it keeps only the
 	 * last callback passed.
 	 * @param {!Function} callback
@@ -145,6 +156,16 @@ class AuthApiHelper {
 	onSignIn(callback) {
 		assertFunction(callback, 'Sign-in callback must be a function');
 		this.onSignInCallback = callback;
+	}
+
+	/**
+	 * Fires passed callback when a user sign-out. Note that it keeps only the
+	 * last callback passed.
+	 * @param {!Function} callback
+	 */
+	onSignOut(callback) {
+		assertFunction(callback, 'Sign-out callback must be a function');
+		this.onSignOutCallback = callback;
 	}
 
 	/**
@@ -244,7 +265,8 @@ class AuthApiHelper {
 			.get()
 			.then(response => assertResponseSucceeded(response))
 			.then(response => {
-				this.unloadCurrentUser();
+				this.maybeCallOnSignOutCallback_();
+				this.unloadCurrentUser_();
 				return response;
 			});
 	}
@@ -254,7 +276,7 @@ class AuthApiHelper {
 	 * <code>localStorage</code> if present.
 	 * @return {[type]} [description]
 	 */
-	unloadCurrentUser() {
+	unloadCurrentUser_() {
 		this.currentUser = null;
 		this.storage.remove('currentUser');
 	}
