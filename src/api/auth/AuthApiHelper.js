@@ -1,6 +1,7 @@
 'use strict';
 
 import Auth from './Auth';
+import FacebookAuthProvider from './FacebookAuthProvider';
 import GithubAuthProvider from './GithubAuthProvider';
 import globals from '../../globals/globals';
 import GoogleAuthProvider from './GoogleAuthProvider';
@@ -28,6 +29,7 @@ class AuthApiHelper {
 		this.processSignIn_();
 
 		this.provider = {
+			Facebook: FacebookAuthProvider,
 			Google: GoogleAuthProvider,
 			Github: GithubAuthProvider
 		};
@@ -284,6 +286,7 @@ class AuthApiHelper {
 
 function assertSupportedProvider(provider) {
 	switch (provider.constructor.PROVIDER) {
+		case FacebookAuthProvider.PROVIDER:
 		case GithubAuthProvider.PROVIDER:
 		case GoogleAuthProvider.PROVIDER:
 			break;

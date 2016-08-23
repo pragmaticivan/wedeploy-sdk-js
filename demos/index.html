@@ -7,10 +7,12 @@
 <body>
 	<script src="../build/globals/api.js"></script>
 	<script>
-		var auth = WeDeploy.auth('http://auth.dashboard.wedeploy.me');
+		var auth = WeDeploy.auth('http://auth.authdemo.wedeploy.me');
 		var githubProvider = new auth.provider.Github();
 		var googleProvider = new auth.provider.Google();
 		googleProvider.setProviderScope('email');
+		var facebookProvider = new auth.provider.Facebook();
+		facebookProvider.setProviderScope('email');
 
 		auth.onSignIn(function(user) {
 			console.log('Sign-in', user);
@@ -19,5 +21,6 @@
 
 	<button onclick="auth.signInWithRedirect(githubProvider);">Login with Github</button>
 	<button onclick="auth.signInWithRedirect(googleProvider);">Login with Google</button>
+	<button onclick="auth.signInWithRedirect(facebookProvider);">Login with Facebook</button>
 </body>
 </html>
