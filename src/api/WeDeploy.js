@@ -4,6 +4,7 @@ import globals from '../globals/globals';
 import { core } from 'metal';
 import Auth from './auth/Auth';
 import AuthApiHelper from './auth/AuthApiHelper';
+import DataApiHelper from './data/DataApiHelper';
 import Base64 from '../crypt/Base64';
 import Embodied from '../api-query/Embodied';
 import Filter from '../api-query/Filter';
@@ -12,6 +13,8 @@ import TransportFactory from './TransportFactory';
 import ClientRequest from './ClientRequest';
 import { MultiMap } from 'metal-structs';
 import Uri from 'metal-uri';
+import { assertUriWithNoPath } from './assertions';
+
 
 var io;
 
@@ -67,6 +70,23 @@ class WeDeploy {
 	aggregate(name, aggregationOrField, opt_operator) {
 		this.getOrCreateQuery_().aggregate(name, aggregationOrField, opt_operator);
 		return this;
+	}
+
+	/**
+	 * Static factory for creating WeDeploy data for the given url
+	 * @param  {string=} opt_dataUrl The url that points to the data services.
+	 * @return @return {data} WeDeploy data instance
+	 */
+	static data(opt_dataUrl) {
+		assertUriWithNoPath(opt_dataUrl, "The data url should not have a path");
+
+		if (core.isString(opt_dataUrl)) {
+			WeDeploy.dataUrl_ = opt_dataUrl;
+		}
+		if (!WeDeploy.data_) {
+			WeDeploy.data_ = new DataApiHelper(WeDeploy);
+		}
+		return WeDeploy.data_;
 	}
 
 	/**
@@ -569,5 +589,7 @@ WeDeploy.isContentTypeJson = function(clientMessage) {
 
 WeDeploy.auth_ = null;
 WeDeploy.authUrl_ = '';
+WeDeploy.data_ = null;
+WeDeploy.dataUrl_ = '';
 
 export default WeDeploy;

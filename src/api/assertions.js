@@ -2,6 +2,7 @@
 
 import { core } from 'metal';
 import globals from '../globals/globals';
+import Uri from 'metal-uri';
 
 function assertBrowserEnvironment() {
 	if (!globals.window) {
@@ -11,6 +12,12 @@ function assertBrowserEnvironment() {
 
 function assertDefAndNotNull(value, errorMessage) {
 	if (!core.isDefAndNotNull(value)) {
+		throw new Error(errorMessage);
+	}
+}
+
+function assetNotNull(value, errorMessage) {
+	if (core.isNull(value)) {
 		throw new Error(errorMessage);
 	}
 }
@@ -40,4 +47,11 @@ function assertUserSignedIn(user) {
 	}
 }
 
-export { assertBrowserEnvironment, assertDefAndNotNull, assertFunction, assertObject, assertResponseSucceeded, assertUserSignedIn };
+function assertUriWithNoPath(url, message) {
+	var uri = new Uri(url);
+	if (uri.getPathname() != '/' && !core.isNull(uri.getPathname())) {
+		throw new Error(message);
+	}
+}
+
+export { assertBrowserEnvironment, assertDefAndNotNull, assetNotNull, assertFunction, assertObject, assertResponseSucceeded, assertUserSignedIn, assertUriWithNoPath };
