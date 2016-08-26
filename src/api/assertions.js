@@ -49,7 +49,7 @@ function assertUserSignedIn(user) {
 
 function assertUriWithNoPath(url, message) {
 	var uri = new Uri(url);
-	if (uri.getPathname() != '/' && !core.isNull(uri.getPathname())) {
+	if (uri.getPathname().length > 1) {
 		throw new Error(message);
 	}
 }
