@@ -1,7 +1,7 @@
 'use strict';
 
 import globals from '../../globals/globals';
-import { assetNotNull, assertObject, assertDefAndNotNull, assertResponseSucceeded } from '../assertions';
+import { assertNotNull, assertObject, assertDefAndNotNull, assertResponseSucceeded } from '../assertions';
 
 /**
  * Class responsible for encapsulate data api calls.
@@ -24,7 +24,7 @@ class DataApiHelper {
 	 * @return {!CancellablePromise}
 	 */
 	create(collection, data) {
-		assetNotNull(collection, "Collection key must be specified");
+		assertNotNull(collection, "Collection key must be specified");
 		assertObject(data, "Data can't be empty");
 
 		return this.wedeployClient
@@ -42,7 +42,7 @@ class DataApiHelper {
 	 * @return {!CancellablePromise}
 	 */
 	update(collection, data) {
-		assetNotNull(collection, "Collection key must be specified");
+		assertNotNull(collection, "Collection key must be specified");
 		assertObject(data, "Data must be specified");
 
 		return this.wedeployClient
@@ -59,7 +59,7 @@ class DataApiHelper {
 	 * @return {!CancellablePromise}
 	 */
 	delete(collection) {
-		assetNotNull(collection, "Collection key must be specified");
+		assertNotNull(collection, "Collection key must be specified");
 
 		return this.wedeployClient
 			.url(this.wedeployClient.dataUrl_)
@@ -73,7 +73,7 @@ class DataApiHelper {
 	 * @return {[type]}            [description]
 	 */
 	get(collection) {
-		assetNotNull(collection, "Collection key must be specified");
+		assertNotNull(collection, "Collection key must be specified");
 
 		return this.wedeployClient
 		.path(collection)

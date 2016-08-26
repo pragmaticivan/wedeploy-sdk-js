@@ -16,7 +16,7 @@ function assertDefAndNotNull(value, errorMessage) {
 	}
 }
 
-function assetNotNull(value, errorMessage) {
+function assertNotNull(value, errorMessage) {
 	if (core.isNull(value)) {
 		throw new Error(errorMessage);
 	}
@@ -54,4 +54,4 @@ function assertUriWithNoPath(url, message) {
 	}
 }
 
-export { assertBrowserEnvironment, assertDefAndNotNull, assetNotNull, assertFunction, assertObject, assertResponseSucceeded, assertUserSignedIn, assertUriWithNoPath };
+export { assertBrowserEnvironment, assertDefAndNotNull, assertNotNull, assertFunction, assertObject, assertResponseSucceeded, assertUserSignedIn, assertUriWithNoPath };
