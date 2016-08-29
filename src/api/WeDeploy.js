@@ -60,19 +60,6 @@ class WeDeploy {
 	}
 
 	/**
-	 * Adds an aggregation to this {@link Query} instance.
-	 * @param {string} name The aggregation name.
-	 * @param {!Aggregation|string} aggregationOrField Either an
-	 *   {@link Aggregation} instance or the name of the aggregation field.
-	 * @param {string=} opt_operator The aggregation operator.
-	 * @chainable
-	 */
-	aggregate(name, aggregationOrField, opt_operator) {
-		this.getOrCreateQuery_().aggregate(name, aggregationOrField, opt_operator);
-		return this;
-	}
-
-	/**
 	 * Static factory for creating WeDeploy data for the given url
 	 * @param  {string=} opt_dataUrl The url that points to the data services.
 	 * @return @return {data} WeDeploy data instance
@@ -144,15 +131,6 @@ class WeDeploy {
 			body = body.body();
 		}
 		Object.keys(body || {}).forEach(name => clientRequest.param(name, body[name]));
-	}
-
-	/**
-	 * Sets this request's query type to "count".
-	 * @chainnable
-	 */
-	count() {
-		this.getOrCreateQuery_().type('count');
-		return this;
 	}
 
 	/**
@@ -265,19 +243,6 @@ class WeDeploy {
 	}
 
 	/**
-	 * Adds a filter to this request's {@link Query}.
-	 * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
-	 *   name of the field to filter by.
-	 * @param {*=} opt_operatorOrValue Either the field's operator or its value.
-	 * @param {*=} opt_value The filter's value.
-	 * @chainable
-	 */
-	filter(fieldOrFilter, opt_operatorOrValue, opt_value) {
-		this.getOrCreateQuery_().filter(fieldOrFilter, opt_operatorOrValue, opt_value);
-		return this;
-	}
-
-	/**
 	 * Adds a key/value pair to be sent via the body in a `multipart/form-data` format.
 	 * If the body is set by other means (for example, through the `body` method), this
 	 * will be ignored.
@@ -307,19 +272,6 @@ class WeDeploy {
 	}
 
 	/**
-	 * Gets the currently used {@link Query} object. If none exists yet,
-	 * a new one is created.
-	 * @return {!Query}
-	 * @protected
-	 */
-	getOrCreateQuery_() {
-		if (!this.query_) {
-			this.query_ = new Query();
-		}
-		return this.query_;
-	}
-
-	/**
 	 * Adds a header. If the header with the same name already exists, it will
 	 * not be overwritten, but new value will be stored. The order is preserved.
 	 * @param {string} name
@@ -340,37 +292,6 @@ class WeDeploy {
 	 */
 	headers() {
 		return this.headers_;
-	}
-
-	/**
-	 * Adds a highlight entry to this request's {@link Query} instance.
-	 * @param {string} field The field's name.
-	 * @chainable
-	 */
-	highlight(field) {
-		this.getOrCreateQuery_().highlight(field);
-		return this;
-	}
-
-	/**
-	 * Sets the limit for this request's {@link Query}.
-	 * @param {number} limit The max amount of entries that this request should return.
-	 * @chainable
-	 */
-	limit(limit) {
-		this.getOrCreateQuery_().limit(limit);
-		return this;
-	}
-
-	/**
-	 * Sets the offset for this request's {@link Query}.
-	 * @param {number} offset The index of the first entry that should be returned
-	 *   by this query.
-	 * @chainable
-	 */
-	offset(offset) {
-		this.getOrCreateQuery_().offset(offset);
-		return this;
 	}
 
 	/**
@@ -451,25 +372,6 @@ class WeDeploy {
 	}
 
 	/**
-	 * Adds a search to this request's {@link Query} instance.
-	 * @param {!Filter|string} filterOrTextOrField If no other arguments
-	 *   are passed to this function, this should be either a `Filter`
-	 *   instance or a text to be used in a match filter. In both cases
-	 *   the filter will be applied to all fields. Another option is to
-	 *   pass this as a field name instead, together with other arguments
-	 *   so the filter can be created.
-	 * @param {string=} opt_textOrOperator Either a text to be used in a
-	 *   match filter, or the operator that should be used.
-	 * @param {*=} opt_value The value to be used by the filter. Should
-	 *   only be passed if an operator was passed as the second argument.
-	 * @chainable
-	 */
-	search(filterOrTextOrField, opt_textOrOperator, opt_value) {
-		this.getOrCreateQuery_().search(filterOrTextOrField, opt_textOrOperator, opt_value);
-		return this;
-	}
-
-	/**
 	 * Uses transport to send request with given method name and body
 	 * asynchronously.
 	 * @param {string} method The HTTP method to be used when sending data.
@@ -490,18 +392,6 @@ class WeDeploy {
 	 */
 	static socket(socket) {
 		io = socket;
-	}
-
-	/**
-	 * Adds a sort query to this request's body.
-	 * @param {string} field The field that the query should be sorted by.
-	 * @param {string=} opt_direction The direction the sort operation should use.
-	 *   If none is given, "asc" is used by default.
-	 * @chainnable
-	 */
-	sort(field, opt_direction) {
-		this.getOrCreateQuery_().sort(field, opt_direction);
-		return this;
 	}
 
 	/**
@@ -526,6 +416,18 @@ class WeDeploy {
 	use(transport) {
 		this.customTransport_ = transport;
 		return this;
+	}
+
+	/**
+	 * Gets the currently used {@link Query} object. If none exists yet,
+	 * a new one is created.
+	 * @return {!Query}
+	 */
+	getOrCreateQuery() {
+		if (!this.query_) {
+			this.query_ = new Query();
+		}
+		return this.query_;
 	}
 
 	/**
