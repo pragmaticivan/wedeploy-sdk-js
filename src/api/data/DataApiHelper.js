@@ -202,6 +202,7 @@ class DataApiHelper {
 	 * Gets the currently used {@link Query} object. If none exists yet,
 	 * a new one is created.
 	 * @return {!Query}
+	 * @protected
 	 */
 	getOrCreateQuery_() {
 		if (!this.query_) {
