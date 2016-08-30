@@ -272,7 +272,7 @@ describe('DataApiHelper', function() {
 	});
 
 
-	describe.only('.get()', function () {
+	describe('.get()', function () {
 		it('returns all data of a collection', function (done) {
 			RequestMock.intercept().reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
 
