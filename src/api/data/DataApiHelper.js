@@ -8,9 +8,9 @@ import Query from '../../api-query/Query';
  * Class responsible for encapsulate data api calls.
  */
 class DataApiHelper {
-
 	/**
 	 * Constructs an {@link DataApiHelper} instance.
+	 * @param {@link WeDeploy} instance.
 	 * @constructor
 	 */
 	constructor(wedeployClient) {
@@ -60,18 +60,6 @@ class DataApiHelper {
 		return this;
 	}
 
-
-	/**
-	 * Sets the offset for this request's {@link Query}.
-	 * @param {number} offset The index of the first entry that should be returned
-	 *   by this query.
-	 * @chainable
-	 */
-	offset(offset) {
-		this.getOrCreateQuery().offset(offset);
-		return this;
-	}
-
 	/**
 	 * Adds a filter to this request's {@link Query}.
 	 * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
@@ -82,6 +70,17 @@ class DataApiHelper {
 	 */
 	where(fieldOrFilter, opt_operatorOrValue, opt_value) {
 		this.getOrCreateQuery().filter(fieldOrFilter, opt_operatorOrValue, opt_value);
+		return this;
+	}
+
+	/**
+	 * Sets the offset for this request's {@link Query}.
+	 * @param {number} offset The index of the first entry that should be returned
+	 *   by this query.
+	 * @chainable
+	 */
+	offset(offset) {
+		this.getOrCreateQuery().offset(offset);
 		return this;
 	}
 
