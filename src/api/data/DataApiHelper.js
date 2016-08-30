@@ -16,9 +16,6 @@ class DataApiHelper {
 	constructor(wedeployClient) {
 		assertDefAndNotNull(wedeployClient, 'WeDeploy client reference must be specified');
 		this.wedeployClient = wedeployClient;
-
-		// sandbox
-		this.wedeployClientInstance = wedeployClient.url(this.wedeployClient.dataUrl_);
 		this.result = null;
 	}
 
@@ -28,31 +25,20 @@ class DataApiHelper {
 	 * @chainable
 	 */
 	limit(limit) {
-		this.wedeployClient
-			.url(this.wedeployClient.dataUrl_)
-			.getOrCreateQuery()
-			.limit(limit);
-
-		return this;
-	}
-
-
-	limit(limit) {
 		this.getOrCreateQuery().limit(limit);
 		return this;
 	}
 
 	/**
-	 * [sandbox]
 	 * Gets the currently used {@link Query} object. If none exists yet,
 	 * a new one is created.
 	 * @return {!Query}
 	 */
 	getOrCreateQuery() {
-		if (!this.wedeployClientInstance.query_) {
-			this.wedeployClientInstance.query_ = new Query();
+		if (!this.query_) {
+			this.query_ = new Query();
 		}
-		return this.wedeployClientInstance.query_;
+		return this.query_;
 	}
 
 	/**
@@ -70,12 +56,8 @@ class DataApiHelper {
 	 * @chainable
 	 */
 	search(filterOrTextOrField, opt_textOrOperator, opt_value) {
-		this.wedeployClient
-			.url(this.wedeployClient.dataUrl_)
-			.getOrCreateQuery()
-			.search(filterOrTextOrField, opt_textOrOperator, opt_value);
-
-		return this.wedeployClient;
+		this.getOrCreateQuery().search(filterOrTextOrField, opt_textOrOperator, opt_value);
+		return this;
 	}
 
 
@@ -86,12 +68,8 @@ class DataApiHelper {
 	 * @chainable
 	 */
 	offset(offset) {
-		this.wedeployClient
-			.url(this.wedeployClient.authUrl_)
-			.getOrCreateQuery()
-			.offset(offset);
-
-		return this.wedeployClient;
+		this.getOrCreateQuery().offset(offset);
+		return this;
 	}
 
 	/**
@@ -103,12 +81,8 @@ class DataApiHelper {
 	 * @chainable
 	 */
 	where(fieldOrFilter, opt_operatorOrValue, opt_value) {
-		this.wedeployClient
-			.url(this.wedeployClient.authUrl_)
-			.getOrCreateQuery()
-			.filter(fieldOrFilter, opt_operatorOrValue, opt_value);
-
-		return this.wedeployClient;
+		this.getOrCreateQuery().filter(fieldOrFilter, opt_operatorOrValue, opt_value);
+		return this;
 	}
 
 	/**
@@ -117,12 +91,8 @@ class DataApiHelper {
 	 * @chainable
 	 */
 	highlight(field) {
-		this.wedeployClient
-			.url(this.wedeployClient.authUrl_)
-			.getOrCreateQuery()
-			.highlight(field);
-
-		return this.wedeployClient;
+		this.getOrCreateQuery().highlight(field);
+		return this;
 	}
 
 	/**
@@ -134,12 +104,8 @@ class DataApiHelper {
 	 * @chainable
 	 */
 	aggregate(name, aggregationOrField, opt_operator) {
-		this.wedeployClient
-			.url(this.wedeployClient.authUrl_)
-			.getOrCreateQuery()
-			.aggregate(name, aggregationOrField, opt_operator);
-
-		return this.wedeployClient;
+		this.getOrCreateQuery().aggregate(name, aggregationOrField, opt_operator);
+		return this;
 	}
 
 	/**
@@ -147,12 +113,8 @@ class DataApiHelper {
 	 * @chainnable
 	 */
 	count() {
-		this.wedeployClient
-			.url(this.wedeployClient.authUrl_)
-			.getOrCreateQuery()
-			.type('count');
-
-		return this.wedeployClient;
+		this.getOrCreateQuery().type('count');
+		return this;
 	}
 
 	/**
@@ -163,12 +125,8 @@ class DataApiHelper {
 	 * @chainnable
 	 */
 	orderBy(field, opt_direction) {
-		this.wedeployClient
-			.url(this.wedeployClient.authUrl_)
-			.getOrCreateQuery()
-			.sort(field, opt_direction)
-
-		return this.wedeployClient;
+		this.getOrCreateQuery().sort(field, opt_direction);
+		return this;
 	}
 
 	/**
@@ -232,28 +190,11 @@ class DataApiHelper {
 		return this.wedeployClient
 			.url(this.wedeployClient.dataUrl_)
 			.path(collection)
-			.get()
+			.get(this.query_)
 			.then(response => assertResponseSucceeded(response))
 			.then(response => {
 				return response.body();
 			});
-	}
-
-	/**
-	 * TO DO
-	 * @param  {[type]} collection [description]
-	 * @return {[type]}            [description]
-	 */
-	all(collection) {
-
-	}
-
-	urlInstance() {
-		if (this.wedeployClient instanceof WeDeploy) {
-			return this.wedeployClient;
-		} else {
-			return this.wedeployClient.url(this.wedeployClient.dataUrl_);
-		}
 	}
 
 	/**

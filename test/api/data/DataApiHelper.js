@@ -166,140 +166,122 @@ describe('DataApiHelper', function() {
 			});
 		});
 
-		context('when creating with one object adding a new key', function() {
+		// context('when creating with one object adding a new key', function() {
 
-		});
+		// });
 
-		context('when creating with one array with a new object key', function() {
+		// context('when creating with one array with a new object key', function() {
 
-		});
+		// });
 
 	});
 
-	describe('.get()', function () {
-		it('should do what...', function (done) {
-			// RequestMock.intercept().reply(200, '{"id": 1, "ping": "pong"}');
+	describe('.limit()', function () {
+		it('should send request with query limit in the body', function(done) {
+			RequestMock.intercept().reply(200, '[{"id": 1, "ping": "pong1"}]');
 
-			var data = WeDeploy.data("http://data.datademo.wedeploy.me");
-			data.limit(1).get("food").then(response => {
-				console.log(response);
+			var data = WeDeploy.data();
+
+			data.limit(0)
+					.get("collection")
+					.then( response => {
+						assert.strictEqual('[{"id": 1, "ping": "pong1"}]', response);
+						done();
+					});
+		});
+	});
+
+	describe('.count()', function () {
+		it('should send request with query count in the body', function(done) {
+			RequestMock.intercept().reply(200, '5');
+
+			WeDeploy.data()
+							.count()
+							.get('food').then(function(response) {
+								assert.strictEqual('5', response);
+								done();
+							});
+
+		});
+	});
+
+	describe('.offset()', function () {
+		it('should send request with query offset in the body', function(done) {
+			RequestMock.intercept().reply(200, '[{"id": 1, "ping": "pong1"}]');
+
+			WeDeploy.data().offset(2).get('food').then(response => {
+				assert.strictEqual('[{"id": 1, "ping": "pong1"}]', response);
+				done();
+			});
+		});
+	});
+
+	describe('.search()', function () {
+		it('should send request with query search in the body', function(done) {
+			RequestMock.intercept().reply(200, '{"search":[{"name":{"operator":"=","value":"foo"}}]}');
+
+			WeDeploy.data().search('name', '=', 'foo').get('food').then(function(response) {
+				assert.strictEqual('{"search":[{"name":{"operator":"=","value":"foo"}}]}', response);
+				done();
+			});
+		});
+	});
+
+	describe('.where()', function () {
+		it('should send request with query filter in the body', function(done) {
+			RequestMock.intercept().reply(200, '{"filter":[{"name":{"operator":"=","value":"foo"}}]}');
+
+			WeDeploy.data().where('name', '=', 'foo').get('food').then(function(response) {
+				assert.strictEqual('{"filter":[{"name":{"operator":"=","value":"foo"}}]}', response);
+				done();
+			});
+		});
+	});
+
+	describe('.highlight()', function () {
+		it('should send request with query highlight in the body', function(done) {
+			RequestMock.intercept().reply(200, '{"highlight":["field"]}');
+
+			WeDeploy.data().highlight('field').get('food').then(function(response) {
+				assert.strictEqual('{"highlight":["field"]}', response);
+				done();
+			});
+		});
+	});
+
+	describe('.aggregate()', function () {
+		it('should send request with query aggregate in the body', function(done) {
+			RequestMock.intercept().reply(200, '{"aggregation":[{"field":{"name":"name"}}]}');
+
+			WeDeploy.data().aggregate('name', 'field').get('food').then(function(response) {
+				assert.strictEqual('{"aggregation":[{"field":{"name":"name"}}]}', response);
+				done();
+			});
+		});
+	});
+
+	describe('.orderBy()', function(){
+		it('sends request with query sort in the body', function(done) {
+			RequestMock.intercept().reply(200, '{"sort":[{"id":"desc"}]}');
+
+			WeDeploy.data().orderBy('id', 'desc').get('food').then(function(response) {
+				assert.strictEqual('{"sort":[{"id":"desc"}]}', response);
 				done();
 			});
 		});
 	});
 
 
-	describe('.limit()', function () {
-		// it('should send request with query limit in the body', function(done) {
-		// 	RequestMock.intercept().reply(200, '{"limit":0}');
-		// 	WeDeploy.url('http://localhost/url').limit(0).post().then(function(response) {
-		// 		assert.strictEqual('{"limit":0}', response.request().body());
-		// 		done();
-		// 	});
-		// });
+	describe.only('.get()', function () {
+		it('returns all data of a collection', function (done) {
+			RequestMock.intercept().reply(200, '[{"id": 1, "ping": "pong"}]');
 
-		// it('should send request with multiple queries in the body', function(done) {
-		// 	RequestMock.intercept().reply(200, '{"offset":0,"limit":50}');
-		// 	WeDeploy.url('http://localhost/url').offset(0).limit(50).post().then(function(response) {
-		// 		assert.strictEqual('{"offset":0,"limit":50}', response.request().body());
-		// 		done();
-		// 	});
-		// });
-	});
-
-
-	describe('.count()', function () {
-		// it('should send request with query count in the body', function(done) {
-		// 	RequestMock.intercept().reply(200, '{"type":"count"}');
-		// 	WeDeploy.url('http://localhost/url').count().post().then(function(response) {
-		// 		assert.strictEqual('{"type":"count"}', response.request().body());
-		// 		done();
-		// 	});
-		// });
-	});
-
-	describe('.orderBy()', function(){
-		// * prioritize body instead of query
-		// it('sends a request and prioritize the body instead of query in the body', function (done) {
-		// 	RequestMock.intercept().reply(200, '"body"');
-		// 	WeDeploy.data().orderBy('id', 'desc').post('body').then(function(response) {
-		// 		assert.strictEqual('"body"', response.request().body());
-		// 		done();
-		// 	});
-		// });
-
-		// * send with query sort
-		// * send with one param
-		// * send with two params
-		// * get
-		// * post
-
-		// it('sends request with query sort in the body', function(done) {
-		// 	RequestMock.intercept().reply(200, '{"sort":[{"id":"desc"}]}');
-		// 	WeDeploy.data().orderBy('id', 'desc').post().then(function(response) {
-		// 		assert.strictEqual('{"sort":[{"id":"desc"}]}', response.request().body());
-		// 		done();
-		// 	});
-		// });
-
-		// it('orders using one param', function () {
-		// 	RequestMock.intercept().reply(200, '[{"id": 1, "ping": "pong1"}, {"id": 2, "ping": "pong2"}]');
-
-		// 	var data = WeDeploy.data();
-
-		// 	console.log(data.orderBy("id", "asc"));
-		// });
-	});
-
-	describe('.offset()', function () {
-		// it('should send request with query offset in the body', function(done) {
-		// 	RequestMock.intercept().reply(200, '{"offset":0}');
-		// 	WeDeploy.url('http://localhost/url').offset(0).post().then(function(response) {
-		// 		assert.strictEqual('{"offset":0}', response.request().body());
-		// 		done();
-		// 	});
-		// });
-	});
-
-	describe('.search()', function () {
-		// it('should send request with query search in the body', function(done) {
-		// 	RequestMock.intercept().reply(200, '{"search":[{"name":{"operator":"=","value":"foo"}}]}');
-		// 	WeDeploy.url('http://localhost/url').search('name', '=', 'foo').post().then(function(response) {
-		// 		assert.strictEqual('{"search":[{"name":{"operator":"=","value":"foo"}}]}', response.request().body());
-		// 		done();
-		// 	});
-		// });
-	});
-
-	describe('.where()', function () {
-		// it('should send request with query filter in the body', function(done) {
-		// 	RequestMock.intercept().reply(200, '{"filter":[{"name":{"operator":"=","value":"foo"}}]}');
-		// 	WeDeploy.url('http://localhost/url').filter('name', '=', 'foo').post().then(function(response) {
-		// 		assert.strictEqual('{"filter":[{"name":{"operator":"=","value":"foo"}}]}', response.request().body());
-		// 		done();
-		// 	});
-		// });
-	});
-
-	describe('.highlight()', function () {
-		// it('should send request with query highlight in the body', function(done) {
-		// 	RequestMock.intercept().reply(200, '{"highlight":["field"]}');
-		// 	WeDeploy.url('http://localhost/url').highlight('field').post().then(function(response) {
-		// 		assert.strictEqual('{"highlight":["field"]}', response.request().body());
-		// 		done();
-		// 	});
-		// });
-	});
-
-	describe('.aggregate()', function () {
-		// it('should send request with query aggregate in the body', function(done) {
-		// 	RequestMock.intercept().reply(200, '{"aggregation":[{"field":{"name":"name"}}]}');
-		// 	WeDeploy.url('http://localhost/url').aggregate('name', 'field').post().then(function(response) {
-		// 		assert.strictEqual('{"aggregation":[{"field":{"name":"name"}}]}', response.request().body());
-		// 		done();
-		// 	});
-		// });
-		it('sends a request with query aggregate as param');
+			var data = WeDeploy.data("http://data.datademo.wedeploy.me");
+			data.get("food").then(response => {
+				assert.strictEqual('[{"id": 1, "ping": "pong"}]', response);
+				done();
+			});
+		});
 	});
 
 });

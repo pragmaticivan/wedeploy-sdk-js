@@ -7,8 +7,8 @@ import AuthApiHelper from './auth/AuthApiHelper';
 import DataApiHelper from './data/DataApiHelper';
 import Base64 from '../crypt/Base64';
 import Embodied from '../api-query/Embodied';
-import Filter from '../api-query/Filter';
 import Query from '../api-query/Query';
+import Filter from '../api-query/Filter';
 import TransportFactory from './TransportFactory';
 import ClientRequest from './ClientRequest';
 import { MultiMap } from 'metal-structs';
@@ -146,9 +146,7 @@ class WeDeploy {
 		clientRequest.body(body || this.body_);
 
 		if (!core.isDefAndNotNull(clientRequest.body())) {
-			if (this.query_) {
-				clientRequest.body(this.query_.body());
-			} else if (this.formData_) {
+			if (this.formData_) {
 				clientRequest.body(this.formData_);
 			}
 		}
@@ -416,18 +414,6 @@ class WeDeploy {
 	use(transport) {
 		this.customTransport_ = transport;
 		return this;
-	}
-
-	/**
-	 * Gets the currently used {@link Query} object. If none exists yet,
-	 * a new one is created.
-	 * @return {!Query}
-	 */
-	getOrCreateQuery() {
-		if (!this.query_) {
-			this.query_ = new Query();
-		}
-		return this.query_;
 	}
 
 	/**

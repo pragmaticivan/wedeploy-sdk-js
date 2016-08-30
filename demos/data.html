@@ -9,9 +9,15 @@
 	<script>
 		var data = WeDeploy.data('http://data.datademo.wedeploy.me');
 
-		food = data.limit(2).get('food').then(response => {
+		food = data.offset(2).get('food').then(response => {
 			console.log(response);
 		});
+
+
+		// data.create("food", {"name": "pasta"})
+		// 			.then(response => {
+		// 				console.log(response);
+		// 			});
 
 	</script>
 </body>
