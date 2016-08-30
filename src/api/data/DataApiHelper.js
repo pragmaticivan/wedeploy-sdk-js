@@ -20,28 +20,6 @@ class DataApiHelper {
 	}
 
 	/**
-	 * Sets the limit for this request's {@link Query}.
-	 * @param {number} limit The max amount of entries that this request should return.
-	 * @chainable
-	 */
-	limit(limit) {
-		this.getOrCreateQuery().limit(limit);
-		return this;
-	}
-
-	/**
-	 * Gets the currently used {@link Query} object. If none exists yet,
-	 * a new one is created.
-	 * @return {!Query}
-	 */
-	getOrCreateQuery() {
-		if (!this.query_) {
-			this.query_ = new Query();
-		}
-		return this.query_;
-	}
-
-	/**
 	 * Adds a search to this request's {@link Query} instance.
 	 * @param {!Filter|string} filterOrTextOrField If no other arguments
 	 *   are passed to this function, this should be either a `Filter`
@@ -56,7 +34,7 @@ class DataApiHelper {
 	 * @chainable
 	 */
 	search(filterOrTextOrField, opt_textOrOperator, opt_value) {
-		this.getOrCreateQuery().search(filterOrTextOrField, opt_textOrOperator, opt_value);
+		this.getOrCreateQuery_().search(filterOrTextOrField, opt_textOrOperator, opt_value);
 		return this;
 	}
 
@@ -69,7 +47,17 @@ class DataApiHelper {
 	 * @chainable
 	 */
 	where(fieldOrFilter, opt_operatorOrValue, opt_value) {
-		this.getOrCreateQuery().filter(fieldOrFilter, opt_operatorOrValue, opt_value);
+		this.getOrCreateQuery_().filter(fieldOrFilter, opt_operatorOrValue, opt_value);
+		return this;
+	}
+
+	/**
+	 * Sets the limit for this request's {@link Query}.
+	 * @param {number} limit The max amount of entries that this request should return.
+	 * @chainable
+	 */
+	limit(limit) {
+		this.getOrCreateQuery_().limit(limit);
 		return this;
 	}
 
@@ -80,7 +68,7 @@ class DataApiHelper {
 	 * @chainable
 	 */
 	offset(offset) {
-		this.getOrCreateQuery().offset(offset);
+		this.getOrCreateQuery_().offset(offset);
 		return this;
 	}
 
@@ -90,7 +78,7 @@ class DataApiHelper {
 	 * @chainable
 	 */
 	highlight(field) {
-		this.getOrCreateQuery().highlight(field);
+		this.getOrCreateQuery_().highlight(field);
 		return this;
 	}
 
@@ -103,7 +91,7 @@ class DataApiHelper {
 	 * @chainable
 	 */
 	aggregate(name, aggregationOrField, opt_operator) {
-		this.getOrCreateQuery().aggregate(name, aggregationOrField, opt_operator);
+		this.getOrCreateQuery_().aggregate(name, aggregationOrField, opt_operator);
 		return this;
 	}
 
@@ -112,7 +100,7 @@ class DataApiHelper {
 	 * @chainnable
 	 */
 	count() {
-		this.getOrCreateQuery().type('count');
+		this.getOrCreateQuery_().type('count');
 		return this;
 	}
 
@@ -124,7 +112,7 @@ class DataApiHelper {
 	 * @chainnable
 	 */
 	orderBy(field, opt_direction) {
-		this.getOrCreateQuery().sort(field, opt_direction);
+		this.getOrCreateQuery_().sort(field, opt_direction);
 		return this;
 	}
 
@@ -208,6 +196,18 @@ class DataApiHelper {
 			.url(this.wedeployClient.dataUrl_)
 			.path(collection)
 			.watch(this.query_, opt_options);
+	}
+
+	/**
+	 * Gets the currently used {@link Query} object. If none exists yet,
+	 * a new one is created.
+	 * @return {!Query}
+	 */
+	getOrCreateQuery_() {
+		if (!this.query_) {
+			this.query_ = new Query();
+		}
+		return this.query_;
 	}
 
 }
