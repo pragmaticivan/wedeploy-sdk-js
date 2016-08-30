@@ -218,10 +218,10 @@ describe('DataApiHelper', function() {
 
 	describe('.search()', function () {
 		it('should send request with query search in the body', function(done) {
-			RequestMock.intercept().reply(200, '{"search":[{"name":{"operator":"=","value":"foo"}}]}');
+			RequestMock.intercept().reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
 
 			WeDeploy.data().search('name', '=', 'foo').get('food').then(function(response) {
-				assert.strictEqual('{"search":[{"name":{"operator":"=","value":"foo"}}]}', response);
+				assert.strictEqual('[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]', response);
 				done();
 			});
 		});
@@ -229,10 +229,10 @@ describe('DataApiHelper', function() {
 
 	describe('.where()', function () {
 		it('should send request with query filter in the body', function(done) {
-			RequestMock.intercept().reply(200, '{"filter":[{"name":{"operator":"=","value":"foo"}}]}');
+			RequestMock.intercept().reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
 
 			WeDeploy.data().where('name', '=', 'foo').get('food').then(function(response) {
-				assert.strictEqual('{"filter":[{"name":{"operator":"=","value":"foo"}}]}', response);
+				assert.strictEqual('[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]', response);
 				done();
 			});
 		});
@@ -240,10 +240,10 @@ describe('DataApiHelper', function() {
 
 	describe('.highlight()', function () {
 		it('should send request with query highlight in the body', function(done) {
-			RequestMock.intercept().reply(200, '{"highlight":["field"]}');
+			RequestMock.intercept().reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
 
 			WeDeploy.data().highlight('field').get('food').then(function(response) {
-				assert.strictEqual('{"highlight":["field"]}', response);
+				assert.strictEqual('[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]', response);
 				done();
 			});
 		});
@@ -251,10 +251,10 @@ describe('DataApiHelper', function() {
 
 	describe('.aggregate()', function () {
 		it('should send request with query aggregate in the body', function(done) {
-			RequestMock.intercept().reply(200, '{"aggregation":[{"field":{"name":"name"}}]}');
+			RequestMock.intercept().reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
 
 			WeDeploy.data().aggregate('name', 'field').get('food').then(function(response) {
-				assert.strictEqual('{"aggregation":[{"field":{"name":"name"}}]}', response);
+				assert.strictEqual('[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]', response);
 				done();
 			});
 		});
@@ -262,10 +262,10 @@ describe('DataApiHelper', function() {
 
 	describe('.orderBy()', function(){
 		it('sends request with query sort in the body', function(done) {
-			RequestMock.intercept().reply(200, '{"sort":[{"id":"desc"}]}');
+			RequestMock.intercept().reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
 
-			WeDeploy.data().orderBy('id', 'desc').get('food').then(function(response) {
-				assert.strictEqual('{"sort":[{"id":"desc"}]}', response);
+			WeDeploy.data().orderBy('id', 'asc').get('food').then(function(response) {
+				assert.strictEqual('[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]', response);
 				done();
 			});
 		});
@@ -274,11 +274,11 @@ describe('DataApiHelper', function() {
 
 	describe.only('.get()', function () {
 		it('returns all data of a collection', function (done) {
-			RequestMock.intercept().reply(200, '[{"id": 1, "ping": "pong"}]');
+			RequestMock.intercept().reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
 
 			var data = WeDeploy.data("http://data.datademo.wedeploy.me");
 			data.get("food").then(response => {
-				assert.strictEqual('[{"id": 1, "ping": "pong"}]', response);
+				assert.strictEqual('[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]', response);
 				done();
 			});
 		});

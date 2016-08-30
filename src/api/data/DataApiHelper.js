@@ -198,29 +198,18 @@ class DataApiHelper {
 	}
 
 	/**
-	 * TO DO
-	 * @return {[type]} [description]
+	 * Creates new socket.io instance. Monitor the arrival of new broadcasted data
+	 * @param  {string} collection key/collection used to find organized data.
+	 * @param  {Object=} opt_options Object with Socket IO options.
+	 * @return {!io} Socket IO reference. Server events can be listened on it.
 	 */
-	range() {
-
+	watch(collection, opt_options) {
+		assertNotNull(collection, "Collection key must be specified");
+		return this.wedeployClient
+			.url(this.wedeployClient.dataUrl_)
+			.path(collection)
+			.watch(this.query_, opt_options);
 	}
-
-	/**
-	 * TO DO
-	 * @return {[type]} [description]
-	 */
-	first() {
-
-	}
-
-	/**
-	 * TO DO
-	 * @return {[type]} [description]
-	 */
-	last() {
-
-	}
-
 
 }
 
