@@ -64,17 +64,13 @@ class DataApiHelper {
 	/**
 	 * Adds a filter to be compose with this filter using "none" operator.
 	 * @param {string} field The name of the field to filter by.
-	 * @param {!(Array|...*)} values A variable amount of values to be used with
+	 * @param {!(Array|...*)} args A variable amount of values to be used with
 	 * the "none" operator. Can be passed either as a single array or as
 	 * separate params.
 	 * @chainnable
 	 */
-	none(field) {
-		var values = Array.prototype.slice.call(arguments, 1);
-		if (values.length === 1 && values[0] instanceof Array) {
-			values = values[0];
-		}
-		return this.where(Filter.none(field,values);
+	none(field,...args) {
+		return this.where(Filter.none(field,args));
 	}
 
 	/**
@@ -104,17 +100,13 @@ class DataApiHelper {
 	/**
 	 * Adds a filter to be compose with this filter using "any" operator.
 	 * @param {string} field The name of the field to filter by.
-	 * @param {!(Array|...*)} values A variable amount of values to be used with
+	 * @param {!(Array|...*)} args A variable amount of values to be used with
 	 * the "none" operator. Can be passed either as a single array or as
 	 * separate params.
 	 * @chainnable
 	 */
-	any(field) {
-		var values = Array.prototype.slice.call(arguments, 1);
-		if (values.length === 1 && values[0] instanceof Array) {
-			values = values[0];
-		}
-		return this.where(Filter.any(field, values));
+	any(field, ...args) {
+		return this.where(Filter.any(field, args));
 	}
 
 	/**
