@@ -148,9 +148,9 @@ describe('DataApiHelper', function() {
 			it('updates a value and adds the new key to the object', function (done) {
 				RequestMock.intercept().reply(200, '{"id": 1, "ping": "pongUpdated", "newKey": "newValue"}');
 
-				var data = WeDeploy.data();
-
-				data.update("collection/1", {"ping": "pongUpdated", "newKey": "newValue"})
+				WeDeploy
+					.data()
+					.update("collection/1", {"ping": "pongUpdated", "newKey": "newValue"})
 					.then(response => {
 						assert.strictEqual('{"id": 1, "ping": "pongUpdated", "newKey": "newValue"}', response);
 						done();
