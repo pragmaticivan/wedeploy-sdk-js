@@ -180,7 +180,8 @@ class DataApiHelper {
 
 	/**
 	 * Deletes a [document/field/collection].
-	 * @param {string} collection
+	 * @param {string} key Key used to delete the
+	 * document/field/collection.
 	 * @return {!CancellablePromise}
 	 */
 	delete(key) {
@@ -195,23 +196,24 @@ class DataApiHelper {
 	}
 
 	/**
-	 * get/findclear
-	 * @param {string} collection [description]
-	 * @return {!CancellablePromise}            [description]
+	 * Retrieve data from a [document/field/collection].
+	 * @param {string} key Key used to delete the document/field/collection.
+	 * @return {!CancellablePromise}
 	 */
-	get(collection) {
-		assertNotNull(collection, 'Collection key must be specified');
+	get(key) {
+		assertNotNull(key, 'Document/Field/Collection key must be specified');
 
 		return this.wedeployClient
 			.url(this.wedeployClient.dataUrl_)
-			.path(collection)
+			.path(key)
 			.get(this.query_)
 			.then(response => assertResponseSucceeded(response))
 			.then(response => response.body());
 	}
 
 	/**
-	 * Creates new socket.io instance. Monitor the arrival of new broadcasted data
+	 * Creates new socket.io instance. Monitor the arrival of new broadcasted
+	 * data.
 	 * @param  {string} collection key/collection used to find organized data.
 	 * @param  {Object=} opt_options Object with Socket IO options.
 	 * @return {!io} Socket IO reference. Server events can be listened on it.
