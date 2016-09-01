@@ -49,6 +49,115 @@ class DataApiHelper {
 	}
 
 	/**
+	 * Adds a filter to be composed with this filter using the "or" operator.
+	 * @param {!Filter|string} fieldOrFilter Either a {@link Filter} instance or
+	 * the name of the field to filter by.
+	 * @param {*=} opt_operatorOrValue Either the field's operator or its value.
+	 * @param {*=} opt_value The filter's value.
+	 * @chainnable
+	 */
+	or(fieldOrFilter, opt_operatorOrValue, opt_value) {
+		this.getOrCreateQuery_().or(fieldOrFilter, opt_operatorOrValue, opt_value);
+		return this;
+	}
+
+	/**
+	 * Adds a filter to be compose with this filter using "none" operator.
+	 * @param {string} field The name of the field to filter by.
+	 * @param {!(Array|...*)} values A variable amount of values to be used with
+	 * the "none" operator. Can be passed either as a single array or as
+	 * separate params.
+	 * @chainnable
+	 */
+	none(field) {
+		var values = Array.prototype.slice.call(arguments, 1);
+		if (values.length === 1 && values[0] instanceof Array) {
+			values = values[0];
+		}
+		return this.where(Filter.none(field,values);
+	}
+
+	/**
+	 * Adds a filter to be compose with this filter using "match" operator.
+	 * @param {string} fieldOrQuery If no second string argument is given, this
+	 * should be the query string, in which case all fields will be matched.
+	 * Otherwise, this should be the name of the field to match.
+	 * @param {string=} opt_query The query string.
+	 * @chainnable
+	 */
+	match(field, value) {
+		return this.where(Filter.match(field, value));
+	}
+
+	/**
+	 * Adds a filter to be compose with this filter using "similar" operator.
+	 * @param {string} fieldOrQuery If no second string argument is given, this
+	 * should be the query string, in which case all fields will be matched.
+	 * Otherwise, this should be the name of the field to match.
+	 * @param {?string} query The query string.
+	 * @chainnable
+	 */
+	similar(fieldOrQuery, query) {
+		return this.where(Filter.similar(fieldOrQuery, query));
+	}
+
+	/**
+	 * Adds a filter to be compose with this filter using "any" operator.
+	 * @param {string} field The name of the field to filter by.
+	 * @param {!(Array|...*)} values A variable amount of values to be used with
+	 * the "none" operator. Can be passed either as a single array or as
+	 * separate params.
+	 * @chainnable
+	 */
+	any(field) {
+		var values = Array.prototype.slice.call(arguments, 1);
+		if (values.length === 1 && values[0] instanceof Array) {
+			values = values[0];
+		}
+		return this.where(Filter.any(field, values));
+	}
+
+	/**
+	 * Adds a filter to be compose with this filter using "gp" operator. This is a
+	 * special use case of `Filter.polygon` for bounding boxes.
+	 * @param {string} field The field's name.
+	 * @param {*} boxOrUpperLeft Either a `Geo.BoundingBox` instance, or a
+	 * bounding box's upper left coordinate.
+	 * @param {*=} opt_lowerRight A bounding box's lower right coordinate.
+	 * @chainnable
+	 */
+	boundingBox(field, boxOrUpperLeft, opt_lowerRight) {
+		return this.where(Filter.boundingBox(field, boxOrUpperLeft, opt_lowerRight));
+	}
+
+	/**
+	 * Adds a filter to be compose with this filter using "gd" operator.
+	 * @param {string} field The field's name.
+	 * @param {*} locationOrCircle Either a `Geo.Circle` instance or a
+	 * coordinate.
+	 * @param {Range|string=} opt_rangeOrDistance Either a `Range` instance or
+	 * the distance value.
+	 * @return {!Filter}
+	 * @chainnable
+	 */
+	distance(field, locationOrCircle, opt_rangeOrDistance) {
+		return this.where(Filter.distance(field, locationOrCircle, opt_rangeOrDistance));
+	}
+
+	/**
+	 * Adds a filter to be compose with this filter using "range" operator.
+	 * @param {string} field The field's name.
+	 * @param {*} rangeOrMin Either a `Range` instance or a the range's min
+	 * value.
+	 * @param {*=} opt_max The range's max value.
+	 * @return {!Filter}
+	 * @chainnable
+	 */
+	range(field, rangeOrMin, opt_max) {
+		return this.where(Filter.range(field, rangeOrMin, opt_max));
+	}
+
+	/**
 	 * Sets the limit for this request's {@link Query}.
 	 * @param {number} limit The max amount of entries that this request should return.
 	 * @chainable
