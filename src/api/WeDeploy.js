@@ -24,8 +24,8 @@ if (typeof globals.window !== 'undefined') {
 }
 
 /**
- * The main class for making api requests. Sending requests returns a promise that is
- * resolved when the response arrives. Usage example:
+ * The main class for making api requests. Sending requests returns a promise
+ * that is resolved when the response arrives. Usage example:
  * ```javascript
  * WeDeploy
  *   .url('/data/tasks')
@@ -40,7 +40,8 @@ class WeDeploy {
 	/**
 	 * WeDeploy constructor function.
 	 * @param {string} url The base url.
-	 * @param {...string} paths Any amount of paths to be appended to the base url.
+	 * @param {...string} paths Any amount of paths to be appended to the base
+	 * url.
 	 * @constructor
 	 */
 	constructor(url, ...paths) {
@@ -60,12 +61,12 @@ class WeDeploy {
 	}
 
 	/**
-	 * Static factory for creating WeDeploy data for the given url
-	 * @param  {string=} opt_dataUrl The url that points to the data services.
-	 * @return @return {data} WeDeploy data instance
+	 * Static factory for creating WeDeploy data for the given url.
+	 * @param {string=} opt_dataUrl The url that points to the data services.
+	 * @return @return {data} WeDeploy data instance.
 	 */
 	static data(opt_dataUrl) {
-		assertUriWithNoPath(opt_dataUrl, "The data url should not have a path");
+		assertUriWithNoPath(opt_dataUrl, 'The data url should not have a path');
 
 		if (core.isString(opt_dataUrl)) {
 			WeDeploy.dataUrl_ = opt_dataUrl;
@@ -79,9 +80,9 @@ class WeDeploy {
 	/**
 	 * Adds authorization information to this request.
 	 * @param {!Auth|string} authOrTokenOrEmail Either an {@link Auth} instance,
-	 *   an authorization token, or the email.
+	 * an authorization token, or the email.
 	 * @param {string=} opt_password If a email is given as the first param,
-	 *   this should be the password.
+	 * this should be the password.
 	 * @chainable
 	 */
 	auth(authOrTokenOrEmail, opt_password) {
@@ -118,7 +119,7 @@ class WeDeploy {
 
 	/**
 	 * Converts the given body object to query params.
-	 * @param {!ClientRequest} clientRequest
+	 * @param {!ClientRequest} clientRequest Client request.
 	 * @param {*} body
 	 * @protected
 	 */
@@ -137,7 +138,7 @@ class WeDeploy {
 	 * Creates client request and encode.
 	 * @param {string} method
 	 * @param {*} body
-	 * @return {!ClientRequest} clientRequest
+	 * @return {!ClientRequest} Client request.
 	 * @protected
 	 */
 	createClientRequest_(method, body) {
@@ -164,7 +165,8 @@ class WeDeploy {
 
 	/**
 	 * Decodes clientResponse body, parsing the body for example.
-	 * @param {!ClientResponse} clientResponse The response object to be decoded.
+	 * @param {!ClientResponse} clientResponse The response object to be
+	 * decoded.
 	 * @return {!ClientResponse} The decoded response.
 	 */
 	decode(clientResponse) {
@@ -186,8 +188,8 @@ class WeDeploy {
 	}
 
 	/**
-	 * Encodes the given {@link ClientRequest}, converting its body to an appropriate
-	 * format for example.
+	 * Encodes the given {@link ClientRequest}, converting its body to an
+	 * appropriate format for example.
 	 * @param {!ClientRequest} clientRequest The request object to encode.
 	 * @return {!ClientRequest} The encoded request.
 	 */
@@ -199,7 +201,7 @@ class WeDeploy {
 			clientRequest.body(body);
 		}
 
-		body = this.wrapWithQuery_(body);
+		body = this.maybeWrapWithQuery_(body);
 		if (clientRequest.method() === 'GET') {
 			this.convertBodyToParams_(clientRequest, body);
 			clientRequest.removeBody();
@@ -272,8 +274,8 @@ class WeDeploy {
 	/**
 	 * Adds a header. If the header with the same name already exists, it will
 	 * not be overwritten, but new value will be stored. The order is preserved.
-	 * @param {string} name
-	 * @param {*} value
+	 * @param {string} name Header key.
+	 * @param {*} value Header value.
 	 * @chainable
 	 */
 	header(name, value) {
@@ -293,10 +295,23 @@ class WeDeploy {
 	}
 
 	/**
+	 * Wraps the given `Embodied` instance with a {@link Query} instance if needed.
+	 * @param {Embodied} embodied
+	 * @return {Embodied}
+	 * @protected
+	 */
+	maybeWrapWithQuery_(embodied) {
+		if (embodied instanceof Filter) {
+			embodied = Query.filter(embodied);
+		}
+		return embodied;
+	}
+
+	/**
 	 * Adds a query. If the query with the same name already exists, it will not
 	 * be overwritten, but new value will be stored. The order is preserved.
-	 * @param {string} name
-	 * @param {*} value
+	 * @param {string} name Param key.
+	 * @param {*} value Param value.
 	 * @chainable
 	 */
 	param(name, value) {
@@ -409,7 +424,8 @@ class WeDeploy {
 
 	/**
 	 * Specifies {@link Transport} implementation.
-	 * @param {!Transport} transport The transport implementation that should be used.
+	 * @param {!Transport} transport The transport implementation that should be
+	 * used.
 	 */
 	use(transport) {
 		this.customTransport_ = transport;
@@ -446,27 +462,6 @@ class WeDeploy {
 		opt_options.path = opt_options.path || uri.getPathname();
 
 		return io(uri.getHost(), opt_options);
-	}
-
-	/**
-	 * @param {boolean} opt_withCredentials
-	 */
-	withCredentials(withCredentials) {
-		this.withCredentials_ = !!withCredentials;
-		return this;
-	}
-
-	/**
-	 * Wraps the given `Embodied` instance with a {@link Query} instance if needed.
-	 * @param {Embodied} embodied
-	 * @return {Embodied}
-	 * @protected
-	 */
-	wrapWithQuery_(embodied) {
-		if (embodied instanceof Filter) {
-			embodied = Query.filter(embodied);
-		}
-		return embodied;
 	}
 }
 

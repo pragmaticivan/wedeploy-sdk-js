@@ -24,67 +24,109 @@ describe('DataApiHelper', function() {
 		});
 	});
 
-	describe('.delete()', function () {
-		it('fails trying to create data without specifing the collection', function () {
-			var data = WeDeploy.data();
-			assert.throws(function() {
-				data.delete(null);
-			}, Error);
-		});
 
-		it('deletes a field', function (done) {
-			RequestMock.intercept().reply(204);
-
-			var data = WeDeploy.data();
-
-			data.delete("collection/1/title")
-				.then(response => {
-					assert.strictEqual(204, response.statusCode());
-					done();
-				});
-
-		});
-
-		it('deletes a data rown', function (done) {
-			RequestMock.intercept().reply(204);
-
-			var data = WeDeploy.data();
-
-			data.delete("collection/1")
-				.then(response => {
-					assert.strictEqual(204, response.statusCode());
-					done();
-				});
-		});
-
-		it('deletes a collection', function (done) {
-			RequestMock.intercept().reply(204);
-
-			var data = WeDeploy.data();
-
-			data.delete("collection/1")
-				.then(response => {
-					assert.strictEqual(204, response.statusCode());
-					done();
-				});
-		});
-
-	});
-
-	describe('.update()', function(){
+	describe('.create()', function(){
 		context('when using invalid params', function(){
 			it('fails trying to create data without specifing the collection', function () {
 				var data = WeDeploy.data();
 				assert.throws(function() {
-					data.update(null, {"ping": "pong"});
+					data.create(null, {"ping": "pong"});
 				}, Error);
 			});
 
 			it('fails trying to create data without specifying the data param', function () {
 				var data = WeDeploy.data();
 				assert.throws(function() {
-					data.update("collection", null);
+					data.create("collection", null);
 				}, Error);
+			});
+		});
+
+		context('when creating and it returns an error', function(){
+			it('fails updating because of an server error ', function (done) {
+				RequestMock.intercept().reply(500, '{"error": "Error 500"}');
+
+				WeDeploy
+					.data()
+					.create("collection", {"ping": "pong"})
+					.catch(error => {
+						assert.strictEqual('{"error": "Error 500"}', error);
+						done();
+					});
+			});
+		});
+
+		context('when creating with one object', function() {
+			it('creates new data', function (done) {
+				RequestMock.intercept().reply(200, '{"id": 1, "ping": "pong"}');
+
+				WeDeploy
+					.data()
+					.create("collection", {"ping": "pong"})
+					.then(response => {
+						assert.strictEqual('{"id": 1, "ping": "pong"}', response);
+						done();
+					});
+			});
+		});
+
+		context('when creating with one array', function() {
+			it('creates multiple data', function (done) {
+				RequestMock.intercept().reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
+
+				WeDeploy
+					.data()
+					.create("collection", [
+						{"ping": "pong1"},
+						{"ping": "pong2"}
+					])
+					.then( response => {
+						assert.strictEqual('[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]', response);
+						done();
+					});
+			});
+		});
+
+	});
+
+	describe('.update()', function(){
+		context('when using invalid params', function(){
+			it('fails trying to updating data without specifing the collection', function () {
+				assert.throws(function() {
+					WeDeploy.data().update(null, {"ping": "pong"});
+				}, Error);
+			});
+
+			it('fails trying to update data without specifying the data param', function () {
+				assert.throws(function() {
+					WeDeploy.data().update("collection", null);
+				}, Error);
+			});
+		});
+
+		context('when updating and it returns an error', function(){
+			it('fails updating because of an server error ', function (done) {
+				RequestMock.intercept().reply(500, '{"error": "Error 500"}');
+
+				WeDeploy
+					.data()
+					.update("collection/242424", {"ping": "pong"})
+					.catch(error => {
+						assert.strictEqual('{"error": "Error 500"}', error);
+						done();
+					});
+			});
+
+			it('fails updating because the row doesn\'t exist', function (done) {
+				RequestMock.intercept().reply(404, '{"error": "Error 404"}');
+
+				WeDeploy
+					.data()
+					.update("collection/242424", {"ping": "pong"})
+					.catch(error => {
+						assert.strictEqual('{"error": "Error 404"}', error);
+						done();
+					});
 			});
 		});
 
@@ -92,9 +134,9 @@ describe('DataApiHelper', function() {
 			it('updates an object', function (done) {
 				RequestMock.intercept().reply(200, '{"id": 1, "ping": "pongUpdated"}');
 
-				var data = WeDeploy.data();
-
-				data.update("collection/1", {"ping": "pongUpdated"})
+				WeDeploy
+					.data()
+					.update("collection/1", {"ping": "pongUpdated"})
 					.then(response => {
 						assert.strictEqual('{"id": 1, "ping": "pongUpdated"}', response);
 						done();
@@ -118,61 +160,79 @@ describe('DataApiHelper', function() {
 
 	});
 
-	describe('.create()', function(){
-		context('when using invalid params', function(){
+	describe('.delete()', function () {
+		context('when using invalid params', function() {
 			it('fails trying to create data without specifing the collection', function () {
-				var data = WeDeploy.data();
 				assert.throws(function() {
-					data.create(null, {"ping": "pong"});
-				}, Error);
-			});
-
-			it('fails trying to create data without specifying the data param', function () {
-				var data = WeDeploy.data();
-				assert.throws(function() {
-					data.create("collection", null);
+					WeDeploy.data().delete(null);
 				}, Error);
 			});
 		});
 
-		context('when creating with one object', function() {
-			it('creates new data', function (done) {
-				RequestMock.intercept().reply(200, '{"id": 1, "ping": "pong"}');
+		context('when updating and it returns an error', function() {
+			it('fails updating because of an server error ', function (done) {
+				RequestMock.intercept().reply(500, '{"error": "Error 500"}');
 
-				var data = WeDeploy.data();
+				WeDeploy
+					.data()
+					.delete("collection/242424", {"ping": "pong"})
+					.catch(error => {
+						assert.strictEqual('{"error": "Error 500"}', error);
+						done();
+					});
+			});
 
-				data.create("collection", {"ping": "pong"})
-					.then(response => {
-						assert.strictEqual('{"id": 1, "ping": "pong"}', response);
+			it('fails updating because the row doesn\'t exist', function (done) {
+				RequestMock.intercept().reply(404, '{"error": "Error 404"}');
+
+				WeDeploy
+					.data()
+					.delete("collection/242424", {"ping": "pong"})
+					.catch(error => {
+						assert.strictEqual('{"error": "Error 404"}', error);
 						done();
 					});
 			});
 		});
 
-		context('when creating with one array', function() {
-			it('creates multiple data', function (done) {
-				RequestMock.intercept().reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
+		context('when successfuly deletes data', function() {
+			it('deletes a field', function (done) {
+				RequestMock.intercept().reply(204);
 
-				var data = WeDeploy.data();
+				WeDeploy
+					.data()
+					.delete("collection/1/title")
+					.then(response => {
+						assert.strictEqual(undefined, undefined);
+						done();
+					});
 
-				data.create("collection", [
-					{"ping": "pong1"},
-					{"ping": "pong2"}
-				])
-				.then( response => {
-					assert.strictEqual('[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]', response);
-					done();
-				});
+			});
+
+			it('deletes a data rown', function (done) {
+				RequestMock.intercept().reply(204);
+
+				WeDeploy
+					.data()
+					.delete("collection/1")
+					.then(response => {
+						assert.strictEqual(undefined, undefined);
+						done();
+					});
+			});
+
+			it('deletes a collection', function (done) {
+				RequestMock.intercept().reply(204);
+
+				WeDeploy
+					.data()
+					.delete("collection/1")
+					.then(response => {
+						assert.strictEqual(undefined, undefined);
+						done();
+					});
 			});
 		});
-
-		// context('when creating with one object adding a new key', function() {
-
-		// });
-
-		// context('when creating with one array with a new object key', function() {
-
-		// });
 
 	});
 
@@ -180,14 +240,14 @@ describe('DataApiHelper', function() {
 		it('should send request with query limit in the body', function(done) {
 			RequestMock.intercept().reply(200, '[{"id": 1, "ping": "pong1"}]');
 
-			var data = WeDeploy.data();
-
-			data.limit(0)
-					.get("collection")
-					.then( response => {
-						assert.strictEqual('[{"id": 1, "ping": "pong1"}]', response);
-						done();
-					});
+			WeDeploy
+				.data()
+				.limit(0)
+				.get("collection")
+				.then( response => {
+					assert.strictEqual('[{"id": 1, "ping": "pong1"}]', response);
+					done();
+				});
 		});
 	});
 
@@ -195,12 +255,13 @@ describe('DataApiHelper', function() {
 		it('should send request with query count in the body', function(done) {
 			RequestMock.intercept().reply(200, '5');
 
-			WeDeploy.data()
-							.count()
-							.get('food').then(function(response) {
-								assert.strictEqual('5', response);
-								done();
-							});
+			WeDeploy
+				.data()
+				.count()
+				.get('food').then(function(response) {
+					assert.strictEqual('5', response);
+					done();
+				});
 
 		});
 	});
@@ -209,10 +270,14 @@ describe('DataApiHelper', function() {
 		it('should send request with query offset in the body', function(done) {
 			RequestMock.intercept().reply(200, '[{"id": 1, "ping": "pong1"}]');
 
-			WeDeploy.data().offset(2).get('food').then(response => {
-				assert.strictEqual('[{"id": 1, "ping": "pong1"}]', response);
-				done();
-			});
+			WeDeploy
+				.data()
+				.offset(2)
+				.get('food')
+				.then(response => {
+					assert.strictEqual('[{"id": 1, "ping": "pong1"}]', response);
+					done();
+				});
 		});
 	});
 
@@ -220,10 +285,14 @@ describe('DataApiHelper', function() {
 		it('should send request with query search in the body', function(done) {
 			RequestMock.intercept().reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
 
-			WeDeploy.data().search('name', '=', 'foo').get('food').then(function(response) {
-				assert.strictEqual('[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]', response);
-				done();
-			});
+			WeDeploy
+				.data()
+				.search('name', '=', 'foo')
+				.get('food')
+				.then(function(response) {
+					assert.strictEqual('[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]', response);
+					done();
+				});
 		});
 	});
 
@@ -231,10 +300,14 @@ describe('DataApiHelper', function() {
 		it('should send request with query filter in the body', function(done) {
 			RequestMock.intercept().reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
 
-			WeDeploy.data().where('name', '=', 'foo').get('food').then(function(response) {
-				assert.strictEqual('[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]', response);
-				done();
-			});
+			WeDeploy
+				.data()
+				.where('name', '=', 'foo')
+				.get('food')
+				.then(function(response) {
+					assert.strictEqual('[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]', response);
+					done();
+				});
 		});
 	});
 
@@ -242,10 +315,14 @@ describe('DataApiHelper', function() {
 		it('should send request with query highlight in the body', function(done) {
 			RequestMock.intercept().reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
 
-			WeDeploy.data().highlight('field').get('food').then(function(response) {
-				assert.strictEqual('[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]', response);
-				done();
-			});
+			WeDeploy
+				.data()
+				.highlight('field')
+				.get('food')
+				.then(function(response) {
+					assert.strictEqual('[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]', response);
+					done();
+				});
 		});
 	});
 
@@ -253,10 +330,14 @@ describe('DataApiHelper', function() {
 		it('should send request with query aggregate in the body', function(done) {
 			RequestMock.intercept().reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
 
-			WeDeploy.data().aggregate('name', 'field').get('food').then(function(response) {
-				assert.strictEqual('[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]', response);
-				done();
-			});
+			WeDeploy
+				.data()
+				.aggregate('name', 'field')
+				.get('food')
+				.then(function(response) {
+					assert.strictEqual('[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]', response);
+					done();
+				});
 		});
 	});
 
@@ -264,10 +345,14 @@ describe('DataApiHelper', function() {
 		it('sends request with query sort in the body', function(done) {
 			RequestMock.intercept().reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
 
-			WeDeploy.data().orderBy('id', 'asc').get('food').then(function(response) {
-				assert.strictEqual('[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]', response);
-				done();
-			});
+			WeDeploy
+				.data()
+				.orderBy('id', 'asc')
+				.get('food')
+				.then(function(response) {
+					assert.strictEqual('[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]', response);
+					done();
+				});
 		});
 	});
 
@@ -276,11 +361,13 @@ describe('DataApiHelper', function() {
 		it('returns all data of a collection', function (done) {
 			RequestMock.intercept().reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
 
-			var data = WeDeploy.data("http://data.datademo.wedeploy.me");
-			data.get("food").then(response => {
-				assert.strictEqual('[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]', response);
-				done();
-			});
+			WeDeploy
+				.data()
+				.get("food")
+				.then(response => {
+					assert.strictEqual('[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]', response);
+					done();
+				});
 		});
 	});
 
