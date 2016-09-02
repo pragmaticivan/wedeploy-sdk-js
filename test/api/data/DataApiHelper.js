@@ -24,7 +24,6 @@ describe('DataApiHelper', function() {
 		});
 	});
 
-
 	describe('.create()', function(){
 		context('when using invalid params', function(){
 			it('fails trying to create data without specifing the collection', function () {
@@ -86,7 +85,6 @@ describe('DataApiHelper', function() {
 					});
 			});
 		});
-
 	});
 
 	describe('.update()', function(){
@@ -157,7 +155,6 @@ describe('DataApiHelper', function() {
 					});
 			});
 		});
-
 	});
 
 	describe('.delete()', function () {
@@ -233,7 +230,6 @@ describe('DataApiHelper', function() {
 					});
 			});
 		});
-
 	});
 
 	describe('.limit()', function () {
@@ -297,7 +293,7 @@ describe('DataApiHelper', function() {
 	});
 
 	describe('.where()', function () {
-		it('should send request with query filter in the body', function(done) {
+		it('should send request with query where in the body', function(done) {
 			RequestMock.intercept().reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
 
 			WeDeploy
@@ -306,6 +302,28 @@ describe('DataApiHelper', function() {
 				.get('food')
 				.then(function(response) {
 					assert.strictEqual('[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]', response);
+					done();
+				});
+		});
+	});
+
+	describe('.or()', function () {
+		it('should thrown an error when using or without any conditional before', function () {
+			assert.throws(function(){
+				WeDeploy
+				.data()
+				.or('name', '!=', 'bar');
+			}, Error);
+		});
+		it('should send request with query or in the body', function(done) {
+			RequestMock.intercept().reply(200, '[{"id": 2, "name": "foo"}]');
+			WeDeploy
+				.data()
+				.where('name', '=', 'foo')
+				.or('name', '!=', 'bar')
+				.get('food')
+				.then(function(response) {
+					assert.strictEqual('[{"id": 2, "name": "foo"}]', response);
 					done();
 				});
 		});
@@ -355,7 +373,6 @@ describe('DataApiHelper', function() {
 				});
 		});
 	});
-
 
 	describe('.get()', function () {
 		it('returns all data of a collection', function (done) {

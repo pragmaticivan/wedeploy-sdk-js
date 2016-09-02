@@ -79,6 +79,46 @@ describe('FilterBody', function() {
 			assert.deepEqual(body, filterBody.getObject());
 		});
 
+
+		it('should compose a empty filter with empty body to use ', function () {
+			var filterBody = new FilterBody();
+
+			var body = {
+			  and: []
+			};
+
+			assert.deepEqual(body, filterBody.getObject());
+		});
+
+		it('should compose a empty Filter Body with a filter', function () {
+			var filterBody = new FilterBody();
+			filterBody.addMany('and', Filter.lt('age', 15));
+			filterBody.addMany('or', Filter.lt('age', 16));
+
+			var body = {
+					  or: [
+					    {
+					      and: [
+					        {
+					          age: {
+					            "operator": "<",
+					            "value": 15
+					          }
+					        }
+					      ]
+					    },
+					    {
+					      age: {
+					        "operator": "<",
+					        "value": 16
+					      }
+					    }
+					  ]
+					};
+			assert.deepEqual(body, filterBody.getObject());
+
+		});
+
 		it('should compose filter with multiple others with the given operator', function() {
 			var filterBody = new FilterBody('age', '>', 12);
 			filterBody.addMany('and', Filter.lt('age', 15), Filter.equal('name', 'foo'));

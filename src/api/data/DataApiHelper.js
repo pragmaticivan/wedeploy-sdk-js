@@ -1,6 +1,7 @@
 'use strict';
 
 import Query from '../../api-query/Query';
+import Filter from '../../api-query/Filter';
 import { assertNotNull, assertObject, assertDefAndNotNull, assertResponseSucceeded } from '../assertions';
 
 /**
@@ -44,7 +45,8 @@ class DataApiHelper {
 	 * @chainable
 	 */
 	where(fieldOrFilter, opt_operatorOrValue, opt_value) {
-		this.getOrCreateQuery_().filter(fieldOrFilter, opt_operatorOrValue, opt_value);
+		this.getOrCreateFilter_().and(fieldOrFilter, opt_operatorOrValue, opt_value);
+
 		return this;
 	}
 
@@ -57,7 +59,13 @@ class DataApiHelper {
 	 * @chainnable
 	 */
 	or(fieldOrFilter, opt_operatorOrValue, opt_value) {
-		this.getOrCreateQuery_().or(fieldOrFilter, opt_operatorOrValue, opt_value);
+
+		if (this.getOrCreateFilter_().body()['and'].length <= 0) {
+			throw Error("It's required to have a condition before using an 'or()' for the first time.");
+		}
+
+		this.getOrCreateFilter_().or(fieldOrFilter, opt_operatorOrValue, opt_value);
+
 		return this;
 	}
 
@@ -304,6 +312,10 @@ class DataApiHelper {
 	get(key) {
 		assertNotNull(key, 'Document/Field/Collection key must be specified');
 
+		if (this.filter_ && this.filter_.length > 0) {
+			this.proccessFilter();
+		}
+
 		return this.wedeployClient
 			.url(this.wedeployClient.dataUrl_)
 			.path(key)
@@ -325,6 +337,13 @@ class DataApiHelper {
 			.url(this.wedeployClient.dataUrl_)
 			.path(collection)
 			.watch(this.query_, opt_options);
+	}
+
+	getOrCreateFilter_() {
+		if (!this.filter_) {
+			this.filter_ = new Filter(); // TODO Talk to Maira
+		}
+		return this.filter_;
 	}
 
 	/**

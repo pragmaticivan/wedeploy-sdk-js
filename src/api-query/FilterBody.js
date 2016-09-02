@@ -21,14 +21,22 @@ class FilterBody {
 		var obj = {
 			operator: core.isDef(opt_value) ? operatorOrValue : '='
 		};
+
 		var value = core.isDef(opt_value) ? opt_value : operatorOrValue;
+
 		if (core.isDefAndNotNull(value)) {
 			if (value instanceof Embodied) {
 				value = value.body();
 			}
 			obj.value = value;
 		}
-		this.createBody_(field, obj);
+
+		if (core.isDefAndNotNull(field)) {
+			this.createBody_(field, obj);
+		} else {
+			this.createBody_("and",[]);
+		}
+
 	}
 
 	/**

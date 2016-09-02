@@ -183,7 +183,7 @@ class Query extends Embodied {
 	 * @chainnable
 	 */
 	filter(fieldOrFilter, opt_operatorOrValue, opt_value) {
-		var filter = Filter.toFilter(fieldOrFilter, opt_operatorOrValue, opt_value);
+		let filter = Filter.toFilter(fieldOrFilter, opt_operatorOrValue, opt_value);
 		if (!this.body_.filter) {
 			this.body_.filter = [];
 		}

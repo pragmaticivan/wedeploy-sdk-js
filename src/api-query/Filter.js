@@ -392,8 +392,8 @@ class Filter extends Embodied {
 	 * Returns a {@link Filter} instance that uses the "none" operator.
 	 * @param {string} field The name of the field to filter by.
 	 * @param {!(Array|...*)} value A variable amount of values to be used with
-	 *   the "none" operator. Can be passed either as a single array or as
-	 *   separate params.
+	 * the "none" operator. Can be passed either as a single array or as
+	 * separate params.
 	 * @return {!Filter}
 	 * @static
 	 */
@@ -418,8 +418,8 @@ class Filter extends Embodied {
 
 	/**
 	 * Returns a {@link Filter} instance that uses the "not" operator.
-	 * @param {!Filter|string} fieldOrFilter Either a {@link Filter} instance or the
-	 *   name of the field to filter by.
+	 * @param {!Filter|string} fieldOrFilter Either a {@link Filter} instance or
+	 * the name of the field to filter by.
 	 * @param {*=} opt_operatorOrValue Either the field's operator or its value.
 	 * @param {*=} opt_value The filter's value.
 	 * @return {!Filter}
@@ -432,12 +432,12 @@ class Filter extends Embodied {
 	/**
 	 * Returns a {@link Filter} instance.
 	 * @param {string} field The name of the field to filter by.
-	 * @param {*} operatorOrValue If a third param is given, this should
-	 *   be the filter's operator (like ">="). Otherwise, this will be
-	 *   used as the filter's value, and the filter's operator will be "=".
+	 * @param {*} operatorOrValue If a third param is given, this should be the
+	 * filter's operator (like ">="). Otherwise, this will be used as the
+	 * filter's value, and the filter's operator will be "=".
 	 * @param {*=} opt_value The filter's value.
 	 * @return {!Filter}
-   * @static
+	 * @static
 	 */
 	static field(field, operatorOrValue, opt_value) {
 		return new Filter(field, operatorOrValue, opt_value);
@@ -445,8 +445,8 @@ class Filter extends Embodied {
 
 	/**
 	 * Adds a filter to be composed with this filter using the "or" operator.
-	 * @param {!Filter|string} fieldOrFilter Either a {@link Filter} instance or the
-	 *   name of the field to filter by.
+	 * @param {!Filter|string} fieldOrFilter Either a {@link Filter} instance or
+	 * the name of the field to filter by.
 	 * @param {*=} opt_operatorOrValue Either the field's operator or its value.
 	 * @param {*=} opt_value The filter's value.
 	 * @chainnable
@@ -457,8 +457,8 @@ class Filter extends Embodied {
 
 	/**
 	 * Converts the given arguments into a {@link Filter} instance.
-	 * @param {!Filter|string} fieldOrFilter Either a {@link Filter} instance or the
-	 *   name of the field to filter by.
+	 * @param {!Filter|string} fieldOrFilter Either a {@link Filter} instance or
+	 * the name of the field to filter by.
 	 * @param {*=} opt_operatorOrValue Either the field's operator or its value.
 	 * @param {*=} opt_value The filter's value.
 	 * @return {!Filter}
