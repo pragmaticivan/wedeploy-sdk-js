@@ -1,6 +1,8 @@
 'use strict';
 
 import WeDeploy from '../../../src/api/WeDeploy';
+import Geo from '../../../src/api-query/Geo';
+import Range from '../../../src/api-query/Range';
 
 describe('DataApiHelper', function() {
 	afterEach(function() {
@@ -375,14 +377,189 @@ describe('DataApiHelper', function() {
 	});
 
 	describe('.get()', function () {
-		it('returns all data of a collection', function (done) {
-			RequestMock.intercept().reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
+		context('when using invalid params', function(){
+			it('fails trying to retrieve data without specifing the collection', function () {
+				var data = WeDeploy.data();
+				assert.throws(function() {
+					data.get(null);
+				}, Error);
+			});
+		});
+
+		context('when using valid params', function(){
+			it('returns all data of a collection', function (done) {
+				RequestMock.intercept().reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
+
+				WeDeploy
+					.data()
+					.get("food")
+					.then(response => {
+						assert.strictEqual('[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]', response);
+						done();
+					});
+			});
+		});
+	});
+
+	describe('.watch()', function () {
+		context('when using invalid params', function(){
+			it('fails trying to watch data without specifing the collection', function () {
+				WeDeploy.socket();
+				var data = WeDeploy.data();
+				assert.throws(function() {
+					data.watch(null);
+				}, Error);
+			});
+		});
+
+		context('when using valid params', function(){
+			it('returns all data of a collection', function (done) {
+
+				WeDeploy.socket(function(url, opts) {
+					assert.deepEqual({
+						forceNew: true,
+						path: '/fruits',
+						query: 'url=' + encodeURIComponent('/fruits')
+					}, opts);
+					done();
+				});
+
+				WeDeploy.data().watch('fruits');
+				WeDeploy.socket();
+			});
+		});
+	});
+
+	describe('.none()', function () {
+		it('should send request with query none in the body', function(done) {
+			RequestMock.intercept().reply(200, '[{"id": 2, "name": "melancia"}]');
 
 			WeDeploy
 				.data()
-				.get("food")
-				.then(response => {
-					assert.strictEqual('[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]', response);
+				.none('name','cuscuz','tapioca')
+				.get('food')
+				.then(function(response) {
+					assert.strictEqual('[{"id": 2, "name": "melancia"}]', response);
+					done();
+				});
+		});
+	});
+
+	describe('.match()', function () {
+		it('should send request with query match in the body', function(done) {
+			RequestMock.intercept().reply(200, '[{"id": 2, "name": "cuscuz"}]');
+
+			WeDeploy
+				.data()
+				.match('name','cuscuz')
+				.get('food')
+				.then(function(response) {
+					assert.strictEqual('[{"id": 2, "name": "cuscuz"}]', response);
+					done();
+				});
+		});
+	});
+
+	describe('.similar()', function () {
+		it('should send request with query similar in the body', function(done) {
+			RequestMock.intercept().reply(200, '[{"id": 2, "name": "cuscuz"}]');
+
+			WeDeploy
+				.data()
+				.similar('name','cusc')
+				.get('food')
+				.then(function(response) {
+					assert.strictEqual('[{"id": 2, "name": "cuscuz"}]', response);
+					done();
+				});
+		});
+	});
+
+	describe('.lt()', function () {
+		it('should send request with query lt in the body', function(done) {
+			RequestMock.intercept().reply(200, '[{"id": 2, "name": "cuscuz", "size": 10}]');
+
+			WeDeploy
+				.data()
+				.lt('size',30)
+				.get('food')
+				.then(function(response) {
+					assert.strictEqual('[{"id": 2, "name": "cuscuz", "size": 10}]', response);
+					done();
+				});
+		});
+	});
+
+	describe('.lte()', function () {
+		it('should send request with query lte in the body', function(done) {
+			RequestMock.intercept().reply(200, '[{"id": 2, "name": "cuscuz", "size": 10}]');
+
+			WeDeploy
+				.data()
+				.lte('size',30)
+				.get('food')
+				.then(function(response) {
+					assert.strictEqual('[{"id": 2, "name": "cuscuz", "size": 10}]', response);
+					done();
+				});
+		});
+	});
+
+	describe('.any()', function () {
+		it('should send request with query any in the body', function(done) {
+			RequestMock.intercept().reply(200, '[{"id": 2, "name": "cuscuz"}]');
+
+			WeDeploy
+				.data()
+				.any('name','cuscuz','tapioca')
+				.get('food')
+				.then(function(response) {
+					assert.strictEqual('[{"id": 2, "name": "cuscuz"}]', response);
+					done();
+				});
+		});
+	});
+
+	describe('.boundingBox()', function () {
+		it('should send request with query boundingBox in the body', function(done) {
+			RequestMock.intercept().reply(200, '[{"id": 2, "name": "cuscuzeria"}]');
+
+			WeDeploy
+				.data()
+				.boundingBox('shape', Geo.boundingBox('20,0', [0, 20]))
+				.get('restaurants')
+				.then(function(response) {
+					assert.strictEqual('[{"id": 2, "name": "cuscuzeria"}]', response);
+					done();
+				});
+		});
+	});
+
+	describe('.distance()', function () {
+		it('should send request with query distance in the body', function(done) {
+			RequestMock.intercept().reply(200, '[{"id": 2, "name": "cuscuzeria"}]');
+
+			WeDeploy
+				.data()
+				.distance('point', Geo.circle([0, 0], 2))
+				.get('restaurants')
+				.then(function(response) {
+					assert.strictEqual('[{"id": 2, "name": "cuscuzeria"}]', response);
+					done();
+				});
+		});
+	});
+
+	describe('.range()', function () {
+		it('should send request with query distance in the body', function(done) {
+			RequestMock.intercept().reply(200, '[{"id": 2, "name": "cuscuzeria", "points": 13}]');
+
+			WeDeploy
+				.data()
+				.range('points', 12, 15)
+				.get('restaurants')
+				.then(function(response) {
+					assert.strictEqual('[{"id": 2, "name": "cuscuzeria", "points": 13}]', response);
 					done();
 				});
 		});

@@ -106,6 +106,29 @@ class DataApiHelper {
 	}
 
 	/**
+	 * Returns a {@link Filter} instance that uses the "<" operator.
+	 * @param {string} field The name of the field to filter by.
+	 * @param {*} value The filter's value.
+	 * @return {!Filter}
+   * @static
+	 */
+	lt(field, value) {
+		return this.where(Filter.lt(field, value));
+	}
+
+	/**
+	 * Returns a {@link Filter} instance that uses the "<=" operator.
+	 * @param {string} field The name of the field to filter by.
+	 * @param {*} value The filter's value.
+	 * @return {!Filter}
+   * @static
+	 */
+	lte(field, value) {
+		return this.where(Filter.lte(field, value));
+	}
+
+
+	/**
 	 * Adds a filter to be compose with this filter using "any" operator.
 	 * @param {string} field The name of the field to filter by.
 	 * @param {!(Array|...*)} args A variable amount of values to be used with
@@ -311,10 +334,6 @@ class DataApiHelper {
 	 */
 	get(key) {
 		assertNotNull(key, 'Document/Field/Collection key must be specified');
-
-		if (this.filter_ && this.filter_.length > 0) {
-			this.proccessFilter();
-		}
 
 		return this.wedeployClient
 			.url(this.wedeployClient.dataUrl_)

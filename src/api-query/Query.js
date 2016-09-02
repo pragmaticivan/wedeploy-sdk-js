@@ -242,6 +242,7 @@ class Query extends Embodied {
 	 */
 	search(filterOrTextOrField, opt_textOrOperator, opt_value) {
 		var filter = filterOrTextOrField;
+
 		if (opt_value) {
 			filter = Filter.field(filterOrTextOrField, opt_textOrOperator, opt_value);
 		} else if (opt_textOrOperator) {
@@ -249,10 +250,13 @@ class Query extends Embodied {
 		} else if (!(filter instanceof Filter)) {
 			filter = Filter.match(filterOrTextOrField);
 		}
+
 		if (!this.body_.search) {
 			this.body_.search = [];
 		}
+
 		this.body_.search.push(filter.body());
+
 		return this;
 	}
 
