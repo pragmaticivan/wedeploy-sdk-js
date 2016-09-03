@@ -15,7 +15,7 @@ class AjaxTransport extends Transport {
 	send(clientRequest) {
 		var deferred = Ajax.request(
 			clientRequest.url(), clientRequest.method(), clientRequest.body(),
-			clientRequest.headers(), clientRequest.params(), null, false, true);
+			clientRequest.headers(), clientRequest.params(), null, false, clientRequest.withCredentials());
 
 		return deferred.then(function(response) {
 			var clientResponse = new ClientResponse(clientRequest);

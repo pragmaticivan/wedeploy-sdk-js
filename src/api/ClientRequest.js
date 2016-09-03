@@ -12,6 +12,20 @@ class ClientRequest extends ClientMessage {
 	constructor() {
 		super();
 		this.params_ = new MultiMap();
+		this.withCredentials_ = true;
+	}
+
+	/**
+	 * Fluent getter and setter for with credentials option.
+	 * @param {boolean=} opt_withCredentials
+	 * @chainable Chainable when used as setter.
+	 */
+	withCredentials(opt_withCredentials) {
+		if (core.isDef(opt_withCredentials)) {
+			this.withCredentials_ = !!opt_withCredentials;
+			return this;
+		}
+		return this.withCredentials_;
 	}
 
 	/**

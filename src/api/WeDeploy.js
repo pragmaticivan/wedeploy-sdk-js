@@ -50,6 +50,7 @@ class WeDeploy {
 		this.url_ = Uri.joinPaths(url || '', ...paths);
 		this.headers_ = new MultiMap();
 		this.params_ = new MultiMap();
+		this.withCredentials_ = true;
 
 		this.header('Content-Type', 'application/json');
 		this.header('X-PJAX', 'true');
@@ -159,6 +160,7 @@ class WeDeploy {
 		clientRequest.headers(this.headers());
 		clientRequest.params(this.params());
 		clientRequest.url(this.url());
+		clientRequest.withCredentials(this.withCredentials_);
 
 		this.encode(clientRequest);
 
@@ -537,6 +539,14 @@ class WeDeploy {
 		opt_options.path = opt_options.path || uri.getPathname();
 
 		return io(uri.getHost(), opt_options);
+	}
+
+	/**
+	 * @param {boolean} opt_withCredentials
+	 */
+	withCredentials(withCredentials) {
+		this.withCredentials_ = !!withCredentials;
+		return this;
 	}
 
 	/**
