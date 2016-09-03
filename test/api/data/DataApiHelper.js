@@ -19,6 +19,12 @@ describe('DataApiHelper', function() {
 			var data = WeDeploy.data();
 			assert.strictEqual(data, WeDeploy.data());
 		});
+
+		it('returns instance with url filled', function () {
+			var data = WeDeploy.data("http://host");
+			assert.strictEqual(data, WeDeploy.data("http://host"));
+		});
+
 		it('raises an error if the data url has a path', function () {
 			assert.throws(function(){
 				var data = WeDeploy.data("http://data.project.wedeploy.me/extrapath");
