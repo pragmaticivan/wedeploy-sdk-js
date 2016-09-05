@@ -46,7 +46,6 @@ class DataApiHelper {
 	 */
 	where(fieldOrFilter, opt_operatorOrValue, opt_value) {
 		this.getOrCreateFilter_().and(fieldOrFilter, opt_operatorOrValue, opt_value);
-
 		return this;
 	}
 
@@ -334,10 +333,12 @@ class DataApiHelper {
 	 */
 	get(key) {
 		assertNotNull(key, 'Document/Field/Collection key must be specified');
+		this.load_filters_();
 
 		return this.wedeployClient
 			.url(this.wedeployClient.dataUrl_)
 			.path(key)
+			.load_filters_()
 			.get(this.query_)
 			.then(response => assertResponseSucceeded(response))
 			.then(response => response.body());
@@ -352,15 +353,24 @@ class DataApiHelper {
 	 */
 	watch(collection, opt_options) {
 		assertNotNull(collection, 'Collection key must be specified');
+		this.load_filters_();
+
 		return this.wedeployClient
 			.url(this.wedeployClient.dataUrl_)
 			.path(collection)
+			.load_filters_()
 			.watch(this.query_, opt_options);
 	}
 
+	/**
+	 * Gets the currentl used main {@link Filter} object. If none exists yet, a
+	 * new one is created.
+	 * @return {!Query}
+	 * @protected
+	 */
 	getOrCreateFilter_() {
 		if (!this.filter_) {
-			this.filter_ = new Filter(); // TODO Talk to Maira
+			this.filter_ = new Filter();
 		}
 		return this.filter_;
 	}
@@ -376,6 +386,16 @@ class DataApiHelper {
 			this.query_ = new Query();
 		}
 		return this.query_;
+	}
+
+	/**
+	 * Load the currently used main {@link Filter} object into the currently used {@link Query}
+	 * @chainable
+	 * @protected
+	 */
+	load_filters_() {
+		this.getOrCreateQuery_().filter(this.filter_);
+		return this;
 	}
 
 }

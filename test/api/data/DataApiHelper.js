@@ -417,9 +417,13 @@ describe('DataApiHelper', function() {
 					.any('category', 'student', 'team1')
 					.orderBy('id', 'asc')
 					.limit(10)
-					.offset(2);
+					.offset(2)
+					.load_filters_();
 
-			console.log(JSON.stringify(query,2,2));
+			var body = {"body_":{"sort":[{"id":"asc"}],"limit":10,"offset":2,"filter":[{"and":[{"or":[{"and":[{"age":{"operator":">","value":"18"}},{"name":{"operator":"match","value":"tester"}}]},{"points":{"operator":">","value":"7"}}]},{"category":{"operator":"any","value":["student","team1"]}}]}]}};
+
+			assert.strictEqual(JSON.stringify(body), JSON.stringify(query.query_));
+
 		});
 	});
 
