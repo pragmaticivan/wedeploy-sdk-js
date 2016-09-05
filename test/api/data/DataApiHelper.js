@@ -167,7 +167,7 @@ describe('DataApiHelper', function() {
 
 	describe('.delete()', function () {
 		context('when using invalid params', function() {
-			it('fails trying to create data without specifing the collection', function () {
+			it('fails trying to create data without specifying the collection', function () {
 				assert.throws(function() {
 					WeDeploy.data().delete(null);
 				}, Error);
@@ -404,6 +404,22 @@ describe('DataApiHelper', function() {
 						done();
 					});
 			});
+		});
+	});
+
+	describe.only('filter formation', function () {
+		it('organizes the filter formation', function () {
+			var query = WeDeploy
+					.data()
+					.where('age','>','18')
+					.match('name','tester')
+					.or('points','>','7')
+					.any('category', 'student', 'team1')
+					.orderBy('id', 'asc')
+					.limit(10)
+					.offset(2);
+
+			console.log(JSON.stringify(query,2,2));
 		});
 	});
 
