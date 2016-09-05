@@ -359,7 +359,6 @@ class DataApiHelper {
 		return this.wedeployClient
 			.url(this.wedeployClient.dataUrl_)
 			.path(collection)
-			.addFiltersToQuery_()
 			.watch(this.query_, opt_options);
 	}
 
@@ -395,7 +394,10 @@ class DataApiHelper {
 	 * @protected
 	 */
 	addFiltersToQuery_() {
-		this.getOrCreateQuery_().filter(this.filter_);
+		if (this.filter_) {
+			this.getOrCreateQuery_().filter();
+		}
+
 		return this;
 	}
 

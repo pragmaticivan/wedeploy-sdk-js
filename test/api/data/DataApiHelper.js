@@ -442,6 +442,7 @@ describe('DataApiHelper', function() {
 			it('returns all data of a collection', function (done) {
 
 				WeDeploy.socket(function(url, opts) {
+					console.log(JSON.stringify(opts,2,2));
 					assert.deepEqual({
 						forceNew: true,
 						path: '/fruits',
