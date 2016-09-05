@@ -285,18 +285,32 @@ describe('DataApiHelper', function() {
 		});
 	});
 
-	describe('.search()', function () {
+	describe('.onSearch()', function () {
 		it('should send request with query search in the body', function(done) {
-			RequestMock.intercept().reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
+			RequestMock.intercept().reply(200, '{"total":1,"documents":[{"id":2,"ping":"pong1"}],"scores":{"2":0.13102644681930542},"queryTime":1}');
 
-			WeDeploy
+			var client = WeDeploy
 				.data()
-				.search('name', '=', 'foo')
+				.where('name', '=', 'foo')
+				.where('name', '=', 'bar')
+				.onSearch()
 				.get('food')
 				.then(function(response) {
-					assert.strictEqual('[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]', response);
+					assert.strictEqual('{"total":1,"documents":[{"id":2,"ping":"pong1"}],"scores":{"2":0.13102644681930542},"queryTime":1}', response);
 					done();
 				});
+		});
+
+		it('should build the query as search type', function () {
+			var client = WeDeploy
+				.data()
+				.where('name', '=', 'foo')
+				.where('name', '=', 'bar')
+				.onSearch()
+				.addFiltersToQuery_();
+
+			var body = '{"body_":{"search":[{"and":[{"name":{"operator":"=","value":"foo"}},{"name":{"operator":"=","value":"bar"}}]}]}}';
+			assert.strictEqual(body, JSON.stringify(client.query_));
 		});
 	});
 

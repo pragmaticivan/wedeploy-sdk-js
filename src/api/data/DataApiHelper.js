@@ -32,8 +32,9 @@ class DataApiHelper {
 	 * passed if an operator was passed as the second argument.
 	 * @chainable
 	 */
-	search(filterOrTextOrField, opt_textOrOperator, opt_value) {
-		this.getOrCreateQuery_().search(filterOrTextOrField, opt_textOrOperator, opt_value);
+	onSearch() {
+		this.getOrCreateQuery_().search(this.getOrCreateFilter_());
+		this.onSearch_ = true;
 		return this;
 	}
 
@@ -395,7 +396,7 @@ class DataApiHelper {
 	 * @protected
 	 */
 	addFiltersToQuery_() {
-		if (core.isDef(this.filter_)) {
+		if (core.isDef(this.filter_) && this.onSearch_ != true) {
 			this.getOrCreateQuery_().filter(this.filter_);
 		}
 
