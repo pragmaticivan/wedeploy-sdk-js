@@ -3,6 +3,7 @@
 import Query from '../../api-query/Query';
 import Filter from '../../api-query/Filter';
 import { assertNotNull, assertObject, assertDefAndNotNull, assertResponseSucceeded } from '../assertions';
+import { core } from 'metal';
 
 /**
  * Class responsible for encapsulate data api calls.
@@ -394,8 +395,8 @@ class DataApiHelper {
 	 * @protected
 	 */
 	addFiltersToQuery_() {
-		if (this.filter_) {
-			this.getOrCreateQuery_().filter();
+		if (core.isDef(this.filter_)) {
+			this.getOrCreateQuery_().filter(this.filter_);
 		}
 
 		return this;

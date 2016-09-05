@@ -407,22 +407,24 @@ describe('DataApiHelper', function() {
 		});
 	});
 
-	describe('query formation', function () {
+	describe.only('query formation', function () {
 		it('creates the and add virtual filters into the query', function () {
-			var query = WeDeploy
-					.data()
-					.where('age','>','18')
-					.match('name','tester')
-					.or('points','>','7')
-					.any('category', 'student', 'team1')
-					.orderBy('id', 'asc')
-					.limit(10)
-					.offset(2)
-					.addFiltersToQuery_();
+
+			var client = WeDeploy.data();
+
+		  client.where('age','>','18')
+				.match('name','tester')
+				.or('points','>','7')
+				.any('category', 'student', 'team1')
+				.orderBy('id', 'asc')
+				.limit(10)
+				.offset(2)
+
+			client.addFiltersToQuery_();
 
 			var body = {"body_":{"sort":[{"id":"asc"}],"limit":10,"offset":2,"filter":[{"and":[{"or":[{"and":[{"age":{"operator":">","value":"18"}},{"name":{"operator":"match","value":"tester"}}]},{"points":{"operator":">","value":"7"}}]},{"category":{"operator":"any","value":["student","team1"]}}]}]}};
 
-			assert.strictEqual(JSON.stringify(body), JSON.stringify(query.query_));
+			assert.strictEqual(JSON.stringify(body), JSON.stringify(client.query_));
 
 		});
 	});
@@ -442,7 +444,6 @@ describe('DataApiHelper', function() {
 			it('returns all data of a collection', function (done) {
 
 				WeDeploy.socket(function(url, opts) {
-					console.log(JSON.stringify(opts,2,2));
 					assert.deepEqual({
 						forceNew: true,
 						path: '/fruits',
