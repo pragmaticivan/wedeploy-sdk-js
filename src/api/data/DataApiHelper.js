@@ -333,12 +333,12 @@ class DataApiHelper {
 	 */
 	get(key) {
 		assertNotNull(key, 'Document/Field/Collection key must be specified');
-		this.load_filters_();
+
+		this.addFiltersToQuery_();
 
 		return this.wedeployClient
 			.url(this.wedeployClient.dataUrl_)
 			.path(key)
-			.addFiltersToQuery_()
 			.get(this.query_)
 			.then(response => assertResponseSucceeded(response))
 			.then(response => response.body());
@@ -353,7 +353,8 @@ class DataApiHelper {
 	 */
 	watch(collection, opt_options) {
 		assertNotNull(collection, 'Collection key must be specified');
-		this.load_filters_();
+
+		this.addFiltersToQuery_();
 
 		return this.wedeployClient
 			.url(this.wedeployClient.dataUrl_)

@@ -407,7 +407,7 @@ describe('DataApiHelper', function() {
 		});
 	});
 
-	describe.only('query formation', function () {
+	describe('query formation', function () {
 		it('creates the and add virtual filters into the query', function () {
 			var query = WeDeploy
 					.data()
