@@ -407,8 +407,8 @@ describe('DataApiHelper', function() {
 		});
 	});
 
-	describe.only('filter formation', function () {
-		it('organizes the filter formation', function () {
+	describe.only('query formation', function () {
+		it('creates the and add virtual filters into the query', function () {
 			var query = WeDeploy
 					.data()
 					.where('age','>','18')
@@ -418,7 +418,7 @@ describe('DataApiHelper', function() {
 					.orderBy('id', 'asc')
 					.limit(10)
 					.offset(2)
-					.load_filters_();
+					.addFiltersToQuery_();
 
 			var body = {"body_":{"sort":[{"id":"asc"}],"limit":10,"offset":2,"filter":[{"and":[{"or":[{"and":[{"age":{"operator":">","value":"18"}},{"name":{"operator":"match","value":"tester"}}]},{"points":{"operator":">","value":"7"}}]},{"category":{"operator":"any","value":["student","team1"]}}]}]}};
 

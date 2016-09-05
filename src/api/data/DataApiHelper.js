@@ -338,7 +338,7 @@ class DataApiHelper {
 		return this.wedeployClient
 			.url(this.wedeployClient.dataUrl_)
 			.path(key)
-			.load_filters_()
+			.addFiltersToQuery_()
 			.get(this.query_)
 			.then(response => assertResponseSucceeded(response))
 			.then(response => response.body());
@@ -358,7 +358,7 @@ class DataApiHelper {
 		return this.wedeployClient
 			.url(this.wedeployClient.dataUrl_)
 			.path(collection)
-			.load_filters_()
+			.addFiltersToQuery_()
 			.watch(this.query_, opt_options);
 	}
 
@@ -393,7 +393,7 @@ class DataApiHelper {
 	 * @chainable
 	 * @protected
 	 */
-	load_filters_() {
+	addFiltersToQuery_() {
 		this.getOrCreateQuery_().filter(this.filter_);
 		return this;
 	}
