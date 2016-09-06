@@ -324,6 +324,12 @@ class DataApiHelper {
 			.then(response => response.body());
 	}
 
+	/**
+	 * Retrieve data from a [document/field/collection] and put it in a search
+	 * format.
+	 * @param {string} key Key used to delete the document/field/collection.
+	 * @return {!CancellablePromise}
+	 */
 	search(key) {
 		assertNotNull(key, 'Document/Field/Collection key must be specified');
 
@@ -384,7 +390,8 @@ class DataApiHelper {
 	}
 
 	/**
-	 * Load the currently used main {@link Filter} object into the currently used {@link Query}
+	 * Load the currently used main {@link Filter} object into the currently
+	 * used {@link Query}.
 	 * @chainable
 	 * @protected
 	 */
