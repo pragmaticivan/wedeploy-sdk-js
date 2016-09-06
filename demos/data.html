@@ -7,12 +7,14 @@
 <body>
 	<script src="../build/globals/api.js"></script>
 	<script>
-		var data = WeDeploy.data('http://data.datademo.wedeploy.me');
+		var data = WeDeploy.data('http://data.ivan.wedeploy.io');
 
-		food = data.offset(2).get('food').then(response => {
-			console.log(response);
-		});
-
+		data.limit(2)
+				.offset(0)
+				.search('customers')
+				.then(response => {
+					console.log(response);
+				});
 	</script>
 </body>
 </html>

@@ -32,6 +32,26 @@ describe('DataApiHelper', function() {
 		});
 	});
 
+	describe('query formation', function () {
+		it('creates the and add virtual filters into the query', function () {
+
+			var client = WeDeploy.data();
+
+		  client.where('age','>','18')
+				.or('points','>','7')
+				.orderBy('id', 'asc')
+				.limit(10)
+				.offset(2)
+
+			client.addFiltersToQuery_();
+
+			var body = {"body_":{"sort":[{"id":"asc"}],"limit":10,"offset":2,"filter":[{"or":[{"and":[{"age":{"operator":">","value":"18"}}]},{"points":{"operator":">","value":"7"}}]}]}};
+
+			assert.strictEqual(JSON.stringify(body), JSON.stringify(client.query_));
+
+		});
+	});
+
 	describe('.create()', function(){
 		context('when using invalid params', function(){
 			it('fails trying to create data without specifing the collection', function () {
@@ -241,22 +261,30 @@ describe('DataApiHelper', function() {
 	});
 
 	describe('.limit()', function () {
-		it('should send request with query limit in the body', function(done) {
+		it('sends request with query limit in the body', function(done) {
 			RequestMock.intercept().reply(200, '[{"id": 1, "ping": "pong1"}]');
 
 			WeDeploy
 				.data()
-				.limit(0)
+				.limit(1)
 				.get("collection")
 				.then( response => {
 					assert.strictEqual('[{"id": 1, "ping": "pong1"}]', response);
 					done();
 				});
 		});
+
+		it('builds the limit into the query body', function () {
+			var dataClient = WeDeploy
+												.data()
+												.limit(99);
+
+			assert.strictEqual(dataClient.query_.body_.limit, 99);
+		});
 	});
 
 	describe('.count()', function () {
-		it('should send request with query count in the body', function(done) {
+		it('sends request with query count in the body', function(done) {
 			RequestMock.intercept().reply(200, '5');
 
 			WeDeploy
@@ -267,6 +295,14 @@ describe('DataApiHelper', function() {
 					done();
 				});
 
+		});
+
+		it('builds the count type into the query body', function () {
+			var dataClient = WeDeploy
+												.data()
+												.count();
+
+			assert.strictEqual(dataClient.query_.body_.type, "count");
 		});
 	});
 
@@ -283,35 +319,222 @@ describe('DataApiHelper', function() {
 					done();
 				});
 		});
+
+		it('builds the offset into the query body', function () {
+			var dataClient = WeDeploy
+												.data()
+												.offset(2);
+
+			assert.strictEqual(dataClient.query_.body_.offset, 2);
+		});
 	});
 
-	describe('.onSearch()', function () {
-		it('should send request with query search in the body', function(done) {
-			RequestMock.intercept().reply(200, '{"total":1,"documents":[{"id":2,"ping":"pong1"}],"scores":{"2":0.13102644681930542},"queryTime":1}');
+	describe('.highlight()', function () {
+		it('should send request with query highlight in the body', function(done) {
+			RequestMock.intercept().reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
 
 			WeDeploy
 				.data()
-				.where('name', '=', 'foo')
-				.where('name', '=', 'bar')
-				.onSearch()
+				.highlight('field')
 				.get('food')
 				.then(function(response) {
-					assert.strictEqual('{"total":1,"documents":[{"id":2,"ping":"pong1"}],"scores":{"2":0.13102644681930542},"queryTime":1}', response);
+					assert.strictEqual('[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]', response);
 					done();
 				});
 		});
 
-		it('should build the query as search type', function () {
-			const client = WeDeploy
-				.data()
-				.where('name', '=', 'foo')
-				.where('name', '=', 'bar')
-				.onSearch()
-				.addFiltersToQuery_();
+		it('builds the highlight into the query body', function () {
+			var dataClient = WeDeploy
+												.data()
+												.highlight("highlighted");
 
-			const body = '{"body_":{"search":[{"and":[{"name":{"operator":"=","value":"foo"}},{"name":{"operator":"=","value":"bar"}}]}]}}';
-			assert.strictEqual(body, JSON.stringify(client.query_));
+			assert.deepEqual(dataClient.query_.body_.highlight, ["highlighted"]);
 		});
+	});
+
+	describe('.orderBy()', function(){
+		it('sends request with query sort in the body', function(done) {
+			RequestMock.intercept().reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
+
+			WeDeploy
+				.data()
+				.orderBy('id', 'asc')
+				.get('food')
+				.then(function(response) {
+					assert.strictEqual('[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]', response);
+					done();
+				});
+		});
+
+		it('builds the orderBy into the query body', function () {
+			var dataClient = WeDeploy
+												.data()
+												.orderBy('id', 'asc');
+
+			assert.deepEqual(dataClient.query_.body_.sort,[{"id":"asc"}]);
+		});
+	});
+
+	describe('.none()', function () {
+		it('should send request with query none in the body', function(done) {
+			RequestMock.intercept().reply(200, '[{"id": 2, "name": "melancia"}]');
+
+			WeDeploy
+				.data()
+				.none('name','cuscuz','tapioca')
+				.get('food')
+				.then(function(response) {
+					assert.strictEqual('[{"id": 2, "name": "melancia"}]', response);
+					done();
+				});
+		});
+
+		it('builds the none query into the query body', function () {
+			var dataClient = WeDeploy
+												.data()
+												.none('name','cuscuz','tapioca')
+			dataClient.addFiltersToQuery_();
+
+			var body = {"body_":{"filter":[{"and":[{"name":{"operator":"none","value":["cuscuz","tapioca"]}}]}]}};
+
+			assert.strictEqual(JSON.stringify(dataClient.query_), JSON.stringify(body));
+		});
+	});
+
+	describe('.match()', function () {
+		it('should send request with query match in the body', function(done) {
+			RequestMock.intercept().reply(200, '[{"id": 2, "name": "cuscuz"}]');
+
+			WeDeploy
+				.data()
+				.match('name','cuscuz')
+				.get('food')
+				.then(function(response) {
+					assert.strictEqual('[{"id": 2, "name": "cuscuz"}]', response);
+					done();
+				});
+		});
+
+		it('builds the match query into the query body');
+	});
+
+	describe('.similar()', function () {
+		it('should send request with query similar in the body', function(done) {
+			RequestMock.intercept().reply(200, '[{"id": 2, "name": "cuscuz"}]');
+
+			WeDeploy
+				.data()
+				.similar('name','cusc')
+				.get('food')
+				.then(function(response) {
+					assert.strictEqual('[{"id": 2, "name": "cuscuz"}]', response);
+					done();
+				});
+		});
+
+		it('builds the similar query into the query body');
+	});
+
+	describe('.lt()', function () {
+		it('should send request with query lt in the body', function(done) {
+			RequestMock.intercept().reply(200, '[{"id": 2, "name": "cuscuz", "size": 10}]');
+
+			WeDeploy
+				.data()
+				.lt('size',30)
+				.get('food')
+				.then(function(response) {
+					assert.strictEqual('[{"id": 2, "name": "cuscuz", "size": 10}]', response);
+					done();
+				});
+		});
+
+		it('builds the lt query into the query body');
+	});
+
+	describe('.lte()', function () {
+		it('should send request with query lte in the body', function(done) {
+			RequestMock.intercept().reply(200, '[{"id": 2, "name": "cuscuz", "size": 10}]');
+
+			WeDeploy
+				.data()
+				.lte('size',30)
+				.get('food')
+				.then(function(response) {
+					assert.strictEqual('[{"id": 2, "name": "cuscuz", "size": 10}]', response);
+					done();
+				});
+		});
+
+		it('builds the lte query into the query body');
+	});
+
+	describe('.any()', function () {
+		it('should send request with query any in the body', function(done) {
+			RequestMock.intercept().reply(200, '[{"id": 2, "name": "cuscuz"}]');
+
+			WeDeploy
+				.data()
+				.any('name','cuscuz','tapioca')
+				.get('food')
+				.then(function(response) {
+					assert.strictEqual('[{"id": 2, "name": "cuscuz"}]', response);
+					done();
+				});
+		});
+
+		it('builds the any query into the query body');
+	});
+
+	describe('.boundingBox()', function () {
+		it('should send request with query boundingBox in the body', function(done) {
+			RequestMock.intercept().reply(200, '[{"id": 2, "name": "cuscuzeria"}]');
+
+			WeDeploy
+				.data()
+				.boundingBox('shape', Geo.boundingBox('20,0', [0, 20]))
+				.get('restaurants')
+				.then(function(response) {
+					assert.strictEqual('[{"id": 2, "name": "cuscuzeria"}]', response);
+					done();
+				});
+		});
+
+		it('builds the boundingBox query into the query body');
+	});
+
+	describe('.distance()', function () {
+		it('should send request with query distance in the body', function(done) {
+			RequestMock.intercept().reply(200, '[{"id": 2, "name": "cuscuzeria"}]');
+
+			WeDeploy
+				.data()
+				.distance('point', Geo.circle([0, 0], 2))
+				.get('restaurants')
+				.then(function(response) {
+					assert.strictEqual('[{"id": 2, "name": "cuscuzeria"}]', response);
+					done();
+				});
+		});
+
+		it('builds the distance query into the query body');
+	});
+
+	describe('.range()', function () {
+		it('should send request with query distance in the body', function(done) {
+			RequestMock.intercept().reply(200, '[{"id": 2, "name": "cuscuzeria", "points": 13}]');
+
+			WeDeploy
+				.data()
+				.range('points', 12, 15)
+				.get('restaurants')
+				.then(function(response) {
+					assert.strictEqual('[{"id": 2, "name": "cuscuzeria", "points": 13}]', response);
+					done();
+				});
+		});
+
+		it('builds the range query into the query body');
 	});
 
 	describe('.where()', function () {
@@ -327,6 +550,8 @@ describe('DataApiHelper', function() {
 					done();
 				});
 		});
+
+		it('builds the filter query into the query body');
 	});
 
 	describe('.or()', function () {
@@ -349,21 +574,8 @@ describe('DataApiHelper', function() {
 					done();
 				});
 		});
-	});
 
-	describe('.highlight()', function () {
-		it('should send request with query highlight in the body', function(done) {
-			RequestMock.intercept().reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
-
-			WeDeploy
-				.data()
-				.highlight('field')
-				.get('food')
-				.then(function(response) {
-					assert.strictEqual('[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]', response);
-					done();
-				});
-		});
+		it('builds the or query into the query body');
 	});
 
 	describe('.aggregate()', function () {
@@ -379,20 +591,54 @@ describe('DataApiHelper', function() {
 					done();
 				});
 		});
+
+		it('builds the aggregate query into the query body');
 	});
 
-	describe('.orderBy()', function(){
-		it('sends request with query sort in the body', function(done) {
-			RequestMock.intercept().reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
+	describe('.search()', function () {
+		context('when using invalid params', function(){
+			it('fails trying to search data without specifing the collection', function () {
+				WeDeploy.socket();
+				var data = WeDeploy.data();
+				assert.throws(function() {
+					data.search(null);
+				}, Error);
+			});
 
-			WeDeploy
-				.data()
-				.orderBy('id', 'asc')
-				.get('food')
-				.then(function(response) {
-					assert.strictEqual('[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]', response);
-					done();
-				});
+			it('builds the query without any conditional on search and throws an error', function () {
+				var data = WeDeploy.data();
+					assert.throws(function() {
+						data.search('collection');
+					}, Error);
+			});
+		});
+
+		context('when using valid params', function(){
+			it('sends request with query search in the body', function(done) {
+				RequestMock.intercept().reply(200, '{"total":1,"documents":[{"id":2,"ping":"pong1"}],"scores":{"2":0.13102644681930542},"queryTime":1}');
+
+				WeDeploy
+					.data()
+					.where('name', '=', 'foo')
+					.where('name', '=', 'bar')
+					.search('food')
+					.then(function(response) {
+						assert.strictEqual('{"total":1,"documents":[{"id":2,"ping":"pong1"}],"scores":{"2":0.13102644681930542},"queryTime":1}', response);
+						done();
+					});
+			});
+
+			it('builds the query as search type', function () {
+				const client = WeDeploy
+					.data()
+					.where('name', '=', 'foo')
+					.where('name', '=', 'bar')
+					.onSearch_()
+					.addFiltersToQuery_();
+
+				const body = '{"body_":{"search":[{"and":[{"name":{"operator":"=","value":"foo"}},{"name":{"operator":"=","value":"bar"}}]}]}}';
+				assert.strictEqual(body, JSON.stringify(client.query_));
+			});
 		});
 	});
 
@@ -418,28 +664,6 @@ describe('DataApiHelper', function() {
 						done();
 					});
 			});
-		});
-	});
-
-	describe('query formation', function () {
-		it('creates the and add virtual filters into the query', function () {
-
-			var client = WeDeploy.data();
-
-		  client.where('age','>','18')
-				.match('name','tester')
-				.or('points','>','7')
-				.any('category', 'student', 'team1')
-				.orderBy('id', 'asc')
-				.limit(10)
-				.offset(2)
-
-			client.addFiltersToQuery_();
-
-			var body = {"body_":{"sort":[{"id":"asc"}],"limit":10,"offset":2,"filter":[{"and":[{"or":[{"and":[{"age":{"operator":">","value":"18"}},{"name":{"operator":"match","value":"tester"}}]},{"points":{"operator":">","value":"7"}}]},{"category":{"operator":"any","value":["student","team1"]}}]}]}};
-
-			assert.strictEqual(JSON.stringify(body), JSON.stringify(client.query_));
-
 		});
 	});
 
@@ -469,141 +693,6 @@ describe('DataApiHelper', function() {
 				WeDeploy.data().watch('fruits');
 				WeDeploy.socket();
 			});
-		});
-	});
-
-	describe('.none()', function () {
-		it('should send request with query none in the body', function(done) {
-			RequestMock.intercept().reply(200, '[{"id": 2, "name": "melancia"}]');
-
-			WeDeploy
-				.data()
-				.none('name','cuscuz','tapioca')
-				.get('food')
-				.then(function(response) {
-					assert.strictEqual('[{"id": 2, "name": "melancia"}]', response);
-					done();
-				});
-		});
-	});
-
-	describe('.match()', function () {
-		it('should send request with query match in the body', function(done) {
-			RequestMock.intercept().reply(200, '[{"id": 2, "name": "cuscuz"}]');
-
-			WeDeploy
-				.data()
-				.match('name','cuscuz')
-				.get('food')
-				.then(function(response) {
-					assert.strictEqual('[{"id": 2, "name": "cuscuz"}]', response);
-					done();
-				});
-		});
-	});
-
-	describe('.similar()', function () {
-		it('should send request with query similar in the body', function(done) {
-			RequestMock.intercept().reply(200, '[{"id": 2, "name": "cuscuz"}]');
-
-			WeDeploy
-				.data()
-				.similar('name','cusc')
-				.get('food')
-				.then(function(response) {
-					assert.strictEqual('[{"id": 2, "name": "cuscuz"}]', response);
-					done();
-				});
-		});
-	});
-
-	describe('.lt()', function () {
-		it('should send request with query lt in the body', function(done) {
-			RequestMock.intercept().reply(200, '[{"id": 2, "name": "cuscuz", "size": 10}]');
-
-			WeDeploy
-				.data()
-				.lt('size',30)
-				.get('food')
-				.then(function(response) {
-					assert.strictEqual('[{"id": 2, "name": "cuscuz", "size": 10}]', response);
-					done();
-				});
-		});
-	});
-
-	describe('.lte()', function () {
-		it('should send request with query lte in the body', function(done) {
-			RequestMock.intercept().reply(200, '[{"id": 2, "name": "cuscuz", "size": 10}]');
-
-			WeDeploy
-				.data()
-				.lte('size',30)
-				.get('food')
-				.then(function(response) {
-					assert.strictEqual('[{"id": 2, "name": "cuscuz", "size": 10}]', response);
-					done();
-				});
-		});
-	});
-
-	describe('.any()', function () {
-		it('should send request with query any in the body', function(done) {
-			RequestMock.intercept().reply(200, '[{"id": 2, "name": "cuscuz"}]');
-
-			WeDeploy
-				.data()
-				.any('name','cuscuz','tapioca')
-				.get('food')
-				.then(function(response) {
-					assert.strictEqual('[{"id": 2, "name": "cuscuz"}]', response);
-					done();
-				});
-		});
-	});
-
-	describe('.boundingBox()', function () {
-		it('should send request with query boundingBox in the body', function(done) {
-			RequestMock.intercept().reply(200, '[{"id": 2, "name": "cuscuzeria"}]');
-
-			WeDeploy
-				.data()
-				.boundingBox('shape', Geo.boundingBox('20,0', [0, 20]))
-				.get('restaurants')
-				.then(function(response) {
-					assert.strictEqual('[{"id": 2, "name": "cuscuzeria"}]', response);
-					done();
-				});
-		});
-	});
-
-	describe('.distance()', function () {
-		it('should send request with query distance in the body', function(done) {
-			RequestMock.intercept().reply(200, '[{"id": 2, "name": "cuscuzeria"}]');
-
-			WeDeploy
-				.data()
-				.distance('point', Geo.circle([0, 0], 2))
-				.get('restaurants')
-				.then(function(response) {
-					assert.strictEqual('[{"id": 2, "name": "cuscuzeria"}]', response);
-					done();
-				});
-		});
-	});
-
-	describe('.range()', function () {
-		it('should send request with query distance in the body', function(done) {
-			RequestMock.intercept().reply(200, '[{"id": 2, "name": "cuscuzeria", "points": 13}]');
-
-			WeDeploy
-				.data()
-				.range('points', 12, 15)
-				.get('restaurants')
-				.then(function(response) {
-					assert.strictEqual('[{"id": 2, "name": "cuscuzeria", "points": 13}]', response);
-					done();
-				});
 		});
 	});
 

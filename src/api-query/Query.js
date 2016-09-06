@@ -255,7 +255,11 @@ class Query extends Embodied {
 			this.body_.search = [];
 		}
 
-		this.body_.search.push(filter.body());
+		if (core.isDefAndNotNull(filterOrTextOrField)) {
+			this.body_.search.push(filter.body());
+		} else {
+			this.body_.search.push({});
+		}
 
 		return this;
 	}

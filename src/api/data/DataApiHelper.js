@@ -20,25 +20,6 @@ class DataApiHelper {
 	}
 
 	/**
-	 * Adds a search to this request's {@link Query} instance.
-	 * @param {!Filter|string} filterOrTextOrField If no other arguments are
-	 * passed to this function, this should be either a `Filter` instance or a
-	 * text to be used in a match filter. In both cases the filter will be
-	 * applied to all fields. Another option is to pass this as a field name
-	 * instead, together with other arguments so the filter can be created.
-	 * @param {string=} opt_textOrOperator Either a text to be used in a match
-	 * filter, or the operator that should be used.
-	 * @param {*=} opt_value The value to be used by the filter. Should only be
-	 * passed if an operator was passed as the second argument.
-	 * @chainable
-	 */
-	onSearch() {
-		this.getOrCreateQuery_().search(this.getOrCreateFilter_());
-		this.onSearch_ = true;
-		return this;
-	}
-
-	/**
 	 * Adds a filter to this request's {@link Query}.
 	 * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
 	 * name of the field to filter by.
@@ -60,13 +41,10 @@ class DataApiHelper {
 	 * @chainnable
 	 */
 	or(fieldOrFilter, opt_operatorOrValue, opt_value) {
-
 		if (this.getOrCreateFilter_().body()['and'].length <= 0) {
 			throw Error("It's required to have a condition before using an 'or()' for the first time.");
 		}
-
 		this.getOrCreateFilter_().or(fieldOrFilter, opt_operatorOrValue, opt_value);
-
 		return this;
 	}
 
@@ -346,6 +324,21 @@ class DataApiHelper {
 			.then(response => response.body());
 	}
 
+	search(key) {
+		assertNotNull(key, 'Document/Field/Collection key must be specified');
+
+		this.onSearch_();
+
+		this.addFiltersToQuery_();
+
+		return this.wedeployClient
+			.url(this.wedeployClient.dataUrl_)
+			.path(key)
+			.get(this.query_)
+			.then(response => assertResponseSucceeded(response))
+			.then(response => response.body());
+	}
+
 	/**
 	 * Creates new socket.io instance. Monitor the arrival of new broadcasted
 	 * data.
@@ -396,10 +389,24 @@ class DataApiHelper {
 	 * @protected
 	 */
 	addFiltersToQuery_() {
-		if (core.isDef(this.filter_) && this.onSearch_ != true) {
+		if (core.isDef(this.filter_) && this.toSearch_ != true) {
 			this.getOrCreateQuery_().filter(this.filter_);
 		}
+		return this;
+	}
 
+	/**
+	 * Adds a search to this request's {@link Query} instance.
+	 * @chainable
+	 * @protected
+	 */
+	onSearch_() {
+		if (core.isDef(this.filter_)) {
+			this.getOrCreateQuery_().search(this.getOrCreateFilter_());
+		} else {
+			throw Error("It's required to have a condition before using an 'search()' for the first time.");
+		}
+		this.toSearch_ = true;
 		return this;
 	}
 
