@@ -392,7 +392,7 @@ describe('DataApiHelper', function() {
 		it('builds the none query into the query body', function () {
 			var dataClient = WeDeploy
 												.data()
-												.none('name','cuscuz','tapioca')
+												.none('name','cuscuz','tapioca');
 			dataClient.addFiltersToQuery_();
 
 			var body = {"body_":{"filter":[{"and":[{"name":{"operator":"none","value":["cuscuz","tapioca"]}}]}]}};
@@ -415,7 +415,16 @@ describe('DataApiHelper', function() {
 				});
 		});
 
-		it('builds the match query into the query body');
+		it('builds the match query into the query body', function(){
+			var dataClient = WeDeploy
+												.data()
+												.match('name','cuscuz');
+			dataClient.addFiltersToQuery_();
+
+			const body = {"body_":{"filter":[{"and":[{"name":{"operator":"match","value":"cuscuz"}}]}]}};
+
+			assert.strictEqual(JSON.stringify(dataClient.query_), JSON.stringify(body));
+		});
 	});
 
 	describe('.similar()', function () {
@@ -432,7 +441,16 @@ describe('DataApiHelper', function() {
 				});
 		});
 
-		it('builds the similar query into the query body');
+		it('builds the similar query into the query body', function(){
+			var dataClient = WeDeploy
+												.data()
+												.similar('name','cusc');
+			dataClient.addFiltersToQuery_();
+
+			const body = {"body_":{"filter":[{"and":[{"name":{"operator":"similar","value":{"query":"cusc"}}}]}]}};
+
+			assert.strictEqual(JSON.stringify(dataClient.query_), JSON.stringify(body));
+		});
 	});
 
 	describe('.lt()', function () {
@@ -449,7 +467,16 @@ describe('DataApiHelper', function() {
 				});
 		});
 
-		it('builds the lt query into the query body');
+		it('builds the lt query into the query body', function(){
+			var dataClient = WeDeploy
+												.data()
+												.lt('size',30);
+			dataClient.addFiltersToQuery_();
+
+			const body = {"body_":{"filter":[{"and":[{"size":{"operator":"<","value":30}}]}]}};
+
+			assert.strictEqual(JSON.stringify(dataClient.query_), JSON.stringify(body));
+		});
 	});
 
 	describe('.lte()', function () {
@@ -466,7 +493,16 @@ describe('DataApiHelper', function() {
 				});
 		});
 
-		it('builds the lte query into the query body');
+		it('builds the lte query into the query body', function(){
+			var dataClient = WeDeploy
+												.data()
+												.lte('size',30);
+			dataClient.addFiltersToQuery_();
+
+			const body = {"body_":{"filter":[{"and":[{"size":{"operator":"<=","value":30}}]}]}};
+
+			assert.strictEqual(JSON.stringify(dataClient.query_), JSON.stringify(body));
+		});
 	});
 
 	describe('.any()', function () {
@@ -483,7 +519,16 @@ describe('DataApiHelper', function() {
 				});
 		});
 
-		it('builds the any query into the query body');
+		it('builds the any query into the query body', function(){
+			var dataClient = WeDeploy
+												.data()
+												.any('name','cuscuz','tapioca');
+			dataClient.addFiltersToQuery_();
+
+			const body = {"body_":{"filter":[{"and":[{"name":{"operator":"any","value":["cuscuz","tapioca"]}}]}]}};
+
+			assert.strictEqual(JSON.stringify(dataClient.query_), JSON.stringify(body));
+		});
 	});
 
 	describe('.boundingBox()', function () {
@@ -500,7 +545,16 @@ describe('DataApiHelper', function() {
 				});
 		});
 
-		it('builds the boundingBox query into the query body');
+		it('builds the boundingBox query into the query body', function(){
+			var dataClient = WeDeploy
+												.data()
+												.boundingBox('shape', Geo.boundingBox('20,0', [0, 20]));
+			dataClient.addFiltersToQuery_();
+
+			const body = {"body_":{"filter":[{"and":[{"shape":{"operator":"gp","value":["20,0",[0,20]]}}]}]}};
+
+			assert.strictEqual(JSON.stringify(dataClient.query_), JSON.stringify(body));
+		});
 	});
 
 	describe('.distance()', function () {
@@ -517,7 +571,16 @@ describe('DataApiHelper', function() {
 				});
 		});
 
-		it('builds the distance query into the query body');
+		it('builds the distance query into the query body', function(){
+			var dataClient = WeDeploy
+												.data()
+												.distance('point', Geo.circle([0, 0], 2));
+			dataClient.addFiltersToQuery_();
+
+			const body = {"body_":{"filter":[{"and":[{"point":{"operator":"gd","value":{"location":[0,0],"max":2}}}]}]}};
+
+			assert.strictEqual(JSON.stringify(dataClient.query_), JSON.stringify(body));
+		});
 	});
 
 	describe('.range()', function () {
@@ -534,7 +597,16 @@ describe('DataApiHelper', function() {
 				});
 		});
 
-		it('builds the range query into the query body');
+		it('builds the range query into the query body', function(){
+			var dataClient = WeDeploy
+												.data()
+												.range('points', 12, 15);
+			dataClient.addFiltersToQuery_();
+
+			const body = {"body_":{"filter":[{"and":[{"points":{"operator":"range","value":{"from":12,"to":15}}}]}]}};
+
+			assert.strictEqual(JSON.stringify(dataClient.query_), JSON.stringify(body));
+		});
 	});
 
 	describe('.where()', function () {
@@ -551,7 +623,16 @@ describe('DataApiHelper', function() {
 				});
 		});
 
-		it('builds the filter query into the query body');
+		it('builds the filter query into the query body', function(){
+			var dataClient = WeDeploy
+												.data()
+												.where('name', '=', 'foo');
+			dataClient.addFiltersToQuery_();
+
+			const body = {"body_":{"filter":[{"and":[{"name":{"operator":"=","value":"foo"}}]}]}};
+
+			assert.strictEqual(JSON.stringify(dataClient.query_), JSON.stringify(body));
+		});
 	});
 
 	describe('.or()', function () {
@@ -575,7 +656,17 @@ describe('DataApiHelper', function() {
 				});
 		});
 
-		it('builds the or query into the query body');
+		it('builds the or query into the query body', function(){
+			var dataClient = WeDeploy
+												.data()
+												.where('name', '=', 'foo')
+												.or('name', '!=', 'bar');
+			dataClient.addFiltersToQuery_();
+
+			const body = {"body_":{"filter":[{"or":[{"and":[{"name":{"operator":"=","value":"foo"}}]},{"name":{"operator":"!=","value":"bar"}}]}]}};
+
+			assert.strictEqual(JSON.stringify(dataClient.query_), JSON.stringify(body));
+		});
 	});
 
 	describe('.aggregate()', function () {
@@ -592,7 +683,16 @@ describe('DataApiHelper', function() {
 				});
 		});
 
-		it('builds the aggregate query into the query body');
+		it('builds the aggregate query into the query body', function(){
+			var dataClient = WeDeploy
+												.data()
+												.aggregate('name', 'field');
+			dataClient.addFiltersToQuery_();
+
+			const body = {"body_":{"aggregation":[{"field":{"name":"name"}}]}};
+
+			assert.strictEqual(JSON.stringify(dataClient.query_), JSON.stringify(body));
+		});
 	});
 
 	describe('.search()', function () {
