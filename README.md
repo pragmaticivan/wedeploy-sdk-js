@@ -1,6 +1,10 @@
-# WeDeploy api client for JavaScript [![Build Status](http://img.shields.io/travis/wedeploy/api-js/master.svg?style=flat)](https://travis-ci.org/wedeploy/api-js)
+# WeDeploy SDK for JavaScript
+[![Build Status][build-status-svg]][build-status-link]
+[![Test Coverage][coverage-status-svg]][coverage-status-link]
+[![Npm Version][npm-svg]][npm-link]
+[![License][license-svg]][license-link]
 
-[![Sauce Test Status](https://saucelabs.com/browser-matrix/launchpad-api.svg)](https://travis-ci.org/wedeploy/api-js)
+An SDK that gives you access to the powerful WeDeploy cloud platforma from your JavaScript app. For more information on WeDeploy and its features, see [the website](https://wedeploy.com) or [the JavaScript guide](https://wedeploy.com/docs).
 
 ## Usage
 
