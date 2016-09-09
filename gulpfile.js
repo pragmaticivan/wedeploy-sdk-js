@@ -8,7 +8,6 @@ metal.registerTasks({
 	globalName: 'wedeploy',
 	buildSrc: ['src/**/!(node)/*.js', '!src/env/node.js'],
 	bundleFileName: 'api.js',
-	karma: require('karma'),
 	testNodeSrc: [
 		'test/enviroment/node/env.js',
 		'test/**/*.js',
