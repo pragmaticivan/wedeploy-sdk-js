@@ -1,13 +1,16 @@
 'use strict';
 
+var concat = require('gulp-concat');
 var gulp = require('gulp');
 var runSequence = require('run-sequence');
 var metal = require('gulp-metal');
+var sourcemaps = require('gulp-sourcemaps');
 
 metal.registerTasks({
 	globalName: 'wedeploy',
 	buildSrc: ['src/**/!(node)/*.js', '!src/env/node.js'],
 	bundleFileName: 'api.js',
+	mainBuildJsTasks: ['build:globals:js', 'build:socket'],
 	testNodeSrc: [
 		'test/enviroment/node/env.js',
 		'test/**/*.js',
@@ -78,4 +81,12 @@ gulp.task('ci', function(cb) {
 	console.warn('Not running tests (most likely due to security restrictions)');
 	console.warn('See https://docs.travis-ci.com/user/sauce-connect/ for help');
 	cb();
+});
+
+gulp.task('build:socket', function() {
+	return gulp.src(['node_modules/socket.io-client/socket.io.js', 'build/globals/api.js'])
+		.pipe(sourcemaps.init({loadMaps: true}))
+		.pipe(concat('api.js'))
+		.pipe(sourcemaps.write())
+		.pipe(gulp.dest('build/globals'));
 });
