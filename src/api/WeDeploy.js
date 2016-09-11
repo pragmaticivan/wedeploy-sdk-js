@@ -142,7 +142,7 @@ class WeDeploy {
 	 * @protected
 	 */
 	createClientRequest_(method, body) {
-		var clientRequest = new ClientRequest();
+		const clientRequest = new ClientRequest();
 
 		clientRequest.body(body || this.body_);
 
@@ -194,7 +194,7 @@ class WeDeploy {
 	 * @return {!ClientRequest} The encoded request.
 	 */
 	encode(clientRequest) {
-		var body = clientRequest.body();
+		let body = clientRequest.body();
 
 		if (core.isElement(body)) {
 			body = new FormData(body);
@@ -228,9 +228,9 @@ class WeDeploy {
 	 * @protected
 	 */
 	encodeParams_(clientRequest) {
-		var params = clientRequest.params();
+		let params = clientRequest.params();
 		params.names().forEach(function(name) {
-			var values = params.getAll(name);
+			let values = params.getAll(name);
 			values.forEach(function(value, index) {
 				if (value instanceof Embodied) {
 					value = value.toString();
@@ -379,7 +379,7 @@ class WeDeploy {
 		if (this.auth_.hasToken()) {
 			clientRequest.header('Authorization', 'Bearer ' + this.auth_.token);
 		} else {
-			var credentials = this.auth_.email + ':' + this.auth_.password;
+			const credentials = this.auth_.email + ':' + this.auth_.password;
 			clientRequest.header('Authorization', 'Basic ' + Base64.encodeString(credentials));
 		}
 	}
@@ -392,9 +392,9 @@ class WeDeploy {
 	 * @return {!CancellablePromise} Deferred request.
 	 */
 	sendAsync(method, body) {
-		var transport = this.customTransport_ || TransportFactory.instance().getDefault();
+		const transport = this.customTransport_ || TransportFactory.instance().getDefault();
 
-		var clientRequest = this.createClientRequest_(method, body);
+		const clientRequest = this.createClientRequest_(method, body);
 
 		return transport.send(clientRequest).then(this.decode);
 	}
@@ -451,8 +451,8 @@ class WeDeploy {
 			throw new Error('Socket.io client not loaded');
 		}
 
-		var clientRequest = this.createClientRequest_('GET', opt_params);
-		var uri = new Uri(clientRequest.url());
+		const clientRequest = this.createClientRequest_('GET', opt_params);
+		const uri = new Uri(clientRequest.url());
 		uri.addParametersFromMultiMap(clientRequest.params());
 
 		opt_options = opt_options || {
@@ -466,7 +466,7 @@ class WeDeploy {
 }
 
 WeDeploy.isContentTypeJson = function(clientMessage) {
-	var contentType = clientMessage.headers().get('content-type') || '';
+	const contentType = clientMessage.headers().get('content-type') || '';
 	return contentType.indexOf('application/json') === 0;
 };
 

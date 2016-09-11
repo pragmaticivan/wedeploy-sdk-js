@@ -34,7 +34,7 @@ class FilterBody {
 		if (core.isDefAndNotNull(field)) {
 			this.createBody_(field, obj);
 		} else {
-			this.createBody_("and",[]);
+			this.createBody_('and', []);
 		}
 
 	}

@@ -41,8 +41,8 @@ class DataApiHelper {
 	 * @chainnable
 	 */
 	or(fieldOrFilter, opt_operatorOrValue, opt_value) {
-		if (this.getOrCreateFilter_().body()['and'].length <= 0) {
-			throw Error("It's required to have a condition before using an 'or()' for the first time.");
+		if (this.getOrCreateFilter_().body().and.length <= 0) {
+			throw Error('It\'s required to have a condition before using an \'or()\' for the first time.');
 		}
 		this.getOrCreateFilter_().or(fieldOrFilter, opt_operatorOrValue, opt_value);
 		return this;
@@ -56,8 +56,8 @@ class DataApiHelper {
 	 * separate params.
 	 * @chainnable
 	 */
-	none(field,...args) {
-		return this.where(Filter.none(field,args));
+	none(field, ...args) {
+		return this.where(Filter.none(field, args));
 	}
 
 	/**
@@ -303,7 +303,7 @@ class DataApiHelper {
 			.path(key)
 			.delete()
 			.then(response => assertResponseSucceeded(response))
-			.then(response => undefined);
+			.then(() => undefined);
 	}
 
 	/**
@@ -396,7 +396,7 @@ class DataApiHelper {
 	 * @protected
 	 */
 	addFiltersToQuery_() {
-		if (core.isDef(this.filter_) && this.toSearch_ != true) {
+		if (core.isDef(this.filter_) && this.toSearch_ !== true) {
 			this.getOrCreateQuery_().filter(this.filter_);
 		}
 		return this;
@@ -411,7 +411,7 @@ class DataApiHelper {
 		if (core.isDef(this.filter_)) {
 			this.getOrCreateQuery_().search(this.getOrCreateFilter_());
 		} else {
-			throw Error("It's required to have a condition before using an 'search()' for the first time.");
+			throw Error('It\'s required to have a condition before using an \'search()\' for the first time.');
 		}
 		this.toSearch_ = true;
 		return this;
