@@ -10,7 +10,7 @@ metal.registerTasks({
 	globalName: 'wedeploy',
 	buildSrc: ['src/**/!(node)/*.js', '!src/env/node.js'],
 	bundleFileName: 'api.js',
-	mainBuildJsTasks: ['build:globals:js', 'build:socket'],
+	mainBuildJsTasks: ['build:socket'],
 	testNodeSrc: [
 		'test/enviroment/node/env.js',
 		'test/**/*.js',
@@ -83,7 +83,7 @@ gulp.task('ci', function(cb) {
 	cb();
 });
 
-gulp.task('build:socket', function() {
+gulp.task('build:socket', ['build:globals:js'], function() {
 	return gulp.src(['node_modules/socket.io-client/socket.io.js', 'build/globals/api.js'])
 		.pipe(sourcemaps.init({loadMaps: true}))
 		.pipe(concat('api.js'))
