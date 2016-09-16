@@ -1,5 +1,6 @@
 'use strict';
 
+import Auth from '../../../src/api/auth/Auth';
 import WeDeploy from '../../../src/api/WeDeploy';
 import Geo from '../../../src/api-query/Geo';
 
@@ -28,6 +29,11 @@ describe('DataApiHelper', function() {
 			assert.throws(function() {
 				WeDeploy.data('http://data.project.wedeploy.me/extrapath');
 			}, Error);
+		});
+
+		it('returns instance of scoped auth', function() {
+			WeDeploy.auth().currentUser = Auth.create('token');
+			assert.strictEqual(WeDeploy.auth().currentUser, WeDeploy.data().helperAuthScope);
 		});
 	});
 

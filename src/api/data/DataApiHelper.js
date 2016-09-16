@@ -1,22 +1,22 @@
 'use strict';
 
+import ApiHelper from '../ApiHelper';
 import Query from '../../api-query/Query';
 import Filter from '../../api-query/Filter';
-import { assertNotNull, assertObject, assertDefAndNotNull, assertResponseSucceeded } from '../assertions';
+import { assertNotNull, assertObject, assertResponseSucceeded } from '../assertions';
 import { core } from 'metal';
 
 /**
  * Class responsible for encapsulate data api calls.
  */
-class DataApiHelper {
+class DataApiHelper extends ApiHelper {
 	/**
 	 * Constructs an {@link DataApiHelper} instance.
 	 * @param {@link WeDeploy} instance.
 	 * @constructor
 	 */
 	constructor(wedeployClient) {
-		assertDefAndNotNull(wedeployClient, 'WeDeploy client reference must be specified');
-		this.wedeployClient = wedeployClient;
+		super(wedeployClient);
 	}
 
 	/**
@@ -254,6 +254,7 @@ class DataApiHelper {
 
 		return this.wedeployClient
 			.url(this.wedeployClient.dataUrl_)
+			.auth(this.helperAuthScope)
 			.path(collection)
 			.post(data)
 			.then(response => assertResponseSucceeded(response))
@@ -283,6 +284,7 @@ class DataApiHelper {
 
 		return this.wedeployClient
 			.url(this.wedeployClient.dataUrl_)
+			.auth(this.helperAuthScope)
 			.path(document)
 			.put(data)
 			.then(response => assertResponseSucceeded(response))
@@ -300,6 +302,7 @@ class DataApiHelper {
 
 		return this.wedeployClient
 			.url(this.wedeployClient.dataUrl_)
+			.auth(this.helperAuthScope)
 			.path(key)
 			.delete()
 			.then(response => assertResponseSucceeded(response))
@@ -318,6 +321,7 @@ class DataApiHelper {
 
 		return this.wedeployClient
 			.url(this.wedeployClient.dataUrl_)
+			.auth(this.helperAuthScope)
 			.path(key)
 			.get(this.query_)
 			.then(response => assertResponseSucceeded(response))
@@ -339,6 +343,7 @@ class DataApiHelper {
 
 		return this.wedeployClient
 			.url(this.wedeployClient.dataUrl_)
+			.auth(this.helperAuthScope)
 			.path(key)
 			.get(this.query_)
 			.then(response => assertResponseSucceeded(response))
@@ -359,6 +364,7 @@ class DataApiHelper {
 
 		return this.wedeployClient
 			.url(this.wedeployClient.dataUrl_)
+			.auth(this.helperAuthScope)
 			.path(collection)
 			.watch(this.query_, opt_options);
 	}

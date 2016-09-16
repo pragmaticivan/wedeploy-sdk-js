@@ -1,6 +1,7 @@
 'use strict';
 
 import Auth from './Auth';
+import ApiHelper from '../ApiHelper';
 import FacebookAuthProvider from './FacebookAuthProvider';
 import GithubAuthProvider from './GithubAuthProvider';
 import globals from '../../globals/globals';
@@ -12,18 +13,17 @@ import { assertDefAndNotNull, assertFunction, assertObject, assertUserSignedIn, 
 /**
  * Class responsible for encapsulate auth api calls.
  */
-class AuthApiHelper {
+class AuthApiHelper extends ApiHelper {
 	/**
 	 * Constructs an {@link AuthApiHelper} instance.
 	 * @constructor
 	 */
 	constructor(wedeployClient) {
-		assertDefAndNotNull(wedeployClient, 'WeDeploy client reference must be specified');
+		super(wedeployClient);
 
 		this.currentUser = null;
 		this.onSignInCallback = null;
 		this.onSignOutCallback = null;
-		this.wedeployClient = wedeployClient;
 		this.storage = new Storage(new LocalStorageMechanism());
 
 		this.processSignIn_();
@@ -86,7 +86,7 @@ class AuthApiHelper {
 		return this.wedeployClient
 			.url(this.wedeployClient.authUrl_)
 			.path('/users', userId)
-			.auth(this.currentUser.token)
+			.auth(this.resolveAuthScope().token)
 			.get()
 			.then(response => assertResponseSucceeded(response));
 	}
@@ -195,6 +195,17 @@ class AuthApiHelper {
 	 */
 	removeUrlFragmentCompletely_() {
 		globals.window.history.pushState({}, document.title, window.location.pathname + window.location.search);
+	}
+
+	/**
+	 * Resolves auth scope from last login or api helper.
+	 * @return {Auth}
+	 */
+	resolveAuthScope() {
+		if (this.helperAuthScope) {
+			return this.helperAuthScope;
+		}
+		return this.currentUser;
 	}
 
 	/**

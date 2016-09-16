@@ -22,6 +22,24 @@ describe('AuthApiHelper', function() {
 		assert.strictEqual(auth, WeDeploy.auth());
 	});
 
+	it('should WeDeploy.auth() use current user information', function(done) {
+		RequestMock.intercept().reply(200);
+		WeDeploy.auth().currentUser = Auth.create('token1');
+		WeDeploy.auth().getUser('id').then(() => {
+			assert.strictEqual(RequestMock.get().requestHeaders.Authorization, 'Bearer token1');
+			done();
+		});
+	});
+
+	it('should WeDeploy.auth() use auth scope instead of current user information', function(done) {
+		RequestMock.intercept().reply(200);
+		WeDeploy.auth().currentUser = Auth.create('token1');
+		WeDeploy.auth().auth('token2').getUser('id').then(() => {
+			assert.strictEqual(RequestMock.get().requestHeaders.Authorization, 'Bearer token2');
+			done();
+		});
+	});
+
 	it('should map providers', function() {
 		var auth = WeDeploy.auth();
 		assert.ok(auth.provider.Google);
