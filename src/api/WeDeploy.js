@@ -71,11 +71,12 @@ class WeDeploy {
 		if (core.isString(opt_dataUrl)) {
 			WeDeploy.dataUrl_ = opt_dataUrl;
 		}
-		if (!WeDeploy.data_) {
-			WeDeploy.data_ = new DataApiHelper(WeDeploy);
-			WeDeploy.data_.auth(WeDeploy.auth().currentUser);
-		}
-		return WeDeploy.data_;
+
+		let data = new DataApiHelper(WeDeploy);
+
+		data.auth(WeDeploy.auth().currentUser);
+
+		return data;
 	}
 
 	/**
