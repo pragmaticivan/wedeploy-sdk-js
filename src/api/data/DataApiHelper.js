@@ -3,7 +3,7 @@
 import ApiHelper from '../ApiHelper';
 import Query from '../../api-query/Query';
 import Filter from '../../api-query/Filter';
-import { assertNotNull, assertObject, assertResponseSucceeded } from '../assertions';
+import { assertDefAndNotNull, assertObject, assertResponseSucceeded } from '../assertions';
 import { core } from 'metal';
 
 /**
@@ -249,7 +249,7 @@ class DataApiHelper extends ApiHelper {
 	 * @return {!CancellablePromise}
 	 */
 	create(collection, data) {
-		assertNotNull(collection, 'Collection key must be specified.');
+		assertDefAndNotNull(collection, 'Collection key must be specified.');
 		assertObject(data, 'Data can\'t be empty.');
 
 		return this.wedeployClient
@@ -279,7 +279,7 @@ class DataApiHelper extends ApiHelper {
 	 * @return {!CancellablePromise}
 	 */
 	update(document, data) {
-		assertNotNull(document, 'Document key must be specified.');
+		assertDefAndNotNull(document, 'Document key must be specified.');
 		assertObject(data, 'Data must be specified.');
 
 		return this.wedeployClient
@@ -298,7 +298,7 @@ class DataApiHelper extends ApiHelper {
 	 * @return {!CancellablePromise}
 	 */
 	delete(key) {
-		assertNotNull(key, 'Document/Field/Collection key must be specified');
+		assertDefAndNotNull(key, 'Document/Field/Collection key must be specified');
 
 		return this.wedeployClient
 			.url(this.wedeployClient.dataUrl_)
@@ -315,7 +315,7 @@ class DataApiHelper extends ApiHelper {
 	 * @return {!CancellablePromise}
 	 */
 	get(key) {
-		assertNotNull(key, 'Document/Field/Collection key must be specified');
+		assertDefAndNotNull(key, 'Document/Field/Collection key must be specified');
 
 		this.addFiltersToQuery_();
 
@@ -335,7 +335,7 @@ class DataApiHelper extends ApiHelper {
 	 * @return {!CancellablePromise}
 	 */
 	search(key) {
-		assertNotNull(key, 'Document/Field/Collection key must be specified');
+		assertDefAndNotNull(key, 'Document/Field/Collection key must be specified');
 
 		this.onSearch_();
 
@@ -358,7 +358,7 @@ class DataApiHelper extends ApiHelper {
 	 * @return {!io} Socket IO reference. Server events can be listened on it.
 	 */
 	watch(collection, opt_options) {
-		assertNotNull(collection, 'Collection key must be specified');
+		assertDefAndNotNull(collection, 'Collection key must be specified');
 
 		this.addFiltersToQuery_();
 
