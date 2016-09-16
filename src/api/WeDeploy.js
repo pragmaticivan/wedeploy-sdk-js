@@ -465,6 +465,14 @@ class WeDeploy {
 
 		return io(uri.getHost(), opt_options);
 	}
+
+	/**
+	 * @param {boolean} opt_withCredentials
+	 */
+	withCredentials(withCredentials) {
+		this.withCredentials_ = !!withCredentials;
+		return this;
+	}
 }
 
 WeDeploy.isContentTypeJson = function(clientMessage) {
