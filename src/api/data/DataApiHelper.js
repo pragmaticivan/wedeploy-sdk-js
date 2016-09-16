@@ -22,7 +22,7 @@ class DataApiHelper {
 	/**
 	 * Adds a filter to this request's {@link Query}.
 	 * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
-	 * name of the field to filter by.
+	 *   name of the field to filter by.
 	 * @param {*=} opt_operatorOrValue Either the field's operator or its value.
 	 * @param {*=} opt_value The filter's value.
 	 * @chainable
@@ -35,13 +35,13 @@ class DataApiHelper {
 	/**
 	 * Adds a filter to be composed with this filter using the "or" operator.
 	 * @param {!Filter|string} fieldOrFilter Either a {@link Filter} instance or
-	 * the name of the field to filter by.
+	 *   the name of the field to filter by.
 	 * @param {*=} opt_operatorOrValue Either the field's operator or its value.
 	 * @param {*=} opt_value The filter's value.
 	 * @chainnable
 	 */
 	or(fieldOrFilter, opt_operatorOrValue, opt_value) {
-		if (this.getOrCreateFilter_().body().and.length <= 0) {
+		if (this.getOrCreateFilter_().body().and.length === 0) {
 			throw Error('It\'s required to have a condition before using an \'or()\' for the first time.');
 		}
 		this.getOrCreateFilter_().or(fieldOrFilter, opt_operatorOrValue, opt_value);

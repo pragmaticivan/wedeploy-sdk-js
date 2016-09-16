@@ -85,7 +85,9 @@ gulp.task('ci', function(cb) {
 
 gulp.task('build:socket', ['build:globals:js'], function() {
 	return gulp.src(['node_modules/socket.io-client/socket.io.js', 'build/globals/api.js'])
-		.pipe(sourcemaps.init({loadMaps: true}))
+		.pipe(sourcemaps.init({
+			loadMaps: true
+		}))
 		.pipe(concat('api.js'))
 		.pipe(sourcemaps.write())
 		.pipe(gulp.dest('build/globals'));
