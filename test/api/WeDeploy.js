@@ -396,14 +396,18 @@ describe('WeDeploy', function() {
 	});
 
 	it('should not allow FormData when it is not implemented (such as on Node)', function(done) {
-		if (typeof FormData === 'undefined') {
-			assert.throws(function() {
-				WeDeploy.url('http://localhost/url').form('a', 'b');
-			}, Error);
+		if (typeof window !== 'undefined') {
 			done();
-			return;
 		}
 
+		var tempFormData = FormData;
+		FormData = 'undefined';
+
+		assert.throws(function() {
+			WeDeploy.url('http://localhost/url').form('a', 'b');
+		}, Error);
+
+		FormData = tempFormData;
 		done();
 	});
 
@@ -488,5 +492,32 @@ describe('WeDeploy', function() {
 		assert.throws(function() {
 			WeDeploy.url('http://localhost/url').header('name');
 		}, Error);
+	});
+
+
+	describe('withCredentials()', function() {
+		it('ensures the default to be false when no param is specified', function() {
+			const client = WeDeploy.url('http://localhost/url')
+				.withCredentials();
+			assert.strictEqual(client.withCredentials_, false);
+		});
+
+		it('ensures to be true', function() {
+			const client = WeDeploy.url('http://localhost/url')
+				.withCredentials(true);
+			assert.strictEqual(client.withCredentials_, true);
+		});
+
+		it('ensures to be false', function() {
+			const client = WeDeploy.url('http://localhost/url')
+				.withCredentials(false);
+			assert.strictEqual(client.withCredentials_, false);
+		});
+
+		it('ensures to be truthy', function() {
+			const client = WeDeploy.url('http://localhost/url')
+				.withCredentials(1);
+			assert.strictEqual(client.withCredentials_, true);
+		});
 	});
 });

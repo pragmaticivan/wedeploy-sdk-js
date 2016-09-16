@@ -2,7 +2,8 @@
 	"globals": {
 		"assert": true,
 		"sinon": true,
-		"RequestMock": true
+		"RequestMock": true,
+		"FormData": true
 	},
 	"mocha": true,
 	"extends": "../.jshintrc"
