@@ -36,17 +36,6 @@ class AuthApiHelper extends ApiHelper {
 	}
 
 	/**
-	 * Creates access token cookie. Relevant to create access token cookie after
-	 * signInWithEmailAndPassword call.
-	 * @param {string} accessToken
-	 */
-	createAccessTokenCookie(accessToken) {
-		if (globals.document) {
-			globals.document.cookie = 'access_token=' + accessToken + '; path=/';
-		}
-	}
-
-	/**
 	 * Creates user.
 	 * @param {!object} data The data to be used to create the user.
 	 * @return {CancellablePromise}
@@ -253,11 +242,7 @@ class AuthApiHelper extends ApiHelper {
 			.param('password', password)
 			.get()
 			.then(response => assertResponseSucceeded(response))
-			.then(response => {
-				let accessToken = response.body().access_token;
-				this.createAccessTokenCookie(accessToken);
-				return this.loadCurrentUser(accessToken);
-			})
+			.then(response => this.loadCurrentUser(response.body().access_token))
 			.then((user) => {
 				this.maybeCallOnSignInCallback_();
 				return user;
