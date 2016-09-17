@@ -10,6 +10,7 @@ describe('AuthApiHelper', function() {
 	afterEach(function() {
 		WeDeploy.auth_ = null;
 		globals.window = window;
+		globals.document = document;
 		RequestMock.teardown();
 	});
 
@@ -234,6 +235,26 @@ describe('AuthApiHelper', function() {
 			.signInWithEmailAndPassword('email@domain.com', 'password')
 			.then((user) => {
 				assert.ok(user instanceof Auth);
+				done();
+			});
+	});
+
+	it('should call sign-in with email and password successfully 11', function(done) {
+		globals.document = {
+			cookie: ''
+		};
+		var auth = WeDeploy.auth();
+		auth.loadCurrentUser = () => new Auth();
+		var authData = {
+			access_token: 'xyz'
+		};
+		RequestMock.intercept().reply(200, JSON.stringify(authData), {
+			'content-type': 'application/json'
+		});
+		auth
+			.signInWithEmailAndPassword('email@domain.com', 'password')
+			.then(() => {
+				assert.strictEqual('access_token=xyz; path=/', globals.document.cookie);
 				done();
 			});
 	});
