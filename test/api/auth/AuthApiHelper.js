@@ -315,7 +315,10 @@ describe('AuthApiHelper', function() {
 		RequestMock.intercept().reply(200);
 		auth
 			.getUser('userId')
-			.then(() => done());
+			.then((user) => {
+				assert.ok(user instanceof Auth);
+				done();
+			});
 	});
 
 	it('should call getUser unsuccessfully', function(done) {

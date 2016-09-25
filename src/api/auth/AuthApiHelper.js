@@ -88,7 +88,8 @@ class AuthApiHelper extends ApiHelper {
 			.path('/users', userId)
 			.auth(this.resolveAuthScope().token)
 			.get()
-			.then(response => assertResponseSucceeded(response));
+			.then(response => assertResponseSucceeded(response))
+			.then(response => this.makeUserAuthFromData(response.body()));
 	}
 
 	/**
