@@ -4,13 +4,16 @@ import Auth from '../../../src/api/auth/Auth';
 import WeDeploy from '../../../src/api/WeDeploy';
 
 describe('Auth', function() {
+	before(function() {
+		WeDeploy.auth('http://localhost');
+	});
 
 	afterEach(function() {
 		RequestMock.teardown();
 	});
 
 	beforeEach(function() {
-		RequestMock.setup();
+		RequestMock.setup('PATCH', 'http://localhost/users');
 	});
 
 	it('should create Auth instance with a token', function() {
@@ -112,7 +115,7 @@ describe('Auth', function() {
 		var auth = Auth.create();
 		auth.setId('id');
 		auth.setWedeployClient(WeDeploy);
-		RequestMock.intercept().reply(200);
+		RequestMock.intercept('DELETE', 'http://localhost/users/id').reply(200);
 		auth
 			.deleteUser()
 			.then(() => done());
@@ -122,7 +125,7 @@ describe('Auth', function() {
 		var auth = Auth.create();
 		auth.setId('id');
 		auth.setWedeployClient(WeDeploy);
-		RequestMock.intercept().reply(400);
+		RequestMock.intercept('DELETE', 'http://localhost/users/id').reply(400);
 		auth
 			.deleteUser()
 			.catch(() => done());
@@ -135,9 +138,12 @@ describe('Auth', function() {
 		var responseErrorObject = {
 			error: true
 		};
-		RequestMock.intercept().reply(400, JSON.stringify(responseErrorObject), {
-			'content-type': 'application/json'
-		});
+		RequestMock.intercept('DELETE', 'http://localhost/users/id').reply(
+			400,
+			JSON.stringify(responseErrorObject), {
+				'content-type': 'application/json'
+			}
+		);
 		auth
 			.deleteUser()
 			.catch((reason) => {

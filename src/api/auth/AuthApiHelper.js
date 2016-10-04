@@ -24,7 +24,9 @@ class AuthApiHelper extends ApiHelper {
 		this.currentUser = null;
 		this.onSignInCallback = null;
 		this.onSignOutCallback = null;
-		this.storage = new Storage(new LocalStorageMechanism());
+		if (LocalStorageMechanism.isSupported()) {
+			this.storage = new Storage(new LocalStorageMechanism());
+		}
 
 		this.processSignIn_();
 
@@ -108,7 +110,9 @@ class AuthApiHelper extends ApiHelper {
 				var data = response.body();
 				data.token = token;
 				this.currentUser = this.makeUserAuthFromData(data);
-				this.storage.set('currentUser', data);
+				if (this.storage) {
+					this.storage.set('currentUser', data);
+				}
 				return this.currentUser;
 			});
 	}
@@ -184,7 +188,7 @@ class AuthApiHelper extends ApiHelper {
 				.then(() => this.maybeCallOnSignInCallback_());
 			return;
 		}
-		var currentUser = this.storage.get('currentUser');
+		var currentUser = this.storage && this.storage.get('currentUser');
 		if (currentUser) {
 			this.currentUser = this.makeUserAuthFromData(currentUser);
 		}
@@ -292,7 +296,9 @@ class AuthApiHelper extends ApiHelper {
 	 */
 	unloadCurrentUser_() {
 		this.currentUser = null;
-		this.storage.remove('currentUser');
+		if (this.storage) {
+			this.storage.remove('currentUser');
+		}
 	}
 }
 

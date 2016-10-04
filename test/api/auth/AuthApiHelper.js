@@ -9,12 +9,17 @@ import WeDeploy from '../../../src/api/WeDeploy';
 describe('AuthApiHelper', function() {
 	afterEach(function() {
 		WeDeploy.auth_ = null;
-		globals.window = window;
+		if (typeof window === 'undefined') {
+			globals.window = null;
+		} else {
+			globals.window = window;
+		}
 		RequestMock.teardown();
 	});
 
 	beforeEach(function() {
-		RequestMock.setup();
+		WeDeploy.auth('http://localhost');
+		RequestMock.setup('GET', 'http://localhost/users/id');
 	});
 
 	it('should WeDeploy.auth() returns same instance', function() {
@@ -26,7 +31,7 @@ describe('AuthApiHelper', function() {
 		RequestMock.intercept().reply(200);
 		WeDeploy.auth().currentUser = Auth.create('token1');
 		WeDeploy.auth().getUser('id').then(() => {
-			assert.strictEqual(RequestMock.get().requestHeaders.Authorization, 'Bearer token1');
+			assert.strictEqual(getAuthorizationHeader_(), 'Bearer token1');
 			done();
 		});
 	});
@@ -35,7 +40,7 @@ describe('AuthApiHelper', function() {
 		RequestMock.intercept().reply(200);
 		WeDeploy.auth().currentUser = Auth.create('token1');
 		WeDeploy.auth().auth('token2').getUser('id').then(() => {
-			assert.strictEqual(RequestMock.get().requestHeaders.Authorization, 'Bearer token2');
+			assert.strictEqual(getAuthorizationHeader_(), 'Bearer token2');
 			done();
 		});
 	});
@@ -46,402 +51,477 @@ describe('AuthApiHelper', function() {
 		assert.ok(auth.provider.Github);
 	});
 
-	it('should throws exception when signin-in with redirect using null provider', function() {
-		var auth = WeDeploy.auth();
-		assert.throws(function() {
-			auth.signInWithRedirect(null);
-		}, Error);
-	});
-
-	it('should throws exception signing-in with redirect using not supported sign-in type for the environment', function() {
-		var auth = WeDeploy.auth();
-		assert.throws(function() {
-			auth.signInWithRedirect(undefined);
-		}, Error);
-	});
-
-	it('should fail sign-in with redirect using not supported provider', function() {
-		var auth = WeDeploy.auth();
-		assert.throws(function() {
-			auth.signInWithRedirect({});
-		}, Error);
-	});
-
-	it('should not fail sign-in with redirect using Github provider', function() {
-		var auth = WeDeploy.auth();
-		globals.window = {
-			location: {
-				href: ''
-			}
-		};
-		assert.doesNotThrow(function() {
-			auth.signInWithRedirect(new GithubAuthProvider());
+	describe('Sign in with redirect', skipForNode_(function() {
+		it('should throws exception when signin-in with redirect using null provider', function() {
+			var auth = WeDeploy.auth();
+			assert.throws(function() {
+				auth.signInWithRedirect(null);
+			}, Error);
 		});
-	});
 
-	it('should not fail sign-in with redirect using Google provider', function() {
-		var auth = WeDeploy.auth();
-		globals.window = {
-			location: {
-				href: ''
-			}
-		};
-		assert.doesNotThrow(function() {
-			auth.signInWithRedirect(new GoogleAuthProvider());
+		it('should throws exception signing-in with redirect using not supported sign-in type for the environment', function() {
+			var auth = WeDeploy.auth();
+			assert.throws(function() {
+				auth.signInWithRedirect(undefined);
+			}, Error);
 		});
-	});
 
-	it('should sign-in with redirect forward location to provider authorization url with current url without hash as redirect uri', function() {
-		var auth = WeDeploy.auth();
-		globals.window = {
-			location: {
-				protocol: 'http:',
-				host: 'currentUrl',
-				pathname: '/',
-				search: '?q=1',
-				hash: '#hash'
-			}
-		};
-		var provider = new GithubAuthProvider();
-		assert.notOk(provider.hasRedirectUri());
-		auth.signInWithRedirect(provider);
-		assert.strictEqual('http://currentUrl/?q=1', provider.getRedirectUri());
-		assert.strictEqual(provider.makeAuthorizationUrl(), globals.window.location.href);
-	});
-
-	it('should sign-in with redirect forward location to provider authorization url and preserve redirect uri', function() {
-		var auth = WeDeploy.auth();
-		globals.window = {
-			location: {
-				href: 'http://currentUrl'
-			}
-		};
-		var provider = new GithubAuthProvider();
-		provider.setRedirectUri('http://customUrl');
-		auth.signInWithRedirect(provider);
-		assert.strictEqual('http://customUrl', provider.getRedirectUri());
-		assert.strictEqual(provider.makeAuthorizationUrl(), globals.window.location.href);
-	});
-
-	it('should throws exception when calling when sending password reset with email not specified', function() {
-		assert.throws(() => WeDeploy.auth().sendPasswordResetEmail(), Error);
-	});
-
-	it('should call send password reset email successfully', function(done) {
-		var auth = WeDeploy.auth();
-		RequestMock.intercept().reply(200);
-		auth
-			.sendPasswordResetEmail('email@domain.com')
-			.then(() => done());
-	});
-
-	it('should call send password reset email unsuccessfully', function(done) {
-		var auth = WeDeploy.auth();
-		RequestMock.intercept().reply(400);
-		auth
-			.sendPasswordResetEmail('email@domain.com')
-			.catch(() => done());
-	});
-
-	it('should call send password reset email with email as parameter', function(done) {
-		var auth = WeDeploy.auth();
-		RequestMock.intercept().reply(200);
-		auth
-			.sendPasswordResetEmail('email@domain.com')
-			.then((response) => {
-				assert.strictEqual('email@domain.com', response.request().params().get('email'));
-				done();
-			});
-	});
-
-	it('should call send password reset email unsuccessfully with error response as reason', function(done) {
-		var auth = WeDeploy.auth();
-		var responseErrorObject = {
-			error: true
-		};
-		RequestMock.intercept().reply(400, JSON.stringify(responseErrorObject), {
-			'content-type': 'application/json'
+		it('should fail sign-in with redirect using not supported provider', function() {
+			var auth = WeDeploy.auth();
+			assert.throws(function() {
+				auth.signInWithRedirect({});
+			}, Error);
 		});
-		auth
-			.sendPasswordResetEmail('email@domain.com')
-			.catch((reason) => {
-				assert.deepEqual(responseErrorObject, reason);
-				done();
-			});
-	});
 
-	it('should throws exception when calling create user with user data not specified', function() {
-		assert.throws(() => WeDeploy.auth().createUser(), Error);
-	});
-
-	it('should throws exception when calling create user with user data not an object', function() {
-		assert.throws(() => WeDeploy.auth().createUser(''), Error);
-	});
-
-	it('should call create user successfully', function(done) {
-		var auth = WeDeploy.auth('http://auth');
-		RequestMock.intercept().reply(200);
-		auth
-			.createUser({})
-			.then((user) => {
-				assert.ok(user instanceof Auth);
-				done();
-			});
-	});
-
-	it('should call create user unsuccessfully', function(done) {
-		var auth = WeDeploy.auth();
-		RequestMock.intercept().reply(400);
-		auth
-			.createUser({})
-			.catch(() => done());
-	});
-
-	it('should call create user unsuccessfully with error response as reason', function(done) {
-		var auth = WeDeploy.auth();
-		var responseErrorObject = {
-			error: true
-		};
-		RequestMock.intercept().reply(400, JSON.stringify(responseErrorObject), {
-			'content-type': 'application/json'
-		});
-		auth
-			.createUser({})
-			.catch((reason) => {
-				assert.deepEqual(responseErrorObject, reason);
-				done();
-			});
-	});
-
-	it('should throws exception when calling sign-in with email and password when email not specified', function() {
-		assert.throws(() => WeDeploy.auth().signInWithEmailAndPassword(), Error);
-	});
-
-	it('should throws exception when calling sign-in with email and password when password not specified', function() {
-		assert.throws(() => WeDeploy.auth().signInWithEmailAndPassword('email@domain.com'), Error);
-	});
-
-	it('should call sign-in with email and password successfully', function(done) {
-		var auth = WeDeploy.auth();
-		auth.loadCurrentUser = () => new Auth();
-		var authData = {
-			access_token: 'xyz'
-		};
-		RequestMock.intercept().reply(200, JSON.stringify(authData), {
-			'content-type': 'application/json'
-		});
-		auth
-			.signInWithEmailAndPassword('email@domain.com', 'password')
-			.then((user) => {
-				assert.ok(user instanceof Auth);
-				done();
-			});
-	});
-
-	it('should call sign-in with email and password unsuccessfully', function(done) {
-		var auth = WeDeploy.auth();
-		RequestMock.intercept().reply(400);
-		auth
-			.signInWithEmailAndPassword('email@domain.com', 'wrongPassword')
-			.catch(() => done());
-	});
-
-	it('should call sign-in with email and password unsuccessfully with error response as reason', function(done) {
-		var auth = WeDeploy.auth();
-		var responseErrorObject = {
-			error: true
-		};
-		RequestMock.intercept().reply(400, JSON.stringify(responseErrorObject), {
-			'content-type': 'application/json'
-		});
-		auth
-			.signInWithEmailAndPassword('email@domain.com', 'wrongPassword')
-			.catch((reason) => {
-				assert.deepEqual(responseErrorObject, reason);
-				done();
-			});
-	});
-
-	it('should throws exception when calling sign-out without being signed-in', function() {
-		assert.throws(() => WeDeploy.auth().signOut(), Error);
-	});
-
-	it('should call sign-out successfully', function(done) {
-		var auth = WeDeploy.auth();
-		auth.currentUser = {};
-		RequestMock.intercept().reply(200);
-		auth
-			.signOut()
-			.then(() => done());
-	});
-
-	it('should call sign-out unsuccessfully', function(done) {
-		var auth = WeDeploy.auth();
-		auth.currentUser = {};
-		RequestMock.intercept().reply(400);
-		auth
-			.signOut()
-			.catch(() => done());
-	});
-
-	it('should call sign-out unsuccessfully with error response as reason', function(done) {
-		var auth = WeDeploy.auth();
-		auth.currentUser = {};
-		var responseErrorObject = {
-			error: true
-		};
-		RequestMock.intercept().reply(400, JSON.stringify(responseErrorObject), {
-			'content-type': 'application/json'
-		});
-		auth
-			.signOut()
-			.catch((reason) => {
-				assert.deepEqual(responseErrorObject, reason);
-				done();
-			});
-	});
-
-	it('should throws exception when calling getUser without user id', function() {
-		assert.throws(() => WeDeploy.auth().getUser(), Error);
-	});
-
-	it('should throws exception when calling getUser without being signed-in', function() {
-		assert.throws(() => WeDeploy.auth().getUser('userId'), Error);
-	});
-
-	it('should call getUser successfully', function(done) {
-		var auth = WeDeploy.auth();
-		auth.currentUser = {};
-		RequestMock.intercept().reply(200);
-		auth
-			.getUser('userId')
-			.then((user) => {
-				assert.ok(user instanceof Auth);
-				done();
-			});
-	});
-
-	it('should call getUser unsuccessfully', function(done) {
-		var auth = WeDeploy.auth();
-		auth.currentUser = {};
-		RequestMock.intercept().reply(400);
-		auth
-			.getUser('userId')
-			.catch(() => done());
-	});
-
-	it('should call getUser unsuccessfully with error response as reason', function(done) {
-		var auth = WeDeploy.auth();
-		auth.currentUser = {};
-		var responseErrorObject = {
-			error: true
-		};
-		RequestMock.intercept().reply(400, JSON.stringify(responseErrorObject), {
-			'content-type': 'application/json'
-		});
-		auth
-			.getUser('userId')
-			.catch((reason) => {
-				assert.deepEqual(responseErrorObject, reason);
-				done();
-			});
-	});
-
-	it('should load current user', function(done) {
-		var auth = WeDeploy.auth('http://auth');
-		var data = {
-			createdAt: 'createdAt',
-			email: 'email',
-			id: 'id',
-			name: 'name',
-			photoUrl: 'photoUrl'
-		};
-		RequestMock.intercept().reply(200, JSON.stringify(data), {
-			'content-type': 'application/json'
-		});
-		auth
-			.loadCurrentUser('token')
-			.then((user) => {
-				assert.ok(user instanceof Auth);
-				assert.strictEqual('createdAt', user.createdAt);
-				assert.strictEqual('email', user.email);
-				assert.strictEqual('id', user.id);
-				assert.strictEqual('name', user.name);
-				assert.strictEqual('photoUrl', user.photoUrl);
-				assert.strictEqual('token', user.token);
-				done();
-			});
-	});
-
-	it('should throws exception when calling onSignIn without function callback', function() {
-		assert.throws(() => WeDeploy.auth().onSignIn(), Error);
-		assert.throws(() => WeDeploy.auth().onSignIn({}), Error);
-	});
-
-	it('should throws exception when calling onSignOut without function callback', function() {
-		assert.throws(() => WeDeploy.auth().onSignOut(), Error);
-		assert.throws(() => WeDeploy.auth().onSignOut({}), Error);
-	});
-
-	it('should invokes callback when after a sign-in redirect', function() {
-		globals.window = {
-			location: {
-				protocol: 'http:',
-				host: 'currentUrl',
-				pathname: '/',
-				search: '?q=1',
-				hash: '#access_token=xyz'
-			},
-			history: {
-				pushState: () => {
-					globals.window.location.hash = '';
+		it('should not fail sign-in with redirect using Github provider', function() {
+			var auth = WeDeploy.auth();
+			globals.window = {
+				location: {
+					href: ''
 				}
-			}
-		};
-		assert.strictEqual('#access_token=xyz', globals.window.location.hash);
-		WeDeploy.auth();
-		assert.strictEqual('', globals.window.location.hash);
-	});
-
-	it('should not invoke callback without sign-in redirect', function() {
-		globals.window = {
-			location: {
-				hash: ''
-			}
-		};
-		var auth = WeDeploy.auth();
-		auth.onSignIn(() => assert.fail());
-	});
-
-	it('should invokes callback when calling onSignIn after a signInWithEmailAndPassword', function(done) {
-		var auth = WeDeploy.auth();
-		auth.loadCurrentUser = (token) => Auth.create(token);
-		var callback = sinon.stub();
-		auth.onSignIn(callback);
-		var data = {
-			access_token: 'xyz'
-		};
-		RequestMock.intercept().reply(200, JSON.stringify(data), {
-			'content-type': 'application/json'
+			};
+			assert.doesNotThrow(function() {
+				auth.signInWithRedirect(new GithubAuthProvider());
+			});
 		});
-		auth
-			.signInWithEmailAndPassword('email@domain.com', 'password')
-			.then(() => {
-				assert.strictEqual(1, callback.callCount);
-				done();
+
+		it('should not fail sign-in with redirect using Google provider', function() {
+			var auth = WeDeploy.auth();
+			globals.window = {
+				location: {
+					href: ''
+				}
+			};
+			assert.doesNotThrow(function() {
+				auth.signInWithRedirect(new GoogleAuthProvider());
 			});
+		});
+
+		it('should sign-in with redirect forward location to provider authorization url with current url without hash as redirect uri', function() {
+			var auth = WeDeploy.auth('http://currentUrl');
+			globals.window = {
+				location: {
+					protocol: 'http:',
+					host: 'currentUrl',
+					pathname: '/',
+					search: '?q=1',
+					hash: '#hash'
+				}
+			};
+			var provider = new GithubAuthProvider();
+			assert.ok(!provider.hasRedirectUri());
+			auth.signInWithRedirect(provider);
+			assert.strictEqual('http://currentUrl/?q=1', provider.getRedirectUri());
+			assert.strictEqual(provider.makeAuthorizationUrl('http://currentUrl'), globals.window.location.href);
+		});
+
+		it('should sign-in with redirect forward location to provider authorization url and preserve redirect uri', function() {
+			var auth = WeDeploy.auth('http://currentUrl');
+			globals.window = {
+				location: {
+					href: 'http://currentUrl'
+				}
+			};
+			var provider = new GithubAuthProvider();
+			provider.setRedirectUri('http://customUrl');
+			auth.signInWithRedirect(provider);
+			assert.strictEqual('http://customUrl', provider.getRedirectUri());
+			assert.strictEqual(provider.makeAuthorizationUrl('http://currentUrl'), globals.window.location.href);
+		});
+	}));
+
+	describe('Password reset', function() {
+		beforeEach(function() {
+			RequestMock.setup(
+				'POST',
+				'http://localhost/user/recover?email=email%40domain.com'
+			);
+		});
+
+		it('should throws exception when calling when sending password reset with email not specified', function() {
+			assert.throws(() => WeDeploy.auth().sendPasswordResetEmail(), Error);
+		});
+
+		it('should call send password reset email successfully', function(done) {
+			var auth = WeDeploy.auth();
+			RequestMock.intercept().reply(200);
+			auth
+				.sendPasswordResetEmail('email@domain.com')
+				.then(() => done());
+		});
+
+		it('should call send password reset email unsuccessfully', function(done) {
+			var auth = WeDeploy.auth();
+			RequestMock.intercept().reply(400);
+			auth
+				.sendPasswordResetEmail('email@domain.com')
+				.catch(() => done());
+		});
+
+		it('should call send password reset email with email as parameter', function(done) {
+			var auth = WeDeploy.auth();
+			RequestMock.intercept().reply(200);
+			auth
+				.sendPasswordResetEmail('email@domain.com')
+				.then((response) => {
+					assert.strictEqual('email@domain.com', response.request().params().get('email'));
+					done();
+				});
+		});
+
+		it('should call send password reset email unsuccessfully with error response as reason', function(done) {
+			var auth = WeDeploy.auth();
+			var responseErrorObject = {
+				error: true
+			};
+			RequestMock.intercept().reply(400, JSON.stringify(responseErrorObject), {
+				'content-type': 'application/json'
+			});
+			auth
+				.sendPasswordResetEmail('email@domain.com')
+				.catch((reason) => {
+					assert.deepEqual(responseErrorObject, reason);
+					done();
+				});
+		});
 	});
 
-	it('should invokes callback when calling onSignOut after a signOut', function(done) {
-		var auth = WeDeploy.auth();
-		var callback = sinon.stub();
-		auth.onSignOut(callback);
-		RequestMock.intercept().reply(200);
-		auth
-			.signOut()
-			.then(() => {
-				assert.strictEqual(1, callback.callCount);
-				done();
+	describe('Create user', function() {
+		beforeEach(function() {
+			RequestMock.setup('POST', 'http://localhost/users');
+		});
+
+		it('should throws exception when calling create user with user data not specified', function() {
+			assert.throws(() => WeDeploy.auth().createUser(), Error);
+		});
+
+		it('should throws exception when calling create user with user data not an object', function() {
+			assert.throws(() => WeDeploy.auth().createUser(''), Error);
+		});
+
+		it('should call create user successfully', function(done) {
+			var auth = WeDeploy.auth('http://auth');
+			RequestMock.intercept('POST', 'http://auth/users').reply(200);
+			auth
+				.createUser({})
+				.then((user) => {
+					assert.ok(user instanceof Auth);
+					done();
+				});
+		});
+
+		it('should call create user unsuccessfully', function(done) {
+			var auth = WeDeploy.auth();
+			RequestMock.intercept().reply(400);
+			auth
+				.createUser({})
+				.catch(() => done());
+		});
+
+		it('should call create user unsuccessfully with error response as reason', function(done) {
+			var auth = WeDeploy.auth();
+			var responseErrorObject = {
+				error: true
+			};
+			RequestMock.intercept().reply(400, JSON.stringify(responseErrorObject), {
+				'content-type': 'application/json'
 			});
+			auth
+				.createUser({})
+				.catch((reason) => {
+					assert.deepEqual(responseErrorObject, reason);
+					done();
+				});
+		});
+	});
+
+	describe('Sign in with email and password', function() {
+		beforeEach(function() {
+			RequestMock.setup(
+				'GET',
+				'http://localhost/oauth/token?grant_type=password' +
+					'&username=email%40domain.com&password=password'
+			);
+		});
+
+		it('should throws exception when calling sign-in with email and password when email not specified', function() {
+			assert.throws(() => WeDeploy.auth().signInWithEmailAndPassword(), Error);
+		});
+
+		it('should throws exception when calling sign-in with email and password when password not specified', function() {
+			assert.throws(() => WeDeploy.auth().signInWithEmailAndPassword('email@domain.com'), Error);
+		});
+
+		it('should call sign-in with email and password successfully', function(done) {
+			var auth = WeDeploy.auth();
+			auth.loadCurrentUser = () => new Auth();
+			var authData = {
+				access_token: 'xyz'
+			};
+			RequestMock.intercept().reply(200, JSON.stringify(authData), {
+				'content-type': 'application/json'
+			});
+			auth
+				.signInWithEmailAndPassword('email@domain.com', 'password')
+				.then((user) => {
+					assert.ok(user instanceof Auth);
+					done();
+				});
+		});
+
+		it('should call sign-in with email and password unsuccessfully', function(done) {
+			var auth = WeDeploy.auth();
+			RequestMock.intercept().reply(400);
+			auth
+				.signInWithEmailAndPassword('email@domain.com', 'password')
+				.catch(() => done());
+		});
+
+		it('should call sign-in with email and password unsuccessfully with error response as reason', function(done) {
+			var auth = WeDeploy.auth();
+			var responseErrorObject = {
+				error: true
+			};
+			RequestMock.intercept().reply(400, JSON.stringify(responseErrorObject), {
+				'content-type': 'application/json'
+			});
+			auth
+				.signInWithEmailAndPassword('email@domain.com', 'password')
+				.catch((reason) => {
+					assert.deepEqual(responseErrorObject, reason);
+					done();
+				});
+		});
+	});
+
+	describe('Sign out', function() {
+		beforeEach(function() {
+			RequestMock.setup('GET', 'http://localhost/oauth/revoke?token');
+		});
+
+		it('should throws exception when calling sign-out without being signed-in', function() {
+			assert.throws(() => WeDeploy.auth().signOut(), Error);
+		});
+
+		it('should call sign-out successfully', function(done) {
+			var auth = WeDeploy.auth();
+			auth.currentUser = {};
+			RequestMock.intercept().reply(200);
+			auth
+				.signOut()
+				.then(() => done());
+		});
+
+		it('should call sign-out unsuccessfully', function(done) {
+			var auth = WeDeploy.auth();
+			auth.currentUser = {};
+			RequestMock.intercept().reply(400);
+			auth
+				.signOut()
+				.catch(() => done());
+		});
+
+		it('should call sign-out unsuccessfully with error response as reason', function(done) {
+			var auth = WeDeploy.auth();
+			auth.currentUser = {};
+			var responseErrorObject = {
+				error: true
+			};
+			RequestMock.intercept().reply(400, JSON.stringify(responseErrorObject), {
+				'content-type': 'application/json'
+			});
+			auth
+				.signOut()
+				.catch((reason) => {
+					assert.deepEqual(responseErrorObject, reason);
+					done();
+				});
+		});
+	});
+
+	describe('Get user', function() {
+		beforeEach(function() {
+			RequestMock.setup('GET', 'http://localhost/users/userId');
+		});
+
+		it('should throws exception when calling getUser without user id', function() {
+			assert.throws(() => WeDeploy.auth().getUser(), Error);
+		});
+
+		it('should throws exception when calling getUser without being signed-in', function() {
+			assert.throws(() => WeDeploy.auth().getUser('userId'), Error);
+		});
+
+		it('should call getUser successfully', function(done) {
+			var auth = WeDeploy.auth();
+			auth.currentUser = {};
+			RequestMock.intercept().reply(200);
+			auth
+				.getUser('userId')
+				.then((user) => {
+					assert.ok(user instanceof Auth);
+					done();
+				});
+		});
+
+		it('should call getUser unsuccessfully', function(done) {
+			var auth = WeDeploy.auth();
+			auth.currentUser = {};
+			RequestMock.intercept().reply(400);
+			auth
+				.getUser('userId')
+				.catch(() => done());
+		});
+
+		it('should call getUser unsuccessfully with error response as reason', function(done) {
+			var auth = WeDeploy.auth();
+			auth.currentUser = {};
+			var responseErrorObject = {
+				error: true
+			};
+			RequestMock.intercept().reply(400, JSON.stringify(responseErrorObject), {
+				'content-type': 'application/json'
+			});
+			auth
+				.getUser('userId')
+				.catch((reason) => {
+					assert.deepEqual(responseErrorObject, reason);
+					done();
+				});
+		});
+	});
+
+	describe('Load current user', function() {
+		beforeEach(function() {
+			RequestMock.setup('GET', 'http://auth/user');
+		});
+
+		it('should load current user', function(done) {
+			var auth = WeDeploy.auth('http://auth');
+			var data = {
+				createdAt: 'createdAt',
+				email: 'email',
+				id: 'id',
+				name: 'name',
+				photoUrl: 'photoUrl'
+			};
+			RequestMock.intercept().reply(200, JSON.stringify(data), {
+				'content-type': 'application/json'
+			});
+			auth
+				.loadCurrentUser('token')
+				.then((user) => {
+					assert.ok(user instanceof Auth);
+					assert.strictEqual('createdAt', user.createdAt);
+					assert.strictEqual('email', user.email);
+					assert.strictEqual('id', user.id);
+					assert.strictEqual('name', user.name);
+					assert.strictEqual('photoUrl', user.photoUrl);
+					assert.strictEqual('token', user.token);
+					done();
+				});
+		});
+	});
+
+	describe('onSignIn and onSignOut', function() {
+		it('should throws exception when calling onSignIn without function callback', function() {
+			assert.throws(() => WeDeploy.auth().onSignIn(), Error);
+			assert.throws(() => WeDeploy.auth().onSignIn({}), Error);
+		});
+
+		it('should throws exception when calling onSignOut without function callback', function() {
+			assert.throws(() => WeDeploy.auth().onSignOut(), Error);
+			assert.throws(() => WeDeploy.auth().onSignOut({}), Error);
+		});
+
+		it('should invokes callback when after a sign-in redirect', skipForNode_(function() {
+			WeDeploy.auth_ = null;
+			globals.window = {
+				location: {
+					protocol: 'http:',
+					host: 'currentUrl',
+					pathname: '/',
+					search: '?q=1',
+					hash: '#access_token=xyz'
+				},
+				history: {
+					pushState: () => {
+						globals.window.location.hash = '';
+					}
+				}
+			};
+			assert.strictEqual('#access_token=xyz', globals.window.location.hash);
+			WeDeploy.auth();
+			assert.strictEqual('', globals.window.location.hash);
+		}));
+
+		it('should not invoke callback without sign-in redirect', function() {
+			globals.window = {
+				location: {
+					hash: ''
+				}
+			};
+			var auth = WeDeploy.auth();
+			auth.onSignIn(() => assert.fail());
+		});
+
+		it('should invokes callback when calling onSignIn after a signInWithEmailAndPassword', function(done) {
+			var auth = WeDeploy.auth();
+			auth.loadCurrentUser = (token) => Auth.create(token);
+			var callback = sinon.stub();
+			auth.onSignIn(callback);
+			var data = {
+				access_token: 'xyz'
+			};
+
+			const url = 'http://localhost/oauth/token?grant_type=password' +
+				'&username=email%40domain.com&password=password';
+			RequestMock.intercept('GET', url).reply(200, JSON.stringify(data), {
+				'content-type': 'application/json'
+			});
+			auth
+				.signInWithEmailAndPassword('email@domain.com', 'password')
+				.then(() => {
+					assert.strictEqual(1, callback.callCount);
+					done();
+				});
+		});
+
+		it('should invokes callback when calling onSignOut after a signOut', function(done) {
+			var auth = WeDeploy.auth();
+			auth.currentUser = {};
+			var callback = sinon.stub();
+			auth.onSignOut(callback);
+			RequestMock.intercept('GET', 'http://localhost/oauth/revoke?token')
+				.reply(200);
+			auth
+				.signOut()
+				.then(() => {
+					assert.strictEqual(1, callback.callCount);
+					done();
+				});
+		});
 	});
 });
+
+/**
+ * Gets the "Authorization" header from the request object. Manages different
+ * mock formats (browser vs node).
+ * @return {?string}
+ * @protected
+ */
+function getAuthorizationHeader_() {
+	const request = RequestMock.get();
+	const headers = request.requestHeaders || request.req.headers;
+	return headers.Authorization || headers.authorization;
+}
+
+/**
+ * Skips the given function if in Node environment. This is used to skip tests
+ * for features that are browser only.
+ * @param  {Function} fn [description]
+ * @return {[type]}      [description]
+ */
+function skipForNode_(fn) {
+	return (typeof window === 'undefined') ? () => {} : fn;
+}

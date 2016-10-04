@@ -5,7 +5,9 @@ import { MultiMap } from 'metal-structs';
 import NodeTransport from '../../../src/api/node/NodeTransport';
 
 describe('NodeTransport', function() {
-	beforeEach(RequestMock.setup);
+	beforeEach(function() {
+		RequestMock.setup('GET', 'http://localhost/url');
+	});
 	afterEach(RequestMock.teardown);
 
 	it('should cancel send request to an url', function(done) {
@@ -79,7 +81,7 @@ describe('NodeTransport', function() {
 	});
 
 	it('should parse request query string', function(done) {
-		RequestMock.intercept().reply(200);
+		RequestMock.intercept('GET', 'http://xyz/url?foo=1&query=1&query=%20').reply(200);
 		var transport = new NodeTransport();
 		var clientRequest = new ClientRequest();
 		clientRequest.url('http://xyz/url?foo=1');
@@ -95,7 +97,7 @@ describe('NodeTransport', function() {
 	});
 
 	it('should parse request query string without params', function(done) {
-		RequestMock.intercept().reply(200);
+		RequestMock.intercept('GET', 'http://localhost/url?foo=1').reply(200);
 		var transport = new NodeTransport();
 		var clientRequest = new ClientRequest();
 		clientRequest.url('http://localhost/url?foo=1');
@@ -106,7 +108,7 @@ describe('NodeTransport', function() {
 	});
 
 	it('should cancel request if given timeout is reached', function(done) {
-		RequestMock.intercept().socketDelay(5).reply(200);
+		RequestMock.intercept('GET', 'http://localhost/url?foo=1').socketDelay(5).reply(200);
 
 		var transport = new NodeTransport();
 		var clientRequest = new ClientRequest();

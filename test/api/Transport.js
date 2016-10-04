@@ -3,8 +3,10 @@
 import ClientRequest from '../../src/api/ClientRequest';
 import TransportFactory from '../../src/api/TransportFactory';
 
-describe('Transport', function() {
-	beforeEach(RequestMock.setup);
+describe('Transport Tests', function() {
+	beforeEach(function() {
+		RequestMock.setup('GET', 'http://localhost/url');
+	});
 	afterEach(RequestMock.teardown);
 
 	it('should send request to an url', function(done) {
@@ -19,7 +21,7 @@ describe('Transport', function() {
 	});
 
 	it('should send request with different http method', function(done) {
-		RequestMock.intercept().reply(200);
+		RequestMock.intercept('POST', 'http://localhost/url').reply(200);
 		var transport = TransportFactory.instance().getDefault();
 		var clientRequest = new ClientRequest();
 		clientRequest.url('http://localhost/url');
@@ -44,7 +46,7 @@ describe('Transport', function() {
 	});
 
 	it('should send request with query string', function(done) {
-		RequestMock.intercept().reply(200);
+		RequestMock.intercept('GET', 'http://localhost/url?query=1').reply(200);
 		var transport = TransportFactory.instance().getDefault();
 		var clientRequest = new ClientRequest();
 		clientRequest.url('http://localhost/url');

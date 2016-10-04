@@ -6,8 +6,10 @@ import Filter from '../../src/api-query/Filter';
 import WeDeploy from '../../src/api/WeDeploy';
 import Transport from '../../src/api/Transport';
 
-describe('WeDeploy', function() {
-	beforeEach(RequestMock.setup);
+describe('WeDeploy Tests', function() {
+	beforeEach(function() {
+		RequestMock.setup('GET', 'http://localhost/url/a');
+	});
 	afterEach(RequestMock.teardown);
 
 	it('should throw exception when socket.io is not loaded', function() {
@@ -67,7 +69,7 @@ describe('WeDeploy', function() {
 	});
 
 	it('should send DELETE request', function(done) {
-		RequestMock.intercept().reply(200);
+		RequestMock.intercept('DELETE', 'http://localhost/url', '"body"').reply(200);
 		WeDeploy.url('http://localhost/url')
 			.delete('body')
 			.then(function(response) {
@@ -79,7 +81,7 @@ describe('WeDeploy', function() {
 	});
 
 	it('should send GET request', function(done) {
-		RequestMock.intercept().reply(200);
+		RequestMock.intercept('GET', 'http://localhost/url').reply(200);
 		WeDeploy.url('http://localhost/url').get().then(function(response) {
 			assert.strictEqual('http://localhost/url', response.request().url());
 			assert.strictEqual('GET', response.request().method());
@@ -89,7 +91,7 @@ describe('WeDeploy', function() {
 	});
 
 	it('should send GET request with params as object', function(done) {
-		RequestMock.intercept().reply(200);
+		RequestMock.intercept('GET', 'http://localhost/url?foo=foo&bar=bar').reply(200);
 		var params = {
 			foo: 'foo',
 			bar: 'bar'
@@ -112,7 +114,7 @@ describe('WeDeploy', function() {
 			}
 		}
 
-		RequestMock.intercept().reply(200);
+		RequestMock.intercept('GET', 'http://localhost/url' + '?foo=foo&bar=%5B%22bar1%22%2C%22bar2%22%5D').reply(200);
 		WeDeploy.url('http://localhost/url').get(new TestParams()).then(function(response) {
 			assert.strictEqual('http://localhost/url', response.request().url());
 			assert.strictEqual('GET', response.request().method());
@@ -123,7 +125,7 @@ describe('WeDeploy', function() {
 	});
 
 	it('should transform Filter into Query when sending via GET', function(done) {
-		RequestMock.intercept().reply(200);
+		RequestMock.intercept('GET', 'http://localhost/url' + '?filter=%5B%7B%22name%22%3A%7B%22operator%22%3A%22%3D%22%2C%22value%22%3A%22foo%22%7D%7D%5D').reply(200);
 		WeDeploy.url('http://localhost/url').get(Filter.field('name', 'foo')).then(function(response) {
 			assert.strictEqual('http://localhost/url', response.request().url());
 			assert.strictEqual('GET', response.request().method());
@@ -135,7 +137,7 @@ describe('WeDeploy', function() {
 	});
 
 	it('should send GET request with params as string', function(done) {
-		RequestMock.intercept().reply(200);
+		RequestMock.intercept('GET', 'http://localhost/url?body=strBody').reply(200);
 		WeDeploy.url('http://localhost/url').get('strBody').then(function(response) {
 			assert.strictEqual('http://localhost/url', response.request().url());
 			assert.strictEqual('GET', response.request().method());
@@ -146,7 +148,7 @@ describe('WeDeploy', function() {
 	});
 
 	it('should send POST request with body', function(done) {
-		RequestMock.intercept().reply(200);
+		RequestMock.intercept('POST', 'http://localhost/url', '"body"').reply(200);
 		WeDeploy.url('http://localhost/url').post('body').then(function(response) {
 			assert.strictEqual('http://localhost/url', response.request().url());
 			assert.strictEqual('POST', response.request().method());
@@ -156,7 +158,7 @@ describe('WeDeploy', function() {
 	});
 
 	it('should send PUT request with body', function(done) {
-		RequestMock.intercept().reply(200);
+		RequestMock.intercept('PUT', 'http://localhost/url', '"body"').reply(200);
 		WeDeploy.url('http://localhost/url').put('body').then(function(response) {
 			assert.strictEqual('http://localhost/url', response.request().url());
 			assert.strictEqual('PUT', response.request().method());
@@ -166,7 +168,7 @@ describe('WeDeploy', function() {
 	});
 
 	it('should send PATCH request with body', function(done) {
-		RequestMock.intercept().reply(200);
+		RequestMock.intercept('PATCH', 'http://localhost/url', '"body"').reply(200);
 		WeDeploy.url('http://localhost/url').patch('body').then(function(response) {
 			assert.strictEqual('http://localhost/url', response.request().url());
 			assert.strictEqual('PATCH', response.request().method());
@@ -176,7 +178,7 @@ describe('WeDeploy', function() {
 	});
 
 	it('should send request with body that was previously set through "body" function', function(done) {
-		RequestMock.intercept().reply(200);
+		RequestMock.intercept('POST', 'http://localhost/url', '"body"').reply(200);
 		WeDeploy.url('http://localhost/url').body('body').post().then(function(response) {
 			assert.strictEqual('http://localhost/url', response.request().url());
 			assert.strictEqual('POST', response.request().method());
@@ -186,7 +188,7 @@ describe('WeDeploy', function() {
 	});
 
 	it('should give precedence to body passed to the request call', function(done) {
-		RequestMock.intercept().reply(200);
+		RequestMock.intercept('POST', 'http://localhost/url', '"postBody"').reply(200);
 		WeDeploy.url('http://localhost/url').body('body').post('postBody').then(function(response) {
 			assert.strictEqual('http://localhost/url', response.request().url());
 			assert.strictEqual('POST', response.request().method());
@@ -204,7 +206,7 @@ describe('WeDeploy', function() {
 	});
 
 	it('should send request to url without path', function(done) {
-		RequestMock.intercept().reply(200);
+		RequestMock.intercept('GET', 'http://localhost/url').reply(200);
 		WeDeploy.url('http://localhost/url').get().then(function(response) {
 			assert.strictEqual('http://localhost/url', response.request().url());
 			done();
@@ -220,7 +222,7 @@ describe('WeDeploy', function() {
 	});
 
 	it('should send request with query string', function(done) {
-		RequestMock.intercept().reply(200);
+		RequestMock.intercept('GET', 'http://localhost/url/a?query=1').reply(200);
 		WeDeploy.url('http://localhost/url/a')
 			.param('query', 1)
 			.get()
@@ -237,7 +239,7 @@ describe('WeDeploy', function() {
 				this.body_.foo = 'foo';
 			}
 		}
-		RequestMock.intercept().reply(200);
+		RequestMock.intercept('GET', 'http://localhost/url/a?query=%7B%22foo%22%3A%22foo%22%7D').reply(200);
 		WeDeploy.url('http://localhost/url/a')
 			.param('query', new TestParam())
 			.get()
@@ -304,7 +306,7 @@ describe('WeDeploy', function() {
 	});
 
 	it('should serialize body of json requests', function(done) {
-		RequestMock.intercept().reply(200);
+		RequestMock.intercept('POST', 'http://localhost/url').reply(200);
 		WeDeploy.url('http://localhost/url').header('content-type', 'application/json').post({
 			foo: 1
 		}).then(function(response) {
@@ -317,7 +319,7 @@ describe('WeDeploy', function() {
 		RequestMock.intercept().reply(200, '{"foo": 1}', {
 			'content-type': 'application/json'
 		});
-		WeDeploy.url('http://localhost/url').get().then(function(response) {
+		WeDeploy.url('http://localhost/url/a').get().then(function(response) {
 			assert.deepEqual({
 				foo: 1
 			}, response.body());
@@ -331,7 +333,7 @@ describe('WeDeploy', function() {
 			return;
 		}
 
-		RequestMock.intercept().reply(200);
+		RequestMock.intercept('POST', 'http://localhost/url').reply(200);
 		var formData = new FormData();
 		WeDeploy.url('http://localhost/url').post(formData).then(function(response) {
 			assert.strictEqual(formData, response.request().body());
@@ -350,7 +352,7 @@ describe('WeDeploy', function() {
 			}
 		}
 
-		RequestMock.intercept().reply(200);
+		RequestMock.intercept('POST', 'http://localhost/url').reply(200);
 		WeDeploy.url('http://localhost/url').post(new TestBody()).then(function(response) {
 			assert.strictEqual('{"foo":"foo"}', response.request().body());
 			done();
@@ -358,7 +360,7 @@ describe('WeDeploy', function() {
 	});
 
 	it('should wrap Filter in query when passed as request body', function(done) {
-		RequestMock.intercept().reply(200);
+		RequestMock.intercept('POST', 'http://localhost/url').reply(200);
 		WeDeploy.url('http://localhost/url').post(Filter.field('name', 'foo')).then(function(response) {
 			var bodyStr = '{"filter":[{"name":{"operator":"=","value":"foo"}}]}';
 			assert.strictEqual(bodyStr, response.request().body());
@@ -372,7 +374,7 @@ describe('WeDeploy', function() {
 			return;
 		}
 
-		RequestMock.intercept().reply(200);
+		RequestMock.intercept('POST', 'http://localhost/url').reply(200);
 		var form = document.createElement('form');
 		WeDeploy.url('http://localhost/url').post(form).then(function(response) {
 			assert.ok(response.request().body() instanceof FormData);
@@ -386,7 +388,7 @@ describe('WeDeploy', function() {
 			return;
 		}
 
-		RequestMock.intercept().reply(200);
+		RequestMock.intercept('POST', 'http://localhost/url').reply(200);
 		WeDeploy.url('http://localhost/url').form('age', 12).form('weight', 100).post().then(function(response) {
 			var body = response.request().body();
 			assert.ok(body instanceof FormData);
@@ -395,20 +397,14 @@ describe('WeDeploy', function() {
 		});
 	});
 
-	it('should not allow FormData when it is not implemented (such as on Node)', function(done) {
+	it('should not allow FormData when it is not implemented (such as on Node)', function() {
 		if (typeof window !== 'undefined') {
-			done();
+			return;
 		}
-
-		var tempFormData = FormData;
-		FormData = 'undefined';
 
 		assert.throws(function() {
 			WeDeploy.url('http://localhost/url').form('a', 'b');
 		}, Error);
-
-		FormData = tempFormData;
-		done();
 	});
 
 	it('should not send data passed through "form" method via the body if the body is already set', function(done) {
@@ -417,7 +413,7 @@ describe('WeDeploy', function() {
 			return;
 		}
 
-		RequestMock.intercept().reply(200);
+		RequestMock.intercept('POST', 'http://localhost/url').reply(200);
 		WeDeploy.url('http://localhost/url').form('age', 12).post({}).then(function(response) {
 			var body = response.request().body();
 			assert.ok(!(body instanceof FormData));
@@ -427,7 +423,7 @@ describe('WeDeploy', function() {
 	});
 
 	it('should response succeeded for status codes 2xx', function(done) {
-		RequestMock.intercept().reply(200);
+		RequestMock.intercept('GET', 'http://localhost/url').reply(200);
 		WeDeploy.url('http://localhost/url').get().then(function(response) {
 			assert.ok(response.succeeded());
 			done();
@@ -435,7 +431,7 @@ describe('WeDeploy', function() {
 	});
 
 	it('should response succeeded for status codes 3xx', function(done) {
-		RequestMock.intercept().reply(300);
+		RequestMock.intercept('GET', 'http://localhost/url').reply(300);
 		WeDeploy.url('http://localhost/url').get().then(function(response) {
 			assert.ok(response.succeeded());
 			done();
@@ -443,7 +439,7 @@ describe('WeDeploy', function() {
 	});
 
 	it('should response not succeeded for status codes 4xx', function(done) {
-		RequestMock.intercept().reply(400);
+		RequestMock.intercept('GET', 'http://localhost/url').reply(400);
 		WeDeploy.url('http://localhost/url').get().then(function(response) {
 			assert.ok(!response.succeeded());
 			done();
@@ -451,7 +447,7 @@ describe('WeDeploy', function() {
 	});
 
 	it('should response not succeeded for status codes 5xx', function(done) {
-		RequestMock.intercept().reply(500);
+		RequestMock.intercept('GET', 'http://localhost/url').reply(500);
 		WeDeploy.url('http://localhost/url').get().then(function(response) {
 			assert.ok(!response.succeeded());
 			done();

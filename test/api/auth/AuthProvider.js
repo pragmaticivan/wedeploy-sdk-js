@@ -16,7 +16,7 @@ describe('AuthProvider', function() {
 
 	it('should set provider scope', function() {
 		var provider = new AuthProvider();
-		assert.notOk(provider.hasProviderScope());
+		assert.ok(!provider.hasProviderScope());
 		provider.setProviderScope('providerScope');
 		assert.ok(provider.hasProviderScope());
 		assert.strictEqual('providerScope', provider.getProviderScope());
@@ -31,7 +31,7 @@ describe('AuthProvider', function() {
 
 	it('should set redirect uri', function() {
 		var provider = new AuthProvider();
-		assert.notOk(provider.hasRedirectUri());
+		assert.ok(!provider.hasRedirectUri());
 		provider.setRedirectUri('uri');
 		assert.ok(provider.hasRedirectUri());
 		assert.strictEqual('uri', provider.getRedirectUri());
@@ -46,7 +46,7 @@ describe('AuthProvider', function() {
 
 	it('should set scope', function() {
 		var provider = new AuthProvider();
-		assert.notOk(provider.hasScope());
+		assert.ok(!provider.hasScope());
 		provider.setScope('scope');
 		assert.ok(provider.hasScope());
 		assert.strictEqual('scope', provider.getScope());

@@ -12,6 +12,7 @@ describe('DataApiHelper', function() {
 
 	beforeEach(function() {
 		RequestMock.setup();
+		WeDeploy.data('http://localhost');
 	});
 
 	describe('WeDeploy.data()', function() {
@@ -81,6 +82,10 @@ describe('DataApiHelper', function() {
 	});
 
 	describe('.create()', function() {
+		beforeEach(function() {
+			RequestMock.setup('POST', 'http://localhost/collection');
+		});
+
 		context('when using invalid params', function() {
 			it('fails trying to create data without specifing the collection', function() {
 				const data = WeDeploy.data();
@@ -100,8 +105,9 @@ describe('DataApiHelper', function() {
 		});
 
 		context('when creating and it returns an error', function() {
-			it('fails updating because of an server error ', function(done) {
-				RequestMock.intercept().reply(500, '{"error": "Error 500"}');
+			it('fails updating because of a server error ', function(done) {
+				RequestMock.intercept()
+					.reply(500, '{"error": "Error 500"}');
 
 				WeDeploy
 					.data()
@@ -117,7 +123,8 @@ describe('DataApiHelper', function() {
 
 		context('when creating with one object', function() {
 			it('creates new data', function(done) {
-				RequestMock.intercept().reply(200, '{"id": 1, "ping": "pong"}');
+				RequestMock.intercept()
+					.reply(200, '{"id": 1, "ping": "pong"}');
 
 				WeDeploy
 					.data()
@@ -133,7 +140,8 @@ describe('DataApiHelper', function() {
 
 		context('when creating with one array', function() {
 			it('creates multiple data', function(done) {
-				RequestMock.intercept().reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
+				RequestMock.intercept()
+					.reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
 
 				WeDeploy
 					.data()
@@ -154,6 +162,10 @@ describe('DataApiHelper', function() {
 	});
 
 	describe('.update()', function() {
+		beforeEach(function() {
+			RequestMock.setup('PUT', 'http://localhost/collection/1');
+		});
+
 		context('when using invalid params', function() {
 			it('fails trying to updating data without specifing the collection', function() {
 				assert.throws(function() {
@@ -172,7 +184,8 @@ describe('DataApiHelper', function() {
 
 		context('when updating and it returns an error', function() {
 			it('fails updating because of an server error ', function(done) {
-				RequestMock.intercept().reply(500, '{"error": "Error 500"}');
+				RequestMock.intercept('PUT', 'http://localhost/collection/242424')
+					.reply(500, '{"error": "Error 500"}');
 
 				WeDeploy
 					.data()
@@ -186,7 +199,8 @@ describe('DataApiHelper', function() {
 			});
 
 			it('fails updating because the row doesn\'t exist', function(done) {
-				RequestMock.intercept().reply(404, '{"error": "Error 404"}');
+				RequestMock.intercept('PUT', 'http://localhost/collection/242424')
+					.reply(404, '{"error": "Error 404"}');
 
 				WeDeploy
 					.data()
@@ -235,6 +249,10 @@ describe('DataApiHelper', function() {
 	});
 
 	describe('.delete()', function() {
+		beforeEach(function() {
+			RequestMock.setup('DELETE', 'http://localhost/collection/242424');
+		});
+
 		context('when using invalid params', function() {
 			it('fails trying to create data without specifying the collection', function() {
 				assert.throws(function() {
@@ -275,7 +293,8 @@ describe('DataApiHelper', function() {
 
 		context('when successfuly deletes data', function() {
 			it('deletes a field', function(done) {
-				RequestMock.intercept().reply(204);
+				RequestMock.intercept('DELETE', 'http://localhost/collection/1/title')
+					.reply(204);
 
 				WeDeploy
 					.data()
@@ -287,8 +306,9 @@ describe('DataApiHelper', function() {
 
 			});
 
-			it('deletes a data rown', function(done) {
-				RequestMock.intercept().reply(204);
+			it('deletes a data row', function(done) {
+				RequestMock.intercept('DELETE', 'http://localhost/collection/1')
+					.reply(204);
 
 				WeDeploy
 					.data()
@@ -300,11 +320,12 @@ describe('DataApiHelper', function() {
 			});
 
 			it('deletes a collection', function(done) {
-				RequestMock.intercept().reply(204);
+				RequestMock.intercept('DELETE', 'http://localhost/collection')
+					.reply(204);
 
 				WeDeploy
 					.data()
-					.delete('collection/1')
+					.delete('collection')
 					.then(() => {
 						assert.strictEqual(undefined, undefined);
 						done();
@@ -315,7 +336,8 @@ describe('DataApiHelper', function() {
 
 	describe('.limit()', function() {
 		it('sends request with query limit in the body', function(done) {
-			RequestMock.intercept().reply(200, '[{"id": 1, "ping": "pong1"}]');
+			RequestMock.intercept('GET', 'http://localhost/collection?limit=1')
+				.reply(200, '[{"id": 1, "ping": "pong1"}]');
 
 			WeDeploy
 				.data()
@@ -338,7 +360,8 @@ describe('DataApiHelper', function() {
 
 	describe('.count()', function() {
 		it('sends request with query count in the body', function(done) {
-			RequestMock.intercept().reply(200, '5');
+			RequestMock.intercept('GET', 'http://localhost/food?type=count')
+				.reply(200, '5');
 
 			WeDeploy
 				.data()
@@ -361,7 +384,8 @@ describe('DataApiHelper', function() {
 
 	describe('.offset()', function() {
 		it('should send request with query offset in the body', function(done) {
-			RequestMock.intercept().reply(200, '[{"id": 1, "ping": "pong1"}]');
+			RequestMock.intercept('GET', 'http://localhost/food?offset=2')
+				.reply(200, '[{"id": 1, "ping": "pong1"}]');
 
 			WeDeploy
 				.data()
@@ -384,7 +408,8 @@ describe('DataApiHelper', function() {
 
 	describe('.highlight()', function() {
 		it('should send request with query highlight in the body', function(done) {
-			RequestMock.intercept().reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
+			RequestMock.intercept('GET', 'http://localhost/food?highlight=%5B%22field%22%5D')
+				.reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
 
 			WeDeploy
 				.data()
@@ -407,7 +432,8 @@ describe('DataApiHelper', function() {
 
 	describe('.orderBy()', function() {
 		it('sends request with query sort in the body', function(done) {
-			RequestMock.intercept().reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
+			RequestMock.intercept('GET', 'http://localhost/food?sort=%5B%7B%22id%22%3A%22asc%22%7D%5D')
+			.reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
 
 			WeDeploy
 				.data()
@@ -432,7 +458,13 @@ describe('DataApiHelper', function() {
 
 	describe('.none()', function() {
 		it('should send request with query none in the body', function(done) {
-			RequestMock.intercept().reply(200, '[{"id": 2, "name": "melancia"}]');
+			RequestMock.intercept(
+				'GET',
+				'http://localhost/food?filter=' +
+					'%5B%7B%22and%22%3A%5B%7B%22name%22%3A%7B%22operator%22%3A' +
+					'%22none%22%2C%22value%22%3A%5B%22cuscuz%22%2C' +
+					'%22tapioca%22%5D%7D%7D%5D%7D%5D'
+			).reply(200, '[{"id": 2, "name": "melancia"}]');
 
 			WeDeploy
 				.data()
@@ -469,7 +501,12 @@ describe('DataApiHelper', function() {
 
 	describe('.match()', function() {
 		it('should send request with query match in the body', function(done) {
-			RequestMock.intercept().reply(200, '[{"id": 2, "name": "cuscuz"}]');
+			RequestMock.intercept(
+				'GET',
+				'http://localhost/food?filter=%5B%7B%22and%22%3A%5B%7B' +
+					'%22name%22%3A%7B%22operator%22%3A%22match%22%2C%22value%22%3A' +
+					'%22cuscuz%22%7D%7D%5D%7D%5D'
+			).reply(200, '[{"id": 2, "name": "cuscuz"}]');
 
 			WeDeploy
 				.data()
@@ -506,7 +543,12 @@ describe('DataApiHelper', function() {
 
 	describe('.similar()', function() {
 		it('should send request with query similar in the body', function(done) {
-			RequestMock.intercept().reply(200, '[{"id": 2, "name": "cuscuz"}]');
+			RequestMock.intercept(
+				'GET',
+				'http://localhost/food?filter=%5B%7B%22and%22%3A%5B%7B' +
+					'%22name%22%3A%7B%22operator%22%3A%22similar%22%2C' +
+					'%22value%22%3A%7B%22query%22%3A%22cusc%22%7D%7D%7D%5D%7D%5D'
+			).reply(200, '[{"id": 2, "name": "cuscuz"}]');
 
 			WeDeploy
 				.data()
@@ -545,7 +587,12 @@ describe('DataApiHelper', function() {
 
 	describe('.lt()', function() {
 		it('should send request with query lt in the body', function(done) {
-			RequestMock.intercept().reply(200, '[{"id": 2, "name": "cuscuz", "size": 10}]');
+			RequestMock.intercept(
+				'GET',
+				'http://localhost/food?filter=%5B%7B%22and%22%3A%5B%7B' +
+					'%22size%22%3A%7B%22operator%22%3A%22%3C%22%2C' +
+					'%22value%22%3A30%7D%7D%5D%7D%5D'
+			).reply(200, '[{"id": 2, "name": "cuscuz", "size": 10}]');
 
 			WeDeploy
 				.data()
@@ -582,7 +629,12 @@ describe('DataApiHelper', function() {
 
 	describe('.lte()', function() {
 		it('should send request with query lte in the body', function(done) {
-			RequestMock.intercept().reply(200, '[{"id": 2, "name": "cuscuz", "size": 10}]');
+			RequestMock.intercept(
+				'GET',
+				'http://localhost/food?filter=%5B%7B%22and%22%3A%5B%7B' +
+					'%22size%22%3A%7B%22operator%22%3A%22%3C%3D%22%2C' +
+					'%22value%22%3A30%7D%7D%5D%7D%5D'
+			).reply(200, '[{"id": 2, "name": "cuscuz", "size": 10}]');
 
 			WeDeploy
 				.data()
@@ -619,7 +671,12 @@ describe('DataApiHelper', function() {
 
 	describe('.any()', function() {
 		it('should send request with query any in the body', function(done) {
-			RequestMock.intercept().reply(200, '[{"id": 2, "name": "cuscuz"}]');
+			RequestMock.intercept(
+				'GET',
+				'http://localhost/food?filter=%5B%7B%22and%22%3A%5B%7B' +
+					'%22name%22%3A%7B%22operator%22%3A%22any%22%2C' +
+					'%22value%22%3A%5B%22cuscuz%22%2C%22tapioca%22%5D%7D%7D%5D%7D%5D'
+			).reply(200, '[{"id": 2, "name": "cuscuz"}]');
 
 			WeDeploy
 				.data()
@@ -656,7 +713,12 @@ describe('DataApiHelper', function() {
 
 	describe('.boundingBox()', function() {
 		it('should send request with query boundingBox in the body', function(done) {
-			RequestMock.intercept().reply(200, '[{"id": 2, "name": "cuscuzeria"}]');
+			RequestMock.intercept(
+				'GET',
+				'http://localhost/restaurants?filter=%5B%7B%22and%22%3A%5B%7B' +
+					'%22shape%22%3A%7B%22operator%22%3A%22gp%22%2C' +
+					'%22value%22%3A%5B%2220%2C0%22%2C%5B0%2C20%5D%5D%7D%7D%5D%7D%5D'
+			).reply(200, '[{"id": 2, "name": "cuscuzeria"}]');
 
 			WeDeploy
 				.data()
@@ -693,7 +755,12 @@ describe('DataApiHelper', function() {
 
 	describe('.distance()', function() {
 		it('should send request with query distance in the body', function(done) {
-			RequestMock.intercept().reply(200, '[{"id": 2, "name": "cuscuzeria"}]');
+			RequestMock.intercept(
+				'GET',
+				'http://localhost/restaurants?filter=%5B%7B%22and%22%3A%5B%7B' +
+					'%22point%22%3A%7B%22operator%22%3A%22gd%22%2C%22value%22%3A%7B' +
+					'%22location%22%3A%5B0%2C0%5D%2C%22max%22%3A2%7D%7D%7D%5D%7D%5D'
+			).reply(200, '[{"id": 2, "name": "cuscuzeria"}]');
 
 			WeDeploy
 				.data()
@@ -733,7 +800,12 @@ describe('DataApiHelper', function() {
 
 	describe('.range()', function() {
 		it('should send request with query distance in the body', function(done) {
-			RequestMock.intercept().reply(200, '[{"id": 2, "name": "cuscuzeria", "points": 13}]');
+			RequestMock.intercept(
+				'GET',
+				'http://localhost/restaurants?filter=%5B%7B%22and%22%3A%5B%7B' +
+					'%22points%22%3A%7B%22operator%22%3A%22range%22%2C' +
+					'%22value%22%3A%7B%22from%22%3A12%2C%22to%22%3A15%7D%7D%7D%5D%7D%5D'
+			).reply(200, '[{"id": 2, "name": "cuscuzeria", "points": 13}]');
 
 			WeDeploy
 				.data()
@@ -773,7 +845,12 @@ describe('DataApiHelper', function() {
 
 	describe('.where()', function() {
 		it('should send request with query where in the body', function(done) {
-			RequestMock.intercept().reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
+			RequestMock.intercept(
+				'GET',
+				'http://localhost/food?filter=%5B%7B%22and%22%3A%5B%7B' +
+				'%22name%22%3A%7B%22operator%22%3A%22%3D%22%2C' +
+				'%22value%22%3A%22foo%22%7D%7D%5D%7D%5D'
+			).reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
 
 			WeDeploy
 				.data()
@@ -817,7 +894,13 @@ describe('DataApiHelper', function() {
 			}, Error);
 		});
 		it('should send request with query or in the body', function(done) {
-			RequestMock.intercept().reply(200, '[{"id": 2, "name": "foo"}]');
+			RequestMock.intercept(
+				'GET',
+				'http://localhost/food?filter=%5B%7B%22or%22%3A%5B%7B' +
+					'%22and%22%3A%5B%7B%22name%22%3A%7B%22operator%22%3A%22%3D%22%2C' +
+					'%22value%22%3A%22foo%22%7D%7D%5D%7D%2C%7B%22name%22%3A%7B' +
+					'%22operator%22%3A%22!%3D%22%2C%22value%22%3A%22bar%22%7D%7D%5D%7D%5D'
+			).reply(200, '[{"id": 2, "name": "foo"}]');
 			WeDeploy
 				.data()
 				.where('name', '=', 'foo')
@@ -862,7 +945,11 @@ describe('DataApiHelper', function() {
 
 	describe('.aggregate()', function() {
 		it('should send request with query aggregate in the body', function(done) {
-			RequestMock.intercept().reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
+			RequestMock.intercept(
+				'GET',
+				'http://localhost/food?aggregation=%5B%7B%22field%22%3A%7B' +
+					'%22name%22%3A%22name%22%7D%7D%5D'
+			).reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
 
 			WeDeploy
 				.data()
@@ -914,7 +1001,13 @@ describe('DataApiHelper', function() {
 
 		context('when using valid params', function() {
 			it('sends request with query search in the body', function(done) {
-				RequestMock.intercept().reply(200, '{"total":1,"documents":[{"id":2,"ping":"pong1"}],"scores":{"2":0.13102644681930542},"queryTime":1}');
+				RequestMock.intercept(
+					'GET',
+					'http://localhost/food?search=%5B%7B%22and%22%3A%5B%7B' +
+						'%22name%22%3A%7B%22operator%22%3A%22%3D%22%2C%22value%22%3A' +
+						'%22foo%22%7D%7D%2C%7B%22name%22%3A%7B%22operator%22%3A%22%3D%22%2C' +
+						'%22value%22%3A%22bar%22%7D%7D%5D%7D%5D'
+				).reply(200, '{"total":1,"documents":[{"id":2,"ping":"pong1"}],"scores":{"2":0.13102644681930542},"queryTime":1}');
 
 				WeDeploy
 					.data()
@@ -953,7 +1046,8 @@ describe('DataApiHelper', function() {
 
 		context('when using valid params', function() {
 			it('returns all data of a collection', function(done) {
-				RequestMock.intercept().reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
+				RequestMock.intercept('GET', 'http://localhost/food')
+					.reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
 
 				WeDeploy
 					.data()
@@ -979,7 +1073,6 @@ describe('DataApiHelper', function() {
 
 		context('when using valid params', function() {
 			it('returns all data of a collection', function(done) {
-
 				WeDeploy.socket(function(url, opts) {
 					assert.deepEqual({
 						forceNew: true,
