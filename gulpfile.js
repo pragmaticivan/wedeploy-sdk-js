@@ -1,16 +1,21 @@
 'use strict';
 
+var babel = require('rollup-plugin-babel');
+var buildRollup = require('metal-tools-build-rollup');
+var commonJs = require('rollup-plugin-commonjs');
 var concat = require('gulp-concat');
 var gulp = require('gulp');
 var runSequence = require('run-sequence');
 var metal = require('gulp-metal');
 var sourcemaps = require('gulp-sourcemaps');
 
-metal.registerTasks({
+var options = {
 	globalName: 'wedeploy',
 	buildSrc: ['src/**/!(node)/*.js', '!src/env/node.js'],
 	bundleFileName: 'api.js',
 	mainBuildJsTasks: ['build:socket'],
+	dest: 'build/globals',
+	src: 'src/env/browser.js',
 	testNodeSrc: [
 		'test/enviroment/node/env.js',
 		'test/**/*.js',
@@ -72,7 +77,8 @@ metal.registerTasks({
 			version: '5.0'
 		}
 	}
-});
+};
+metal.registerTasks(options);
 
 gulp.task('ci', function(cb) {
 	if (process.env.SAUCE_USERNAME) {
@@ -81,6 +87,30 @@ gulp.task('ci', function(cb) {
 	console.warn('Not running tests (most likely due to security restrictions)');
 	console.warn('See https://docs.travis-ci.com/user/sauce-connect/ for help');
 	cb();
+});
+
+gulp.task('build:node', function() {
+	var nodeOptions = {
+		bundleFileName: 'api.js',
+		dest: 'build/node',
+		globalName: 'wedeploy',
+		rollupConfig: {
+			format: 'cjs',
+			plugins: [
+				commonJs(),
+				babel({
+					presets: ['es2015-rollup']
+				})
+			]
+		},
+		skipWarnings: [/Treating .+ as external dependency/],
+		src: 'src/env/node.js'
+	};
+	return buildRollup(nodeOptions);
+});
+
+gulp.task('build:globals:js', ['build:node'], function() {
+	return buildRollup(options);
 });
 
 gulp.task('build:socket', ['build:globals:js'], function() {

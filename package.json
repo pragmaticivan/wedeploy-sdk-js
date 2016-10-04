@@ -21,16 +21,17 @@
   "dependencies": {
     "babel-cli": "^6.4.5",
     "babel-preset-metal": "^4.0.0",
-    "socket.io-client": "^1.3.7",
-    "request": "^2.67.0",
     "metal": "^2.0.0",
     "metal-ajax": "^2.0.0",
     "metal-promise": "^2.0.0",
     "metal-storage": "^1.0.1",
     "metal-structs": "^1.0.0",
-    "metal-uri": "^2.0.0"
+    "metal-uri": "^2.0.0",
+    "request": "^2.67.0",
+    "socket.io-client": "^1.3.7"
   },
   "devDependencies": {
+    "babel-preset-es2015-rollup": "^1.2.0",
     "babel-preset-metal-resolve-source": "^1.0.0",
     "chai": "^2.3.0",
     "gulp": "^3.8.11",
@@ -38,7 +39,10 @@
     "gulp-metal": "^1.0.0",
     "gulp-sourcemaps": "^1.6.0",
     "isparta": "^4.0.0",
+    "metal-tools-build-rollup": "^2.0.0",
     "nock": "^3.3.2",
+    "rollup-plugin-babel": "^2.6.1",
+    "rollup-plugin-commonjs": "^5.0.4",
     "run-sequence": "^1.1.5",
     "sinon": "^1.17.2",
     "source-map-support": "^0.4.0"
