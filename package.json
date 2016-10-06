@@ -1,5 +1,5 @@
 {
-  "name": "api-js",
+  "name": "wedeploy",
   "version": "0.0.0",
   "description": "WeDeploy Api",
   "scripts": {
@@ -7,13 +7,11 @@
     "install": "npm run compile",
     "test": "gulp ci"
   },
-  "main": "lib/env/node.js",
+  "main": "build/node/api-min.js",
   "jsnext:main": "src/env/browser.js",
   "files": [
-    "env",
-    "lib",
-    "src",
-    "test"
+    "build/globals/api-min.js",
+    "build/node/api-min.js"
   ],
   "keywords": [
     "metal"
