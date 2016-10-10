@@ -1,6 +1,6 @@
 {
   "name": "wedeploy",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "WeDeploy Api",
   "scripts": {
     "compile": "babel --presets metal -d lib/ src/",
