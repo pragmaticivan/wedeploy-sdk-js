@@ -10,7 +10,7 @@ An SDK that gives you access to the powerful WeDeploy cloud platforma from your 
 
 ## Getting Started
 
-The easiest way to integrate the WeDeploy SDK into your JavaScript project is through the [npm module](https://npmjs.org/wedeploy) or you can fetch it from our [CDN](cdn.wedeploy.com/api/latest/wedeploy.js).
+The easiest way to integrate the WeDeploy SDK into your JavaScript project is through the [npm module](https://npmjs.org/wedeploy) or you can fetch it from our [CDN](http://cdn.wedeploy.com/api/latest/wedeploy.js).
 
 ## Usage
 
