@@ -10,12 +10,7 @@ An SDK that gives you access to the powerful WeDeploy cloud platforma from your 
 
 ## Getting Started
 
-The easiest way to integrate the WeDeploy SDK into your JavaScript project is through the [npm module](https://npmjs.org/wedeploy).
-However, if you want to use a pre-compiled file, you can fetch it from [npmcdn](https://npmcdn.com). The development version is available at [https://npmcdn.com/wedeploy/dist/wedeploy.js](https://npmcdn.com/wedeploy/dist/wedeploy.js), and the minified production version is at [https://npmcdn.com/wedeploy/dist/wedeploy.min.js](https://npmcdn.com/wedeploy/dist/wedeploy.min.js).
-
-### Using WeDeploy on Different Platforms
-
-The JavaScript ecosystem is wide and incorporates a large number of platforms and execution environments. To handle this, the Parse npm module contains special versions of the SDK tailored to use in Node.js and browser environments. Not all features make sense in all environments, so using the appropriate package will ensure that items like local storage, user sessions, and HTTP requests use appropriate dependencies.
+The easiest way to integrate the WeDeploy SDK into your JavaScript project is through the [npm module](https://npmjs.org/wedeploy) or you can fetch it from our [CDN](cdn.wedeploy.com/api/latest/wedeploy.js).
 
 ## Usage
 
