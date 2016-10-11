@@ -6,6 +6,7 @@
   "scripts": {
     "compile": "babel --presets metal -d lib/ src/",
     "install": "npm run compile",
+    "prepublish": "gulp build",
     "test": "gulp ci"
   },
   "main": "build/node/api-min.js",
