@@ -1,8 +1,8 @@
 {
   "name": "wedeploy",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "WeDeploy Api",
-	"repository": "wedeploy/api-js",
+  "repository": "wedeploy/api-js",
   "scripts": {
     "compile": "babel --presets metal -d lib/ src/",
     "install": "npm run compile",
