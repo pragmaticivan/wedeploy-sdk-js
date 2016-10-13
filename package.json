@@ -1,6 +1,6 @@
 {
   "name": "wedeploy",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "WeDeploy Api",
   "repository": "wedeploy/api-js",
   "scripts": {
@@ -10,7 +10,7 @@
   "main": "build/node/api-min.js",
   "jsnext:main": "build/es2015/api-min.js",
   "files": [
-		"build/es2015/api-min.js",
+    "build/es2015/api-min.js",
     "build/globals/api-min.js",
     "build/node/api-min.js"
   ],
