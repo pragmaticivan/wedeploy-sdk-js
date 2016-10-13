@@ -8,8 +8,9 @@
     "test": "gulp ci"
   },
   "main": "build/node/api-min.js",
-  "jsnext:main": "src/env/browser.js",
+  "jsnext:main": "build/es2015/api-min.js",
   "files": [
+		"build/es2015/api-min.js",
     "build/globals/api-min.js",
     "build/node/api-min.js"
   ],
@@ -27,13 +28,16 @@
     "socket.io-client": "^1.3.7"
   },
   "devDependencies": {
+    "babel-preset-babili": "0.0.5",
     "babel-preset-es2015-rollup": "^1.2.0",
     "babel-preset-metal": "^4.1.0",
     "babel-preset-metal-resolve-source": "^1.0.0",
     "chai": "^2.3.0",
     "gulp": "^3.8.11",
+    "gulp-babel": "^6.1.2",
     "gulp-concat": "^2.6.0",
     "gulp-metal": "^1.0.0",
+    "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^1.6.0",
     "isparta": "^4.0.0",
     "metal-tools-build-rollup": "^2.0.0",

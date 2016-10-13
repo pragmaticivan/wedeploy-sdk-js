@@ -1,19 +1,22 @@
 'use strict';
 
-var babel = require('rollup-plugin-babel');
+var babel = require('gulp-babel');
 var buildRollup = require('metal-tools-build-rollup');
 var commonJs = require('rollup-plugin-commonjs');
 var concat = require('gulp-concat');
 var gulp = require('gulp');
 var runSequence = require('run-sequence');
 var metal = require('gulp-metal');
+var nodeResolve = require('rollup-plugin-node-resolve');
+var rename = require('gulp-rename');
+var rollupBabel = require('rollup-plugin-babel');
 var sourcemaps = require('gulp-sourcemaps');
 
 var options = {
 	globalName: 'wedeploy',
 	buildSrc: ['src/**/!(node)/*.js', '!src/env/node.js'],
 	bundleFileName: 'api.js',
-	mainBuildJsTasks: ['build:socket'],
+	mainBuildJsTasks: ['build:js:all'],
 	dest: 'build/globals',
 	src: 'src/env/browser.js',
 	testNodeSrc: [
@@ -76,7 +79,10 @@ var options = {
 			platform: 'Linux',
 			version: '5.0'
 		}
-	}
+	},
+
+	// See the `build:es2015` task for more information.
+	uglifySrc: 'build/!(es2015)/**.js'
 };
 metal.registerTasks(options);
 
@@ -98,7 +104,7 @@ gulp.task('build:node', function() {
 			format: 'cjs',
 			plugins: [
 				commonJs(),
-				babel({
+				rollupBabel({
 					presets: ['es2015-rollup']
 				})
 			]
@@ -109,11 +115,42 @@ gulp.task('build:node', function() {
 	return buildRollup(nodeOptions);
 });
 
-gulp.task('build:globals:js', ['build:node'], function() {
+gulp.task('build:es2015:rollup', function() {
+	var nodeOptions = {
+		bundleFileName: 'api.js',
+		dest: 'build/es2015',
+		rollupConfig: {
+			format: 'es',
+			plugins: [
+				nodeResolve({
+					jsnext: true
+				})
+			]
+		},
+		src: 'src/env/browser.js'
+	};
+	return buildRollup(nodeOptions);
+});
+
+gulp.task('build:es2015', ['build:es2015:rollup'], function() {
+	// UglifyJS can't handle es2015 syntax yet, so we're uglifying this version
+	// of the bundle separately.
+	return gulp.src('build/es2015/api.js')
+		.pipe(babel({
+			presets: ['babili'],
+			comments: false
+		}))
+		.pipe(rename({
+			suffix: '-min'
+		}))
+		.pipe(gulp.dest('build/es2015'));
+});
+
+gulp.task('build:globals:js', function() {
 	return buildRollup(options);
 });
 
-gulp.task('build:socket', ['build:globals:js'], function() {
+gulp.task('build:socket', function() {
 	return gulp.src(['node_modules/socket.io-client/socket.io.js', 'build/globals/api.js'])
 		.pipe(sourcemaps.init({
 			loadMaps: true
@@ -121,4 +158,8 @@ gulp.task('build:socket', ['build:globals:js'], function() {
 		.pipe(concat('api.js'))
 		.pipe(sourcemaps.write())
 		.pipe(gulp.dest('build/globals'));
+});
+
+gulp.task('build:js:all', function(done) {
+	runSequence('build:globals:js', 'build:es2015', 'build:node', 'build:socket', done);
 });
