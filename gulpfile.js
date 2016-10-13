@@ -115,7 +115,7 @@ gulp.task('build:node', function() {
 	return buildRollup(nodeOptions);
 });
 
-gulp.task('build:es2015:rollup', function() {
+gulp.task('build:es2015', function() {
 	var nodeOptions = {
 		bundleFileName: 'api.js',
 		dest: 'build/es2015',
@@ -132,7 +132,7 @@ gulp.task('build:es2015:rollup', function() {
 	return buildRollup(nodeOptions);
 });
 
-gulp.task('build:es2015', ['build:es2015:rollup'], function() {
+gulp.task('uglify:es2015', function() {
 	// UglifyJS can't handle es2015 syntax yet, so we're uglifying this version
 	// of the bundle separately.
 	return gulp.src('build/es2015/api.js')
@@ -150,16 +150,28 @@ gulp.task('build:globals:js', function() {
 	return buildRollup(options);
 });
 
-gulp.task('build:socket', function() {
-	return gulp.src(['node_modules/socket.io-client/socket.io.js', 'build/globals/api.js'])
+gulp.task('build:socket', function(done) {
+	return runSequence('build:socket:globals', 'build:socket:es2015', done);
+});
+
+gulp.task('build:socket:globals', function() {
+	return concatSocket('build/globals/api.js', 'build/globals');
+});
+
+gulp.task('build:socket:es2015', function() {
+	return concatSocket('build/es2015/api.js', 'build/es2015');
+});
+
+gulp.task('build:js:all', function(done) {
+	runSequence('build:globals:js', 'build:es2015', 'build:node', 'build:socket', 'uglify:es2015', done);
+});
+
+function concatSocket(filePath, dest) {
+	return gulp.src(['node_modules/socket.io-client/socket.io.js', filePath])
 		.pipe(sourcemaps.init({
 			loadMaps: true
 		}))
 		.pipe(concat('api.js'))
 		.pipe(sourcemaps.write())
-		.pipe(gulp.dest('build/globals'));
-});
-
-gulp.task('build:js:all', function(done) {
-	runSequence('build:globals:js', 'build:es2015', 'build:node', 'build:socket', done);
-});
+		.pipe(gulp.dest(dest));
+}
