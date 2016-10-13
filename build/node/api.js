@@ -2824,7 +2824,9 @@ var AuthApiHelper = function (_ApiHelper) {
 		_this.currentUser = null;
 		_this.onSignInCallback = null;
 		_this.onSignOutCallback = null;
-		_this.storage = new metalStorage.Storage(new metalStorage.LocalStorageMechanism());
+		if (metalStorage.LocalStorageMechanism.isSupported()) {
+			_this.storage = new metalStorage.Storage(new metalStorage.LocalStorageMechanism());
+		}
 
 		_this.processSignIn_();
 
@@ -2923,7 +2925,9 @@ var AuthApiHelper = function (_ApiHelper) {
 				var data = response.body();
 				data.token = token;
 				_this4.currentUser = _this4.makeUserAuthFromData(data);
-				_this4.storage.set('currentUser', data);
+				if (_this4.storage) {
+					_this4.storage.set('currentUser', data);
+				}
 				return _this4.currentUser;
 			});
 		}
@@ -3020,7 +3024,7 @@ var AuthApiHelper = function (_ApiHelper) {
 				});
 				return;
 			}
-			var currentUser = this.storage.get('currentUser');
+			var currentUser = this.storage && this.storage.get('currentUser');
 			if (currentUser) {
 				this.currentUser = this.makeUserAuthFromData(currentUser);
 			}
@@ -3141,7 +3145,9 @@ var AuthApiHelper = function (_ApiHelper) {
 		key: 'unloadCurrentUser_',
 		value: function unloadCurrentUser_() {
 			this.currentUser = null;
-			this.storage.remove('currentUser');
+			if (this.storage) {
+				this.storage.remove('currentUser');
+			}
 		}
 	}]);
 	return AuthApiHelper;
