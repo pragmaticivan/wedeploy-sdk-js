@@ -88,7 +88,7 @@ metal.registerTasks(options);
 
 gulp.task('ci', function(cb) {
 	if (process.env.SAUCE_USERNAME) {
-		return runSequence('lint', 'test:saucelabs', 'build', cb);
+		return runSequence('lint', 'test:saucelabs', 'test:node', 'build', cb);
 	}
 	console.warn('Not running tests (most likely due to security restrictions)');
 	console.warn('See https://docs.travis-ci.com/user/sauce-connect/ for help');
