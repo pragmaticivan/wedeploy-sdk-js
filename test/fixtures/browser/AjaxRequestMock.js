@@ -48,7 +48,7 @@ class AjaxRequestMock {
  * from the browser.
  */
 function convertEvents_(request) {
-	if (!AjaxRequestMock.addedEvents) {
+	if (!AjaxRequestMock.addedEvents && request) {
 		AjaxRequestMock.addedEvents = true;
 		request.addEventListener('error', function(event) {
 			event.stopPropagation();
