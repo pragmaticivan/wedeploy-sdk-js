@@ -29,11 +29,6 @@ var options = {
 			base: 'SauceLabs',
 			browserName: 'chrome'
 		},
-		sl_safari_8: {
-			base: 'SauceLabs',
-			browserName: 'safari',
-			version: '10'
-		},
 		sl_safari_9: {
 			base: 'SauceLabs',
 			browserName: 'safari',
