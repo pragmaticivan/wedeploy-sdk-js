@@ -91,8 +91,9 @@ of patent rights can be found in the PATENTS file in the same directory.
 ```
 
 
-[build-status-svg]: http://img.shields.io/travis/wedeploy/api-js/master.svg?style=flat&branch=master
+[build-status-svg]: https://travis-ci.com/wedeploy/api-js.svg?token=a51FNuiJPYZtHhup9q1V&branch=master
 [build-status-link]: https://travis-ci.com/wedeploy/api-js
+
 
 [coverage-status-svg]: http://codecov.io/github/wedeploy/api-js/coverage.svg?branch=master
 [coverage-status-link]: http://codecov.io/github/wedeploy/api-js?branch=master
