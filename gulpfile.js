@@ -32,7 +32,7 @@ var options = {
 		sl_safari_8: {
 			base: 'SauceLabs',
 			browserName: 'safari',
-			version: '8'
+			version: '10'
 		},
 		sl_safari_9: {
 			base: 'SauceLabs',
@@ -59,7 +59,7 @@ var options = {
 			base: 'SauceLabs',
 			browserName: 'microsoftedge',
 			platform: 'Windows 10',
-			version: '20'
+			version: '13'
 		},
 		sl_iphone: {
 			base: 'SauceLabs',
