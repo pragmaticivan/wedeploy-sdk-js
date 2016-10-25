@@ -12,4 +12,13 @@ import TransportFactory from '../api/TransportFactory';
 TransportFactory[TransportFactory.DEFAULT_TRANSPORT_NAME] = NodeTransport;
 WeDeploy.socket(io);
 
-export { WeDeploy, Filter, Geo, Query, Range };
+WeDeploy.Filter = Filter;
+WeDeploy.Geo = Geo;
+WeDeploy.Query = Query;
+WeDeploy.Range = Range;
+
+// This is for backwards compatibility for previous versions that were using
+// named exports.
+WeDeploy.WeDeploy = WeDeploy;
+
+export default WeDeploy;

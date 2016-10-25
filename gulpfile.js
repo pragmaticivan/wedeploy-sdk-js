@@ -97,6 +97,7 @@ gulp.task('build:node', function() {
 		globalName: 'wedeploy',
 		rollupConfig: {
 			format: 'cjs',
+			exports: 'default',
 			plugins: [
 				commonJs(),
 				rollupBabel({

@@ -1,7 +1,5 @@
 'use strict';
 
-Object.defineProperty(exports, '__esModule', { value: true });
-
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
 var io = _interopDefault(require('socket.io-client'));
@@ -4135,7 +4133,7 @@ if (typeof globals.window !== 'undefined') {
  * ```
  */
 
-var WeDeploy = function () {
+var WeDeploy$1 = function () {
 	/**
   * WeDeploy constructor function.
   * @param {string} url The base url.
@@ -4676,15 +4674,15 @@ var WeDeploy = function () {
 	return WeDeploy;
 }();
 
-WeDeploy.isContentTypeJson = function (clientMessage) {
+WeDeploy$1.isContentTypeJson = function (clientMessage) {
 	var contentType = clientMessage.headers().get('content-type') || '';
 	return contentType.indexOf('application/json') === 0;
 };
 
-WeDeploy.auth_ = null;
-WeDeploy.authUrl_ = '';
-WeDeploy.data_ = null;
-WeDeploy.dataUrl_ = '';
+WeDeploy$1.auth_ = null;
+WeDeploy$1.authUrl_ = '';
+WeDeploy$1.data_ = null;
+WeDeploy$1.dataUrl_ = '';
 
 /**
  * Provides a convenient interface for data transport.
@@ -4786,12 +4784,17 @@ var NodeTransport = function (_Transport) {
 }(Transport);
 
 TransportFactory[TransportFactory.DEFAULT_TRANSPORT_NAME] = NodeTransport;
-WeDeploy.socket(io);
+WeDeploy$1.socket(io);
 
-exports.WeDeploy = WeDeploy;
-exports.Filter = Filter;
-exports.Geo = Geo;
-exports.Query = Query;
-exports.Range = Range;
+WeDeploy$1.Filter = Filter;
+WeDeploy$1.Geo = Geo;
+WeDeploy$1.Query = Query;
+WeDeploy$1.Range = Range;
+
+// This is for backwards compatibility for previous versions that were using
+// named exports.
+WeDeploy$1.WeDeploy = WeDeploy$1;
+
+module.exports = WeDeploy$1;
 
 //# sourceMappingURL=api.js.map
