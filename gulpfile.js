@@ -18,6 +18,9 @@ var options = {
 	bundleFileName: 'api.js',
 	mainBuildJsTasks: ['build:js:all'],
 	dest: 'build/globals',
+	rollupConfig: {
+		exports: 'named'
+	},
 	src: 'src/env/browser.js',
 	testNodeSrc: [
 		'test/enviroment/node/env.js',
