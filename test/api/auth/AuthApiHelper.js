@@ -240,7 +240,7 @@ describe('AuthApiHelper', function() {
 			RequestMock.setup(
 				'GET',
 				'http://localhost/oauth/token?grant_type=password' +
-					'&username=email%40domain.com&password=password'
+				'&username=email%40domain.com&password=password'
 			);
 		});
 
@@ -523,5 +523,6 @@ function getAuthorizationHeader_() {
  * @return {[type]}      [description]
  */
 function skipForNode_(fn) {
-	return (typeof window === 'undefined') ? () => {} : fn;
+	return (typeof window === 'undefined') ? () => {
+	} : fn;
 }

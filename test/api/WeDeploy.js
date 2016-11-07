@@ -273,9 +273,10 @@ describe('WeDeploy Tests', function() {
 	});
 
 	it('should send request with authorization token', function(done) {
-		RequestMock.intercept().reply(200);
+		RequestMock.intercept('GET', 'http://localhost/url/a/testpath').reply(200);
 		WeDeploy.url('http://localhost/url/a')
 			.auth('My Token')
+			.path('/testpath')
 			.get()
 			.then(function(response) {
 				assert.strictEqual('Bearer My Token', response.request().headers().get('Authorization'));

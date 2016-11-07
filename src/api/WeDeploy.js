@@ -348,7 +348,13 @@ class WeDeploy {
 	 * @return {!WeDeploy} A new {@link WeDeploy} instance for handling the given paths.
 	 */
 	path(...paths) {
-		return new WeDeploy(this.url(), ...paths).use(this.customTransport_);
+		let wedeployClient = new WeDeploy(this.url(), ...paths);
+
+		if (core.isDefAndNotNull(this.auth_)) {
+			wedeployClient.auth(this.auth_);
+		}
+
+		return wedeployClient.use(this.customTransport_);
 	}
 
 	/**

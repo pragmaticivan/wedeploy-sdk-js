@@ -4,7 +4,7 @@ import nock from 'nock';
 import url from 'url';
 
 let defVerb_;
-let defAddress_ ;
+let defAddress_;
 
 class NodeRequestMock {
 	static inject(name, module) {
