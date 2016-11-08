@@ -5,7 +5,7 @@ import Query from '../../src/api-query/Query';
 import Aggregation from '../../src/api-query/Aggregation';
 
 describe('Query', function() {
-	describe('filter', function() {
+	describe('Query.filter', function() {
 		it('should be chainnable', function() {
 			var query = Query.filter();
 			assert.strictEqual(query, query.filter(Filter.gt('age', 12)));
@@ -66,7 +66,7 @@ describe('Query', function() {
 		});
 	});
 
-	describe('search', function() {
+	describe('Query.search', function() {
 		it('should be chainnable', function() {
 			var query = Query.search();
 			assert.strictEqual(query, query.search(Query.search()));
@@ -166,7 +166,7 @@ describe('Query', function() {
 		});
 	});
 
-	describe('sort', function() {
+	describe('Query.sort', function() {
 		it('should be chainnable', function() {
 			var query = Query.sort();
 			assert.strictEqual(query, query.sort('age'));
@@ -202,7 +202,7 @@ describe('Query', function() {
 		});
 	});
 
-	describe('type', function() {
+	describe('Query.type', function() {
 		it('should be chainnable', function() {
 			var query = Query.type();
 			assert.strictEqual(query, query.type('count'));
@@ -245,7 +245,7 @@ describe('Query', function() {
 		});
 	});
 
-	describe('offset', function() {
+	describe('Query.offset', function() {
 		it('should be chainnable', function() {
 			var query = Query.offset();
 			assert.strictEqual(query, query.offset(10));
@@ -261,7 +261,7 @@ describe('Query', function() {
 		});
 	});
 
-	describe('limit', function() {
+	describe('Query.limit', function() {
 		it('should be chainnable', function() {
 			var query = Query.limit();
 			assert.strictEqual(query, query.limit(10));
@@ -277,7 +277,7 @@ describe('Query', function() {
 		});
 	});
 
-	describe('all', function() {
+	describe('Query.all', function() {
 		it('should create complex query with many different keys', function() {
 			var query = Query
 				.filter(Filter.gt('age', 12))
@@ -297,7 +297,7 @@ describe('Query', function() {
 		});
 	});
 
-	describe('aggregate', function() {
+	describe('Query.aggregate', function() {
 		it('should be chainnable', function() {
 			var query = Query.aggregate();
 			assert.strictEqual(query, query.aggregate('aggr', 'name', 'count'));
@@ -327,7 +327,7 @@ describe('Query', function() {
 		});
 	});
 
-	describe('highlight', function() {
+	describe('Query.highlight', function() {
 		it('should be chainnable', function() {
 			var query = Query.highlight();
 			assert.strictEqual(query, query.highlight('name'));

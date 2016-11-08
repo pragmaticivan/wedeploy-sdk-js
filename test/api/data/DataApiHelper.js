@@ -16,30 +16,30 @@ describe('DataApiHelper', function() {
 	});
 
 	describe('WeDeploy.data()', function() {
-		it('does not return the same instance', function() {
+		it('should not return the same instance', function() {
 			let data = WeDeploy.data();
 			assert.notStrictEqual(data, WeDeploy.data());
 		});
 
-		it('returns instance with url filled', function() {
+		it('should return the instance with url filled', function() {
 			let data = WeDeploy.data('http://host.com');
 			assert.strictEqual(data.wedeployClient.dataUrl_, 'http://host.com');
 		});
 
-		it('raises an error if the data url has a path', function() {
+		it('should raise an error if the data url has a path', function() {
 			assert.throws(function() {
 				WeDeploy.data('http://data.project.wedeploy.me/extrapath');
 			}, Error);
 		});
 
-		it('returns instance of scoped auth', function() {
+		it('should return the instance of scoped auth', function() {
 			WeDeploy.auth().currentUser = Auth.create('token');
 			assert.strictEqual(WeDeploy.auth().currentUser, WeDeploy.data().helperAuthScope);
 		});
 	});
 
 	describe('query formation', function() {
-		it('creates the and add virtual filters into the query', function() {
+		it('should create a query and add virtual filters into the query', function() {
 
 			const client = WeDeploy.data();
 
@@ -87,7 +87,7 @@ describe('DataApiHelper', function() {
 		});
 
 		context('when using invalid params', function() {
-			it('fails trying to create data without specifing the collection', function() {
+			it('should fail trying to create data without specifing the collection', function() {
 				const data = WeDeploy.data();
 				assert.throws(function() {
 					data.create(null, {
@@ -96,7 +96,7 @@ describe('DataApiHelper', function() {
 				}, Error);
 			});
 
-			it('fails trying to create data without specifying the data param', function() {
+			it('should fail trying to create data without specifying the data param', function() {
 				const data = WeDeploy.data();
 				assert.throws(function() {
 					data.create('collection', null);
@@ -105,7 +105,7 @@ describe('DataApiHelper', function() {
 		});
 
 		context('when creating and it returns an error', function() {
-			it('fails updating because of a server error ', function(done) {
+			it('should fail updating because of a server error ', function(done) {
 				RequestMock.intercept()
 					.reply(500, '{"error": "Error 500"}');
 
@@ -122,7 +122,7 @@ describe('DataApiHelper', function() {
 		});
 
 		context('when creating with one object', function() {
-			it('creates new data', function(done) {
+			it('should create new data', function(done) {
 				RequestMock.intercept()
 					.reply(200, '{"id": 1, "ping": "pong"}');
 
@@ -139,7 +139,7 @@ describe('DataApiHelper', function() {
 		});
 
 		context('when creating with one array', function() {
-			it('creates multiple data', function(done) {
+			it('should create multiple data', function(done) {
 				RequestMock.intercept()
 					.reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
 
@@ -167,7 +167,7 @@ describe('DataApiHelper', function() {
 		});
 
 		context('when using invalid params', function() {
-			it('fails trying to updating data without specifing the collection', function() {
+			it('should fail trying to updating data without specifing the collection', function() {
 				assert.throws(function() {
 					WeDeploy.data().update(null, {
 						'ping': 'pong'
@@ -175,7 +175,7 @@ describe('DataApiHelper', function() {
 				}, Error);
 			});
 
-			it('fails trying to update data without specifying the data param', function() {
+			it('should fail trying to update data without specifying the data param', function() {
 				assert.throws(function() {
 					WeDeploy.data().update('collection', null);
 				}, Error);
@@ -183,7 +183,7 @@ describe('DataApiHelper', function() {
 		});
 
 		context('when updating and it returns an error', function() {
-			it('fails updating because of an server error ', function(done) {
+			it('should fail updating because of an server error ', function(done) {
 				RequestMock.intercept('PUT', 'http://localhost/collection/242424')
 					.reply(500, '{"error": "Error 500"}');
 
@@ -198,7 +198,7 @@ describe('DataApiHelper', function() {
 					});
 			});
 
-			it('fails updating because the row doesn\'t exist', function(done) {
+			it('should fail updating because the row doesn\'t exist', function(done) {
 				RequestMock.intercept('PUT', 'http://localhost/collection/242424')
 					.reply(404, '{"error": "Error 404"}');
 
@@ -215,7 +215,7 @@ describe('DataApiHelper', function() {
 		});
 
 		context('when updating with one object', function() {
-			it('updates an object', function(done) {
+			it('should update an object', function(done) {
 				RequestMock.intercept().reply(200, '{"id": 1, "ping": "pongUpdated"}');
 
 				WeDeploy
@@ -231,7 +231,7 @@ describe('DataApiHelper', function() {
 		});
 
 		context('when updating with one object and a new key', function() {
-			it('updates a value and adds the new key to the object', function(done) {
+			it('should update a value and add the new key to the object', function(done) {
 				RequestMock.intercept().reply(200, '{"id": 1, "ping": "pongUpdated", "newKey": "newValue"}');
 
 				WeDeploy
@@ -254,7 +254,7 @@ describe('DataApiHelper', function() {
 		});
 
 		context('when using invalid params', function() {
-			it('fails trying to create data without specifying the collection', function() {
+			it('should fail trying to create data without specifying the collection', function() {
 				assert.throws(function() {
 					WeDeploy.data().delete(null);
 				}, Error);
@@ -262,7 +262,7 @@ describe('DataApiHelper', function() {
 		});
 
 		context('when updating and it returns an error', function() {
-			it('fails updating because of an server error ', function(done) {
+			it('should fail updating because of an server error ', function(done) {
 				RequestMock.intercept().reply(500, '{"error": "Error 500"}');
 
 				WeDeploy
@@ -276,7 +276,7 @@ describe('DataApiHelper', function() {
 					});
 			});
 
-			it('fails updating because the row doesn\'t exist', function(done) {
+			it('should fail updating because the row doesn\'t exist', function(done) {
 				RequestMock.intercept().reply(404, '{"error": "Error 404"}');
 
 				WeDeploy
@@ -292,7 +292,7 @@ describe('DataApiHelper', function() {
 		});
 
 		context('when successfuly deletes data', function() {
-			it('deletes a field', function(done) {
+			it('should delete a field', function(done) {
 				RequestMock.intercept('DELETE', 'http://localhost/collection/1/title')
 					.reply(204);
 
@@ -306,7 +306,7 @@ describe('DataApiHelper', function() {
 
 			});
 
-			it('deletes a data row', function(done) {
+			it('should delete a data row', function(done) {
 				RequestMock.intercept('DELETE', 'http://localhost/collection/1')
 					.reply(204);
 
@@ -319,7 +319,7 @@ describe('DataApiHelper', function() {
 					});
 			});
 
-			it('deletes a collection', function(done) {
+			it('should delete a collection', function(done) {
 				RequestMock.intercept('DELETE', 'http://localhost/collection')
 					.reply(204);
 
@@ -335,7 +335,7 @@ describe('DataApiHelper', function() {
 	});
 
 	describe('.limit()', function() {
-		it('sends request with query limit in the body', function(done) {
+		it('should send the request with query limit in the body', function(done) {
 			RequestMock.intercept('GET', 'http://localhost/collection?limit=1')
 				.reply(200, '[{"id": 1, "ping": "pong1"}]');
 
@@ -349,7 +349,7 @@ describe('DataApiHelper', function() {
 				});
 		});
 
-		it('builds the limit into the query body', function() {
+		it('should build the limit into the query body', function() {
 			const dataClient = WeDeploy
 				.data()
 				.limit(99);
@@ -359,7 +359,7 @@ describe('DataApiHelper', function() {
 	});
 
 	describe('.count()', function() {
-		it('sends request with query count in the body', function(done) {
+		it('should send request with query count in the body', function(done) {
 			RequestMock.intercept('GET', 'http://localhost/food?type=count')
 				.reply(200, '5');
 
@@ -373,7 +373,7 @@ describe('DataApiHelper', function() {
 
 		});
 
-		it('builds the count type into the query body', function() {
+		it('should build the count type into the query body', function() {
 			const dataClient = WeDeploy
 				.data()
 				.count();
@@ -397,7 +397,7 @@ describe('DataApiHelper', function() {
 				});
 		});
 
-		it('builds the offset into the query body', function() {
+		it('should build the offset into the query body', function() {
 			const dataClient = WeDeploy
 				.data()
 				.offset(2);
@@ -421,7 +421,7 @@ describe('DataApiHelper', function() {
 				});
 		});
 
-		it('builds the highlight into the query body', function() {
+		it('should build the highlight into the query body', function() {
 			const dataClient = WeDeploy
 				.data()
 				.highlight('highlighted');
@@ -431,7 +431,7 @@ describe('DataApiHelper', function() {
 	});
 
 	describe('.orderBy()', function() {
-		it('sends request with query sort in the body', function(done) {
+		it('should send request with query sort in the body', function(done) {
 			RequestMock.intercept('GET', 'http://localhost/food?sort=%5B%7B%22id%22%3A%22asc%22%7D%5D')
 				.reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
 
@@ -445,7 +445,7 @@ describe('DataApiHelper', function() {
 				});
 		});
 
-		it('builds the orderBy into the query body', function() {
+		it('should build the orderBy into the query body', function() {
 			const dataClient = WeDeploy
 				.data()
 				.orderBy('id', 'asc');
@@ -476,7 +476,7 @@ describe('DataApiHelper', function() {
 				});
 		});
 
-		it('builds the none query into the query body', function() {
+		it('should build the none query into the query body', function() {
 			const dataClient = WeDeploy
 				.data()
 				.none('name', 'cuscuz', 'tapioca');
@@ -518,7 +518,7 @@ describe('DataApiHelper', function() {
 				});
 		});
 
-		it('builds the match query into the query body', function() {
+		it('should build the match query into the query body', function() {
 			const dataClient = WeDeploy
 				.data()
 				.match('name', 'cuscuz');
@@ -560,7 +560,7 @@ describe('DataApiHelper', function() {
 				});
 		});
 
-		it('builds the similar query into the query body', function() {
+		it('should build the similar query into the query body', function() {
 			const dataClient = WeDeploy
 				.data()
 				.similar('name', 'cusc');
@@ -604,7 +604,7 @@ describe('DataApiHelper', function() {
 				});
 		});
 
-		it('builds the lt query into the query body', function() {
+		it('should build the lt query into the query body', function() {
 			const dataClient = WeDeploy
 				.data()
 				.lt('size', 30);
@@ -646,7 +646,7 @@ describe('DataApiHelper', function() {
 				});
 		});
 
-		it('builds the lte query into the query body', function() {
+		it('should build the lte query into the query body', function() {
 			const dataClient = WeDeploy
 				.data()
 				.lte('size', 30);
@@ -688,7 +688,7 @@ describe('DataApiHelper', function() {
 				});
 		});
 
-		it('builds the any query into the query body', function() {
+		it('should build the any query into the query body', function() {
 			const dataClient = WeDeploy
 				.data()
 				.any('name', 'cuscuz', 'tapioca');
@@ -730,7 +730,7 @@ describe('DataApiHelper', function() {
 				});
 		});
 
-		it('builds the boundingBox query into the query body', function() {
+		it('should build the boundingBox query into the query body', function() {
 			const dataClient = WeDeploy
 				.data()
 				.boundingBox('shape', Geo.boundingBox('20,0', [0, 20]));
@@ -772,7 +772,7 @@ describe('DataApiHelper', function() {
 				});
 		});
 
-		it('builds the distance query into the query body', function() {
+		it('should build the distance query into the query body', function() {
 			const dataClient = WeDeploy
 				.data()
 				.distance('point', Geo.circle([0, 0], 2));
@@ -817,7 +817,7 @@ describe('DataApiHelper', function() {
 				});
 		});
 
-		it('builds the range query into the query body', function() {
+		it('should build the range query into the query body', function() {
 			const dataClient = WeDeploy
 				.data()
 				.range('points', 12, 15);
@@ -862,7 +862,7 @@ describe('DataApiHelper', function() {
 				});
 		});
 
-		it('builds the filter query into the query body', function() {
+		it('should build the filter query into the query body', function() {
 			const dataClient = WeDeploy
 				.data()
 				.where('name', '=', 'foo');
@@ -912,7 +912,7 @@ describe('DataApiHelper', function() {
 				});
 		});
 
-		it('builds the or query into the query body', function() {
+		it('should build the or query into the query body', function() {
 			const dataClient = WeDeploy
 				.data()
 				.where('name', '=', 'foo')
@@ -961,7 +961,7 @@ describe('DataApiHelper', function() {
 				});
 		});
 
-		it('builds the aggregate query into the query body', function() {
+		it('should build the aggregate query into the query body', function() {
 			const dataClient = WeDeploy
 				.data()
 				.aggregate('name', 'field');
@@ -983,7 +983,7 @@ describe('DataApiHelper', function() {
 
 	describe('.search()', function() {
 		context('when using invalid params', function() {
-			it('fails trying to search data without specifing the collection', function() {
+			it('should fail trying to search data without specifing the collection', function() {
 				WeDeploy.socket();
 				const data = WeDeploy.data();
 				assert.throws(function() {
@@ -991,7 +991,7 @@ describe('DataApiHelper', function() {
 				}, Error);
 			});
 
-			it('builds the query without any conditional on search and throws an error', function() {
+			it('should build the query without any conditional on search and throws an error', function() {
 				const data = WeDeploy.data();
 				assert.throws(function() {
 					data.search('collection');
@@ -1000,7 +1000,7 @@ describe('DataApiHelper', function() {
 		});
 
 		context('when using valid params', function() {
-			it('sends request with query search in the body', function(done) {
+			it('should send request with query search in the body', function(done) {
 				RequestMock.intercept(
 					'GET',
 					'http://localhost/food?search=%5B%7B%22and%22%3A%5B%7B' +
@@ -1020,7 +1020,7 @@ describe('DataApiHelper', function() {
 					});
 			});
 
-			it('builds the query as search type', function() {
+			it('should build the query as search type', function() {
 				const client = WeDeploy
 					.data()
 					.where('name', '=', 'foo')
@@ -1036,7 +1036,7 @@ describe('DataApiHelper', function() {
 
 	describe('.get()', function() {
 		context('when using invalid params', function() {
-			it('fails trying to retrieve data without specifing the collection', function() {
+			it('should fail trying to retrieve data without specifing the collection', function() {
 				const data = WeDeploy.data();
 				assert.throws(function() {
 					data.get(null);
@@ -1045,7 +1045,7 @@ describe('DataApiHelper', function() {
 		});
 
 		context('when using valid params', function() {
-			it('returns all data of a collection', function(done) {
+			it('should return all data of a collection', function(done) {
 				RequestMock.intercept('GET', 'http://localhost/food')
 					.reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
 
@@ -1062,7 +1062,7 @@ describe('DataApiHelper', function() {
 
 	describe('.watch()', function() {
 		context('when using invalid params', function() {
-			it('fails trying to watch data without specifing the collection', function() {
+			it('should fail trying to watch data without specifing the collection', function() {
 				WeDeploy.socket();
 				const data = WeDeploy.data();
 				assert.throws(function() {
@@ -1072,7 +1072,7 @@ describe('DataApiHelper', function() {
 		});
 
 		context('when using valid params', function() {
-			it('returns all data of a collection', function(done) {
+			it('should return all data of a collection', function(done) {
 				WeDeploy.socket(function(url, opts) {
 					assert.deepEqual({
 						forceNew: true,

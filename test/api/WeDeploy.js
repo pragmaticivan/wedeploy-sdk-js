@@ -471,28 +471,30 @@ describe('WeDeploy Tests', function() {
 		}, Error);
 	});
 
-	it('should throws exception for invalid header arguments', function() {
-		assert.throws(function() {
-			WeDeploy.url('http://localhost/url').header();
-		}, Error);
+	describe('headers', function () {
+		it('should throws exception for invalid header arguments', function() {
+			assert.throws(function() {
+				WeDeploy.url('http://localhost/url').header();
+			}, Error);
 
-		assert.throws(function() {
-			WeDeploy.url('http://localhost/url').header('name');
-		}, Error);
+			assert.throws(function() {
+				WeDeploy.url('http://localhost/url').header('name');
+			}, Error);
+		});
+
+		it('should throws exception for invalid header arguments', function() {
+			assert.throws(function() {
+				WeDeploy.url('http://localhost/url').header();
+			}, Error);
+
+			assert.throws(function() {
+				WeDeploy.url('http://localhost/url').header('name');
+			}, Error);
+		});
 	});
 
-	it('should throws exception for invalid header arguments', function() {
-		assert.throws(function() {
-			WeDeploy.url('http://localhost/url').header();
-		}, Error);
 
-		assert.throws(function() {
-			WeDeploy.url('http://localhost/url').header('name');
-		}, Error);
-	});
-
-
-	describe('withCredentials()', function() {
+	describe('.withCredentials()', function() {
 		it('ensures the default to be false when no param is specified', function() {
 			const client = WeDeploy.url('http://localhost/url')
 				.withCredentials();
