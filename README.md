@@ -4,7 +4,7 @@
 [![License][license-svg]][license-link]
 [![Npm Version][npm-svg]][npm-link]
 
-[![Sauce Test Status](https://saucelabs.com/browser-matrix/launchpad-api.svg)](https://travis-ci.org/wedeploy/api-js)
+[![Build Status](https://saucelabs.com/browser-matrix/ivansantos.svg)](https://saucelabs.com/beta/builds/8a24c731fc704e2c835033bcbc2faa2e)
 
 An SDK that gives you access to the powerful WeDeploy cloud platforma from your JavaScript app. For more information on WeDeploy and its features, see [the website](https://wedeploy.com) or [the JavaScript guide](https://wedeploy.com/docs).
 
