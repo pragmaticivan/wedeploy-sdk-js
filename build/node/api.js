@@ -2483,7 +2483,7 @@ var Auth = function () {
 		key: 'updateUser',
 		value: function updateUser(data) {
 			assertObject(data, 'User data must be specified as object');
-			return this.wedeployClient.url(this.wedeployClient.authUrl_).path('/users').auth(this).patch(data).then(function (response) {
+			return this.wedeployClient.url(this.wedeployClient.authUrl_).path('/users', this.getId().toString()).auth(this).patch(data).then(function (response) {
 				return assertResponseSucceeded(response);
 			});
 		}
@@ -2496,8 +2496,8 @@ var Auth = function () {
 	}, {
 		key: 'deleteUser',
 		value: function deleteUser() {
-			assertDefAndNotNull(this.id, 'Cannot delete user without id');
-			return this.wedeployClient.url(this.wedeployClient.authUrl_).path('/users', this.id).auth(this).delete().then(function (response) {
+			assertDefAndNotNull(this.getId(), 'Cannot delete user without id');
+			return this.wedeployClient.url(this.wedeployClient.authUrl_).path('/users', this.getId().toString()).auth(this).delete().then(function (response) {
 				return assertResponseSucceeded(response);
 			});
 		}

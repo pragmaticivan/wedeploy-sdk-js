@@ -221,7 +221,7 @@ class Auth {
 		assertObject(data, 'User data must be specified as object');
 		return this.wedeployClient
 			.url(this.wedeployClient.authUrl_)
-			.path('/users')
+			.path('/users', this.getId().toString())
 			.auth(this)
 			.patch(data)
 			.then(response => assertResponseSucceeded(response));
@@ -232,10 +232,10 @@ class Auth {
 	 * @return {CompletableFuture}
 	 */
 	deleteUser() {
-		assertDefAndNotNull(this.id, 'Cannot delete user without id');
+		assertDefAndNotNull(this.getId(), 'Cannot delete user without id');
 		return this.wedeployClient
 			.url(this.wedeployClient.authUrl_)
-			.path('/users', this.id)
+			.path('/users', this.getId().toString())
 			.auth(this)
 			.delete()
 			.then(response => assertResponseSucceeded(response));

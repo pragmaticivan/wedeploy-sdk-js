@@ -74,6 +74,8 @@ describe('Auth', function() {
 
 		it('should call updateUser successfully', function(done) {
 			var auth = Auth.create();
+			auth.setId(3);
+
 			auth.setWedeployClient(WeDeploy);
 			RequestMock.intercept().reply(200);
 			auth
@@ -83,6 +85,8 @@ describe('Auth', function() {
 
 		it('should call updateUser unsuccessfully', function(done) {
 			var auth = Auth.create();
+			auth.setId(3);
+
 			auth.setWedeployClient(WeDeploy);
 			RequestMock.intercept().reply(400);
 			auth
@@ -92,6 +96,8 @@ describe('Auth', function() {
 
 		it('should call updateUser unsuccessfully with error response as reason', function(done) {
 			var auth = Auth.create();
+			auth.setId(3);
+
 			auth.setWedeployClient(WeDeploy);
 			auth.currentUser = {};
 			var responseErrorObject = {
