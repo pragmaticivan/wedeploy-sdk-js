@@ -77,7 +77,8 @@ describe('Auth', function() {
 			auth.setId(3);
 
 			auth.setWedeployClient(WeDeploy);
-			RequestMock.intercept().reply(200);
+			RequestMock.intercept('PATCH', 'http://localhost/users/3')
+					.reply(200);
 			auth
 				.updateUser({})
 				.then(() => done());
@@ -88,7 +89,8 @@ describe('Auth', function() {
 			auth.setId(3);
 
 			auth.setWedeployClient(WeDeploy);
-			RequestMock.intercept().reply(400);
+			RequestMock.intercept('PATCH', 'http://localhost/users/3')
+					.reply(400);
 			auth
 				.updateUser({})
 				.catch(() => done());
@@ -103,9 +105,10 @@ describe('Auth', function() {
 			var responseErrorObject = {
 				error: true
 			};
-			RequestMock.intercept().reply(400, JSON.stringify(responseErrorObject), {
+			RequestMock.intercept('PATCH', 'http://localhost/users/3').reply(400, JSON.stringify(responseErrorObject), {
 				'content-type': 'application/json'
 			});
+
 			auth
 				.updateUser({})
 				.catch((reason) => {
