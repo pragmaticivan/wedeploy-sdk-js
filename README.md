@@ -1,6 +1,5 @@
 # WeDeploy SDK for JavaScript
 [![Build Status][build-status-svg]][build-status-link]
-[![Test Coverage][coverage-status-svg]][coverage-status-link]
 [![License][license-svg]][license-link]
 [![Npm Version][npm-svg]][npm-link]
 
@@ -93,10 +92,6 @@ of patent rights can be found in the PATENTS file in the same directory.
 
 [build-status-svg]: https://travis-ci.com/wedeploy/api-js.svg?token=a51FNuiJPYZtHhup9q1V&branch=master
 [build-status-link]: https://travis-ci.com/wedeploy/api-js
-
-
-[coverage-status-svg]: http://codecov.io/github/wedeploy/api-js/coverage.svg?branch=master
-[coverage-status-link]: http://codecov.io/github/wedeploy/api-js?branch=master
 
 [license-svg]: https://img.shields.io/badge/license-BSD-lightgrey.svg
 [license-link]: https://github.com/wedeploy/api-js/blob/master/LICENSE.md
