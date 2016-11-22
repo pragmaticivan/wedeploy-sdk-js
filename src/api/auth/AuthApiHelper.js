@@ -272,7 +272,7 @@ class AuthApiHelper extends ApiHelper {
 
 	/**
 	 * Signs out <code>currentUser</code> and removes from <code>localStorage</code>.
-	 * @return {[type]} [description]
+	 * @return {CancellablePromise}
 	 */
 	signOut() {
 		assertUserSignedIn(this.currentUser);
@@ -292,7 +292,6 @@ class AuthApiHelper extends ApiHelper {
 	/**
 	 * Unloads all information for <code>currentUser</code> and removes from
 	 * <code>localStorage</code> if present.
-	 * @return {[type]} [description]
 	 */
 	unloadCurrentUser_() {
 		this.currentUser = null;
