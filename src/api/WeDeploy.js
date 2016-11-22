@@ -297,6 +297,16 @@ class WeDeploy {
 	}
 
 	/**
+	 * Check if clientMessage content type is application/json.
+	 * @param {ClientMessage} clientMessage Client message.
+	 * @return {boolean}
+	 */
+	static isContentTypeJson(clientMessage) {
+		const contentType = clientMessage.headers().get('content-type') || '';
+		return contentType.indexOf('application/json') === 0;
+	}
+
+	/**
 	 * Wraps the given `Embodied` instance with a {@link Query} instance if needed.
 	 * @param {Embodied} embodied
 	 * @return {Embodied}
@@ -480,11 +490,6 @@ class WeDeploy {
 		return this;
 	}
 }
-
-WeDeploy.isContentTypeJson = function(clientMessage) {
-	const contentType = clientMessage.headers().get('content-type') || '';
-	return contentType.indexOf('application/json') === 0;
-};
 
 WeDeploy.auth_ = null;
 WeDeploy.authUrl_ = '';
