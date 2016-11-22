@@ -493,7 +493,6 @@ class WeDeploy {
 
 WeDeploy.auth_ = null;
 WeDeploy.authUrl_ = '';
-WeDeploy.data_ = null;
 WeDeploy.dataUrl_ = '';
 
 export default WeDeploy;
