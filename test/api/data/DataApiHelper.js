@@ -16,14 +16,14 @@ describe('DataApiHelper', function() {
 	});
 
 	describe('WeDeploy.data()', function() {
-		it('should not return the same instance', function() {
+		it('returns same instance', function() {
 			let data = WeDeploy.data();
-			assert.notStrictEqual(data, WeDeploy.data());
+			assert.strictEqual(data, WeDeploy.data());
 		});
 
 		it('should return the instance with url filled', function() {
-			let data = WeDeploy.data('http://host.com');
-			assert.strictEqual(data.wedeployClient.dataUrl_, 'http://host.com');
+			let data = WeDeploy.data('http://host');
+			assert.strictEqual(data, WeDeploy.data('http://host'));
 		});
 
 		it('should raise an error if the data url has a path', function() {

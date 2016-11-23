@@ -50,6 +50,7 @@ class WeDeploy {
 		}
 
 		this.auth_ = null;
+		this.data_ = null;
 		this.body_ = null;
 		this.url_ = Uri.joinPaths(url || '', ...paths);
 		this.headers_ = new MultiMap();
@@ -71,12 +72,11 @@ class WeDeploy {
 		if (core.isString(opt_dataUrl)) {
 			WeDeploy.dataUrl_ = opt_dataUrl;
 		}
-
-		let data = new DataApiHelper(WeDeploy);
-
-		data.auth(WeDeploy.auth().currentUser);
-
-		return data;
+		if (!WeDeploy.data_) {
+			WeDeploy.data_ = new DataApiHelper(WeDeploy);
+			WeDeploy.data_.auth(WeDeploy.auth().currentUser);
+		}
+		return WeDeploy.data_;
 	}
 
 	/**
@@ -492,6 +492,7 @@ class WeDeploy {
 }
 
 WeDeploy.auth_ = null;
+WeDeploy.data_ = null;
 WeDeploy.authUrl_ = '';
 WeDeploy.dataUrl_ = '';
 
