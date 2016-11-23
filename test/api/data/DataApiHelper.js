@@ -32,9 +32,11 @@ describe('DataApiHelper', function() {
 			}, Error);
 		});
 
-		it('should return the instance of scoped auth', function() {
-			WeDeploy.auth().currentUser = Auth.create('token');
-			assert.strictEqual(WeDeploy.auth().currentUser, WeDeploy.data().helperAuthScope);
+		it('should always use latest scoped auth defined', function() {
+			WeDeploy.auth().currentUser = Auth.create('token1');
+			assert.strictEqual('token1', WeDeploy.data().helperAuthScope.getToken());
+			WeDeploy.auth().currentUser = Auth.create('token2');
+			assert.strictEqual('token2', WeDeploy.data().helperAuthScope.getToken());
 		});
 	});
 
