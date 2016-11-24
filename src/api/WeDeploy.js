@@ -396,7 +396,7 @@ class WeDeploy {
 		}
 		if (this.auth_.hasToken()) {
 			clientRequest.header('Authorization', 'Bearer ' + this.auth_.token);
-		} else {
+		} else if (this.auth_.hasEmail() && this.auth_.hasPassword()) {
 			const credentials = this.auth_.email + ':' + this.auth_.password;
 			clientRequest.header('Authorization', 'Basic ' + Base64.encodeString(credentials));
 		}

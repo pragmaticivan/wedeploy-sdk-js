@@ -284,6 +284,17 @@ describe('WeDeploy Tests', function() {
 			});
 	});
 
+	it('should not send request with authorization for empty auth', function(done) {
+		RequestMock.intercept('GET', 'http://localhost/url/a').reply(200);
+		WeDeploy.url('http://localhost/url/a')
+			.auth(null)
+			.get()
+			.then(function(response) {
+				assert.strictEqual(undefined, response.request().headers().get('Authorization'));
+				done();
+			});
+	});
+
 	it('should send request with authorization username and password', function(done) {
 		RequestMock.intercept().reply(200);
 		WeDeploy.url('http://localhost/url/a')
