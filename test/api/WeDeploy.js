@@ -471,7 +471,7 @@ describe('WeDeploy Tests', function() {
 		}, Error);
 	});
 
-	describe('headers', function () {
+	describe('headers', function() {
 		it('should throws exception for invalid header arguments', function() {
 			assert.throws(function() {
 				WeDeploy.url('http://localhost/url').header();

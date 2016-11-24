@@ -3,7 +3,7 @@
 import Range from '../../src/api-query/Range';
 
 describe('Range', function() {
-	describe('Range.range', function () {
+	describe('Range.range', function() {
 		it('should create instance with both from/to values', function() {
 			var range = Range.range(10, 20);
 			var body = {
@@ -14,7 +14,7 @@ describe('Range', function() {
 			assert.deepEqual('{"from":10,"to":20}', range.toString());
 		});
 	});
-	describe('Range.from', function () {
+	describe('Range.from', function() {
 		it('should create instance with just the "from" value', function() {
 			var range = Range.from(10);
 			var body = {
@@ -24,7 +24,7 @@ describe('Range', function() {
 			assert.deepEqual('{"from":10}', range.toString());
 		});
 	});
-	describe('Range.to', function () {
+	describe('Range.to', function() {
 		it('should create instance with just the "to" value', function() {
 			var range = Range.to(20);
 			var body = {

@@ -16,7 +16,7 @@ describe('Auth', function() {
 		RequestMock.setup('PATCH', 'http://localhost/users');
 	});
 
-	describe('instance', function () {
+	describe('instance', function() {
 		it('should create Auth instance with a token', function() {
 			var auth = Auth.create('My Token');
 			assert.ok(auth.hasToken());
@@ -59,7 +59,7 @@ describe('Auth', function() {
 		});
 	});
 
-	describe('Auth.updateUser', function () {
+	describe('Auth.updateUser', function() {
 		it('should throws exception when calling updateUser without data', function() {
 			var auth = Auth.create();
 			auth.setWedeployClient(WeDeploy);
@@ -78,7 +78,7 @@ describe('Auth', function() {
 
 			auth.setWedeployClient(WeDeploy);
 			RequestMock.intercept('PATCH', 'http://localhost/users/3')
-					.reply(200);
+				.reply(200);
 			auth
 				.updateUser({})
 				.then(() => done());
@@ -90,7 +90,7 @@ describe('Auth', function() {
 
 			auth.setWedeployClient(WeDeploy);
 			RequestMock.intercept('PATCH', 'http://localhost/users/3')
-					.reply(400);
+				.reply(400);
 			auth
 				.updateUser({})
 				.catch(() => done());
@@ -118,7 +118,7 @@ describe('Auth', function() {
 		});
 	});
 
-	describe('Auth.deleteUser', function () {
+	describe('Auth.deleteUser', function() {
 		it('should throws exception when calling deleteUser without user having id', function() {
 			var auth = Auth.create();
 			auth.setWedeployClient(WeDeploy);
