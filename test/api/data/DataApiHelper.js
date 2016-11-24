@@ -51,7 +51,7 @@ describe('DataApiHelper', function() {
 				.limit(10)
 				.offset(2);
 
-			client.addFiltersToQuery_();
+			const query = client.processAndResetQueryState();
 
 			let body = {
 				'body_': {
@@ -78,8 +78,7 @@ describe('DataApiHelper', function() {
 				}
 			};
 
-			assert.strictEqual(JSON.stringify(body), JSON.stringify(client.query_));
-
+			assert.deepEqual(body, query);
 		});
 	});
 
@@ -89,7 +88,7 @@ describe('DataApiHelper', function() {
 		});
 
 		context('when using invalid params', function() {
-			it('should fail trying to create data without specifing the collection', function() {
+			it('should fail trying to create data without specifying the collection', function() {
 				const data = WeDeploy.data();
 				assert.throws(function() {
 					data.create(null, {
@@ -169,7 +168,7 @@ describe('DataApiHelper', function() {
 		});
 
 		context('when using invalid params', function() {
-			it('should fail trying to updating data without specifing the collection', function() {
+			it('should fail trying to updating data without specifying the collection', function() {
 				assert.throws(function() {
 					WeDeploy.data().update(null, {
 						'ping': 'pong'
@@ -479,10 +478,11 @@ describe('DataApiHelper', function() {
 		});
 
 		it('should build the none query into the query body', function() {
-			const dataClient = WeDeploy
+			const client = WeDeploy
 				.data()
 				.none('name', 'cuscuz', 'tapioca');
-			dataClient.addFiltersToQuery_();
+
+			const query = client.processAndResetQueryState();
 
 			const body = {
 				'body_': {
@@ -497,7 +497,7 @@ describe('DataApiHelper', function() {
 				}
 			};
 
-			assert.strictEqual(JSON.stringify(dataClient.query_), JSON.stringify(body));
+			assert.deepEqual(query, body);
 		});
 	});
 
@@ -521,10 +521,11 @@ describe('DataApiHelper', function() {
 		});
 
 		it('should build the match query into the query body', function() {
-			const dataClient = WeDeploy
+			const client = WeDeploy
 				.data()
 				.match('name', 'cuscuz');
-			dataClient.addFiltersToQuery_();
+
+			const query = client.processAndResetQueryState();
 
 			const body = {
 				'body_': {
@@ -539,7 +540,7 @@ describe('DataApiHelper', function() {
 				}
 			};
 
-			assert.strictEqual(JSON.stringify(dataClient.query_), JSON.stringify(body));
+			assert.deepEqual(query, body);
 		});
 	});
 
@@ -563,10 +564,11 @@ describe('DataApiHelper', function() {
 		});
 
 		it('should build the similar query into the query body', function() {
-			const dataClient = WeDeploy
+			const client = WeDeploy
 				.data()
 				.similar('name', 'cusc');
-			dataClient.addFiltersToQuery_();
+
+			const query = client.processAndResetQueryState();
 
 			const body = {
 				'body_': {
@@ -583,7 +585,7 @@ describe('DataApiHelper', function() {
 				}
 			};
 
-			assert.strictEqual(JSON.stringify(dataClient.query_), JSON.stringify(body));
+			assert.deepEqual(query, body);
 		});
 	});
 
@@ -607,10 +609,11 @@ describe('DataApiHelper', function() {
 		});
 
 		it('should build the lt query into the query body', function() {
-			const dataClient = WeDeploy
+			const client = WeDeploy
 				.data()
 				.lt('size', 30);
-			dataClient.addFiltersToQuery_();
+
+			const query = client.processAndResetQueryState();
 
 			const body = {
 				'body_': {
@@ -625,7 +628,7 @@ describe('DataApiHelper', function() {
 				}
 			};
 
-			assert.strictEqual(JSON.stringify(dataClient.query_), JSON.stringify(body));
+			assert.deepEqual(query, body);
 		});
 	});
 
@@ -649,10 +652,11 @@ describe('DataApiHelper', function() {
 		});
 
 		it('should build the lte query into the query body', function() {
-			const dataClient = WeDeploy
+			const client = WeDeploy
 				.data()
 				.lte('size', 30);
-			dataClient.addFiltersToQuery_();
+
+			const query = client.processAndResetQueryState();
 
 			const body = {
 				'body_': {
@@ -667,7 +671,7 @@ describe('DataApiHelper', function() {
 				}
 			};
 
-			assert.strictEqual(JSON.stringify(dataClient.query_), JSON.stringify(body));
+			assert.deepEqual(query, body);
 		});
 	});
 
@@ -691,10 +695,11 @@ describe('DataApiHelper', function() {
 		});
 
 		it('should build the any query into the query body', function() {
-			const dataClient = WeDeploy
+			const client = WeDeploy
 				.data()
 				.any('name', 'cuscuz', 'tapioca');
-			dataClient.addFiltersToQuery_();
+
+			const query = client.processAndResetQueryState();
 
 			const body = {
 				'body_': {
@@ -709,7 +714,7 @@ describe('DataApiHelper', function() {
 				}
 			};
 
-			assert.strictEqual(JSON.stringify(dataClient.query_), JSON.stringify(body));
+			assert.deepEqual(query, body);
 		});
 	});
 
@@ -733,10 +738,11 @@ describe('DataApiHelper', function() {
 		});
 
 		it('should build the boundingBox query into the query body', function() {
-			const dataClient = WeDeploy
+			const client = WeDeploy
 				.data()
 				.boundingBox('shape', Geo.boundingBox('20,0', [0, 20]));
-			dataClient.addFiltersToQuery_();
+
+			const query = client.processAndResetQueryState();
 
 			const body = {
 				'body_': {
@@ -751,7 +757,7 @@ describe('DataApiHelper', function() {
 				}
 			};
 
-			assert.strictEqual(JSON.stringify(dataClient.query_), JSON.stringify(body));
+			assert.deepEqual(query, body);
 		});
 	});
 
@@ -775,10 +781,11 @@ describe('DataApiHelper', function() {
 		});
 
 		it('should build the distance query into the query body', function() {
-			const dataClient = WeDeploy
+			const client = WeDeploy
 				.data()
 				.distance('point', Geo.circle([0, 0], 2));
-			dataClient.addFiltersToQuery_();
+
+			const query = client.processAndResetQueryState();
 
 			const body = {
 				'body_': {
@@ -796,7 +803,7 @@ describe('DataApiHelper', function() {
 				}
 			};
 
-			assert.strictEqual(JSON.stringify(dataClient.query_), JSON.stringify(body));
+			assert.deepEqual(query, body);
 		});
 	});
 
@@ -820,10 +827,11 @@ describe('DataApiHelper', function() {
 		});
 
 		it('should build the range query into the query body', function() {
-			const dataClient = WeDeploy
+			const client = WeDeploy
 				.data()
 				.range('points', 12, 15);
-			dataClient.addFiltersToQuery_();
+
+			const query = client.processAndResetQueryState();
 
 			const body = {
 				'body_': {
@@ -841,7 +849,7 @@ describe('DataApiHelper', function() {
 				}
 			};
 
-			assert.strictEqual(JSON.stringify(dataClient.query_), JSON.stringify(body));
+			assert.deepEqual(query, body);
 		});
 	});
 
@@ -865,10 +873,11 @@ describe('DataApiHelper', function() {
 		});
 
 		it('should build the filter query into the query body', function() {
-			const dataClient = WeDeploy
+			const client = WeDeploy
 				.data()
 				.where('name', '=', 'foo');
-			dataClient.addFiltersToQuery_();
+
+			const query = client.processAndResetQueryState();
 
 			const body = {
 				'body_': {
@@ -883,7 +892,7 @@ describe('DataApiHelper', function() {
 				}
 			};
 
-			assert.strictEqual(JSON.stringify(dataClient.query_), JSON.stringify(body));
+			assert.deepEqual(query, body);
 		});
 	});
 
@@ -915,11 +924,12 @@ describe('DataApiHelper', function() {
 		});
 
 		it('should build the or query into the query body', function() {
-			const dataClient = WeDeploy
+			const client = WeDeploy
 				.data()
 				.where('name', '=', 'foo')
 				.or('name', '!=', 'bar');
-			dataClient.addFiltersToQuery_();
+
+			const query = client.processAndResetQueryState();
 
 			const body = {
 				'body_': {
@@ -941,7 +951,7 @@ describe('DataApiHelper', function() {
 				}
 			};
 
-			assert.strictEqual(JSON.stringify(dataClient.query_), JSON.stringify(body));
+			assert.deepEqual(query, body);
 		});
 	});
 
@@ -964,28 +974,32 @@ describe('DataApiHelper', function() {
 		});
 
 		it('should build the aggregate query into the query body', function() {
-			const dataClient = WeDeploy
+			const client = WeDeploy
 				.data()
-				.aggregate('name', 'field');
-			dataClient.addFiltersToQuery_();
+				.aggregate('name', 'field', '=');
+
+			const query = client.processAndResetQueryState();
 
 			const body = {
-				'body_': {
-					'aggregation': [{
-						'field': {
-							'name': 'name'
+				body_: {
+					aggregation: [
+						{
+							field: {
+								name: 'name',
+								operator: '='
+							}
 						}
-					}]
+					]
 				}
 			};
 
-			assert.strictEqual(JSON.stringify(dataClient.query_), JSON.stringify(body));
+			assert.deepEqual(body, query);
 		});
 	});
 
 	describe('.search()', function() {
 		context('when using invalid params', function() {
-			it('should fail trying to search data without specifing the collection', function() {
+			it('should fail trying to search data without specifying the collection', function() {
 				WeDeploy.socket();
 				const data = WeDeploy.data();
 				assert.throws(function() {
@@ -1026,19 +1040,75 @@ describe('DataApiHelper', function() {
 				const client = WeDeploy
 					.data()
 					.where('name', '=', 'foo')
-					.where('name', '=', 'bar')
-					.onSearch_()
-					.addFiltersToQuery_();
+					.where('name', '=', 'bar');
+				client.isSearch_ = true;
+				const query = client.processAndResetQueryState();
 
 				const body = '{"body_":{"search":[{"and":[{"name":{"operator":"=","value":"foo"}},{"name":{"operator":"=","value":"bar"}}]}]}}';
-				assert.strictEqual(body, JSON.stringify(client.query_));
+				assert.strictEqual(body, JSON.stringify(query));
+			});
+		});
+
+		context('when using multiple searches with the same data client', function() {
+			it('should not aggregate the previous query into the next fetch', function(done) {
+				const client = WeDeploy.data();
+
+				RequestMock
+					.intercept('GET', 'http://localhost/food?search=%5B%7B%22and%22%3A%5B%7B%22type%22%3A%7B%22operator%22%3A%22%3D%22%2C%22value%22%3A%22fruit%22%7D%7D%5D%7D%5D')
+					.reply(200);
+
+				client
+					.where('type', 'fruit')
+					.search('food')
+					.then(() => {
+						RequestMock.teardown();
+						RequestMock.setup();
+
+						const requestUrlWithNoQuery = 'http://localhost/food?search=%5B%7B%22and%22%3A%5B%5D%7D%5D';
+
+						RequestMock.intercept('GET', requestUrlWithNoQuery).reply(200);
+
+						client
+							.search('food')
+							.then(() => {
+								assert.strictEqual(requestUrlWithNoQuery, RequestMock.getUrl());
+								done();
+							});
+					});
+			});
+		});
+
+		context('when using multiple searches with different data clients', function() {
+			it('should not aggregate the previous query into the next fetch', function(done) {
+				RequestMock
+					.intercept('GET', 'http://localhost/food?search=%5B%7B%22and%22%3A%5B%7B%22type%22%3A%7B%22operator%22%3A%22%3D%22%2C%22value%22%3A%22fruit%22%7D%7D%5D%7D%5D')
+					.reply(200);
+
+				WeDeploy.data()
+					.where('type', 'fruit')
+					.search('food')
+					.then(() => {
+						RequestMock.teardown();
+						RequestMock.setup();
+
+						const requestUrlWithNoQuery = 'http://localhost/food?search=%5B%7B%22and%22%3A%5B%5D%7D%5D';
+
+						RequestMock.intercept('GET', requestUrlWithNoQuery).reply(200);
+
+						WeDeploy.data()
+							.search('food')
+							.then(() => {
+								assert.strictEqual(requestUrlWithNoQuery, RequestMock.getUrl());
+								done();
+							});
+					});
 			});
 		});
 	});
 
 	describe('.get()', function() {
 		context('when using invalid params', function() {
-			it('should fail trying to retrieve data without specifing the collection', function() {
+			it('should fail trying to retrieve data without specifying the collection', function() {
 				const data = WeDeploy.data();
 				assert.throws(function() {
 					data.get(null);
@@ -1060,11 +1130,67 @@ describe('DataApiHelper', function() {
 					});
 			});
 		});
+
+		context('when using multiple gets with the same data client', function() {
+			it('should not aggregate the previous query into the next fetch', function(done) {
+				const client = WeDeploy.data();
+
+				RequestMock
+					.intercept('GET', 'http://localhost/food?filter=%5B%7B%22and%22%3A%5B%7B%22type%22%3A%7B%22operator%22%3A%22%3D%22%2C%22value%22%3A%22fruit%22%7D%7D%5D%7D%5D')
+					.reply(200);
+
+				client
+					.where('type', 'fruit')
+					.get('food')
+					.then(() => {
+						RequestMock.teardown();
+						RequestMock.setup();
+
+						const requestUrlWithNoQuery = 'http://localhost/food?filter=%5B%7B%22and%22%3A%5B%5D%7D%5D';
+
+						RequestMock.intercept('GET', requestUrlWithNoQuery).reply(200);
+
+						client
+							.get('food')
+							.then(() => {
+								assert.strictEqual(requestUrlWithNoQuery, RequestMock.getUrl());
+								done();
+							});
+					});
+			});
+		});
+
+		context('when using multiple gets with different data clients', function() {
+			it('should not aggregate the previous query into the next fetch', function(done) {
+				RequestMock
+					.intercept('GET', 'http://localhost/food?filter=%5B%7B%22and%22%3A%5B%7B%22type%22%3A%7B%22operator%22%3A%22%3D%22%2C%22value%22%3A%22fruit%22%7D%7D%5D%7D%5D')
+					.reply(200);
+
+				WeDeploy.data()
+					.where('type', 'fruit')
+					.get('food')
+					.then(() => {
+						RequestMock.teardown();
+						RequestMock.setup();
+
+						const requestUrlWithNoQuery = 'http://localhost/food?filter=%5B%7B%22and%22%3A%5B%5D%7D%5D';
+
+						RequestMock.intercept('GET', requestUrlWithNoQuery).reply(200);
+
+						WeDeploy.data()
+							.get('food')
+							.then(() => {
+								assert.strictEqual(requestUrlWithNoQuery, RequestMock.getUrl());
+								done();
+							});
+					});
+			});
+		});
 	});
 
 	describe('.watch()', function() {
 		context('when using invalid params', function() {
-			it('should fail trying to watch data without specifing the collection', function() {
+			it('should fail trying to watch data without specifying the collection', function() {
 				WeDeploy.socket();
 				const data = WeDeploy.data();
 				assert.throws(function() {
@@ -1088,6 +1214,39 @@ describe('DataApiHelper', function() {
 				WeDeploy.socket();
 			});
 		});
+
+		context('when using multiple watches with the same data client', function() {
+			it('should not aggregate the previous query into the next fetch', function(done) {
+				const client = WeDeploy.data();
+
+				WeDeploy.socket(function() {
+					WeDeploy.socket(function(url, opts) {
+						const requestUrlWithNoQuery = 'url=%2Ffood%3Ffilter%3D%255B%257B%2522and%2522%253A%255B%255D%257D%255D';
+						assert.strictEqual(requestUrlWithNoQuery, opts.query);
+						done();
+					});
+					client.watch('food');
+				});
+
+				client.where('type', 'fruit').watch('food');
+			});
+		});
+
+		context('when using multiple watches with different data clients', function() {
+			it('should not aggregate the previous query into the next fetch', function(done) {
+				WeDeploy.socket(function() {
+					WeDeploy.socket(function(url, opts) {
+						const requestUrlWithNoQuery = 'url=%2Ffood%3Ffilter%3D%255B%257B%2522and%2522%253A%255B%255D%257D%255D';
+						assert.strictEqual(requestUrlWithNoQuery, opts.query);
+						done();
+					});
+					WeDeploy.data().watch('food');
+				});
+
+				WeDeploy.data().where('type', 'fruit').watch('food');
+			});
+		});
+
 	});
 
 });

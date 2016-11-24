@@ -17,6 +17,17 @@ class DataApiHelper extends ApiHelper {
 	 */
 	constructor(wedeployClient) {
 		super(wedeployClient);
+
+		this.isSearch_ = false;
+	}
+
+	/**
+	 * Asserts is search with filters.
+	 */
+	assertIsSearchWithFilter_() {
+		if (this.isSearch_ && !core.isDef(this.filter_)) {
+			throw Error('It\'s required to have a condition before using an or \'search()\' for the first time.');
+		}
 	}
 
 	/**
@@ -317,13 +328,11 @@ class DataApiHelper extends ApiHelper {
 	get(key) {
 		assertDefAndNotNull(key, 'Document/Field/Collection key must be specified');
 
-		this.addFiltersToQuery_();
-
 		return this.wedeployClient
 			.url(this.wedeployClient.dataUrl_)
 			.auth(this.helperAuthScope)
 			.path(key)
-			.get(this.query_)
+			.get(this.processAndResetQueryState())
 			.then(response => assertResponseSucceeded(response))
 			.then(response => response.body());
 	}
@@ -337,15 +346,13 @@ class DataApiHelper extends ApiHelper {
 	search(key) {
 		assertDefAndNotNull(key, 'Document/Field/Collection key must be specified');
 
-		this.onSearch_();
-
-		this.addFiltersToQuery_();
+		this.isSearch_ = true;
 
 		return this.wedeployClient
 			.url(this.wedeployClient.dataUrl_)
 			.auth(this.helperAuthScope)
 			.path(key)
-			.get(this.query_)
+			.get(this.processAndResetQueryState())
 			.then(response => assertResponseSucceeded(response))
 			.then(response => response.body());
 	}
@@ -360,13 +367,11 @@ class DataApiHelper extends ApiHelper {
 	watch(collection, opt_options) {
 		assertDefAndNotNull(collection, 'Collection key must be specified');
 
-		this.addFiltersToQuery_();
-
 		return this.wedeployClient
 			.url(this.wedeployClient.dataUrl_)
 			.auth(this.helperAuthScope)
 			.path(collection)
-			.watch(this.query_, opt_options);
+			.watch(this.processAndResetQueryState(), opt_options);
 	}
 
 	/**
@@ -396,31 +401,25 @@ class DataApiHelper extends ApiHelper {
 	}
 
 	/**
-	 * Load the currently used main {@link Filter} object into the currently
-	 * used {@link Query}.
-	 * @chainable
+	 * Aggregate filters into query and return its latest value. Query and
+	 * filters are cleaned after aggregation.
+	 * @return {Query}
 	 * @protected
 	 */
-	addFiltersToQuery_() {
-		if (core.isDef(this.filter_) && this.toSearch_ !== true) {
-			this.getOrCreateQuery_().filter(this.filter_);
-		}
-		return this;
-	}
-
-	/**
-	 * Adds a search to this request's {@link Query} instance.
-	 * @chainable
-	 * @protected
-	 */
-	onSearch_() {
+	processAndResetQueryState() {
+		this.assertIsSearchWithFilter_();
 		if (core.isDef(this.filter_)) {
-			this.getOrCreateQuery_().search(this.getOrCreateFilter_());
-		} else {
-			throw Error('It\'s required to have a condition before using an \'search()\' for the first time.');
+			if (this.isSearch_) {
+				this.getOrCreateQuery_().search(this.getOrCreateFilter_());
+			} else {
+				this.getOrCreateQuery_().filter(this.getOrCreateFilter_());
+			}
 		}
-		this.toSearch_ = true;
-		return this;
+		const query = this.getOrCreateQuery_();
+		this.query_ = null;
+		this.filter_ = null;
+		this.isSearch_ = false;
+		return query;
 	}
 
 }

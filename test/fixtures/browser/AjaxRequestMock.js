@@ -21,6 +21,10 @@ class AjaxRequestMock {
 		}
 	}
 
+	static getUrl() {
+		return AjaxRequestMock.get().url;
+	}
+
 	static setup() {
 		AjaxRequestMock.fakeServer = sinon.fakeServer.create();
 		AjaxRequestMock.addedEvents = false;
