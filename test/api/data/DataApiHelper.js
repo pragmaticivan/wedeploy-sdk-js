@@ -53,7 +53,7 @@ describe('DataApiHelper', function() {
 
 			const query = data.processAndResetQueryState();
 
-			let body = {
+			let bodyQuery = {
 				'body_': {
 					'sort': [{
 						'id': 'asc'
@@ -78,7 +78,7 @@ describe('DataApiHelper', function() {
 				}
 			};
 
-			assert.deepEqual(body, query);
+			assert.deepEqual(bodyQuery, query);
 		});
 	});
 
