@@ -8,12 +8,12 @@ describe('Auth', function() {
 		WeDeploy.auth('http://localhost');
 	});
 
-	afterEach(function() {
-		RequestMock.teardown();
+	beforeEach(function() {
+		RequestMock.setup();
 	});
 
-	beforeEach(function() {
-		RequestMock.setup('PATCH', 'http://localhost/users');
+	afterEach(function() {
+		RequestMock.teardown();
 	});
 
 	describe('instance', function() {
