@@ -17,12 +17,12 @@ describe('DataApiHelper', function() {
 
 	describe('WeDeploy.data()', function() {
 		it('returns same instance', function() {
-			let data = WeDeploy.data();
+			const data = WeDeploy.data();
 			assert.strictEqual(data, WeDeploy.data());
 		});
 
 		it('should return the instance with url filled', function() {
-			let data = WeDeploy.data('http://host');
+			const data = WeDeploy.data('http://host');
 			assert.strictEqual(data, WeDeploy.data('http://host'));
 		});
 
@@ -43,15 +43,15 @@ describe('DataApiHelper', function() {
 	describe('query formation', function() {
 		it('should create a query and add virtual filters into the query', function() {
 
-			const client = WeDeploy.data();
+			const data = WeDeploy.data();
 
-			client.where('age', '>', '18')
+			data.where('age', '>', '18')
 				.or('points', '>', '7')
 				.orderBy('id', 'asc')
 				.limit(10)
 				.offset(2);
 
-			const query = client.processAndResetQueryState();
+			const query = data.processAndResetQueryState();
 
 			let body = {
 				'body_': {
@@ -351,11 +351,11 @@ describe('DataApiHelper', function() {
 		});
 
 		it('should build the limit into the query body', function() {
-			const dataClient = WeDeploy
+			const data = WeDeploy
 				.data()
 				.limit(99);
 
-			assert.strictEqual(dataClient.query_.body_.limit, 99);
+			assert.strictEqual(data.query_.body_.limit, 99);
 		});
 	});
 
@@ -375,11 +375,11 @@ describe('DataApiHelper', function() {
 		});
 
 		it('should build the count type into the query body', function() {
-			const dataClient = WeDeploy
+			const data = WeDeploy
 				.data()
 				.count();
 
-			assert.strictEqual(dataClient.query_.body_.type, 'count');
+			assert.strictEqual(data.query_.body_.type, 'count');
 		});
 	});
 
@@ -399,11 +399,11 @@ describe('DataApiHelper', function() {
 		});
 
 		it('should build the offset into the query body', function() {
-			const dataClient = WeDeploy
+			const data = WeDeploy
 				.data()
 				.offset(2);
 
-			assert.strictEqual(dataClient.query_.body_.offset, 2);
+			assert.strictEqual(data.query_.body_.offset, 2);
 		});
 	});
 
@@ -423,11 +423,11 @@ describe('DataApiHelper', function() {
 		});
 
 		it('should build the highlight into the query body', function() {
-			const dataClient = WeDeploy
+			const data = WeDeploy
 				.data()
 				.highlight('highlighted');
 
-			assert.deepEqual(dataClient.query_.body_.highlight, ['highlighted']);
+			assert.deepEqual(data.query_.body_.highlight, ['highlighted']);
 		});
 	});
 
@@ -447,11 +447,11 @@ describe('DataApiHelper', function() {
 		});
 
 		it('should build the orderBy into the query body', function() {
-			const dataClient = WeDeploy
+			const data = WeDeploy
 				.data()
 				.orderBy('id', 'asc');
 
-			assert.deepEqual(dataClient.query_.body_.sort, [{
+			assert.deepEqual(data.query_.body_.sort, [{
 				'id': 'asc'
 			}]);
 		});
@@ -478,11 +478,11 @@ describe('DataApiHelper', function() {
 		});
 
 		it('should build the none query into the query body', function() {
-			const client = WeDeploy
+			const data = WeDeploy
 				.data()
 				.none('name', 'cuscuz', 'tapioca');
 
-			const query = client.processAndResetQueryState();
+			const query = data.processAndResetQueryState();
 
 			const body = {
 				'body_': {
@@ -521,11 +521,11 @@ describe('DataApiHelper', function() {
 		});
 
 		it('should build the match query into the query body', function() {
-			const client = WeDeploy
+			const data = WeDeploy
 				.data()
 				.match('name', 'cuscuz');
 
-			const query = client.processAndResetQueryState();
+			const query = data.processAndResetQueryState();
 
 			const body = {
 				'body_': {
@@ -564,11 +564,11 @@ describe('DataApiHelper', function() {
 		});
 
 		it('should build the similar query into the query body', function() {
-			const client = WeDeploy
+			const data = WeDeploy
 				.data()
 				.similar('name', 'cusc');
 
-			const query = client.processAndResetQueryState();
+			const query = data.processAndResetQueryState();
 
 			const body = {
 				'body_': {
@@ -609,11 +609,11 @@ describe('DataApiHelper', function() {
 		});
 
 		it('should build the lt query into the query body', function() {
-			const client = WeDeploy
+			const data = WeDeploy
 				.data()
 				.lt('size', 30);
 
-			const query = client.processAndResetQueryState();
+			const query = data.processAndResetQueryState();
 
 			const body = {
 				'body_': {
@@ -652,11 +652,11 @@ describe('DataApiHelper', function() {
 		});
 
 		it('should build the lte query into the query body', function() {
-			const client = WeDeploy
+			const data = WeDeploy
 				.data()
 				.lte('size', 30);
 
-			const query = client.processAndResetQueryState();
+			const query = data.processAndResetQueryState();
 
 			const body = {
 				'body_': {
@@ -695,11 +695,11 @@ describe('DataApiHelper', function() {
 		});
 
 		it('should build the any query into the query body', function() {
-			const client = WeDeploy
+			const data = WeDeploy
 				.data()
 				.any('name', 'cuscuz', 'tapioca');
 
-			const query = client.processAndResetQueryState();
+			const query = data.processAndResetQueryState();
 
 			const body = {
 				'body_': {
@@ -738,11 +738,11 @@ describe('DataApiHelper', function() {
 		});
 
 		it('should build the boundingBox query into the query body', function() {
-			const client = WeDeploy
+			const data = WeDeploy
 				.data()
 				.boundingBox('shape', Geo.boundingBox('20,0', [0, 20]));
 
-			const query = client.processAndResetQueryState();
+			const query = data.processAndResetQueryState();
 
 			const body = {
 				'body_': {
@@ -781,11 +781,11 @@ describe('DataApiHelper', function() {
 		});
 
 		it('should build the distance query into the query body', function() {
-			const client = WeDeploy
+			const data = WeDeploy
 				.data()
 				.distance('point', Geo.circle([0, 0], 2));
 
-			const query = client.processAndResetQueryState();
+			const query = data.processAndResetQueryState();
 
 			const body = {
 				'body_': {
@@ -827,11 +827,11 @@ describe('DataApiHelper', function() {
 		});
 
 		it('should build the range query into the query body', function() {
-			const client = WeDeploy
+			const data = WeDeploy
 				.data()
 				.range('points', 12, 15);
 
-			const query = client.processAndResetQueryState();
+			const query = data.processAndResetQueryState();
 
 			const body = {
 				'body_': {
@@ -873,11 +873,11 @@ describe('DataApiHelper', function() {
 		});
 
 		it('should build the filter query into the query body', function() {
-			const client = WeDeploy
+			const data = WeDeploy
 				.data()
 				.where('name', '=', 'foo');
 
-			const query = client.processAndResetQueryState();
+			const query = data.processAndResetQueryState();
 
 			const body = {
 				'body_': {
@@ -924,12 +924,12 @@ describe('DataApiHelper', function() {
 		});
 
 		it('should build the or query into the query body', function() {
-			const client = WeDeploy
+			const data = WeDeploy
 				.data()
 				.where('name', '=', 'foo')
 				.or('name', '!=', 'bar');
 
-			const query = client.processAndResetQueryState();
+			const query = data.processAndResetQueryState();
 
 			const body = {
 				'body_': {
@@ -974,11 +974,11 @@ describe('DataApiHelper', function() {
 		});
 
 		it('should build the aggregate query into the query body', function() {
-			const client = WeDeploy
+			const data = WeDeploy
 				.data()
 				.aggregate('name', 'field', '=');
 
-			const query = client.processAndResetQueryState();
+			const query = data.processAndResetQueryState();
 
 			const body = {
 				body_: {
@@ -1037,12 +1037,12 @@ describe('DataApiHelper', function() {
 			});
 
 			it('should build the query as search type', function() {
-				const client = WeDeploy
+				const data = WeDeploy
 					.data()
 					.where('name', '=', 'foo')
 					.where('name', '=', 'bar');
-				client.isSearch_ = true;
-				const query = client.processAndResetQueryState();
+				data.isSearch_ = true;
+				const query = data.processAndResetQueryState();
 
 				const body = '{"body_":{"search":[{"and":[{"name":{"operator":"=","value":"foo"}},{"name":{"operator":"=","value":"bar"}}]}]}}';
 				assert.strictEqual(body, JSON.stringify(query));
@@ -1051,13 +1051,13 @@ describe('DataApiHelper', function() {
 
 		context('when using multiple searches with the same data client', function() {
 			it('should not aggregate the previous query into the next fetch', function(done) {
-				const client = WeDeploy.data();
+				const data = WeDeploy.data();
 
 				RequestMock
 					.intercept('GET', 'http://localhost/food?search=%5B%7B%22and%22%3A%5B%7B%22type%22%3A%7B%22operator%22%3A%22%3D%22%2C%22value%22%3A%22fruit%22%7D%7D%5D%7D%5D')
 					.reply(200);
 
-				client
+				data
 					.where('type', 'fruit')
 					.search('food')
 					.then(() => {
@@ -1068,7 +1068,7 @@ describe('DataApiHelper', function() {
 
 						RequestMock.intercept('GET', requestUrlWithNoQuery).reply(200);
 
-						client
+						data
 							.search('food')
 							.then(() => {
 								assert.strictEqual(requestUrlWithNoQuery, RequestMock.getUrl());
@@ -1133,13 +1133,13 @@ describe('DataApiHelper', function() {
 
 		context('when using multiple gets with the same data client', function() {
 			it('should not aggregate the previous query into the next fetch', function(done) {
-				const client = WeDeploy.data();
+				const data = WeDeploy.data();
 
 				RequestMock
 					.intercept('GET', 'http://localhost/food?filter=%5B%7B%22and%22%3A%5B%7B%22type%22%3A%7B%22operator%22%3A%22%3D%22%2C%22value%22%3A%22fruit%22%7D%7D%5D%7D%5D')
 					.reply(200);
 
-				client
+				data
 					.where('type', 'fruit')
 					.get('food')
 					.then(() => {
@@ -1150,7 +1150,7 @@ describe('DataApiHelper', function() {
 
 						RequestMock.intercept('GET', requestUrlWithNoQuery).reply(200);
 
-						client
+						data
 							.get('food')
 							.then(() => {
 								assert.strictEqual(requestUrlWithNoQuery, RequestMock.getUrl());
@@ -1217,7 +1217,7 @@ describe('DataApiHelper', function() {
 
 		context('when using multiple watches with the same data client', function() {
 			it('should not aggregate the previous query into the next fetch', function(done) {
-				const client = WeDeploy.data();
+				const data = WeDeploy.data();
 
 				WeDeploy.socket(function() {
 					WeDeploy.socket(function(url, opts) {
@@ -1225,10 +1225,10 @@ describe('DataApiHelper', function() {
 						assert.strictEqual(requestUrlWithNoQuery, opts.query);
 						done();
 					});
-					client.watch('food');
+					data.watch('food');
 				});
 
-				client.where('type', 'fruit').watch('food');
+				data.where('type', 'fruit').watch('food');
 			});
 		});
 
