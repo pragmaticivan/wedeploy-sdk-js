@@ -354,8 +354,7 @@ describe('DataApiHelper', function() {
 			const data = WeDeploy
 				.data()
 				.limit(99);
-
-			assert.strictEqual(data.query_.body_.limit, 99);
+			assert.strictEqual(data.query_.body().limit, 99);
 		});
 	});
 
@@ -379,7 +378,7 @@ describe('DataApiHelper', function() {
 				.data()
 				.count();
 
-			assert.strictEqual(data.query_.body_.type, 'count');
+			assert.strictEqual(data.query_.body().type, 'count');
 		});
 	});
 
@@ -403,7 +402,7 @@ describe('DataApiHelper', function() {
 				.data()
 				.offset(2);
 
-			assert.strictEqual(data.query_.body_.offset, 2);
+			assert.strictEqual(data.query_.body().offset, 2);
 		});
 	});
 
@@ -427,7 +426,7 @@ describe('DataApiHelper', function() {
 				.data()
 				.highlight('highlighted');
 
-			assert.deepEqual(data.query_.body_.highlight, ['highlighted']);
+			assert.deepEqual(data.query_.body().highlight, ['highlighted']);
 		});
 	});
 
@@ -451,7 +450,7 @@ describe('DataApiHelper', function() {
 				.data()
 				.orderBy('id', 'asc');
 
-			assert.deepEqual(data.query_.body_.sort, [{
+			assert.deepEqual(data.query_.body().sort, [{
 				'id': 'asc'
 			}]);
 		});
