@@ -1044,8 +1044,24 @@ describe('DataApiHelper', function() {
 				data.isSearch_ = true;
 				const query = data.processAndResetQueryState();
 
-				const body = '{"body_":{"search":[{"and":[{"name":{"operator":"=","value":"foo"}},{"name":{"operator":"=","value":"bar"}}]}]}}';
-				assert.strictEqual(body, JSON.stringify(query));
+				const body = {
+					"body_": {
+						"search": [{
+							"and": [{
+								"name": {
+									"operator": "=",
+									"value": "foo"
+								}
+							}, {
+								"name": {
+									"operator": "=",
+									"value": "bar"
+								}
+							}]
+						}]
+					}
+				};
+				assert.deepEqual(body, query);
 			});
 		});
 
