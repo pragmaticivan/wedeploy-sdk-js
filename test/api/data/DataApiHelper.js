@@ -936,25 +936,25 @@ describe('DataApiHelper', function() {
 			const queryBody = {
 				body_: {
 					filter: [
-						{or:
-						[
-							{
-								and: [
-									{
-										name: {
-											operator: '=',
-											value: 'foo'
+						{
+							or: [
+								{
+									and: [
+										{
+											name: {
+												operator: '=',
+												value: 'foo'
+											}
 										}
+									]
+								},
+								{
+									name: {
+										operator: '!=',
+										value: 'bar'
 									}
-								]
-							},
-							{
-								name: {
-									operator: '!=',
-									value: 'bar'
 								}
-							}
-						]
+							]
 						}
 					]
 				}
