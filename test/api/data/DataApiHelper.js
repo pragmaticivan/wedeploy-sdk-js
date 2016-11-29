@@ -53,7 +53,7 @@ describe('DataApiHelper', function() {
 
 			const query = data.processAndResetQueryState();
 
-			let queryBody = {
+			const queryBody = {
 				'body_': {
 					'sort': [{
 						'id': 'asc'
@@ -300,11 +300,10 @@ describe('DataApiHelper', function() {
 				WeDeploy
 					.data()
 					.delete('collection/1/title')
-					.then(() => {
-						assert.strictEqual(undefined, undefined);
+					.then((response) => {
+						assert.strictEqual(undefined, response);
 						done();
 					});
-
 			});
 
 			it('should delete a data row', function(done) {
@@ -314,8 +313,8 @@ describe('DataApiHelper', function() {
 				WeDeploy
 					.data()
 					.delete('collection/1')
-					.then(() => {
-						assert.strictEqual(undefined, undefined);
+					.then((response) => {
+						assert.strictEqual(undefined, response);
 						done();
 					});
 			});
@@ -327,8 +326,8 @@ describe('DataApiHelper', function() {
 				WeDeploy
 					.data()
 					.delete('collection')
-					.then(() => {
-						assert.strictEqual(undefined, undefined);
+					.then((response) => {
+						assert.strictEqual(undefined, response);
 						done();
 					});
 			});
@@ -367,10 +366,9 @@ describe('DataApiHelper', function() {
 				.data()
 				.count()
 				.get('food').then(function(response) {
-				assert.strictEqual('5', response);
-				done();
-			});
-
+					assert.strictEqual('5', response);
+					done();
+				});
 		});
 
 		it('should build the count type into the query body', function() {
@@ -483,7 +481,7 @@ describe('DataApiHelper', function() {
 
 			const query = data.processAndResetQueryState();
 
-			const body = {
+			const queryBody = {
 				'body_': {
 					'filter': [{
 						'and': [{
@@ -496,7 +494,7 @@ describe('DataApiHelper', function() {
 				}
 			};
 
-			assert.deepEqual(query, body);
+			assert.deepEqual(queryBody, query);
 		});
 	});
 
@@ -526,7 +524,7 @@ describe('DataApiHelper', function() {
 
 			const query = data.processAndResetQueryState();
 
-			const body = {
+			const queryBody = {
 				'body_': {
 					'filter': [{
 						'and': [{
@@ -539,7 +537,7 @@ describe('DataApiHelper', function() {
 				}
 			};
 
-			assert.deepEqual(query, body);
+			assert.deepEqual(queryBody, query);
 		});
 	});
 
@@ -569,7 +567,7 @@ describe('DataApiHelper', function() {
 
 			const query = data.processAndResetQueryState();
 
-			const body = {
+			const queryBody = {
 				'body_': {
 					'filter': [{
 						'and': [{
@@ -584,7 +582,7 @@ describe('DataApiHelper', function() {
 				}
 			};
 
-			assert.deepEqual(query, body);
+			assert.deepEqual(queryBody, query);
 		});
 	});
 
@@ -614,7 +612,7 @@ describe('DataApiHelper', function() {
 
 			const query = data.processAndResetQueryState();
 
-			const body = {
+			const queryBody = {
 				'body_': {
 					'filter': [{
 						'and': [{
@@ -627,7 +625,7 @@ describe('DataApiHelper', function() {
 				}
 			};
 
-			assert.deepEqual(query, body);
+			assert.deepEqual(queryBody, query);
 		});
 	});
 
@@ -657,7 +655,7 @@ describe('DataApiHelper', function() {
 
 			const query = data.processAndResetQueryState();
 
-			const body = {
+			const queryBody = {
 				'body_': {
 					'filter': [{
 						'and': [{
@@ -670,7 +668,7 @@ describe('DataApiHelper', function() {
 				}
 			};
 
-			assert.deepEqual(query, body);
+			assert.deepEqual(queryBody, query);
 		});
 	});
 
@@ -700,7 +698,7 @@ describe('DataApiHelper', function() {
 
 			const query = data.processAndResetQueryState();
 
-			const body = {
+			const queryBody = {
 				'body_': {
 					'filter': [{
 						'and': [{
@@ -713,7 +711,7 @@ describe('DataApiHelper', function() {
 				}
 			};
 
-			assert.deepEqual(query, body);
+			assert.deepEqual(queryBody, query);
 		});
 	});
 
@@ -743,7 +741,7 @@ describe('DataApiHelper', function() {
 
 			const query = data.processAndResetQueryState();
 
-			const body = {
+			const queryBody = {
 				'body_': {
 					'filter': [{
 						'and': [{
@@ -756,7 +754,7 @@ describe('DataApiHelper', function() {
 				}
 			};
 
-			assert.deepEqual(query, body);
+			assert.deepEqual(queryBody, query);
 		});
 	});
 
@@ -832,7 +830,7 @@ describe('DataApiHelper', function() {
 
 			const query = data.processAndResetQueryState();
 
-			const body = {
+			const queryBody = {
 				'body_': {
 					'filter': [{
 						'and': [{
@@ -848,7 +846,7 @@ describe('DataApiHelper', function() {
 				}
 			};
 
-			assert.deepEqual(query, body);
+			assert.deepEqual(queryBody, query);
 		});
 	});
 
@@ -878,7 +876,7 @@ describe('DataApiHelper', function() {
 
 			const query = data.processAndResetQueryState();
 
-			const body = {
+			const queryBody = {
 				'body_': {
 					'filter': [{
 						'and': [{
@@ -891,7 +889,7 @@ describe('DataApiHelper', function() {
 				}
 			};
 
-			assert.deepEqual(query, body);
+			assert.deepEqual(queryBody, query);
 		});
 	});
 
@@ -930,7 +928,7 @@ describe('DataApiHelper', function() {
 
 			const query = data.processAndResetQueryState();
 
-			const body = {
+			const queryBody = {
 				'body_': {
 					'filter': [{
 						'or': [{
@@ -950,7 +948,7 @@ describe('DataApiHelper', function() {
 				}
 			};
 
-			assert.deepEqual(query, body);
+			assert.deepEqual(queryBody, query);
 		});
 	});
 
@@ -979,7 +977,7 @@ describe('DataApiHelper', function() {
 
 			const query = data.processAndResetQueryState();
 
-			const body = {
+			const queryBody = {
 				body_: {
 					aggregation: [
 						{
@@ -992,7 +990,7 @@ describe('DataApiHelper', function() {
 				}
 			};
 
-			assert.deepEqual(body, query);
+			assert.deepEqual(queryBody, query);
 		});
 	});
 
@@ -1043,7 +1041,7 @@ describe('DataApiHelper', function() {
 				data.isSearch_ = true;
 				const query = data.processAndResetQueryState();
 
-				const body = {
+				const queryBody = {
 					"body_": {
 						"search": [{
 							"and": [{
@@ -1060,7 +1058,7 @@ describe('DataApiHelper', function() {
 						}]
 					}
 				};
-				assert.deepEqual(body, query);
+				assert.deepEqual(queryBody, query);
 			});
 		});
 
