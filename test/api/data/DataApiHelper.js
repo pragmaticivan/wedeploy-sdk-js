@@ -118,7 +118,7 @@ describe('DataApiHelper', function() {
 				WeDeploy
 					.data()
 					.create('collection', {
-						'ping': 'pong'
+						ping: 'pong'
 					})
 					.catch(error => {
 						assert.strictEqual('{"error": "Error 500"}', error);
@@ -135,7 +135,7 @@ describe('DataApiHelper', function() {
 				WeDeploy
 					.data()
 					.create('collection', {
-						'ping': 'pong'
+						ping: 'pong'
 					})
 					.then(response => {
 						assert.strictEqual('{"id": 1, "ping": "pong"}', response);
@@ -153,10 +153,10 @@ describe('DataApiHelper', function() {
 					.data()
 					.create('collection', [
 						{
-							'ping': 'pong1'
+							ping: 'pong1'
 						},
 						{
-							'ping': 'pong2'
+							ping: 'pong2'
 						}
 					])
 					.then(response => {
@@ -176,7 +176,7 @@ describe('DataApiHelper', function() {
 			it('should fail trying to updating data without specifying the collection', function() {
 				assert.throws(function() {
 					WeDeploy.data().update(null, {
-						'ping': 'pong'
+						ping: 'pong'
 					});
 				}, Error);
 			});
@@ -196,7 +196,7 @@ describe('DataApiHelper', function() {
 				WeDeploy
 					.data()
 					.update('collection/242424', {
-						'ping': 'pong'
+						ping: 'pong'
 					})
 					.catch(error => {
 						assert.strictEqual('{"error": "Error 500"}', error);
@@ -211,7 +211,7 @@ describe('DataApiHelper', function() {
 				WeDeploy
 					.data()
 					.update('collection/242424', {
-						'ping': 'pong'
+						ping: 'pong'
 					})
 					.catch(error => {
 						assert.strictEqual('{"error": "Error 404"}', error);
@@ -227,7 +227,7 @@ describe('DataApiHelper', function() {
 				WeDeploy
 					.data()
 					.update('collection/1', {
-						'ping': 'pongUpdated'
+						ping: 'pongUpdated'
 					})
 					.then(response => {
 						assert.strictEqual('{"id": 1, "ping": "pongUpdated"}', response);
@@ -243,8 +243,8 @@ describe('DataApiHelper', function() {
 				WeDeploy
 					.data()
 					.update('collection/1', {
-						'ping': 'pongUpdated',
-						'newKey': 'newValue'
+						ping: 'pongUpdated',
+						newKey: 'newValue'
 					})
 					.then(response => {
 						assert.strictEqual('{"id": 1, "ping": "pongUpdated", "newKey": "newValue"}', response);
@@ -274,7 +274,7 @@ describe('DataApiHelper', function() {
 				WeDeploy
 					.data()
 					.delete('collection/242424', {
-						'ping': 'pong'
+						ping: 'pong'
 					})
 					.catch(error => {
 						assert.strictEqual('{"error": "Error 500"}', error);
@@ -288,7 +288,7 @@ describe('DataApiHelper', function() {
 				WeDeploy
 					.data()
 					.delete('collection/242424', {
-						'ping': 'pong'
+						ping: 'pong'
 					})
 					.catch(error => {
 						assert.strictEqual('{"error": "Error 404"}', error);
