@@ -55,14 +55,28 @@ describe('DataApiHelper', function() {
 
 			const queryBody = {
 				body_: {
-					sort: [{id: 'asc'}],
+					sort: [{
+						id: 'asc'
+					}],
 					limit: 10,
 					offset: 2,
 					filter: [
 						{
 							or: [
-								{and: [{age: {operator: '>', value: '18'}}]},
-								{points: {operator: '>',value: '7'}}
+								{
+									and: [{
+										age: {
+											operator: '>',
+											value: '18'
+										}
+									}]
+								},
+								{
+									points: {
+										operator: '>',
+										value: '7'
+									}
+								}
 							]
 						}
 					]
@@ -357,9 +371,9 @@ describe('DataApiHelper', function() {
 				.data()
 				.count()
 				.get('food').then(function(response) {
-					assert.strictEqual('5', response);
-					done();
-				});
+				assert.strictEqual('5', response);
+				done();
+			});
 		});
 
 		it('should build the count type into the query body', function() {
@@ -516,12 +530,12 @@ describe('DataApiHelper', function() {
 			const query = data.processAndResetQueryState();
 
 			const queryBody = {
-				'body_': {
-					'filter': [{
-						'and': [{
-							'name': {
-								'operator': 'match',
-								'value': 'cuscuz'
+				body_: {
+					filter: [{
+						and: [{
+							name: {
+								operator: 'match',
+								value: 'cuscuz'
 							}
 						}]
 					}]
@@ -559,13 +573,13 @@ describe('DataApiHelper', function() {
 			const query = data.processAndResetQueryState();
 
 			const queryBody = {
-				'body_': {
-					'filter': [{
-						'and': [{
-							'name': {
-								'operator': 'similar',
-								'value': {
-									'query': 'cusc'
+				body_: {
+					filter: [{
+						and: [{
+							name: {
+								operator: 'similar',
+								value: {
+									query: 'cusc'
 								}
 							}
 						}]
@@ -604,12 +618,12 @@ describe('DataApiHelper', function() {
 			const query = data.processAndResetQueryState();
 
 			const queryBody = {
-				'body_': {
-					'filter': [{
-						'and': [{
-							'size': {
-								'operator': '<',
-								'value': 30
+				body_: {
+					filter: [{
+						and: [{
+							size: {
+								operator: '<',
+								value: 30
 							}
 						}]
 					}]
@@ -647,12 +661,12 @@ describe('DataApiHelper', function() {
 			const query = data.processAndResetQueryState();
 
 			const queryBody = {
-				'body_': {
-					'filter': [{
-						'and': [{
-							'size': {
-								'operator': '<=',
-								'value': 30
+				body_: {
+					filter: [{
+						and: [{
+							size: {
+								operator: '<=',
+								value: 30
 							}
 						}]
 					}]
@@ -690,12 +704,12 @@ describe('DataApiHelper', function() {
 			const query = data.processAndResetQueryState();
 
 			const queryBody = {
-				'body_': {
-					'filter': [{
-						'and': [{
-							'name': {
-								'operator': 'any',
-								'value': ['cuscuz', 'tapioca']
+				body_: {
+					filter: [{
+						and: [{
+							name: {
+								operator: 'any',
+								value: ['cuscuz', 'tapioca']
 							}
 						}]
 					}]
@@ -733,12 +747,12 @@ describe('DataApiHelper', function() {
 			const query = data.processAndResetQueryState();
 
 			const queryBody = {
-				'body_': {
-					'filter': [{
-						'and': [{
-							'shape': {
-								'operator': 'gp',
-								'value': ['20,0', [0, 20]]
+				body_: {
+					filter: [{
+						and: [{
+							shape: {
+								operator: 'gp',
+								value: ['20,0', [0, 20]]
 							}
 						}]
 					}]
@@ -776,14 +790,14 @@ describe('DataApiHelper', function() {
 			const query = data.processAndResetQueryState();
 
 			const body = {
-				'body_': {
-					'filter': [{
-						'and': [{
-							'point': {
-								'operator': 'gd',
-								'value': {
-									'location': [0, 0],
-									'max': 2
+				body_: {
+					filter: [{
+						and: [{
+							point: {
+								operator: 'gd',
+								value: {
+									location: [0, 0],
+									max: 2
 								}
 							}
 						}]
@@ -822,14 +836,14 @@ describe('DataApiHelper', function() {
 			const query = data.processAndResetQueryState();
 
 			const queryBody = {
-				'body_': {
-					'filter': [{
-						'and': [{
-							'points': {
-								'operator': 'range',
-								'value': {
-									'from': 12,
-									'to': 15
+				body_: {
+					filter: [{
+						and: [{
+							points: {
+								operator: 'range',
+								value: {
+									from: 12,
+									to: 15
 								}
 							}
 						}]
@@ -868,12 +882,12 @@ describe('DataApiHelper', function() {
 			const query = data.processAndResetQueryState();
 
 			const queryBody = {
-				'body_': {
-					'filter': [{
-						'and': [{
-							'name': {
-								'operator': '=',
-								'value': 'foo'
+				body_: {
+					filter: [{
+						and: [{
+							name: {
+								operator: '=',
+								value: 'foo'
 							}
 						}]
 					}]
@@ -920,22 +934,29 @@ describe('DataApiHelper', function() {
 			const query = data.processAndResetQueryState();
 
 			const queryBody = {
-				'body_': {
-					'filter': [{
-						'or': [{
-							'and': [{
-								'name': {
-									'operator': '=',
-									'value': 'foo'
+				body_: {
+					filter: [
+						{or:
+						[
+							{
+								and: [
+									{
+										name: {
+											operator: '=',
+											value: 'foo'
+										}
+									}
+								]
+							},
+							{
+								name: {
+									operator: '!=',
+									value: 'bar'
 								}
-							}]
-						}, {
-							'name': {
-								'operator': '!=',
-								'value': 'bar'
 							}
-						}]
-					}]
+						]
+						}
+					]
 				}
 			};
 
@@ -1033,20 +1054,25 @@ describe('DataApiHelper', function() {
 				const query = data.processAndResetQueryState();
 
 				const queryBody = {
-					'body_': {
-						'search': [{
-							'and': [{
-								'name': {
-									'operator': '=',
-									'value': 'foo'
-								}
-							}, {
-								'name': {
-									'operator': '=',
-									'value': 'bar'
-								}
-							}]
-						}]
+					body_: {
+						search: [
+							{
+								and: [
+									{
+										name: {
+											operator: '=',
+											value: 'foo'
+										}
+									},
+									{
+										name: {
+											operator: '=',
+											value: 'bar'
+										}
+									}
+								]
+							}
+						]
 					}
 				};
 				assert.deepEqual(queryBody, query);
