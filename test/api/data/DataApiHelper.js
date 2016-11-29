@@ -1042,17 +1042,17 @@ describe('DataApiHelper', function() {
 				const query = data.processAndResetQueryState();
 
 				const queryBody = {
-					"body_": {
-						"search": [{
-							"and": [{
-								"name": {
-									"operator": "=",
-									"value": "foo"
+					'body_': {
+						'search': [{
+							'and': [{
+								'name': {
+									'operator': '=',
+									'value': 'foo'
 								}
 							}, {
-								"name": {
-									"operator": "=",
-									"value": "bar"
+								'name': {
+									'operator': '=',
+									'value': 'bar'
 								}
 							}]
 						}]
