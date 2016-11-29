@@ -54,27 +54,18 @@ describe('DataApiHelper', function() {
 			const query = data.processAndResetQueryState();
 
 			const queryBody = {
-				'body_': {
-					'sort': [{
-						'id': 'asc'
-					}],
-					'limit': 10,
-					'offset': 2,
-					'filter': [{
-						'or': [{
-							'and': [{
-								'age': {
-									'operator': '>',
-									'value': '18'
-								}
-							}]
-						}, {
-							'points': {
-								'operator': '>',
-								'value': '7'
-							}
-						}]
-					}]
+				body_: {
+					sort: [{id: 'asc'}],
+					limit: 10,
+					offset: 2,
+					filter: [
+						{
+							or: [
+								{and: [{age: {operator: '>', value: '18'}}]},
+								{points: {operator: '>',value: '7'}}
+							]
+						}
+					]
 				}
 			};
 
