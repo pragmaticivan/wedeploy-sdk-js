@@ -7,8 +7,8 @@ import Range from '../../src/api-query/Range';
 describe('Filter', function() {
 	describe('Filter.field', function() {
 		it('should create Filter for a custom operator', function() {
-			var filter = Filter.field('age', '>', 12);
-			var body = {
+			let filter = Filter.field('age', '>', 12);
+			let body = {
 				age: {
 					operator: '>',
 					value: 12
@@ -29,8 +29,8 @@ describe('Filter', function() {
 		});
 
 		it('should assume "=" operator if none is given', function() {
-			var filter = Filter.field('age', 12);
-			var body = {
+			const filter = Filter.field('age', 12);
+			const body = {
 				age: {
 					operator: '=',
 					value: 12
@@ -42,8 +42,8 @@ describe('Filter', function() {
 
 	describe('Filter.any', function() {
 		it('should create Filter for "any" operator form multiple params', function() {
-			var filter = Filter.any('age', 12, 21, 25);
-			var body = {
+			const filter = Filter.any('age', 12, 21, 25);
+			const body = {
 				age: {
 					operator: 'any',
 					value: [12, 21, 25]
@@ -54,8 +54,8 @@ describe('Filter', function() {
 		});
 
 		it('should create Filter for "any" operator from array', function() {
-			var filter = Filter.any('age', [12, 21, 25]);
-			var body = {
+			const filter = Filter.any('age', [12, 21, 25]);
+			const body = {
 				age: {
 					operator: 'any',
 					value: [12, 21, 25]
@@ -68,8 +68,8 @@ describe('Filter', function() {
 
 	describe('Filter.equal', function() {
 		it('should create Filter for "=" operator', function() {
-			var filter = Filter.equal('age', 12);
-			var body = {
+			const filter = Filter.equal('age', 12);
+			const body = {
 				age: {
 					operator: '=',
 					value: 12
@@ -82,8 +82,8 @@ describe('Filter', function() {
 
 	describe('Filter.gt', function() {
 		it('should create Filter for ">" operator', function() {
-			var filter = Filter.gt('age', 12);
-			var body = {
+			const filter = Filter.gt('age', 12);
+			const body = {
 				age: {
 					operator: '>',
 					value: 12
@@ -96,8 +96,8 @@ describe('Filter', function() {
 
 	describe('Filter.gte', function() {
 		it('should create Filter for ">=" operator', function() {
-			var filter = Filter.gte('age', 12);
-			var body = {
+			const filter = Filter.gte('age', 12);
+			const body = {
 				age: {
 					operator: '>=',
 					value: 12
@@ -110,8 +110,8 @@ describe('Filter', function() {
 
 	describe('Filter.regex', function() {
 		it('should create Filter for "~" operator', function() {
-			var filter = Filter.regex('age', 12);
-			var body = {
+			const filter = Filter.regex('age', 12);
+			const body = {
 				age: {
 					operator: '~',
 					value: 12
@@ -124,8 +124,8 @@ describe('Filter', function() {
 
 	describe('Filter.lt', function() {
 		it('should create Filter for "<" operator', function() {
-			var filter = Filter.lt('age', 12);
-			var body = {
+			const filter = Filter.lt('age', 12);
+			const body = {
 				age: {
 					operator: '<',
 					value: 12
@@ -138,8 +138,8 @@ describe('Filter', function() {
 
 	describe('Filter.lte', function() {
 		it('should create Filter for "<=" operator', function() {
-			var filter = Filter.lte('age', 12);
-			var body = {
+			const filter = Filter.lte('age', 12);
+			const body = {
 				age: {
 					operator: '<=',
 					value: 12
@@ -152,8 +152,8 @@ describe('Filter', function() {
 
 	describe('Filter.none', function() {
 		it('should create Filter for "none" operator from multiple values', function() {
-			var filter = Filter.none('age', 12, 21, 25);
-			var body = {
+			const filter = Filter.none('age', 12, 21, 25);
+			const body = {
 				age: {
 					operator: 'none',
 					value: [12, 21, 25]
@@ -164,8 +164,8 @@ describe('Filter', function() {
 		});
 
 		it('should create Filter for "none" operator from array', function() {
-			var filter = Filter.none('age', [12, 21, 25]);
-			var body = {
+			const filter = Filter.none('age', [12, 21, 25]);
+			const body = {
 				age: {
 					operator: 'none',
 					value: [12, 21, 25]
@@ -178,8 +178,8 @@ describe('Filter', function() {
 
 	describe('Filter.notEqual', function() {
 		it('should create Filter for "!=" operator', function() {
-			var filter = Filter.notEqual('age', 12);
-			var body = {
+			const filter = Filter.notEqual('age', 12);
+			const body = {
 				age: {
 					operator: '!=',
 					value: 12
@@ -192,8 +192,8 @@ describe('Filter', function() {
 
 	describe('Filter.not', function() {
 		it('should negate an existing filter', function() {
-			var filter = Filter.not(Filter.field('age', '>', 12));
-			var body = {
+			const filter = Filter.not(Filter.field('age', '>', 12));
+			const body = {
 				not: {
 					age: {
 						operator: '>',
@@ -206,8 +206,8 @@ describe('Filter', function() {
 		});
 
 		it('should negate a filter created from field/operator/value params', function() {
-			var filter = Filter.not('age', '>', 12);
-			var body = {
+			const filter = Filter.not('age', '>', 12);
+			const body = {
 				not: {
 					age: {
 						operator: '>',
@@ -220,8 +220,8 @@ describe('Filter', function() {
 		});
 
 		it('should negate a filter created from field/value params', function() {
-			var filter = Filter.not('age', 12);
-			var body = {
+			const filter = Filter.not('age', 12);
+			const body = {
 				not: {
 					age: {
 						operator: '=',
@@ -236,8 +236,8 @@ describe('Filter', function() {
 
 	describe('Composition', function() {
 		it('should compose current filter with another using the "add" method', function() {
-			var filter = Filter.gt('age', 12).add('and', Filter.lt('age', 15));
-			var bodyStr = '{"and":[{"age":{"operator":">","value":12}},' +
+			let filter = Filter.gt('age', 12).add('and', Filter.lt('age', 15));
+			const bodyStr = '{"and":[{"age":{"operator":">","value":12}},' +
 				'{"age":{"operator":"<","value":15}}]}';
 			assert.strictEqual(bodyStr, filter.toString());
 
@@ -246,8 +246,8 @@ describe('Filter', function() {
 		});
 
 		it('should compose current filter with another using the "and" operator', function() {
-			var filter = Filter.gt('age', 12).and(Filter.lt('age', 15));
-			var bodyStr = '{"and":[{"age":{"operator":">","value":12}},' +
+			let filter = Filter.gt('age', 12).and(Filter.lt('age', 15));
+			const bodyStr = '{"and":[{"age":{"operator":">","value":12}},' +
 				'{"age":{"operator":"<","value":15}}]}';
 			assert.strictEqual(bodyStr, filter.toString());
 
@@ -256,8 +256,8 @@ describe('Filter', function() {
 		});
 
 		it('should compose current filter with another using the "or" operator', function() {
-			var filter = Filter.gt('age', 12).or(Filter.lt('age', 15));
-			var bodyStr = '{"or":[{"age":{"operator":">","value":12}},' +
+			let filter = Filter.gt('age', 12).or(Filter.lt('age', 15));
+			const bodyStr = '{"or":[{"age":{"operator":">","value":12}},' +
 				'{"age":{"operator":"<","value":15}}]}';
 			assert.strictEqual(bodyStr, filter.toString());
 
@@ -266,8 +266,8 @@ describe('Filter', function() {
 		});
 
 		it('should compose current filter with multiple anothers using the "addMany" method', function() {
-			var filter = Filter.gt('age', 12).addMany('and', Filter.lt('age', 15), Filter.equal('age', 13));
-			var bodyStr = '{"and":[{"age":{"operator":">","value":12}},' +
+			const filter = Filter.gt('age', 12).addMany('and', Filter.lt('age', 15), Filter.equal('age', 13));
+			const bodyStr = '{"and":[{"age":{"operator":">","value":12}},' +
 				'{"age":{"operator":"<","value":15}},' +
 				'{"age":{"operator":"=","value":13}}]}';
 			assert.strictEqual(bodyStr, filter.toString());
@@ -276,8 +276,8 @@ describe('Filter', function() {
 
 	describe('Filter.boundingBox', function() {
 		it('should create Filter with "gp" operator for bounding box', function() {
-			var filter = Filter.boundingBox('shape', Geo.boundingBox('20,0', [0, 20]));
-			var body = {
+			const filter = Filter.boundingBox('shape', Geo.boundingBox('20,0', [0, 20]));
+			const body = {
 				shape: {
 					operator: 'gp',
 					value: ['20,0', [0, 20]]
@@ -291,8 +291,8 @@ describe('Filter', function() {
 		});
 
 		it('should create Filter with "gp" operator for bounding box points', function() {
-			var filter = Filter.boundingBox('shape', '20,0', Geo.point(0, 20));
-			var body = {
+			const filter = Filter.boundingBox('shape', '20,0', Geo.point(0, 20));
+			const body = {
 				shape: {
 					operator: 'gp',
 					value: ['20,0', [0, 20]]
@@ -308,9 +308,9 @@ describe('Filter', function() {
 
 	describe('Filter.distance', function() {
 		it('should create Filter with "gp" operator from Circle', function() {
-			var filter = Filter.distance('point', Geo.circle([0, 0], 2));
+			const filter = Filter.distance('point', Geo.circle([0, 0], 2));
 
-			var body = {
+			const body = {
 				point: {
 					operator: 'gd',
 					value: {
@@ -321,14 +321,14 @@ describe('Filter', function() {
 			};
 			assert.deepEqual(body, filter.body());
 
-			var bodyStr = '{"point":{"operator":"gd","value":{"location":[0,0],"max":2}}}';
+			const bodyStr = '{"point":{"operator":"gd","value":{"location":[0,0],"max":2}}}';
 			assert.strictEqual(bodyStr, filter.toString());
 		});
 
 		it('should create Filter with "gd" operator from location and distance', function() {
-			var filter = Filter.distance('point', Geo.point(0, 0), 2);
+			const filter = Filter.distance('point', Geo.point(0, 0), 2);
 
-			var body = {
+			const body = {
 				point: {
 					operator: 'gd',
 					value: {
@@ -339,14 +339,14 @@ describe('Filter', function() {
 			};
 			assert.deepEqual(body, filter.body());
 
-			var bodyStr = '{"point":{"operator":"gd","value":{"location":[0,0],"max":2}}}';
+			const bodyStr = '{"point":{"operator":"gd","value":{"location":[0,0],"max":2}}}';
 			assert.strictEqual(bodyStr, filter.toString());
 		});
 
 		it('should create Filter with "gd" operator from location and full range', function() {
-			var filter = Filter.distance('point', [0, 0], Range.range(1, 2));
+			const filter = Filter.distance('point', [0, 0], Range.range(1, 2));
 
-			var body = {
+			const body = {
 				point: {
 					operator: 'gd',
 					value: {
@@ -358,14 +358,14 @@ describe('Filter', function() {
 			};
 			assert.deepEqual(body, filter.body());
 
-			var bodyStr = '{"point":{"operator":"gd","value":{"location":[0,0],"min":1,"max":2}}}';
+			const bodyStr = '{"point":{"operator":"gd","value":{"location":[0,0],"min":1,"max":2}}}';
 			assert.strictEqual(bodyStr, filter.toString());
 		});
 
 		it('should create Filter with "gd" operator from location and min range', function() {
-			var filter = Filter.distance('point', [0, 0], Range.from(1));
+			const filter = Filter.distance('point', [0, 0], Range.from(1));
 
-			var body = {
+			const body = {
 				point: {
 					operator: 'gd',
 					value: {
@@ -376,15 +376,15 @@ describe('Filter', function() {
 			};
 			assert.deepEqual(body, filter.body());
 
-			var bodyStr = '{"point":{"operator":"gd","value":{"location":[0,0],"min":1}}}';
+			const bodyStr = '{"point":{"operator":"gd","value":{"location":[0,0],"min":1}}}';
 			assert.strictEqual(bodyStr, filter.toString());
 		});
 	});
 
 	describe('Filter.exists', function() {
 		it('should create Filter with "exists" operator', function() {
-			var filter = Filter.exists('age');
-			var body = {
+			const filter = Filter.exists('age');
+			const body = {
 				age: {
 					operator: 'exists',
 				}
@@ -396,8 +396,8 @@ describe('Filter', function() {
 
 	describe('Filter.fuzzy', function() {
 		it('should create Filter with "fuzzy" operator from just the query', function() {
-			var filter = Filter.fuzzy('foo');
-			var body = {
+			const filter = Filter.fuzzy('foo');
+			const body = {
 				'*': {
 					operator: 'fuzzy',
 					value: {
@@ -410,8 +410,8 @@ describe('Filter', function() {
 		});
 
 		it('should create Filter with "fuzzy" operator from both field and query', function() {
-			var filter = Filter.fuzzy('name', 'foo');
-			var body = {
+			const filter = Filter.fuzzy('name', 'foo');
+			const body = {
 				'name': {
 					operator: 'fuzzy',
 					value: {
@@ -427,8 +427,8 @@ describe('Filter', function() {
 		});
 
 		it('should create Filter with "fuzzy" operator from query and fuzziness', function() {
-			var filter = Filter.fuzzy('foo', 0.8);
-			var body = {
+			const filter = Filter.fuzzy('foo', 0.8);
+			const body = {
 				'*': {
 					operator: 'fuzzy',
 					value: {
@@ -445,8 +445,8 @@ describe('Filter', function() {
 		});
 
 		it('should create Filter with "fuzzy" operator from field, query and fuzziness', function() {
-			var filter = Filter.fuzzy('name', 'foo', 0.8);
-			var body = {
+			const filter = Filter.fuzzy('name', 'foo', 0.8);
+			const body = {
 				'name': {
 					operator: 'fuzzy',
 					value: {
@@ -465,8 +465,8 @@ describe('Filter', function() {
 
 	describe('Filter.match', function() {
 		it('should create Filter with "match" operator from just the query', function() {
-			var filter = Filter.match('foo');
-			var body = {
+			const filter = Filter.match('foo');
+			const body = {
 				'*': {
 					operator: 'match',
 					value: 'foo'
@@ -477,8 +477,8 @@ describe('Filter', function() {
 		});
 
 		it('should create Filter with "match" operator from field and query', function() {
-			var filter = Filter.match('name', 'foo');
-			var body = {
+			const filter = Filter.match('name', 'foo');
+			const body = {
 				name: {
 					operator: 'match',
 					value: 'foo'
@@ -491,8 +491,8 @@ describe('Filter', function() {
 
 	describe('Filter.missing', function() {
 		it('should create Filter with "missing" operator', function() {
-			var filter = Filter.missing('age');
-			var body = {
+			const filter = Filter.missing('age');
+			const body = {
 				age: {
 					operator: 'missing',
 				}
@@ -504,8 +504,8 @@ describe('Filter', function() {
 
 	describe('Filter.similar', function() {
 		it('should create Filter with "similar" operator from just the query', function() {
-			var filter = Filter.similar('foo');
-			var body = {
+			const filter = Filter.similar('foo');
+			const body = {
 				'*': {
 					operator: 'similar',
 					value: {
@@ -518,8 +518,8 @@ describe('Filter', function() {
 		});
 
 		it('should create Filter with "similar" operator from field and query', function() {
-			var filter = Filter.similar('name', 'foo');
-			var body = {
+			const filter = Filter.similar('name', 'foo');
+			const body = {
 				name: {
 					operator: 'similar',
 					value: {
@@ -534,8 +534,8 @@ describe('Filter', function() {
 
 	describe('Filter.phrase', function() {
 		it('should create Filter with phrase "match" operator from just the query', function() {
-			var filter = Filter.phrase('foo');
-			var body = {
+			const filter = Filter.phrase('foo');
+			const body = {
 				'*': {
 					operator: 'phrase',
 					value: 'foo'
@@ -549,8 +549,8 @@ describe('Filter', function() {
 		});
 
 		it('should create Filter with phrase "match" operator from field and query', function() {
-			var filter = Filter.phrase('name', 'foo');
-			var body = {
+			const filter = Filter.phrase('name', 'foo');
+			const body = {
 				name: {
 					operator: 'phrase',
 					value: 'foo'
@@ -566,8 +566,8 @@ describe('Filter', function() {
 
 	describe('Filter.polygon', function() {
 		it('should create Filter with "gp" operator', function() {
-			var filter = Filter.polygon('shape', '10,0', [20, 0], Geo.point(15, 10));
-			var body = {
+			const filter = Filter.polygon('shape', '10,0', [20, 0], Geo.point(15, 10));
+			const body = {
 				shape: {
 					operator: 'gp',
 					value: ['10,0', [20, 0], [15, 10]]
@@ -583,8 +583,8 @@ describe('Filter', function() {
 
 	describe('Filter.prefix', function() {
 		it('should create Filter with "prefix" operator on all fields for given query', function() {
-			var filter = Filter.prefix('myPrefix');
-			var body = {
+			const filter = Filter.prefix('myPrefix');
+			const body = {
 				'*': {
 					operator: 'prefix',
 					value: 'myPrefix'
@@ -595,8 +595,8 @@ describe('Filter', function() {
 		});
 
 		it('should create Filter with "prefix" operator for given field and query', function() {
-			var filter = Filter.prefix('name', 'myPrefix');
-			var body = {
+			const filter = Filter.prefix('name', 'myPrefix');
+			const body = {
 				name: {
 					operator: 'prefix',
 					value: 'myPrefix'
@@ -609,8 +609,8 @@ describe('Filter', function() {
 
 	describe('Filter.range', function() {
 		it('should create Filter with "range" operator', function() {
-			var filter = Filter.range('age', 12, 15);
-			var body = {
+			const filter = Filter.range('age', 12, 15);
+			const body = {
 				age: {
 					operator: 'range',
 					value: {
@@ -624,8 +624,8 @@ describe('Filter', function() {
 		});
 
 		it('should create Filter with "range" operator through Range instance', function() {
-			var filter = Filter.range('age', Range.range(12, 15));
-			var body = {
+			const filter = Filter.range('age', Range.range(12, 15));
+			const body = {
 				age: {
 					operator: 'range',
 					value: {
@@ -641,12 +641,12 @@ describe('Filter', function() {
 
 	describe('Filter.shape', function() {
 		it('should create Filter with "gs" operator', function() {
-			var filter = Filter.shape(
+			const filter = Filter.shape(
 				'shape',
 				Geo.circle([0, 0], '2km'),
 				Geo.boundingBox([20, 0], [0, 20])
 			);
-			var body = {
+			const body = {
 				shape: {
 					operator: 'gs',
 					value: {
@@ -667,7 +667,7 @@ describe('Filter', function() {
 			};
 			assert.deepEqual(body, filter.body());
 
-			var bodyStr = '{"shape":{"operator":"gs","value":{"type":"geometrycollection",' +
+			const bodyStr = '{"shape":{"operator":"gs","value":{"type":"geometrycollection",' +
 				'"geometries":[{"type":"circle","coordinates":[0,0],"radius":"2km"},' +
 				'{"type":"envelope","coordinates":[[20,0],[0,20]]}]}}}';
 			assert.strictEqual(bodyStr, filter.toString());

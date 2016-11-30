@@ -18,14 +18,14 @@ describe('Auth', function() {
 
 	describe('instance', function() {
 		it('should create Auth instance with a token', function() {
-			var auth = Auth.create('My Token');
+			const auth = Auth.create('My Token');
 			assert.ok(auth.hasToken());
 			assert.strictEqual('My Token', auth.token);
 			assert.strictEqual('My Token', auth.getToken());
 		});
 
 		it('should create Auth instance with email and password', function() {
-			var auth = Auth.create('email', 'password');
+			const auth = Auth.create('email', 'password');
 			assert.ok(auth.hasEmail());
 			assert.ok(auth.hasPassword());
 			assert.strictEqual('email', auth.email);
@@ -35,7 +35,7 @@ describe('Auth', function() {
 		});
 
 		it('should create Auth instance and set other fields', function() {
-			var auth = Auth.create();
+			const auth = Auth.create();
 			auth.setCreatedAt('createdAt');
 			auth.setId('id');
 			auth.setName('name');
@@ -61,19 +61,19 @@ describe('Auth', function() {
 
 	describe('Auth.updateUser', function() {
 		it('should throws exception when calling updateUser without data', function() {
-			var auth = Auth.create();
+			const auth = Auth.create();
 			auth.setWedeployClient(WeDeploy);
 			assert.throws(() => auth.updateUser(), Error);
 		});
 
 		it('should throws exception when calling updateUser without data', function() {
-			var auth = Auth.create();
+			const auth = Auth.create();
 			auth.setWedeployClient(WeDeploy);
 			assert.throws(() => auth.updateUser(), Error);
 		});
 
 		it('should call updateUser successfully', function(done) {
-			var auth = Auth.create();
+			const auth = Auth.create();
 			auth.setId(3);
 
 			auth.setWedeployClient(WeDeploy);
@@ -85,7 +85,7 @@ describe('Auth', function() {
 		});
 
 		it('should call updateUser unsuccessfully', function(done) {
-			var auth = Auth.create();
+			const auth = Auth.create();
 			auth.setId(3);
 
 			auth.setWedeployClient(WeDeploy);
@@ -97,12 +97,12 @@ describe('Auth', function() {
 		});
 
 		it('should call updateUser unsuccessfully with error response as reason', function(done) {
-			var auth = Auth.create();
+			const auth = Auth.create();
 			auth.setId(3);
 
 			auth.setWedeployClient(WeDeploy);
 			auth.currentUser = {};
-			var responseErrorObject = {
+			const responseErrorObject = {
 				error: true
 			};
 			RequestMock.intercept('PATCH', 'http://localhost/users/3').reply(400, JSON.stringify(responseErrorObject), {
@@ -120,13 +120,13 @@ describe('Auth', function() {
 
 	describe('Auth.deleteUser', function() {
 		it('should throws exception when calling deleteUser without user having id', function() {
-			var auth = Auth.create();
+			const auth = Auth.create();
 			auth.setWedeployClient(WeDeploy);
 			assert.throws(() => auth.deleteUser(), Error);
 		});
 
 		it('should call deleteUser successfully', function(done) {
-			var auth = Auth.create();
+			const auth = Auth.create();
 			auth.setId('id');
 			auth.setWedeployClient(WeDeploy);
 			RequestMock.intercept('DELETE', 'http://localhost/users/id').reply(200);
@@ -136,7 +136,7 @@ describe('Auth', function() {
 		});
 
 		it('should call deleteUser unsuccessfully', function(done) {
-			var auth = Auth.create();
+			const auth = Auth.create();
 			auth.setId('id');
 			auth.setWedeployClient(WeDeploy);
 			RequestMock.intercept('DELETE', 'http://localhost/users/id').reply(400);
@@ -146,10 +146,10 @@ describe('Auth', function() {
 		});
 
 		it('should call deleteUser unsuccessfully with error response as reason', function(done) {
-			var auth = Auth.create();
+			const auth = Auth.create();
 			auth.setId('id');
 			auth.setWedeployClient(WeDeploy);
-			var responseErrorObject = {
+			const responseErrorObject = {
 				error: true
 			};
 			RequestMock.intercept('DELETE', 'http://localhost/users/id').reply(

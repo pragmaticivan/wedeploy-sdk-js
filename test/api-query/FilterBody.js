@@ -6,8 +6,8 @@ import FilterBody from '../../src/api-query/FilterBody';
 
 describe('FilterBody', function() {
 	it('should return the filter\'s body object', function() {
-		var filterBody = new FilterBody('age', '>', 0);
-		var body = {
+		const filterBody = new FilterBody('age', '>', 0);
+		const body = {
 			age: {
 				operator: '>',
 				value: 0
@@ -17,8 +17,8 @@ describe('FilterBody', function() {
 	});
 
 	it('should assume "=" operator if none is given', function() {
-		var filterBody = new FilterBody('age', 12);
-		var body = {
+		const filterBody = new FilterBody('age', 12);
+		const body = {
 			age: {
 				operator: '=',
 				value: 12
@@ -28,8 +28,8 @@ describe('FilterBody', function() {
 	});
 
 	it('should not set "value" key if null is given', function() {
-		var filterBody = new FilterBody('age', null);
-		var body = {
+		const filterBody = new FilterBody('age', null);
+		const body = {
 			age: {
 				operator: '='
 			}
@@ -44,8 +44,8 @@ describe('FilterBody', function() {
 				this.body_.foo = 'foo';
 			}
 		}
-		var filterBody = new FilterBody('age', new Test());
-		var body = {
+		const filterBody = new FilterBody('age', new Test());
+		const body = {
 			age: {
 				operator: '=',
 				value: {
@@ -58,9 +58,9 @@ describe('FilterBody', function() {
 
 	describe('Composition', function() {
 		it('should compose filter with another with the given operator', function() {
-			var filterBody = new FilterBody('age', '>', 12);
+			const filterBody = new FilterBody('age', '>', 12);
 			filterBody.add('and', Filter.lt('age', 15));
-			var body = {
+			const body = {
 				and: [
 					{
 						age: {
@@ -81,9 +81,9 @@ describe('FilterBody', function() {
 
 
 		it('should compose a empty filter with empty body to use ', function() {
-			var filterBody = new FilterBody();
+			const filterBody = new FilterBody();
 
-			var body = {
+			const body = {
 				and: []
 			};
 
@@ -91,11 +91,11 @@ describe('FilterBody', function() {
 		});
 
 		it('should compose a empty Filter Body with a filter', function() {
-			var filterBody = new FilterBody();
+			const filterBody = new FilterBody();
 			filterBody.addMany('and', Filter.lt('age', 15));
 			filterBody.addMany('or', Filter.lt('age', 16));
 
-			var body = {
+			const body = {
 				or: [
 					{
 						and: [
@@ -120,9 +120,9 @@ describe('FilterBody', function() {
 		});
 
 		it('should compose filter with multiple others with the given operator', function() {
-			var filterBody = new FilterBody('age', '>', 12);
+			const filterBody = new FilterBody('age', '>', 12);
 			filterBody.addMany('and', Filter.lt('age', 15), Filter.equal('name', 'foo'));
-			var body = {
+			const body = {
 				and: [
 					{
 						age: {
@@ -148,9 +148,9 @@ describe('FilterBody', function() {
 		});
 
 		it('should compose filter with a unary operator', function() {
-			var filterBody = new FilterBody('age', '>', 12);
+			const filterBody = new FilterBody('age', '>', 12);
 			filterBody.add('not');
-			var body = {
+			const body = {
 				not: {
 					age: {
 						operator: '>',

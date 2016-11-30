@@ -5,8 +5,8 @@ import Range from '../../src/api-query/Range';
 describe('Range', function() {
 	describe('Range.range', function() {
 		it('should create instance with both from/to values', function() {
-			var range = Range.range(10, 20);
-			var body = {
+			const range = Range.range(10, 20);
+			const body = {
 				from: 10,
 				to: 20
 			};
@@ -16,8 +16,8 @@ describe('Range', function() {
 	});
 	describe('Range.from', function() {
 		it('should create instance with just the "from" value', function() {
-			var range = Range.from(10);
-			var body = {
+			const range = Range.from(10);
+			const body = {
 				from: 10
 			};
 			assert.deepEqual(body, range.body());
@@ -26,8 +26,8 @@ describe('Range', function() {
 	});
 	describe('Range.to', function() {
 		it('should create instance with just the "to" value', function() {
-			var range = Range.to(20);
-			var body = {
+			const range = Range.to(20);
+			const body = {
 				to: 20
 			};
 			assert.deepEqual(body, range.body());

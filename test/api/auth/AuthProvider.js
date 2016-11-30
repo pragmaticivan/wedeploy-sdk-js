@@ -10,12 +10,12 @@ describe('AuthProvider', function() {
 	});
 
 	it('should not set default provider', function() {
-		var provider = new AuthProvider();
+		const provider = new AuthProvider();
 		assert.strictEqual(null, provider.getProvider());
 	});
 
 	it('should set provider scope', function() {
-		var provider = new AuthProvider();
+		const provider = new AuthProvider();
 		assert.ok(!provider.hasProviderScope());
 		provider.setProviderScope('providerScope');
 		assert.ok(provider.hasProviderScope());
@@ -23,14 +23,14 @@ describe('AuthProvider', function() {
 	});
 
 	it('should set provider scope as string', function() {
-		var provider = new AuthProvider();
+		const provider = new AuthProvider();
 		assert.throws(function() {
 			provider.setProviderScope(0);
 		}, Error);
 	});
 
 	it('should set redirect uri', function() {
-		var provider = new AuthProvider();
+		const provider = new AuthProvider();
 		assert.ok(!provider.hasRedirectUri());
 		provider.setRedirectUri('uri');
 		assert.ok(provider.hasRedirectUri());
@@ -38,14 +38,14 @@ describe('AuthProvider', function() {
 	});
 
 	it('should set redirect uri as string', function() {
-		var provider = new AuthProvider();
+		const provider = new AuthProvider();
 		assert.throws(function() {
 			provider.setRedirectUri(0);
 		}, Error);
 	});
 
 	it('should set scope', function() {
-		var provider = new AuthProvider();
+		const provider = new AuthProvider();
 		assert.ok(!provider.hasScope());
 		provider.setScope('scope');
 		assert.ok(provider.hasScope());
@@ -53,24 +53,24 @@ describe('AuthProvider', function() {
 	});
 
 	it('should set scope as string', function() {
-		var provider = new AuthProvider();
+		const provider = new AuthProvider();
 		assert.throws(function() {
 			provider.setScope(0);
 		}, Error);
 	});
 
 	it('should make authorization url with base auth url', function() {
-		var provider = new AuthProvider();
+		const provider = new AuthProvider();
 		assert.strictEqual('https://auth:8080/oauth/authorize', provider.makeAuthorizationUrl('https://auth:8080'));
 	});
 
 	it('should make authorization url for null parameters', function() {
-		var provider = new AuthProvider();
+		const provider = new AuthProvider();
 		assert.strictEqual('/oauth/authorize', provider.makeAuthorizationUrl());
 	});
 
 	it('should make authorization url for empty parameters', function() {
-		var provider = new AuthProvider();
+		const provider = new AuthProvider();
 		provider.setProviderScope('');
 		provider.setRedirectUri('');
 		provider.setScope('');
@@ -78,7 +78,7 @@ describe('AuthProvider', function() {
 	});
 
 	it('should make authorization url for defined parameters', function() {
-		var provider = new AuthProvider();
+		const provider = new AuthProvider();
 		provider.setProviderScope('scope1 scope2');
 		provider.setRedirectUri('uri');
 		provider.setScope('scope1 scope2');

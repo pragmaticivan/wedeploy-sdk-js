@@ -12,8 +12,8 @@ describe('NodeTransport', function() {
 
 	it('should cancel send request to an url', function(done) {
 		RequestMock.intercept().reply(200);
-		var transport = new NodeTransport();
-		var clientRequest = new ClientRequest();
+		const transport = new NodeTransport();
+		const clientRequest = new ClientRequest();
 		clientRequest.url('http://localhost/url');
 		transport.send(clientRequest)
 			.then(function() {
@@ -28,8 +28,8 @@ describe('NodeTransport', function() {
 
 	it('should send request with body', function(done) {
 		RequestMock.intercept().reply(200, 'responseBody');
-		var transport = new NodeTransport();
-		var clientRequest = new ClientRequest();
+		const transport = new NodeTransport();
+		const clientRequest = new ClientRequest();
 		clientRequest.url('http://localhost/url');
 		clientRequest.body('requestBody');
 		transport.send(clientRequest).then(function(response) {
@@ -41,8 +41,8 @@ describe('NodeTransport', function() {
 
 	it('should send request with header', function(done) {
 		RequestMock.intercept().reply(200);
-		var transport = new NodeTransport();
-		var clientRequest = new ClientRequest();
+		const transport = new NodeTransport();
+		const clientRequest = new ClientRequest();
 		clientRequest.url('http://localhost/url');
 		clientRequest.header('content-type', 'application/json');
 		transport.send(clientRequest).then(function(response) {
@@ -56,11 +56,11 @@ describe('NodeTransport', function() {
 			'content-type': 'application/json'
 		});
 
-		var headers = new MultiMap();
+		const headers = new MultiMap();
 		headers.add('content-type', 'application/json');
 		headers.add('content-type', 'text/html');
 
-		var transport = new NodeTransport();
+		const transport = new NodeTransport();
 		transport.request('http://localhost/url', 'get', null, headers)
 			.then(function() {
 				done();
@@ -71,8 +71,8 @@ describe('NodeTransport', function() {
 		RequestMock.intercept().reply(200, undefined, {
 			'content-type': 'application/json'
 		});
-		var transport = new NodeTransport();
-		var clientRequest = new ClientRequest();
+		const transport = new NodeTransport();
+		const clientRequest = new ClientRequest();
 		clientRequest.url('http://localhost/url');
 		transport.send(clientRequest).then(function(response) {
 			assert.strictEqual('{"content-type":["application/json"]}', response.headers().toString());
@@ -82,8 +82,8 @@ describe('NodeTransport', function() {
 
 	it('should parse request query string', function(done) {
 		RequestMock.intercept('GET', 'http://xyz/url?foo=1&query=1&query=%20').reply(200);
-		var transport = new NodeTransport();
-		var clientRequest = new ClientRequest();
+		const transport = new NodeTransport();
+		const clientRequest = new ClientRequest();
 		clientRequest.url('http://xyz/url?foo=1');
 		clientRequest.params().add('query', 1);
 		clientRequest.params().add('query', ' ');
@@ -98,8 +98,8 @@ describe('NodeTransport', function() {
 
 	it('should parse request query string without params', function(done) {
 		RequestMock.intercept('GET', 'http://localhost/url?foo=1').reply(200);
-		var transport = new NodeTransport();
-		var clientRequest = new ClientRequest();
+		const transport = new NodeTransport();
+		const clientRequest = new ClientRequest();
 		clientRequest.url('http://localhost/url?foo=1');
 		transport.request(clientRequest.url(), clientRequest.method()).then(function(xhrResponse) {
 			assert.strictEqual('http://localhost/url?foo=1', xhrResponse.request.uri.href);
@@ -110,8 +110,8 @@ describe('NodeTransport', function() {
 	it('should cancel request if given timeout is reached', function(done) {
 		RequestMock.intercept('GET', 'http://localhost/url?foo=1').socketDelay(5).reply(200);
 
-		var transport = new NodeTransport();
-		var clientRequest = new ClientRequest();
+		const transport = new NodeTransport();
+		const clientRequest = new ClientRequest();
 		clientRequest.url('http://localhost/url?foo=1');
 		transport.request(
 			clientRequest.url(),

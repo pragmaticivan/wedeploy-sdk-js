@@ -49,22 +49,22 @@ describe('WeDeploy Tests', function() {
 	});
 
 	it('should use different transport', function() {
-		var transport = new Transport();
-		var client = WeDeploy.url().use(transport);
+		const transport = new Transport();
+		const client = WeDeploy.url().use(transport);
 		assert.strictEqual(transport, client.customTransport_);
 		assert.ok(client instanceof WeDeploy);
 	});
 
 	it('should change full url', function() {
-		var transport = new Transport();
-		var parent = WeDeploy.url('http://other:123').use(transport);
+		const transport = new Transport();
+		const parent = WeDeploy.url('http://other:123').use(transport);
 		assert.strictEqual('http://other:123', parent.url());
 	});
 
 	it('should inherit parent transport', function() {
-		var transport = new Transport();
-		var parent = WeDeploy.url().use(transport);
-		var child = parent.path('/path');
+		const transport = new Transport();
+		const parent = WeDeploy.url().use(transport);
+		const child = parent.path('/path');
 		assert.strictEqual(parent.customTransport_, child.customTransport_);
 	});
 
@@ -92,7 +92,7 @@ describe('WeDeploy Tests', function() {
 
 	it('should send GET request with params as object', function(done) {
 		RequestMock.intercept('GET', 'http://localhost/url?foo=foo&bar=bar').reply(200);
-		var params = {
+		const params = {
 			foo: 'foo',
 			bar: 'bar'
 		};
@@ -130,7 +130,7 @@ describe('WeDeploy Tests', function() {
 			assert.strictEqual('http://localhost/url', response.request().url());
 			assert.strictEqual('GET', response.request().method());
 			assert.ok(!response.request().body());
-			var paramsStr = '{"filter":["[{\\"name\\":{\\"operator\\":\\"=\\",\\"value\\":\\"foo\\"}}]"]}';
+			const paramsStr = '{"filter":["[{\\"name\\":{\\"operator\\":\\"=\\",\\"value\\":\\"foo\\"}}]"]}';
 			assert.strictEqual(paramsStr, response.request().params().toString());
 			done();
 		});
@@ -198,8 +198,8 @@ describe('WeDeploy Tests', function() {
 	});
 
 	it('should create new client instance based on parent client', function() {
-		var books = WeDeploy.url('http://localhost/books');
-		var book1 = books.path('/1', '/2', '3');
+		const books = WeDeploy.url('http://localhost/books');
+		const book1 = books.path('/1', '/2', '3');
 		assert.notStrictEqual(book1, books);
 		assert.strictEqual('http://localhost/books', books.url());
 		assert.strictEqual('http://localhost/books/1/2/3', book1.url());
@@ -346,7 +346,7 @@ describe('WeDeploy Tests', function() {
 		}
 
 		RequestMock.intercept('POST', 'http://localhost/url').reply(200);
-		var formData = new FormData();
+		const formData = new FormData();
 		WeDeploy.url('http://localhost/url').post(formData).then(function(response) {
 			assert.strictEqual(formData, response.request().body());
 			assert.strictEqual(undefined, response.request().headers().get('content-type'));
@@ -374,7 +374,7 @@ describe('WeDeploy Tests', function() {
 	it('should wrap Filter in query when passed as request body', function(done) {
 		RequestMock.intercept('POST', 'http://localhost/url').reply(200);
 		WeDeploy.url('http://localhost/url').post(Filter.field('name', 'foo')).then(function(response) {
-			var bodyStr = '{"filter":[{"name":{"operator":"=","value":"foo"}}]}';
+			const bodyStr = '{"filter":[{"name":{"operator":"=","value":"foo"}}]}';
 			assert.strictEqual(bodyStr, response.request().body());
 			done();
 		});
@@ -387,7 +387,7 @@ describe('WeDeploy Tests', function() {
 		}
 
 		RequestMock.intercept('POST', 'http://localhost/url').reply(200);
-		var form = document.createElement('form');
+		const form = document.createElement('form');
 		WeDeploy.url('http://localhost/url').post(form).then(function(response) {
 			assert.ok(response.request().body() instanceof FormData);
 			done();
@@ -402,7 +402,7 @@ describe('WeDeploy Tests', function() {
 
 		RequestMock.intercept('POST', 'http://localhost/url').reply(200);
 		WeDeploy.url('http://localhost/url').form('age', 12).form('weight', 100).post().then(function(response) {
-			var body = response.request().body();
+			const body = response.request().body();
 			assert.ok(body instanceof FormData);
 			assert.strictEqual(undefined, response.request().headers().get('content-type'));
 			done();
@@ -427,7 +427,7 @@ describe('WeDeploy Tests', function() {
 
 		RequestMock.intercept('POST', 'http://localhost/url').reply(200);
 		WeDeploy.url('http://localhost/url').form('age', 12).post({}).then(function(response) {
-			var body = response.request().body();
+			const body = response.request().body();
 			assert.ok(!(body instanceof FormData));
 			assert.strictEqual('{}', body);
 			done();

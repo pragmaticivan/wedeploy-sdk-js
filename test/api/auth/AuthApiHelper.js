@@ -23,7 +23,7 @@ describe('AuthApiHelper', function() {
 	});
 
 	it('should WeDeploy.auth() returns same instance', function() {
-		var auth = WeDeploy.auth();
+		const auth = WeDeploy.auth();
 		assert.strictEqual(auth, WeDeploy.auth());
 	});
 
@@ -46,35 +46,35 @@ describe('AuthApiHelper', function() {
 	});
 
 	it('should map providers', function() {
-		var auth = WeDeploy.auth();
+		const auth = WeDeploy.auth();
 		assert.ok(auth.provider.Google);
 		assert.ok(auth.provider.Github);
 	});
 
 	describe('Sign in with redirect', skipForNode_(function() {
 		it('should throws exception when signin-in with redirect using null provider', function() {
-			var auth = WeDeploy.auth();
+			const auth = WeDeploy.auth();
 			assert.throws(function() {
 				auth.signInWithRedirect(null);
 			}, Error);
 		});
 
 		it('should throws exception signing-in with redirect using not supported sign-in type for the environment', function() {
-			var auth = WeDeploy.auth();
+			const auth = WeDeploy.auth();
 			assert.throws(function() {
 				auth.signInWithRedirect(undefined);
 			}, Error);
 		});
 
 		it('should fail sign-in with redirect using not supported provider', function() {
-			var auth = WeDeploy.auth();
+			const auth = WeDeploy.auth();
 			assert.throws(function() {
 				auth.signInWithRedirect({});
 			}, Error);
 		});
 
 		it('should not fail sign-in with redirect using Github provider', function() {
-			var auth = WeDeploy.auth();
+			const auth = WeDeploy.auth();
 			globals.window = {
 				location: {
 					href: ''
@@ -86,7 +86,7 @@ describe('AuthApiHelper', function() {
 		});
 
 		it('should not fail sign-in with redirect using Google provider', function() {
-			var auth = WeDeploy.auth();
+			const auth = WeDeploy.auth();
 			globals.window = {
 				location: {
 					href: ''
@@ -98,7 +98,7 @@ describe('AuthApiHelper', function() {
 		});
 
 		it('should sign-in with redirect forward location to provider authorization url with current url without hash as redirect uri', function() {
-			var auth = WeDeploy.auth('http://currentUrl');
+			const auth = WeDeploy.auth('http://currentUrl');
 			globals.window = {
 				location: {
 					protocol: 'http:',
@@ -108,7 +108,7 @@ describe('AuthApiHelper', function() {
 					hash: '#hash'
 				}
 			};
-			var provider = new GithubAuthProvider();
+			const provider = new GithubAuthProvider();
 			assert.ok(!provider.hasRedirectUri());
 			auth.signInWithRedirect(provider);
 			assert.strictEqual('http://currentUrl/?q=1', provider.getRedirectUri());
@@ -116,13 +116,13 @@ describe('AuthApiHelper', function() {
 		});
 
 		it('should sign-in with redirect forward location to provider authorization url and preserve redirect uri', function() {
-			var auth = WeDeploy.auth('http://currentUrl');
+			const auth = WeDeploy.auth('http://currentUrl');
 			globals.window = {
 				location: {
 					href: 'http://currentUrl'
 				}
 			};
-			var provider = new GithubAuthProvider();
+			const provider = new GithubAuthProvider();
 			provider.setRedirectUri('http://customUrl');
 			auth.signInWithRedirect(provider);
 			assert.strictEqual('http://customUrl', provider.getRedirectUri());
@@ -143,7 +143,7 @@ describe('AuthApiHelper', function() {
 		});
 
 		it('should call send password reset email successfully', function(done) {
-			var auth = WeDeploy.auth();
+			const auth = WeDeploy.auth();
 			RequestMock.intercept().reply(200);
 			auth
 				.sendPasswordResetEmail('email@domain.com')
@@ -151,7 +151,7 @@ describe('AuthApiHelper', function() {
 		});
 
 		it('should call send password reset email unsuccessfully', function(done) {
-			var auth = WeDeploy.auth();
+			const auth = WeDeploy.auth();
 			RequestMock.intercept().reply(400);
 			auth
 				.sendPasswordResetEmail('email@domain.com')
@@ -159,7 +159,7 @@ describe('AuthApiHelper', function() {
 		});
 
 		it('should call send password reset email with email as parameter', function(done) {
-			var auth = WeDeploy.auth();
+			const auth = WeDeploy.auth();
 			RequestMock.intercept().reply(200);
 			auth
 				.sendPasswordResetEmail('email@domain.com')
@@ -170,8 +170,8 @@ describe('AuthApiHelper', function() {
 		});
 
 		it('should call send password reset email unsuccessfully with error response as reason', function(done) {
-			var auth = WeDeploy.auth();
-			var responseErrorObject = {
+			const auth = WeDeploy.auth();
+			const responseErrorObject = {
 				error: true
 			};
 			RequestMock.intercept().reply(400, JSON.stringify(responseErrorObject), {
@@ -200,7 +200,7 @@ describe('AuthApiHelper', function() {
 		});
 
 		it('should call create user successfully', function(done) {
-			var auth = WeDeploy.auth('http://auth');
+			const auth = WeDeploy.auth('http://auth');
 			RequestMock.intercept('POST', 'http://auth/users').reply(200);
 			auth
 				.createUser({})
@@ -211,7 +211,7 @@ describe('AuthApiHelper', function() {
 		});
 
 		it('should call create user unsuccessfully', function(done) {
-			var auth = WeDeploy.auth();
+			const auth = WeDeploy.auth();
 			RequestMock.intercept().reply(400);
 			auth
 				.createUser({})
@@ -219,8 +219,8 @@ describe('AuthApiHelper', function() {
 		});
 
 		it('should call create user unsuccessfully with error response as reason', function(done) {
-			var auth = WeDeploy.auth();
-			var responseErrorObject = {
+			const auth = WeDeploy.auth();
+			const responseErrorObject = {
 				error: true
 			};
 			RequestMock.intercept().reply(400, JSON.stringify(responseErrorObject), {
@@ -253,9 +253,9 @@ describe('AuthApiHelper', function() {
 		});
 
 		it('should call sign-in with email and password successfully', function(done) {
-			var auth = WeDeploy.auth();
+			const auth = WeDeploy.auth();
 			auth.loadCurrentUser = () => new Auth();
-			var authData = {
+			const authData = {
 				access_token: 'xyz'
 			};
 			RequestMock.intercept().reply(200, JSON.stringify(authData), {
@@ -270,7 +270,7 @@ describe('AuthApiHelper', function() {
 		});
 
 		it('should call sign-in with email and password unsuccessfully', function(done) {
-			var auth = WeDeploy.auth();
+			const auth = WeDeploy.auth();
 			RequestMock.intercept().reply(400);
 			auth
 				.signInWithEmailAndPassword('email@domain.com', 'password')
@@ -278,8 +278,8 @@ describe('AuthApiHelper', function() {
 		});
 
 		it('should call sign-in with email and password unsuccessfully with error response as reason', function(done) {
-			var auth = WeDeploy.auth();
-			var responseErrorObject = {
+			const auth = WeDeploy.auth();
+			const responseErrorObject = {
 				error: true
 			};
 			RequestMock.intercept().reply(400, JSON.stringify(responseErrorObject), {
@@ -304,7 +304,7 @@ describe('AuthApiHelper', function() {
 		});
 
 		it('should call sign-out successfully', function(done) {
-			var auth = WeDeploy.auth();
+			const auth = WeDeploy.auth();
 			auth.currentUser = {};
 			RequestMock.intercept().reply(200);
 			auth
@@ -313,7 +313,7 @@ describe('AuthApiHelper', function() {
 		});
 
 		it('should call sign-out unsuccessfully', function(done) {
-			var auth = WeDeploy.auth();
+			const auth = WeDeploy.auth();
 			auth.currentUser = {};
 			RequestMock.intercept().reply(400);
 			auth
@@ -322,9 +322,9 @@ describe('AuthApiHelper', function() {
 		});
 
 		it('should call sign-out unsuccessfully with error response as reason', function(done) {
-			var auth = WeDeploy.auth();
+			const auth = WeDeploy.auth();
 			auth.currentUser = {};
-			var responseErrorObject = {
+			const responseErrorObject = {
 				error: true
 			};
 			RequestMock.intercept().reply(400, JSON.stringify(responseErrorObject), {
@@ -353,7 +353,7 @@ describe('AuthApiHelper', function() {
 		});
 
 		it('should call getUser successfully', function(done) {
-			var auth = WeDeploy.auth();
+			const auth = WeDeploy.auth();
 			auth.currentUser = {};
 			RequestMock.intercept().reply(200);
 			auth
@@ -365,7 +365,7 @@ describe('AuthApiHelper', function() {
 		});
 
 		it('should call getUser unsuccessfully', function(done) {
-			var auth = WeDeploy.auth();
+			const auth = WeDeploy.auth();
 			auth.currentUser = {};
 			RequestMock.intercept().reply(400);
 			auth
@@ -374,9 +374,9 @@ describe('AuthApiHelper', function() {
 		});
 
 		it('should call getUser unsuccessfully with error response as reason', function(done) {
-			var auth = WeDeploy.auth();
+			const auth = WeDeploy.auth();
 			auth.currentUser = {};
-			var responseErrorObject = {
+			const responseErrorObject = {
 				error: true
 			};
 			RequestMock.intercept().reply(400, JSON.stringify(responseErrorObject), {
@@ -397,8 +397,8 @@ describe('AuthApiHelper', function() {
 		});
 
 		it('should load current user', function(done) {
-			var auth = WeDeploy.auth('http://auth');
-			var data = {
+			const auth = WeDeploy.auth('http://auth');
+			const data = {
 				createdAt: 'createdAt',
 				email: 'email',
 				id: 'id',
@@ -461,16 +461,16 @@ describe('AuthApiHelper', function() {
 					hash: ''
 				}
 			};
-			var auth = WeDeploy.auth();
+			const auth = WeDeploy.auth();
 			auth.onSignIn(() => assert.fail());
 		});
 
 		it('should invokes callback when calling onSignIn after a signInWithEmailAndPassword', function(done) {
-			var auth = WeDeploy.auth();
+			const auth = WeDeploy.auth();
 			auth.loadCurrentUser = (token) => Auth.create(token);
-			var callback = sinon.stub();
+			const callback = sinon.stub();
 			auth.onSignIn(callback);
-			var data = {
+			const data = {
 				access_token: 'xyz'
 			};
 
@@ -488,9 +488,9 @@ describe('AuthApiHelper', function() {
 		});
 
 		it('should invokes callback when calling onSignOut after a signOut', function(done) {
-			var auth = WeDeploy.auth();
+			const auth = WeDeploy.auth();
 			auth.currentUser = {};
-			var callback = sinon.stub();
+			const callback = sinon.stub();
 			auth.onSignOut(callback);
 			RequestMock.intercept('GET', 'http://localhost/oauth/revoke?token')
 				.reply(200);
@@ -519,8 +519,8 @@ function getAuthorizationHeader_() {
 /**
  * Skips the given function if in Node environment. This is used to skip tests
  * for features that are browser only.
- * @param  {Function} fn [description]
- * @return {[type]}      [description]
+ * @param  {Function} fn
+ * @return {[type]}
  */
 function skipForNode_(fn) {
 	return (typeof window === 'undefined') ? () => {
