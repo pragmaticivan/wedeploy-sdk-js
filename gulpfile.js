@@ -171,6 +171,10 @@ gulp.task('build:js:all', function(done) {
 	runSequence('build:globals:js', 'build:es2015', 'build:node', 'build:socket', 'uglify:es2015', done);
 });
 
+gulp.task('build', function(done) {
+	runSequence('clean', ['build:js'], 'uglify', done);
+});
+
 function concatSocket(filePath, dest) {
 	return gulp.src(['node_modules/socket.io-client/socket.io.js', filePath])
 		.pipe(sourcemaps.init({
