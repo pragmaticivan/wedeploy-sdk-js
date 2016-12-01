@@ -96,5 +96,5 @@ of patent rights can be found in the PATENTS file in the same directory.
 [license-svg]: https://img.shields.io/badge/license-BSD-lightgrey.svg
 [license-link]: https://github.com/wedeploy/api-js/blob/master/LICENSE.md
 
-[npm-svg]: https://badge.fury.io/js/wedeploy.svg
+[npm-svg]: https://img.shields.io/npm/v/wedeploy.svg
 [npm-link]: https://npmjs.org/wedeploy
