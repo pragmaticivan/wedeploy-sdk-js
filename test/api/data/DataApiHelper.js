@@ -1094,7 +1094,7 @@ describe('DataApiHelper', function() {
 						RequestMock.teardown();
 						RequestMock.setup();
 
-						const requestUrlWithNoQuery = 'http://localhost/food?search=%5B%7B%22and%22%3A%5B%5D%7D%5D';
+						const requestUrlWithNoQuery = 'http://localhost/food';
 
 						RequestMock.intercept('GET', requestUrlWithNoQuery).reply(200);
 
@@ -1121,7 +1121,7 @@ describe('DataApiHelper', function() {
 						RequestMock.teardown();
 						RequestMock.setup();
 
-						const requestUrlWithNoQuery = 'http://localhost/food?search=%5B%7B%22and%22%3A%5B%5D%7D%5D';
+						const requestUrlWithNoQuery = 'http://localhost/food';
 
 						RequestMock.intercept('GET', requestUrlWithNoQuery).reply(200);
 
@@ -1176,7 +1176,7 @@ describe('DataApiHelper', function() {
 						RequestMock.teardown();
 						RequestMock.setup();
 
-						const requestUrlWithNoQuery = 'http://localhost/food?filter=%5B%7B%22and%22%3A%5B%5D%7D%5D';
+						const requestUrlWithNoQuery = 'http://localhost/food';
 
 						RequestMock.intercept('GET', requestUrlWithNoQuery).reply(200);
 
@@ -1203,7 +1203,7 @@ describe('DataApiHelper', function() {
 						RequestMock.teardown();
 						RequestMock.setup();
 
-						const requestUrlWithNoQuery = 'http://localhost/food?filter=%5B%7B%22and%22%3A%5B%5D%7D%5D';
+						const requestUrlWithNoQuery = 'http://localhost/food';
 
 						RequestMock.intercept('GET', requestUrlWithNoQuery).reply(200);
 
@@ -1251,7 +1251,7 @@ describe('DataApiHelper', function() {
 
 				WeDeploy.socket(function() {
 					WeDeploy.socket(function(url, opts) {
-						const requestUrlWithNoQuery = 'url=%2Ffood%3Ffilter%3D%255B%257B%2522and%2522%253A%255B%255D%257D%255D';
+						const requestUrlWithNoQuery = 'url=%2Ffood';
 						assert.strictEqual(requestUrlWithNoQuery, opts.query);
 						done();
 					});
@@ -1266,7 +1266,7 @@ describe('DataApiHelper', function() {
 			it('should not aggregate the previous query into the next fetch', function(done) {
 				WeDeploy.socket(function() {
 					WeDeploy.socket(function(url, opts) {
-						const requestUrlWithNoQuery = 'url=%2Ffood%3Ffilter%3D%255B%257B%2522and%2522%253A%255B%255D%257D%255D';
+						const requestUrlWithNoQuery = 'url=%2Ffood';
 						assert.strictEqual(requestUrlWithNoQuery, opts.query);
 						done();
 					});

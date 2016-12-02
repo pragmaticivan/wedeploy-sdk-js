@@ -408,14 +408,14 @@ class DataApiHelper extends ApiHelper {
 	 */
 	processAndResetQueryState() {
 		this.assertIsSearchWithFilter_();
-		if (core.isDef(this.filter_)) {
+		if (core.isDefAndNotNull(this.filter_)) {
 			if (this.isSearch_) {
 				this.getOrCreateQuery_().search(this.getOrCreateFilter_());
 			} else {
 				this.getOrCreateQuery_().filter(this.getOrCreateFilter_());
 			}
 		}
-		const query = this.getOrCreateQuery_();
+		const query = this.query_;
 		this.query_ = null;
 		this.filter_ = null;
 		this.isSearch_ = false;
