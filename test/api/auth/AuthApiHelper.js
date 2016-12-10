@@ -13,6 +13,12 @@ describe('AuthApiHelper', function() {
 			globals.window = null;
 		} else {
 			globals.window = window;
+			globals.window.localStorage.currentUser = null;
+		}
+		if (typeof document === 'undefined') {
+			globals.document = null;
+		} else {
+			globals.document = document;
 		}
 		RequestMock.teardown();
 	});
@@ -397,7 +403,7 @@ describe('AuthApiHelper', function() {
 		});
 
 		it('should load current user', function(done) {
-			const auth = WeDeploy.auth('http://auth');
+			const auth = WeDeploy.auth();
 			const data = {
 				createdAt: 'createdAt',
 				email: 'email',
@@ -421,6 +427,21 @@ describe('AuthApiHelper', function() {
 					done();
 				});
 		});
+	});
+
+	it('should load current user and set access token cookie', function(done) {
+		globals.document = {
+			cookie: ''
+		};
+		RequestMock.intercept().reply(200, JSON.stringify({}), {
+			'content-type': 'application/json'
+		});
+		WeDeploy.auth()
+			.loadCurrentUser('xyz')
+			.then(() => {
+				assert.strictEqual('access_token=xyz;', globals.document.cookie);
+				done();
+			});
 	});
 
 	describe('onSignIn and onSignOut', function() {

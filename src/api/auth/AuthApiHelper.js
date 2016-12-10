@@ -38,6 +38,16 @@ class AuthApiHelper extends ApiHelper {
 	}
 
 	/**
+	 * Creates access token cookie.
+	 * @param {string} accessToken
+	 */
+	createAccessTokenCookie(accessToken) {
+		if (globals.document) {
+			globals.document.cookie = 'access_token=' + accessToken + ';';
+		}
+	}
+
+	/**
 	 * Creates user.
 	 * @param {!object} data The data to be used to create the user.
 	 * @return {CancellablePromise}
@@ -50,6 +60,15 @@ class AuthApiHelper extends ApiHelper {
 			.post(data)
 			.then(response => assertResponseSucceeded(response))
 			.then(response => this.makeUserAuthFromData(response.body()));
+	}
+
+	/**
+	 * Deletes access token cookie.
+	 */
+	deleteAccessTokenCookie() {
+		if (globals.document) {
+			globals.document.cookie = 'access_token=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+		}
 	}
 
 	/**
@@ -112,6 +131,9 @@ class AuthApiHelper extends ApiHelper {
 				this.currentUser = this.makeUserAuthFromData(data);
 				if (this.storage) {
 					this.storage.set('currentUser', data);
+				}
+				if (this.currentUser.hasToken()) {
+					this.createAccessTokenCookie(this.currentUser.getToken());
 				}
 				return this.currentUser;
 			});
@@ -298,6 +320,7 @@ class AuthApiHelper extends ApiHelper {
 		if (this.storage) {
 			this.storage.remove('currentUser');
 		}
+		this.deleteAccessTokenCookie();
 	}
 }
 
