@@ -427,21 +427,34 @@ describe('AuthApiHelper', function() {
 					done();
 				});
 		});
-	});
 
-	it('should load current user and set access token cookie', function(done) {
-		globals.document = {
-			cookie: ''
-		};
-		RequestMock.intercept().reply(200, JSON.stringify({}), {
-			'content-type': 'application/json'
-		});
-		WeDeploy.auth()
-			.loadCurrentUser('xyz')
-			.then(() => {
-				assert.strictEqual('access_token=xyz;', globals.document.cookie);
-				done();
+		it('should load current user and store current user in local storage', function(done) {
+			const auth = WeDeploy.auth();
+			RequestMock.intercept().reply(200, JSON.stringify({}), {
+				'content-type': 'application/json'
 			});
+			auth
+				.loadCurrentUser('token')
+				.then(() => {
+					assert.strictEqual('token', auth.storage.get('currentUser').token);
+					done();
+				});
+		});
+
+		it('should load current user and set access token cookie', function(done) {
+			globals.document = {
+				cookie: ''
+			};
+			RequestMock.intercept().reply(200, JSON.stringify({}), {
+				'content-type': 'application/json'
+			});
+			WeDeploy.auth()
+				.loadCurrentUser('xyz')
+				.then(() => {
+					assert.strictEqual('access_token=xyz;', globals.document.cookie);
+					done();
+				});
+		});
 	});
 
 	describe('onSignIn and onSignOut', function() {
