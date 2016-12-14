@@ -13,6 +13,12 @@ describe('AuthApiHelper', function() {
 			globals.window = null;
 		} else {
 			globals.window = window;
+			globals.window.localStorage.currentUser = null;
+		}
+		if (typeof document === 'undefined') {
+			globals.document = null;
+		} else {
+			globals.document = document;
 		}
 		RequestMock.teardown();
 	});
@@ -418,6 +424,21 @@ describe('AuthApiHelper', function() {
 					assert.strictEqual('name', user.name);
 					assert.strictEqual('photoUrl', user.photoUrl);
 					assert.strictEqual('token', user.token);
+					done();
+				});
+		});
+
+		it('should load current user and set access token cookie', function(done) {
+			globals.document = {
+				cookie: ''
+			};
+			RequestMock.intercept().reply(200, JSON.stringify({}), {
+				'content-type': 'application/json'
+			});
+			WeDeploy.auth('http://auth')
+				.loadCurrentUser('xyz')
+				.then(() => {
+					assert.strictEqual('access_token=xyz;', globals.document.cookie);
 					done();
 				});
 		});
