@@ -176,7 +176,7 @@ gulp.task('build', function(done) {
 });
 
 function concatSocket(filePath, dest) {
-	return gulp.src(['node_modules/socket.io-client/socket.io.js', filePath])
+	return gulp.src(['node_modules/socket.io-client/dist/socket.io.js', filePath])
 		.pipe(sourcemaps.init({
 			loadMaps: true
 		}))
