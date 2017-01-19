@@ -335,7 +335,7 @@ class AuthApiHelper extends ApiHelper {
 		return this.wedeployClient
 			.url(this.wedeployClient.authUrl_)
 			.path('/oauth/tokeninfo')
-			.auth(token)
+			.param('token', token)
 			.get()
 			.then(response => assertResponseSucceeded(response))
 			.then(response => response.body());

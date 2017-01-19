@@ -527,7 +527,7 @@ describe('AuthApiHelper', function() {
 
 	describe('Verify token', function() {
 		beforeEach(function() {
-			RequestMock.setup('GET', 'http://auth/oauth/tokeninfo');
+			RequestMock.setup('GET', 'http://auth/oauth/tokeninfo?token=token');
 		});
 
 		it('should verify token', function(done) {
@@ -542,6 +542,7 @@ describe('AuthApiHelper', function() {
 				.verifyToken('token')
 				.then((tokeninfo) => {
 					assert.strictEqual('token', tokeninfo.access_token);
+					assert.strictEqual('http://auth/oauth/tokeninfo?token=token', RequestMock.getUrl());
 					done();
 				});
 		});
