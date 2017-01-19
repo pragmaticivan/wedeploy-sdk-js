@@ -55,6 +55,7 @@ describe('AuthApiHelper', function() {
 		const auth = WeDeploy.auth();
 		assert.ok(auth.provider.Google);
 		assert.ok(auth.provider.Github);
+		assert.ok(auth.provider.Facebook);
 	});
 
 	describe('Sign in with redirect', skipForNode_(function() {
