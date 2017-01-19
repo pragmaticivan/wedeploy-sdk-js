@@ -322,6 +322,24 @@ class AuthApiHelper extends ApiHelper {
 		}
 		this.deleteAccessTokenCookie();
 	}
+
+	/**
+	 * Method for verifying tokens. If the provided token has the correct
+	 * format, is not expired, and is properly signed, the method returns the
+	 * decoded token.
+	 * @param {!string} token
+	 * @return {CancellablePromise}
+	 */
+	verifyToken(token) {
+		assertDefAndNotNull(token, 'Token must be specified');
+		return this.wedeployClient
+			.url(this.wedeployClient.authUrl_)
+			.path('/oauth/tokeninfo')
+			.auth(token)
+			.get()
+			.then(response => assertResponseSucceeded(response))
+			.then(response => response.body());
+	}
 }
 
 function assertSupportedProvider(provider) {

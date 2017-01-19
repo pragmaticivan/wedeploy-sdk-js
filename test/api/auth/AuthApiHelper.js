@@ -523,6 +523,42 @@ describe('AuthApiHelper', function() {
 				});
 		});
 	});
+
+	describe('Verify token', function() {
+		beforeEach(function() {
+			RequestMock.setup('GET', 'http://auth/oauth/tokeninfo');
+		});
+
+		it('should verify token', function(done) {
+			const auth = WeDeploy.auth('http://auth');
+			const data = {
+				access_token: 'token'
+			};
+			RequestMock.intercept().reply(200, JSON.stringify(data), {
+				'content-type': 'application/json'
+			});
+			auth
+				.verifyToken('token')
+				.then((tokeninfo) => {
+					assert.strictEqual('token', tokeninfo.access_token);
+					done();
+				});
+		});
+
+		it('should verify token failure', function(done) {
+			const auth = WeDeploy.auth('http://auth');
+			RequestMock.intercept().reply(400);
+			auth
+				.verifyToken('token')
+				.catch(() => done());
+		});
+
+		it('should throws exception if token not specified', function() {
+			assert.throws(function() {
+				WeDeploy.auth('http://auth').verifyToken();
+			}, Error);
+		});
+	});
 });
 
 /**
