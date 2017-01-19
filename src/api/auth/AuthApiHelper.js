@@ -20,10 +20,10 @@ class AuthApiHelper extends ApiHelper {
 	 */
 	constructor(wedeployClient) {
 		super(wedeployClient);
-
 		this.currentUser = null;
 		this.onSignInCallback = null;
 		this.onSignOutCallback = null;
+
 		if (LocalStorageMechanism.isSupported()) {
 			this.storage = new Storage(new LocalStorageMechanism());
 		}
@@ -119,18 +119,11 @@ class AuthApiHelper extends ApiHelper {
 	 * @return {CancellablePromise}
 	 */
 	loadCurrentUser(token) {
-		assertDefAndNotNull(token, 'User token must be specified');
-		return this.wedeployClient
-			.url(this.wedeployClient.authUrl_)
-			.path('/user')
-			.auth(token)
-			.get()
-			.then(response => {
-				var data = response.body();
-				data.token = token;
-				this.currentUser = this.makeUserAuthFromData(data);
+		return this.verifyUser(token)
+			.then(currentUser => {
+				this.currentUser = currentUser;
 				if (this.storage) {
-					this.storage.set('currentUser', data);
+					this.storage.set('currentUser', currentUser);
 				}
 				if (this.currentUser.hasToken()) {
 					this.createAccessTokenCookie(this.currentUser.getToken());
@@ -339,6 +332,28 @@ class AuthApiHelper extends ApiHelper {
 			.get()
 			.then(response => assertResponseSucceeded(response))
 			.then(response => response.body());
+	}
+
+	/**
+	 * Method for verifying user by token. If the provided token has the correct
+	 * format, is not expired, and is properly signed, the method returns the
+	 * user payload.
+	 * @param {!string} token
+	 * @return {CancellablePromise}
+	 */
+	verifyUser(token) {
+		assertDefAndNotNull(token, 'Token must be specified');
+		return this.wedeployClient
+			.url(this.wedeployClient.authUrl_)
+			.path('/user')
+			.auth(token)
+			.get()
+			.then(response => assertResponseSucceeded(response))
+			.then(response => {
+				var data = response.body();
+				data.token = token;
+				return this.makeUserAuthFromData(data);
+			});
 	}
 }
 

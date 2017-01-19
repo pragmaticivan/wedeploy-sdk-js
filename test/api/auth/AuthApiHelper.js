@@ -561,6 +561,42 @@ describe('AuthApiHelper', function() {
 			}, Error);
 		});
 	});
+
+	describe('Verify user', function() {
+		beforeEach(function() {
+			RequestMock.setup('GET', 'http://auth/user');
+		});
+
+		it('should verify user', function(done) {
+			const auth = WeDeploy.auth('http://auth');
+			const data = {
+				name: 'username'
+			};
+			RequestMock.intercept().reply(200, JSON.stringify(data), {
+				'content-type': 'application/json'
+			});
+			auth
+				.verifyUser('token')
+				.then((user) => {
+					assert.strictEqual('username', user.name);
+					done();
+				});
+		});
+
+		it('should verify user failure', function(done) {
+			const auth = WeDeploy.auth('http://auth');
+			RequestMock.intercept().reply(400);
+			auth
+				.verifyUser('token')
+				.catch(() => done());
+		});
+
+		it('should throws exception if token not specified', function() {
+			assert.throws(function() {
+				WeDeploy.auth('http://auth').verifyUser();
+			}, Error);
+		});
+	});
 });
 
 /**
