@@ -21,7 +21,7 @@ describe('WeDeploy Tests', function() {
 
 	it('should socket.io use path from client url', function(done) {
 		WeDeploy.socket(function(url, opts) {
-			assert.strictEqual('domain:8080', url);
+			assert.strictEqual('http://domain:8080', url);
 			assert.deepEqual({
 				forceNew: true,
 				path: '/path/a',
@@ -35,7 +35,7 @@ describe('WeDeploy Tests', function() {
 
 	it('should socket.io ignore path from client url and use from options', function(done) {
 		WeDeploy.socket(function(url, opts) {
-			assert.strictEqual('domain:8080', url);
+			assert.strictEqual('http://domain:8080', url);
 			assert.deepEqual({
 				path: '/new',
 				query: 'url=' + encodeURIComponent('/path/a')

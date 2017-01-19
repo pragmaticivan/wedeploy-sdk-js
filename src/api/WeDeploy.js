@@ -479,7 +479,7 @@ class WeDeploy {
 		opt_options.query = 'url=' + encodeURIComponent(uri.getPathname() + uri.getSearch());
 		opt_options.path = opt_options.path || uri.getPathname();
 
-		return io(uri.getHost(), opt_options);
+		return io(uri.getProtocol() + '//' + uri.getHost(), opt_options);
 	}
 
 	/**
