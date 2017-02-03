@@ -338,20 +338,23 @@ class AuthApiHelper extends ApiHelper {
 	 * Method for verifying user by token. If the provided token has the correct
 	 * format, is not expired, and is properly signed, the method returns the
 	 * user payload.
-	 * @param {!string} token
+	 * @param {!string} tokenOrEmail Either an authorization token,
+	 * or the email.
+	 * @param {string=} opt_password If a email is given as the first param,
+	 * this should be the password.
 	 * @return {CancellablePromise}
 	 */
-	verifyUser(token) {
-		assertDefAndNotNull(token, 'Token must be specified');
+	verifyUser(tokenOrEmail, opt_password) {
+		assertDefAndNotNull(tokenOrEmail, 'Token or email must be specified');
 		return this.wedeployClient
 			.url(this.wedeployClient.authUrl_)
 			.path('/user')
-			.auth(token)
+			.auth(tokenOrEmail, opt_password)
 			.get()
 			.then(response => assertResponseSucceeded(response))
 			.then(response => {
 				var data = response.body();
-				data.token = token;
+				data.token = opt_password ? null : tokenOrEmail;
 				return this.makeUserAuthFromData(data);
 			});
 	}
