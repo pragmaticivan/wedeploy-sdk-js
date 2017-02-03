@@ -16,7 +16,7 @@ class Base64 {
 			return btoa(string);
 		}
 
-		return new Buffer(string.toString(), 'binary');
+		return new Buffer(string.toString(), 'binary').toString('base64');
 	}
 }
 
