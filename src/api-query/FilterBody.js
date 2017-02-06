@@ -18,11 +18,11 @@ class FilterBody {
 	 * @constructor
 	 */
 	constructor(field, operatorOrValue, opt_value) {
-		var obj = {
+		let obj = {
 			operator: core.isDef(opt_value) ? operatorOrValue : '='
 		};
 
-		var value = core.isDef(opt_value) ? opt_value : operatorOrValue;
+		let value = core.isDef(opt_value) ? opt_value : operatorOrValue;
 
 		if (core.isDefAndNotNull(value)) {
 			if (value instanceof Embodied) {
@@ -36,7 +36,6 @@ class FilterBody {
 		} else {
 			this.createBody_('and', []);
 		}
-
 	}
 
 	/**
@@ -72,13 +71,13 @@ class FilterBody {
 	 * @param {...*} filters A variable amount of filters to be composed.
 	 */
 	addMany(operator, ...filters) {
-		for (var i = 0; i < filters.length; i++) {
+		for (let i = 0; i < filters.length; i++) {
 			this.add(operator, filters[i]);
 		}
 	}
 
 	/**
-	 * Creates a new body object, setting the requestd key to the given value.
+	 * Creates a new body object, setting the requested key to the given value.
 	 * @param {string} key The key to set in the new body object
 	 * @param {*} value The value the requested key should have in the new body object.
 	 * @protected

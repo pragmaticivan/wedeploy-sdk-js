@@ -120,7 +120,7 @@ describe('DataApiHelper', function() {
 					.create('collection', {
 						ping: 'pong'
 					})
-					.catch(error => {
+					.catch((error) => {
 						assert.strictEqual('{"error": "Error 500"}', error);
 						done();
 					});
@@ -137,7 +137,7 @@ describe('DataApiHelper', function() {
 					.create('collection', {
 						ping: 'pong'
 					})
-					.then(response => {
+					.then((response) => {
 						assert.strictEqual('{"id": 1, "ping": "pong"}', response);
 						done();
 					});
@@ -159,7 +159,7 @@ describe('DataApiHelper', function() {
 							ping: 'pong2'
 						}
 					])
-					.then(response => {
+					.then((response) => {
 						assert.strictEqual('[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]', response);
 						done();
 					});
@@ -198,7 +198,7 @@ describe('DataApiHelper', function() {
 					.update('collection/242424', {
 						ping: 'pong'
 					})
-					.catch(error => {
+					.catch((error) => {
 						assert.strictEqual('{"error": "Error 500"}', error);
 						done();
 					});
@@ -229,7 +229,7 @@ describe('DataApiHelper', function() {
 					.update('collection/1', {
 						ping: 'pongUpdated'
 					})
-					.then(response => {
+					.then((response) => {
 						assert.strictEqual('{"id": 1, "ping": "pongUpdated"}', response);
 						done();
 					});
@@ -246,7 +246,7 @@ describe('DataApiHelper', function() {
 						ping: 'pongUpdated',
 						newKey: 'newValue'
 					})
-					.then(response => {
+					.then((response) => {
 						assert.strictEqual('{"id": 1, "ping": "pongUpdated", "newKey": "newValue"}', response);
 						done();
 					});
@@ -290,7 +290,7 @@ describe('DataApiHelper', function() {
 					.delete('collection/242424', {
 						ping: 'pong'
 					})
-					.catch(error => {
+					.catch((error) => {
 						assert.strictEqual('{"error": "Error 404"}', error);
 						done();
 					});
@@ -348,7 +348,7 @@ describe('DataApiHelper', function() {
 				.data()
 				.limit(1)
 				.get('collection')
-				.then(response => {
+				.then((response) => {
 					assert.strictEqual('[{"id": 1, "ping": "pong1"}]', response);
 					done();
 				});
@@ -394,7 +394,7 @@ describe('DataApiHelper', function() {
 				.data()
 				.offset(2)
 				.get('food')
-				.then(response => {
+				.then((response) => {
 					assert.strictEqual('[{"id": 1, "ping": "pong1"}]', response);
 					done();
 				});
@@ -1154,7 +1154,7 @@ describe('DataApiHelper', function() {
 				WeDeploy
 					.data()
 					.get('food')
-					.then(response => {
+					.then((response) => {
 						assert.strictEqual('[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]', response);
 						done();
 					});
@@ -1276,7 +1276,5 @@ describe('DataApiHelper', function() {
 				WeDeploy.data().where('type', 'fruit').watch('food');
 			});
 		});
-
 	});
-
 });

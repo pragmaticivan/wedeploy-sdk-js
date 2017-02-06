@@ -1,7 +1,7 @@
 'use strict';
 
-import { core } from 'metal';
 import Uri from 'metal-uri';
+import { core } from 'metal';
 
 /**
  * Class responsible for encapsulate provider information.
@@ -51,11 +51,12 @@ class AuthProvider {
 	}
 
 	/**
-	 * Makes authorization url.
-	 * @return {string=} Authorization url.
+	 * Makes authorization url. An optional authorization URL might be provided.
+	 * @param {string} opt_authUrl Optional authorization URL.
+	 * @return {string} Normalized authorization URL.
 	 */
 	makeAuthorizationUrl(opt_authUrl) {
-		var uri = new Uri(opt_authUrl);
+		let uri = new Uri(opt_authUrl);
 
 		uri.setPathname('/oauth/authorize');
 
@@ -77,7 +78,7 @@ class AuthProvider {
 
 	/**
 	 * Gets provider name.
-	 * @return {string=} Provider name.
+	 * @return {string} Provider name.
 	 */
 	getProvider() {
 		return this.provider;
@@ -85,7 +86,7 @@ class AuthProvider {
 
 	/**
 	 * Gets provider scope.
-	 * @return {string=} String with scopes.
+	 * @return {string} String with scopes.
 	 */
 	getProviderScope() {
 		return this.providerScope;
@@ -93,7 +94,7 @@ class AuthProvider {
 
 	/**
 	 * Gets redirect uri.
-	 * @return {string=}.
+	 * @return {string}.
 	 */
 	getRedirectUri() {
 		return this.redirectUri;
@@ -101,7 +102,7 @@ class AuthProvider {
 
 	/**
 	 * Gets scope.
-	 * @return {string=} String with scopes.
+	 * @return {string} String with scopes.
 	 */
 	getScope() {
 		return this.scope;
@@ -109,7 +110,7 @@ class AuthProvider {
 
 	/**
 	 * Sets provider scope.
-	 * @param {string=} scope Scope string. Separate by space for multiple
+	 * @param {string=} providerScope Scope string. Separate by space for multiple
 	 *   scopes, e.g. "scope1 scope2".
 	 */
 	setProviderScope(providerScope) {
@@ -119,7 +120,7 @@ class AuthProvider {
 
 	/**
 	 * Sets redirect uri.
-	 * @param {string=} redirectUri.
+	 * @param {string} redirectUri The redirect URI to be set to the current instance.
 	 */
 	setRedirectUri(redirectUri) {
 		assertStringIfDefAndNotNull(redirectUri, 'Redirect uri must be a string');
@@ -137,6 +138,11 @@ class AuthProvider {
 	}
 }
 
+/**
+ * Throws an exception if the provided value is defined and not null, but not a string.
+ * @param {!*} value The value to be checked.
+ * @param {!string} errorMessage The message to be provided to the exception.
+ */
 function assertStringIfDefAndNotNull(value, errorMessage) {
 	if (core.isDefAndNotNull(value) && !core.isString(value)) {
 		throw new Error(errorMessage);

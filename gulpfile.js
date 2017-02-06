@@ -1,18 +1,19 @@
 'use strict';
 
-var babel = require('gulp-babel');
-var buildRollup = require('metal-tools-build-rollup');
-var commonJs = require('rollup-plugin-commonjs');
-var concat = require('gulp-concat');
-var gulp = require('gulp');
-var runSequence = require('run-sequence');
-var metal = require('gulp-metal');
-var nodeResolve = require('rollup-plugin-node-resolve');
-var rename = require('gulp-rename');
-var rollupBabel = require('rollup-plugin-babel');
-var sourcemaps = require('gulp-sourcemaps');
+const babel = require('gulp-babel');
+const buildRollup = require('metal-tools-build-rollup');
+const commonJs = require('rollup-plugin-commonjs');
+const concat = require('gulp-concat');
+const eslint = require('rollup-plugin-eslint');
+const gulp = require('gulp');
+const metal = require('gulp-metal');
+const nodeResolve = require('rollup-plugin-node-resolve');
+const rename = require('gulp-rename');
+const rollupBabel = require('rollup-plugin-babel');
+const runSequence = require('run-sequence');
+const sourcemaps = require('gulp-sourcemaps');
 
-var options = {
+let options = {
 	globalName: 'wedeploy',
 	buildSrc: ['src/**/!(node)/*.js', '!src/env/node.js'],
 	bundleFileName: 'api.js',
@@ -100,7 +101,7 @@ gulp.task('ci', function(cb) {
 });
 
 gulp.task('build:node', function() {
-	var nodeOptions = {
+	let nodeOptions = {
 		bundleFileName: 'api.js',
 		dest: 'build/node',
 		globalName: 'wedeploy',
@@ -108,6 +109,7 @@ gulp.task('build:node', function() {
 			format: 'cjs',
 			exports: 'default',
 			plugins: [
+				eslint(),
 				commonJs(),
 				rollupBabel({
 					presets: ['es2015-rollup']
@@ -121,12 +123,13 @@ gulp.task('build:node', function() {
 });
 
 gulp.task('build:es2015', function() {
-	var nodeOptions = {
+	let nodeOptions = {
 		bundleFileName: 'api.js',
 		dest: 'build/es2015',
 		rollupConfig: {
 			format: 'es',
 			plugins: [
+				eslint(),
 				nodeResolve({
 					jsnext: true
 				})

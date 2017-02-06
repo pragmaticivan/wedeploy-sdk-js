@@ -7,6 +7,10 @@ import { MultiMap } from 'metal-structs';
  * Represents a client message (e.g. a request or a response).
  */
 class ClientMessage {
+	/**
+	 * Constructs an {@link ClientMessage} instance.
+	 * @constructor
+	 */
 	constructor() {
 		this.headers_ = new MultiMap();
 	}
@@ -32,6 +36,8 @@ class ClientMessage {
 	 * overwritten, but the new value will be stored as well. The order is preserved.
 	 * @param {string} name
 	 * @param {string} value
+	 * @return {!ClientMessage} Returns the {@link ClientMessage}
+	 *   object itself, so calls can be chained.
 	 * @chainable
 	 */
 	header(name, value) {

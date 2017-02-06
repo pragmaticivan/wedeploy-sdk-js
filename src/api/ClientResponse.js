@@ -8,6 +8,11 @@ import ClientMessage from './ClientMessage';
  * @extends {ClientMessage}
  */
 class ClientResponse extends ClientMessage {
+	/**
+	 * Constructs an {@link ClientResponse} instance.
+	 * @param {!ClientRequest} clientRequest Instance of {@link ClientRequest} object.
+	 * @constructor
+	 */
 	constructor(clientRequest) {
 		super();
 		if (!clientRequest) {

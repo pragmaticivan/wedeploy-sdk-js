@@ -116,7 +116,6 @@ describe('FilterBody', function() {
 				]
 			};
 			assert.deepEqual(body, filterBody.getObject());
-
 		});
 
 		it('should compose filter with multiple others with the given operator', function() {

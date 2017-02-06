@@ -6,13 +6,19 @@ import AjaxTransport from './browser/AjaxTransport';
  * Provides a factory for data transport.
  */
 class TransportFactory {
+	/**
+	 * Constructs an {@link TransportFactory} instance.
+	 * @constructor
+	 */
 	constructor() {
 		this.transports = {};
-		this.transports[TransportFactory.DEFAULT_TRANSPORT_NAME] = TransportFactory[TransportFactory.DEFAULT_TRANSPORT_NAME];
+		this.transports[TransportFactory.DEFAULT_TRANSPORT_NAME] =
+			TransportFactory[TransportFactory.DEFAULT_TRANSPORT_NAME];
 	}
 
 	/**
 	 * Returns {@link TransportFactory} instance.
+	 * @return {!TransportFactory} Instance of TransportFactory
 	 */
 	static instance() {
 		if (!TransportFactory.instance_) {
@@ -27,7 +33,7 @@ class TransportFactory {
 	 * @return {!Transport}
 	 */
 	get(implementationName) {
-		var TransportClass = this.transports[implementationName];
+		let TransportClass = this.transports[implementationName];
 
 		if (!TransportClass) {
 			throw new Error('Invalid transport name: ' + implementationName);

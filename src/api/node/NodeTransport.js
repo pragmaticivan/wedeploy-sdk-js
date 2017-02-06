@@ -16,12 +16,12 @@ class NodeTransport extends Transport {
 	 * @inheritDoc
 	 */
 	send(clientRequest) {
-		var deferred = this.request(
+		let deferred = this.request(
 			clientRequest.url(), clientRequest.method(), clientRequest.body(),
 			clientRequest.headers(), clientRequest.params(), null, false);
 
 		return deferred.then(function(response) {
-			var clientResponse = new ClientResponse(clientRequest);
+			let clientResponse = new ClientResponse(clientRequest);
 			clientResponse.body(response.body);
 			clientResponse.statusCode(response.statusCode);
 			clientResponse.statusText(http.STATUS_CODES[response.statusCode]);
@@ -50,7 +50,7 @@ class NodeTransport extends Transport {
 			url = new Uri(url).addParametersFromMultiMap(opt_params).toString();
 		}
 
-		var options = {
+		let options = {
 			method: method,
 			uri: url
 		};
@@ -72,7 +72,7 @@ class NodeTransport extends Transport {
 			options.timeout = opt_timeout;
 		}
 
-		var connection;
+		let connection;
 
 		return new CancellablePromise((resolve, reject) => {
 			connection = request(options, (error, response) => {

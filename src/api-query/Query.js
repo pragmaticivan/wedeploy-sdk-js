@@ -133,16 +133,17 @@ class Query extends Embodied {
 	 * @param {!Aggregation|string} aggregationOrField Either an
 	 *   {@link Aggregation} instance or the name of the aggregation field.
 	 * @param {string=} opt_operator The aggregation operator.
+	 * @return {Query} Returns the {@link Query} object itself, so calls can be chained.
 	 * @chainnable
 	 */
 	aggregate(name, aggregationOrField, opt_operator) {
-		var aggregation = aggregationOrField;
+		let aggregation = aggregationOrField;
 		if (!(aggregation instanceof Aggregation)) {
 			aggregation = Aggregation.field(aggregationOrField, opt_operator);
 		}
 
-		var field = aggregation.getField();
-		var value = {};
+		let field = aggregation.getField();
+		let value = {};
 		value[field] = {
 			name: name,
 			operator: aggregation.getOperator()
@@ -160,6 +161,7 @@ class Query extends Embodied {
 
 	/**
 	 * Sets this query's type to "count".
+	 * @return {Query} Returns the {@link Query} object itself, so calls can be chained.
 	 * @chainnable
 	 */
 	count() {
@@ -168,6 +170,7 @@ class Query extends Embodied {
 
 	/**
 	 * Sets this query's type to "fetch".
+	 * @return {Query} Returns the {@link Query} object itself, so calls can be chained.
 	 * @chainnable
 	 */
 	fetch() {
@@ -180,6 +183,7 @@ class Query extends Embodied {
 	 *   name of the field to filter by.
 	 * @param {*=} opt_operatorOrValue Either the field's operator or its value.
 	 * @param {*=} opt_value The filter's value.
+	 * @return {Query} Returns the {@link Query} object itself, so calls can be chained.
 	 * @chainnable
 	 */
 	filter(fieldOrFilter, opt_operatorOrValue, opt_value) {
@@ -195,6 +199,7 @@ class Query extends Embodied {
 	 * Sets the query offset.
 	 * @param {number} offset The index of the first entry that should be returned
 	 *   by this query.
+	 * @return {Query} Returns the {@link Query} object itself, so calls can be chained.
 	 * @chainnable
 	 */
 	offset(offset) {
@@ -205,6 +210,7 @@ class Query extends Embodied {
 	/**
 	 * Adds a highlight entry to this {@link Query} instance.
 	 * @param {string} field The field's name.
+	 * @return {Query} Returns the {@link Query} object itself, so calls can be chained.
 	 * @chainnable
 	 */
 	highlight(field) {
@@ -219,6 +225,7 @@ class Query extends Embodied {
 	/**
 	 * Sets the query limit.
 	 * @param {number} limit The max amount of entries that this query should return.
+	 * @return {Query} Returns the {@link Query} object itself, so calls can be chained.
 	 * @chainnable
 	 */
 	limit(limit) {
@@ -238,10 +245,11 @@ class Query extends Embodied {
 	 *   match filter, or the operator that should be used.
 	 * @param {*=} opt_value The value to be used by the filter. Should
 	 *   only be passed if an operator was passed as the second argument.
+	 * @return {Query} Returns the {@link Query} object itself, so calls can be chained.
 	 * @chainnable
 	 */
 	search(filterOrTextOrField, opt_textOrOperator, opt_value) {
-		var filter = filterOrTextOrField;
+		let filter = filterOrTextOrField;
 
 		if (opt_value) {
 			filter = Filter.field(filterOrTextOrField, opt_textOrOperator, opt_value);
@@ -270,13 +278,14 @@ class Query extends Embodied {
 	 * @param {string} field The field that the query should be sorted by.
 	 * @param {string=} opt_direction The direction the sort operation should use.
 	 *   If none is given, "asc" is used by default.
+	 * @return {Query} Returns the {@link Query} object itself, so calls can be chained.
 	 * @chainnable
 	 */
 	sort(field, opt_direction) {
 		if (!this.body_.sort) {
 			this.body_.sort = [];
 		}
-		var sortEntry = {};
+		let sortEntry = {};
 		sortEntry[field] = opt_direction || 'asc';
 		this.body_.sort.push(sortEntry);
 		return this;
@@ -285,6 +294,7 @@ class Query extends Embodied {
 	/**
 	 * Sets the query type.
 	 * @param {string} type The query's type. For example: "count", "fetch".
+	 * @return {Query} Returns the {@link Query} object itself, so calls can be chained.
 	 * @chainnable
 	 */
 	type(type) {

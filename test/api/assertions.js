@@ -16,5 +16,4 @@ describe('assertions', function() {
 			assertBrowserEnvironment(null, 'test message');
 		}, Error);
 	});
-
 });

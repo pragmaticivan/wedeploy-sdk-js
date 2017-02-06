@@ -32,10 +32,11 @@ class Filter extends Embodied {
 	 *   name of the field to filter by.
 	 * @param {*=} opt_operatorOrValue Either the field's operator or its value.
 	 * @param {*=} opt_value The filter's value.
-	 * @chainnable
+	 * @return {Filter} Returns the {@link Filter} object itself, so calls can be chained.
+	 * @chainable
 	 */
 	add(operator, fieldOrFilter, opt_operatorOrValue, opt_value) {
-		var filter = fieldOrFilter ? Filter.toFilter(fieldOrFilter, opt_operatorOrValue, opt_value) : null;
+		let filter = fieldOrFilter ? Filter.toFilter(fieldOrFilter, opt_operatorOrValue, opt_value) : null;
 		this.body_.add(operator, filter);
 		return this;
 	}
@@ -44,7 +45,8 @@ class Filter extends Embodied {
 	 * Adds filters to be composed with this filter using the given operator.
 	 * @param {string} operator
 	 * @param {...*} filters A variable amount of filters to be composed.
-	 * @chainnable
+	 * @return {Filter} Returns the {@link Filter} object itself, so calls can be chained.
+	 * @chainable
 	 */
 	addMany(operator, ...filters) {
 		this.body_.addMany(operator, ...filters);
@@ -57,7 +59,8 @@ class Filter extends Embodied {
 	 *   name of the field to filter by.
 	 * @param {*=} opt_operatorOrValue Either the field's operator or its value.
 	 * @param {*=} opt_value The filter's value.
-	 * @chainnable
+	 * @return {Filter} Returns the {@link Filter} object itself, so calls can be chained.
+	 * @chainable
 	 */
 	and(fieldOrFilter, opt_operatorOrValue, opt_value) {
 		return this.add('and', fieldOrFilter, opt_operatorOrValue, opt_value);
@@ -66,15 +69,14 @@ class Filter extends Embodied {
 	/**
 	 * Returns a {@link Filter} instance that uses the "any" operator.
 	 * @param {string} field The name of the field to filter by.
-	 * @param {!(Array|...*)} values A variable amount of values to be used with
-	 *   the "none" operator. Can be passed either as a single array or as
+	 * @param {Array|*} values A variable amount of values to be used with
+	 *   the "any" operator. Can be passed either as a single array or as
 	 *   separate params.
 	 * @return {!Filter}
 	 * @static
 	 */
-	static any(field) {
-		var values = Array.prototype.slice.call(arguments, 1);
-		if (values.length === 1 && values[0] instanceof Array) {
+	static any(field, ...values) {
+		if (values.length === 1 && Array.isArray(values[0])) {
 			values = values[0];
 		}
 		return new Filter(field, 'any', values);
@@ -117,8 +119,8 @@ class Filter extends Embodied {
 	 * @static
 	 */
 	static distance(field, locationOrCircle, opt_rangeOrDistance) {
-		var location = locationOrCircle;
-		var range = opt_rangeOrDistance;
+		let location = locationOrCircle;
+		let range = opt_rangeOrDistance;
 		if (locationOrCircle instanceof Geo.Circle) {
 			location = locationOrCircle.getCenter();
 			range = Range.to(locationOrCircle.getRadius());
@@ -139,7 +141,7 @@ class Filter extends Embodied {
 	 * @static
 	 */
 	static distanceInternal_(field, location, range) {
-		var value = {
+		let value = {
 			location: Embodied.toBody(location)
 		};
 		range = range.body();
@@ -203,17 +205,17 @@ class Filter extends Embodied {
 	 * @static
 	 */
 	static fuzzyInternal_(operator, fieldOrQuery, opt_queryOrFuzziness, opt_fuzziness) {
-		var arg2IsString = core.isString(opt_queryOrFuzziness);
+		let arg2IsString = core.isString(opt_queryOrFuzziness);
 
-		var value = {
+		let value = {
 			query: arg2IsString ? opt_queryOrFuzziness : fieldOrQuery
 		};
-		var fuzziness = arg2IsString ? opt_fuzziness : opt_queryOrFuzziness;
+		let fuzziness = arg2IsString ? opt_fuzziness : opt_queryOrFuzziness;
 		if (fuzziness) {
 			value.fuzziness = fuzziness;
 		}
 
-		var field = arg2IsString ? fieldOrQuery : Filter.ALL;
+		let field = arg2IsString ? fieldOrQuery : Filter.ALL;
 		return Filter.field(field, operator, value);
 	}
 
@@ -249,8 +251,8 @@ class Filter extends Embodied {
 	 * @static
 	 */
 	static match(fieldOrQuery, opt_query) {
-		var field = core.isString(opt_query) ? fieldOrQuery : Filter.ALL;
-		var query = core.isString(opt_query) ? opt_query : fieldOrQuery;
+		let field = core.isString(opt_query) ? fieldOrQuery : Filter.ALL;
+		let query = core.isString(opt_query) ? opt_query : fieldOrQuery;
 		return Filter.field(field, 'match', query);
 	}
 
@@ -274,8 +276,8 @@ class Filter extends Embodied {
 	 * @static
 	 */
 	static phrase(fieldOrQuery, opt_query) {
-		var field = core.isString(opt_query) ? fieldOrQuery : Filter.ALL;
-		var query = core.isString(opt_query) ? opt_query : fieldOrQuery;
+		let field = core.isString(opt_query) ? fieldOrQuery : Filter.ALL;
+		let query = core.isString(opt_query) ? opt_query : fieldOrQuery;
 		return Filter.field(field, 'phrase', query);
 	}
 
@@ -287,7 +289,7 @@ class Filter extends Embodied {
 	 * @static
 	 */
 	static polygon(field, ...points) {
-		points = points.map(point => Embodied.toBody(point));
+		points = points.map((point) => Embodied.toBody(point));
 		return Filter.field(field, 'gp', points);
 	}
 
@@ -301,8 +303,8 @@ class Filter extends Embodied {
 	 * @static
 	 */
 	static prefix(fieldOrQuery, opt_query) {
-		var field = opt_query ? fieldOrQuery : Filter.ALL;
-		var query = opt_query ? opt_query : fieldOrQuery;
+		let field = opt_query ? fieldOrQuery : Filter.ALL;
+		let query = opt_query ? opt_query : fieldOrQuery;
 		return Filter.field(field, 'prefix', query);
 	}
 
@@ -315,7 +317,7 @@ class Filter extends Embodied {
 	 * @static
 	 */
 	static range(field, rangeOrMin, opt_max) {
-		var range = rangeOrMin;
+		let range = rangeOrMin;
 		if (!(range instanceof Range)) {
 			range = Range.range(rangeOrMin, opt_max);
 		}
@@ -341,8 +343,8 @@ class Filter extends Embodied {
 	 * @static
 	 */
 	static shape(field, ...shapes) {
-		shapes = shapes.map(shape => Embodied.toBody(shape));
-		var value = {
+		shapes = shapes.map((shape) => Embodied.toBody(shape));
+		let value = {
 			type: 'geometrycollection',
 			geometries: shapes
 		};
@@ -359,8 +361,8 @@ class Filter extends Embodied {
 	 * @static
 	 */
 	static similar(fieldOrQuery, query) {
-		var field = core.isString(query) ? fieldOrQuery : Filter.ALL;
-		var value = {
+		let field = core.isString(query) ? fieldOrQuery : Filter.ALL;
+		let value = {
 			query: core.isString(query) ? query : fieldOrQuery
 		};
 		return Filter.field(field, 'similar', value);
@@ -391,15 +393,14 @@ class Filter extends Embodied {
 	/**
 	 * Returns a {@link Filter} instance that uses the "none" operator.
 	 * @param {string} field The name of the field to filter by.
-	 * @param {!(Array|...*)} value A variable amount of values to be used with
+	 * @param {!(Array|*)} value A variable amount of values to be used with
 	 * the "none" operator. Can be passed either as a single array or as
 	 * separate params.
 	 * @return {!Filter}
 	 * @static
 	 */
-	static none(field) {
-		var values = Array.prototype.slice.call(arguments, 1);
-		if (values.length === 1 && values[0] instanceof Array) {
+	static none(field, ...values) {
+		if (values.length === 1 && Array.isArray(values[0])) {
 			values = values[0];
 		}
 		return new Filter(field, 'none', values);
@@ -449,7 +450,8 @@ class Filter extends Embodied {
 	 * the name of the field to filter by.
 	 * @param {*=} opt_operatorOrValue Either the field's operator or its value.
 	 * @param {*=} opt_value The filter's value.
-	 * @chainnable
+	 * @return {Filter} Returns the {@link Filter} object itself, so calls can be chained.
+	 * @chainable
 	 */
 	or(fieldOrFilter, opt_operatorOrValue, opt_value) {
 		return this.add('or', fieldOrFilter, opt_operatorOrValue, opt_value);
@@ -464,7 +466,7 @@ class Filter extends Embodied {
 	 * @return {!Filter}
 	 */
 	static toFilter(fieldOrFilter, opt_operatorOrValue, opt_value) {
-		var filter = fieldOrFilter;
+		let filter = fieldOrFilter;
 		if (!(filter instanceof Filter)) {
 			filter = Filter.field(fieldOrFilter, opt_operatorOrValue, opt_value);
 		}

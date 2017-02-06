@@ -8,14 +8,16 @@ import globals from '../../globals/globals';
 import GoogleAuthProvider from './GoogleAuthProvider';
 import { Storage, LocalStorageMechanism } from 'metal-storage';
 
-import { assertDefAndNotNull, assertFunction, assertObject, assertUserSignedIn, assertBrowserEnvironment, assertResponseSucceeded } from '../assertions';
+import { assertDefAndNotNull, assertFunction, assertObject, assertUserSignedIn,
+	assertBrowserEnvironment, assertResponseSucceeded } from '../assertions';
 
 /**
- * Class responsible for encapsulate auth api calls.
+ * Class responsible for encapsulating auth API calls.
  */
 class AuthApiHelper extends ApiHelper {
 	/**
 	 * Constructs an {@link AuthApiHelper} instance.
+	 * @param {!string} wedeployClient
 	 * @constructor
 	 */
 	constructor(wedeployClient) {
@@ -58,8 +60,8 @@ class AuthApiHelper extends ApiHelper {
 			.url(this.wedeployClient.authUrl_)
 			.path('/users')
 			.post(data)
-			.then(response => assertResponseSucceeded(response))
-			.then(response => this.makeUserAuthFromData(response.body()));
+			.then((response) => assertResponseSucceeded(response))
+			.then((response) => this.makeUserAuthFromData(response.body()));
 	}
 
 	/**
@@ -77,7 +79,7 @@ class AuthApiHelper extends ApiHelper {
 	 * @protected
 	 */
 	getHrefWithoutFragment_() {
-		var location = globals.window.location;
+		let location = globals.window.location;
 		return location.protocol + '//' + location.host + location.pathname + (location.search ? location.search : '');
 	}
 
@@ -88,7 +90,7 @@ class AuthApiHelper extends ApiHelper {
 	 */
 	getRedirectAccessToken_() {
 		if (globals.window) {
-			var fragment = globals.window.location.hash;
+			let fragment = globals.window.location.hash;
 			if (fragment.indexOf('#access_token=') === 0) {
 				return fragment.substring(14);
 			}
@@ -109,8 +111,8 @@ class AuthApiHelper extends ApiHelper {
 			.path('/users', userId)
 			.auth(this.resolveAuthScope().token)
 			.get()
-			.then(response => assertResponseSucceeded(response))
-			.then(response => this.makeUserAuthFromData(response.body()));
+			.then((response) => assertResponseSucceeded(response))
+			.then((response) => this.makeUserAuthFromData(response.body()));
 	}
 
 	/**
@@ -120,7 +122,7 @@ class AuthApiHelper extends ApiHelper {
 	 */
 	loadCurrentUser(token) {
 		return this.verifyUser(token)
-			.then(currentUser => {
+			.then((currentUser) => {
 				this.currentUser = currentUser;
 				if (this.storage) {
 					this.storage.set('currentUser', currentUser);
@@ -139,7 +141,7 @@ class AuthApiHelper extends ApiHelper {
 	 * @protected
 	 */
 	makeUserAuthFromData(data) {
-		var auth = new Auth();
+		let auth = new Auth();
 		auth.setWedeployClient(this.wedeployClient);
 		auth.setCreatedAt(data.createdAt);
 		auth.setEmail(data.email);
@@ -196,14 +198,14 @@ class AuthApiHelper extends ApiHelper {
 	 * storage current user.
 	 */
 	processSignIn_() {
-		var redirectAccessToken = this.getRedirectAccessToken_();
+		let redirectAccessToken = this.getRedirectAccessToken_();
 		if (redirectAccessToken) {
 			this.removeUrlFragmentCompletely_();
 			this.loadCurrentUser(redirectAccessToken)
 				.then(() => this.maybeCallOnSignInCallback_());
 			return;
 		}
-		var currentUser = this.storage && this.storage.get('currentUser');
+		let currentUser = this.storage && this.storage.get('currentUser');
 		if (currentUser) {
 			this.currentUser = this.makeUserAuthFromData(currentUser);
 		}
@@ -241,7 +243,7 @@ class AuthApiHelper extends ApiHelper {
 			.path('/user/recover')
 			.param('email', email)
 			.post()
-			.then(response => assertResponseSucceeded(response));
+			.then((response) => assertResponseSucceeded(response));
 	}
 
 	/**
@@ -261,8 +263,8 @@ class AuthApiHelper extends ApiHelper {
 			.param('username', email)
 			.param('password', password)
 			.get()
-			.then(response => assertResponseSucceeded(response))
-			.then(response => this.loadCurrentUser(response.body().access_token))
+			.then((response) => assertResponseSucceeded(response))
+			.then((response) => this.loadCurrentUser(response.body().access_token))
 			.then((user) => {
 				this.maybeCallOnSignInCallback_();
 				return user;
@@ -296,8 +298,8 @@ class AuthApiHelper extends ApiHelper {
 			.path('/oauth/revoke')
 			.param('token', this.currentUser.token)
 			.get()
-			.then(response => assertResponseSucceeded(response))
-			.then(response => {
+			.then((response) => assertResponseSucceeded(response))
+			.then((response) => {
 				this.maybeCallOnSignOutCallback_();
 				this.unloadCurrentUser_();
 				return response;
@@ -330,8 +332,8 @@ class AuthApiHelper extends ApiHelper {
 			.path('/oauth/tokeninfo')
 			.param('token', token)
 			.get()
-			.then(response => assertResponseSucceeded(response))
-			.then(response => response.body());
+			.then((response) => assertResponseSucceeded(response))
+			.then((response) => response.body());
 	}
 
 	/**
@@ -351,15 +353,23 @@ class AuthApiHelper extends ApiHelper {
 			.path('/user')
 			.auth(tokenOrEmail, opt_password)
 			.get()
-			.then(response => assertResponseSucceeded(response))
-			.then(response => {
-				var data = response.body();
+			.then((response) => assertResponseSucceeded(response))
+			.then((response) => {
+				let data = response.body();
 				data.token = opt_password ? null : tokenOrEmail;
 				return this.makeUserAuthFromData(data);
 			});
 	}
 }
 
+/**
+ * Asserts a passed sign-in provider is supported.
+ * Throws an exception if the passed provider is not one of:
+ * - FacebookAuthProvider.PROVIDER
+ * - GithubAuthProvider.PROVIDER
+ * - GoogleAuthProvider.PROVIDER
+ * @param {!string} provider
+ */
 function assertSupportedProvider(provider) {
 	switch (provider.constructor.PROVIDER) {
 		case FacebookAuthProvider.PROVIDER:

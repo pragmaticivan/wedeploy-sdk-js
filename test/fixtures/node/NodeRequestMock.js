@@ -12,7 +12,7 @@ class NodeRequestMock {
 	}
 
 	static intercept(verb = defVerb_, address = defAddress_, requestBody = undefined, reqMeta = undefined) {
-		var u = url.parse(address);
+		let u = url.parse(address);
 
 		NodeRequestMock.scope = nock(u.protocol + '//' + u.hostname, reqMeta)
 			.intercept(u.path, verb, requestBody);

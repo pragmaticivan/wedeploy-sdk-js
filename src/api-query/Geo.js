@@ -93,7 +93,7 @@ class Line extends Embodied {
 		super();
 		this.body_ = {
 			type: 'linestring',
-			coordinates: points.map(point => Embodied.toBody(point))
+			coordinates: points.map((point) => Embodied.toBody(point))
 		};
 	}
 }
@@ -191,13 +191,14 @@ class Polygon extends Embodied {
 	 * @protected
 	 */
 	addCoordinates_(...points) {
-		this.body_.coordinates.push(points.map(point => Embodied.toBody(point)));
+		this.body_.coordinates.push(points.map((point) => Embodied.toBody(point)));
 	}
 
 	/**
 	 * Adds the given points as a hole inside this polygon.
-	 * @param  {...*} points
-	 * @chainnable
+	 * @param {...*} points
+	 * @return {Polygon} Returns the {@link Polygon} object itself, so calls can be chained.
+	 * @chainable
 	 */
 	hole(...points) {
 		this.addCoordinates_(...points);

@@ -3,10 +3,13 @@
 import Auth from './auth/Auth';
 import { assertDefAndNotNull } from './assertions';
 
+/**
+ * Class responsible for encapsulating API calls.
+ */
 class ApiHelper {
-
 	/**
 	 * Constructs an {@link ApiHelper} instance.
+	 * @param {!WeDeploy} wedeployClient {@link WeDeploy} client reference.
 	 * @constructor
 	 */
 	constructor(wedeployClient) {
@@ -20,6 +23,7 @@ class ApiHelper {
 	 * an authorization token, or the email.
 	 * @param {string=} opt_password If a email is given as the first param,
 	 * this should be the password.
+	 * @return {ApiHelper}
 	 * @chainable
 	 */
 	auth(authOrTokenOrEmail, opt_password) {

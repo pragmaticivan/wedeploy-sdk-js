@@ -386,7 +386,7 @@ describe('Filter', function() {
 			const filter = Filter.exists('age');
 			const body = {
 				age: {
-					operator: 'exists',
+					operator: 'exists'
 				}
 			};
 			assert.deepEqual(body, filter.body());
@@ -494,7 +494,7 @@ describe('Filter', function() {
 			const filter = Filter.missing('age');
 			const body = {
 				age: {
-					operator: 'missing',
+					operator: 'missing'
 				}
 			};
 			assert.deepEqual(body, filter.body());

@@ -208,6 +208,10 @@ class Auth {
 		this.token = token;
 	}
 
+	/**
+	 * Sets the WeDeploy client.
+	 * @param {object} wedeployClient
+	 */
 	setWedeployClient(wedeployClient) {
 		this.wedeployClient = wedeployClient;
 	}
@@ -224,7 +228,7 @@ class Auth {
 			.path('/users', this.getId().toString())
 			.auth(this)
 			.patch(data)
-			.then(response => assertResponseSucceeded(response));
+			.then((response) => assertResponseSucceeded(response));
 	}
 
 	/**
@@ -238,7 +242,7 @@ class Auth {
 			.path('/users', this.getId().toString())
 			.auth(this)
 			.delete()
-			.then(response => assertResponseSucceeded(response));
+			.then((response) => assertResponseSucceeded(response));
 	}
 }
 

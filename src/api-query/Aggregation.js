@@ -195,17 +195,18 @@ class DistanceAggregation extends Aggregation {
 	constructor(field, location, ...ranges) {
 		super(field, 'geoDistance', {});
 		this.value_.location = Embodied.toBody(location);
-		this.value_.ranges = ranges.map(range => range.body());
+		this.value_.ranges = ranges.map((range) => range.body());
 	}
 
 	/**
 	 * Adds a range to this aggregation.
 	 * @param {*} rangeOrFrom
 	 * @param {*=} opt_to
-	 * @chainnable
+	 * @return {Aggregation} Returns the {@link Aggregation} object itself, so calls can be chained.
+	 * @chainable
 	 */
 	range(rangeOrFrom, opt_to) {
-		var range = rangeOrFrom;
+		let range = rangeOrFrom;
 		if (!(range instanceof Range)) {
 			range = Range.range(rangeOrFrom, opt_to);
 		}
@@ -216,7 +217,8 @@ class DistanceAggregation extends Aggregation {
 	/**
 	 * Sets this aggregation's unit.
 	 * @param {string} unit
-	 * @chainnable
+	 * @return {Aggregation} Returns the {@link Aggregation} object itself, so calls can be chained.
+	 * @chainable
 	 */
 	unit(unit) {
 		this.value_.unit = unit;
@@ -238,17 +240,18 @@ class RangeAggregation extends Aggregation {
 	 */
 	constructor(field, ...ranges) {
 		super(field, 'range');
-		this.value_ = ranges.map(range => range.body());
+		this.value_ = ranges.map((range) => range.body());
 	}
 
 	/**
 	 * Adds a range to this aggregation.
 	 * @param {*} rangeOrFrom
 	 * @param {*=} opt_to
-	 * @chainnable
+	 * @return {Aggregation} Returns the {@link Aggregation} object itself, so calls can be chained.
+	 * @chainable
 	 */
 	range(rangeOrFrom, opt_to) {
-		var range = rangeOrFrom;
+		let range = rangeOrFrom;
 		if (!(range instanceof Range)) {
 			range = Range.range(rangeOrFrom, opt_to);
 		}

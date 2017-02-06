@@ -9,6 +9,10 @@ import { MultiMap } from 'metal-structs';
  * @extends {ClientMessage}
  */
 class ClientRequest extends ClientMessage {
+	/**
+	 * Constructs an {@link ClientRequest} instance.
+	 * @constructor
+	 */
 	constructor() {
 		super();
 		this.params_ = new MultiMap();
@@ -18,6 +22,8 @@ class ClientRequest extends ClientMessage {
 	/**
 	 * Fluent getter and setter for with credentials option.
 	 * @param {boolean=} opt_withCredentials
+	 * @return {!ClientRequest|boolean} Returns the {@link ClientMessage} object itself
+	 *   when used as setter, otherwise returns the current value of with credentials option.
 	 * @chainable Chainable when used as setter.
 	 */
 	withCredentials(opt_withCredentials) {
@@ -50,6 +56,8 @@ class ClientRequest extends ClientMessage {
 	 * be overwritten, but new value will be stored as well. The order is preserved.
 	 * @param {string} name
 	 * @param {string} value
+	 * @return {!ClientMessage} Returns the {@link ClientMessage} object itself, so
+	 *   calls can be chained.
 	 * @chainable
 	 */
 	param(name, value) {
@@ -96,7 +104,6 @@ class ClientRequest extends ClientMessage {
 		}
 		return this.url_;
 	}
-
 }
 
 ClientRequest.DEFAULT_METHOD = 'GET';

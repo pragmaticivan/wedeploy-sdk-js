@@ -16,7 +16,7 @@ import Uri from 'metal-uri';
 import { assertUriWithNoPath } from './assertions';
 
 
-var io;
+let io;
 
 // Optimistic initialization of `io` reference from global `globals.window.io`.
 if (typeof globals.window !== 'undefined') {
@@ -29,7 +29,7 @@ if (typeof globals.window !== 'undefined') {
  * ```javascript
  * WeDeploy
  *   .url('/data/tasks')
- *   .post({desc: 'Buy milkl'})
+ *   .post({desc: 'Buy milk'})
  *   .then(function(response) {
  *     // Handle response here.
  *     console.log(response.body())
@@ -64,7 +64,7 @@ class WeDeploy {
 	/**
 	 * Static factory for creating WeDeploy data for the given url.
 	 * @param {string=} opt_dataUrl The url that points to the data services.
-	 * @return @return {data} WeDeploy data instance.
+	 * @return {data} WeDeploy data instance.
 	 */
 	static data(opt_dataUrl) {
 		assertUriWithNoPath(opt_dataUrl, 'The data url should not have a path');
@@ -85,6 +85,7 @@ class WeDeploy {
 	 * an authorization token, or the email.
 	 * @param {string=} opt_password If a email is given as the first param,
 	 * this should be the password.
+	 * @return {WeDeploy} Returns the {@link WeDeploy} object itself, so calls can be chained.
 	 * @chainable
 	 */
 	auth(authOrTokenOrEmail, opt_password) {
@@ -98,6 +99,7 @@ class WeDeploy {
 	/**
 	 * Static factory for creating WeDeploy auth for the given url.
 	 * @param {string=} opt_authUrl The url that points to the auth service.
+	 * @return {!Auth} Returns an {@link Auth} instance.
 	 */
 	static auth(opt_authUrl) {
 		if (core.isString(opt_authUrl)) {
@@ -112,6 +114,7 @@ class WeDeploy {
 	/**
 	 * Sets the body that will be sent with this request.
 	 * @param {*} body
+	 * @return {WeDeploy} Returns the {@link WeDeploy} object itself, so calls can be chained.
 	 * @chainable
 	 */
 	body(body) {
@@ -133,7 +136,7 @@ class WeDeploy {
 		} else if (body instanceof Embodied) {
 			body = body.body();
 		}
-		Object.keys(body || {}).forEach(name => clientRequest.param(name, body[name]));
+		Object.keys(body || {}).forEach((name) => clientRequest.param(name, body[name]));
 	}
 
 	/**
@@ -250,6 +253,7 @@ class WeDeploy {
 	 * will be ignored.
 	 * @param {string} name
 	 * @param {*} value
+	 * @return {WeDeploy} Returns the {@link WeDeploy} object itself, so calls can be chained.
 	 * @chainable
 	 */
 	form(name, value) {
@@ -278,6 +282,7 @@ class WeDeploy {
 	 * not be overwritten, but new value will be stored. The order is preserved.
 	 * @param {string} name Header key.
 	 * @param {*} value Header value.
+	 * @return {WeDeploy} Returns the {@link WeDeploy} object itself, so calls can be chained.
 	 * @chainable
 	 */
 	header(name, value) {
@@ -324,6 +329,7 @@ class WeDeploy {
 	 * be overwritten, but new value will be stored. The order is preserved.
 	 * @param {string} name Param key.
 	 * @param {*} value Param value.
+	 * @return {WeDeploy} Returns the {@link WeDeploy} object itself, so calls can be chained.
 	 * @chainable
 	 */
 	param(name, value) {
@@ -428,6 +434,7 @@ class WeDeploy {
 	/**
 	 * Static factory for creating WeDeploy client for the given url.
 	 * @param {string} url The url that the client should use for sending requests.
+	 * @return {WeDeploy} Returns the {@link WeDeploy} object itself, so calls can be chained.
 	 */
 	static url(url) {
 		return new WeDeploy(url).use(this.customTransport_);
@@ -435,6 +442,7 @@ class WeDeploy {
 
 	/**
 	 * Returns the URL used by this client.
+	 * @return {!string}
 	 */
 	url() {
 		return this.url_;
@@ -444,6 +452,7 @@ class WeDeploy {
 	 * Specifies {@link Transport} implementation.
 	 * @param {!Transport} transport The transport implementation that should be
 	 * used.
+	 * @return {WeDeploy} Returns the {@link WeDeploy} object itself, so calls can be chained.
 	 */
 	use(transport) {
 		this.customTransport_ = transport;
@@ -483,7 +492,9 @@ class WeDeploy {
 	}
 
 	/**
-	 * @param {boolean} opt_withCredentials
+	 * Assigns the passed value to the internal with credentials option.
+	 * @param {boolean} withCredentials
+	 * @return {WeDeploy} Returns the {@link WeDeploy} object itself, so calls can be chained.
 	 */
 	withCredentials(withCredentials) {
 		this.withCredentials_ = !!withCredentials;
