@@ -114,7 +114,7 @@ gulp.task('build:node', function() {
 				})
 			]
 		},
-		skipWarnings: [/Treating .+ as external dependency/],
+		skipWarnings: [/treating .+ as an external dependency/],
 		src: 'src/env/node.js'
 	};
 	return buildRollup(nodeOptions);
