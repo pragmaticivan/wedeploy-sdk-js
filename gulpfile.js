@@ -23,7 +23,7 @@ var options = {
 	},
 	src: 'src/env/browser.js',
 	testNodeSrc: [
-		'test/enviroment/node/env.js',
+		'test/environment/node/env.js',
 		'test/**/*.js',
 		'!test/**/browser/**/*.js'
 	],

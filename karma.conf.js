@@ -14,7 +14,7 @@ module.exports = function (config) {
 			'node_modules/metal/src/**/*.js',
 			'node_modules/metal-*/src/**/*.js',
 			'src/**/!(node)/*.js',
-			'test/enviroment/browser/env.js',
+			'test/environment/browser/env.js',
 			'test/**/*.js'
 		],
 
