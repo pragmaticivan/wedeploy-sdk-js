@@ -303,8 +303,8 @@ class Filter extends Embodied {
 	 * @static
 	 */
 	static prefix(fieldOrQuery, opt_query) {
-		let field = opt_query ? fieldOrQuery : Filter.ALL;
-		let query = opt_query ? opt_query : fieldOrQuery;
+		let field = core.isDefAndNotNull(opt_query) ? fieldOrQuery : Filter.ALL;
+		let query = core.isDefAndNotNull(opt_query) ? opt_query : fieldOrQuery;
 		return Filter.field(field, 'prefix', query);
 	}
 

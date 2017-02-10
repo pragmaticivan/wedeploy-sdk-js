@@ -605,6 +605,19 @@ describe('Filter', function() {
 			assert.deepEqual(body, filter.body());
 			assert.strictEqual('{"name":{"operator":"prefix","value":"myPrefix"}}', filter.toString());
 		});
+
+		it('should create Filter with "prefix" operator treating empty string as a valid query', function() {
+			const filter = Filter.prefix('myPrefix', '');
+
+			const body = {
+				'myPrefix': {
+					operator: 'prefix',
+					value: ''
+				}
+			};
+			assert.deepEqual(body, filter.body());
+			assert.strictEqual('{"myPrefix":{"operator":"prefix","value":""}}', filter.toString());
+		});
 	});
 
 	describe('Filter.range', function() {
