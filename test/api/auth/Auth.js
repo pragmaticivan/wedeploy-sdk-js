@@ -41,11 +41,15 @@ describe('Auth', function() {
 			auth.setName('name');
 			auth.setPassword('password');
 			auth.setPhotoUrl('photoUrl');
+			auth.setSupportedScopes(['admin']);
 			assert.ok(auth.hasCreatedAt());
 			assert.ok(auth.hasId());
 			assert.ok(auth.hasName());
 			assert.ok(auth.hasPassword());
 			assert.ok(auth.hasPhotoUrl());
+			assert.ok(auth.hasSupportedScopes('admin'));
+			assert.ok(auth.hasSupportedScopes(['admin']));
+			assert.ok(!auth.hasSupportedScopes(['admin', 'invalid']));
 			assert.strictEqual('createdAt', auth.createdAt);
 			assert.strictEqual('id', auth.id);
 			assert.strictEqual('name', auth.name);
@@ -56,6 +60,7 @@ describe('Auth', function() {
 			assert.strictEqual('name', auth.getName());
 			assert.strictEqual('password', auth.getPassword());
 			assert.strictEqual('photoUrl', auth.getPhotoUrl());
+			assert.deepEqual(['admin'], auth.getSupportedScopes());
 		});
 	});
 

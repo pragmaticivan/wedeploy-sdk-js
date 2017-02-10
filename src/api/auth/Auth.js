@@ -25,6 +25,7 @@ class Auth {
 		this.id = null;
 		this.name = null;
 		this.photoUrl = null;
+		this.supportedScopes = [];
 		this.wedeployClient = null;
 	}
 
@@ -89,6 +90,14 @@ class Auth {
 	}
 
 	/**
+	 * Gets the supported scopes.
+	 * @return {array.<string>}
+	 */
+	getSupportedScopes() {
+		return this.supportedScopes;
+	}
+
+	/**
 	 * Gets the token.
 	 * @return {string}
 	 */
@@ -145,6 +154,19 @@ class Auth {
 	}
 
 	/**
+	 * Checks if the user has scopes.
+	 * @param {string|array.<string>} scopes Scope or array of scopes to check.
+	 * @return {boolean}
+	 */
+	hasSupportedScopes(scopes) {
+		if (Array.isArray(scopes)) {
+			return scopes.every((val) => this.supportedScopes.indexOf(val) > -1);
+		} else {
+			return this.supportedScopes.indexOf(scopes) > -1;
+		}
+	}
+
+	/**
 	 * Checks if the token is set.
 	 * @return {boolean}
 	 */
@@ -198,6 +220,14 @@ class Auth {
 	 */
 	setPhotoUrl(photoUrl) {
 		this.photoUrl = photoUrl;
+	}
+
+	/**
+	 * Sets supported scopes.
+	 * @param {array.<string>} supportedScopes
+	 */
+	setSupportedScopes(supportedScopes) {
+		this.supportedScopes = supportedScopes;
 	}
 
 	/**

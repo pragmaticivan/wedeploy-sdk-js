@@ -149,6 +149,7 @@ class AuthApiHelper extends ApiHelper {
 		auth.setName(data.name);
 		auth.setPhotoUrl(data.photoUrl);
 		auth.setToken(data.token);
+		auth.setSupportedScopes(data.supportedScopes);
 		return auth;
 	}
 
