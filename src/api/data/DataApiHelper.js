@@ -22,15 +22,6 @@ class DataApiHelper extends ApiHelper {
 	}
 
 	/**
-	 * Asserts is search with filters.
-	 */
-	assertIsSearchWithFilter_() {
-		if (this.isSearch_ && !core.isDef(this.filter_)) {
-			throw Error('It\'s required to have a condition before using an or \'search()\' for the first time.');
-		}
-	}
-
-	/**
 	 * Adds a filter to this request's {@link Query}.
 	 * @param {!Filter|string} fieldOrFilter Either a Filter instance or the
 	 *   name of the field to filter by.
@@ -419,14 +410,18 @@ class DataApiHelper extends ApiHelper {
 	 * @protected
 	 */
 	processAndResetQueryState() {
-		this.assertIsSearchWithFilter_();
+		let filter;
+
 		if (core.isDefAndNotNull(this.filter_)) {
-			if (this.isSearch_) {
-				this.getOrCreateQuery_().search(this.getOrCreateFilter_());
-			} else {
-				this.getOrCreateQuery_().filter(this.getOrCreateFilter_());
-			}
+			filter = this.getOrCreateFilter_();
 		}
+
+		if (this.isSearch_) {
+			this.getOrCreateQuery_().search(filter);
+		} else if (filter) {
+			this.getOrCreateQuery_().filter(filter);
+		}
+
 		const query = this.query_;
 		this.query_ = null;
 		this.filter_ = null;

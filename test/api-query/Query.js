@@ -75,48 +75,51 @@ describe('Query', function() {
 		it('should set the search entry from text', function() {
 			const query = Query.search('foo');
 			const body = {
-				search: [{
+				filter: [{
 					'*': {
 						operator: 'match',
 						value: 'foo'
 					}
-				}]
+				}],
+				type: 'search'
 			};
 			assert.deepEqual(body, query.body());
 
-			const bodyStr = '{"search":[{"*":{"operator":"match","value":"foo"}}]}';
+			const bodyStr = '{"type":"search","filter":[{"*":{"operator":"match","value":"foo"}}]}';
 			assert.strictEqual(bodyStr, query.toString());
 		});
 
 		it('should set the search entry from field and text', function() {
 			const query = Query.search('name', 'foo');
 			const body = {
-				search: [{
+				filter: [{
 					name: {
 						operator: 'match',
 						value: 'foo'
 					}
-				}]
+				}],
+				type: 'search'
 			};
 			assert.deepEqual(body, query.body());
 
-			const bodyStr = '{"search":[{"name":{"operator":"match","value":"foo"}}]}';
+			const bodyStr = '{"type":"search","filter":[{"name":{"operator":"match","value":"foo"}}]}';
 			assert.strictEqual(bodyStr, query.toString());
 		});
 
 		it('should set the search entry from field, operator and text', function() {
 			const query = Query.search('age', '<', 12);
 			const body = {
-				search: [{
+				filter: [{
 					age: {
 						operator: '<',
 						value: 12
 					}
-				}]
+				}],
+				type: 'search'
 			};
 			assert.deepEqual(body, query.body());
 
-			const bodyStr = '{"search":[{"age":{"operator":"<","value":12}}]}';
+			const bodyStr = '{"type":"search","filter":[{"age":{"operator":"<","value":12}}]}';
 			assert.strictEqual(bodyStr, query.toString());
 		});
 
@@ -127,25 +130,25 @@ describe('Query', function() {
 
 		it('should add an existing filter', function() {
 			const query = Query.search(Filter.gt('age', 12));
-			const bodyStr = '{"search":[{"age":{"operator":">","value":12}}]}';
+			const bodyStr = '{"type":"search","filter":[{"age":{"operator":">","value":12}}]}';
 			assert.strictEqual(bodyStr, query.toString());
 		});
 
 		it('should add filter from text', function() {
 			const query = Query.search('foo');
-			const bodyStr = '{"search":[{"*":{"operator":"match","value":"foo"}}]}';
+			const bodyStr = '{"type":"search","filter":[{"*":{"operator":"match","value":"foo"}}]}';
 			assert.strictEqual(bodyStr, query.toString());
 		});
 
 		it('should add filter from field and text', function() {
 			const query = Query.search('name', 'foo');
-			const bodyStr = '{"search":[{"name":{"operator":"match","value":"foo"}}]}';
+			const bodyStr = '{"type":"search","filter":[{"name":{"operator":"match","value":"foo"}}]}';
 			assert.strictEqual(bodyStr, query.toString());
 		});
 
 		it('should add filter from field, operator and text', function() {
 			const query = Query.search('age', '<', 12);
-			const bodyStr = '{"search":[{"age":{"operator":"<","value":12}}]}';
+			const bodyStr = '{"type":"search","filter":[{"age":{"operator":"<","value":12}}]}';
 			assert.strictEqual(bodyStr, query.toString());
 		});
 
@@ -156,7 +159,7 @@ describe('Query', function() {
 				.search('name', 'foo')
 				.search('age', '<', 12);
 
-			const bodyStr = '{"search":[' +
+			const bodyStr = '{"type":"search","filter":[' +
 				'{"age":{"operator":">","value":12}},' +
 				'{"*":{"operator":"match","value":"foo"}},' +
 				'{"name":{"operator":"match","value":"foo"}},' +

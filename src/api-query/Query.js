@@ -235,12 +235,13 @@ class Query extends Embodied {
 
 	/**
 	 * Adds a search to this {@link Query} instance.
-	 * @param {!Filter|string} filterOrTextOrField If no other arguments
+	 * @param {!Filter|string=} filterOrTextOrField If no other arguments
 	 *   are passed to this function, this should be either a {@link Filter}
 	 *   instance or a text to be used in a match filter. In both cases
 	 *   the filter will be applied to all fields. Another option is to
 	 *   pass this as a field name instead, together with other arguments
-	 *   so the filter can be created.
+	 *   so the filter can be created. If the value of this parameter is
+	 *   undefined or null, no filter will be provided to the search query.
 	 * @param {string=} opt_textOrOperator Either a text to be used in a
 	 *   match filter, or the operator that should be used.
 	 * @param {*=} opt_value The value to be used by the filter. Should
@@ -255,18 +256,14 @@ class Query extends Embodied {
 			filter = Filter.field(filterOrTextOrField, opt_textOrOperator, opt_value);
 		} else if (opt_textOrOperator) {
 			filter = Filter.match(filterOrTextOrField, opt_textOrOperator);
-		} else if (!(filter instanceof Filter)) {
+		} else if (filter && !(filter instanceof Filter)) {
 			filter = Filter.match(filterOrTextOrField);
 		}
 
-		if (!this.body_.search) {
-			this.body_.search = [];
-		}
+		this.type('search');
 
-		if (core.isDefAndNotNull(filterOrTextOrField)) {
-			this.body_.search.push(filter.body());
-		} else {
-			this.body_.search.push({});
+		if (filter) {
+			this.filter(filter);
 		}
 
 		return this;

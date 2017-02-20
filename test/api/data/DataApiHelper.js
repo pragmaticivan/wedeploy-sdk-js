@@ -1015,20 +1015,28 @@ describe('DataApiHelper', function() {
 					data.search(null);
 				}, Error);
 			});
-
-			it('should build the query without any conditional on search and throws an error', function() {
-				const data = WeDeploy.data();
-				assert.throws(function() {
-					data.search('collection');
-				}, Error);
-			});
 		});
 
 		context('when using valid params', function() {
+			it('should send search request when no filters are provided', function(done) {
+				RequestMock.intercept(
+					'GET',
+					'http://localhost/food?type=search'
+				).reply(200, '{"total":1,"highlights":{"2":{}},"documents":[{"id":2,"ping":"pong1"}],"scores":{"2":0.13102644681930542},"queryTime":1}');
+
+				WeDeploy
+					.data()
+					.search('food')
+					.then(function(response) {
+						assert.strictEqual('{"total":1,"highlights":{"2":{}},"documents":[{"id":2,"ping":"pong1"}],"scores":{"2":0.13102644681930542},"queryTime":1}', response);
+						done();
+					});
+			});
+
 			it('should send request with query search in the body', function(done) {
 				RequestMock.intercept(
 					'GET',
-					'http://localhost/food?search=%5B%7B%22and%22%3A%5B%7B' +
+					'http://localhost/food?type=search&filter=%5B%7B%22and%22%3A%5B%7B' +
 					'%22name%22%3A%7B%22operator%22%3A%22%3D%22%2C%22value%22%3A' +
 					'%22foo%22%7D%7D%2C%7B%22name%22%3A%7B%22operator%22%3A%22%3D%22%2C' +
 					'%22value%22%3A%22bar%22%7D%7D%5D%7D%5D'
@@ -1055,7 +1063,7 @@ describe('DataApiHelper', function() {
 
 				const queryBody = {
 					body_: {
-						search: [
+						filter: [
 							{
 								and: [
 									{
@@ -1072,7 +1080,8 @@ describe('DataApiHelper', function() {
 									}
 								]
 							}
-						]
+						],
+						type: 'search'
 					}
 				};
 				assert.deepEqual(queryBody, query);
@@ -1084,7 +1093,7 @@ describe('DataApiHelper', function() {
 				const data = WeDeploy.data();
 
 				RequestMock
-					.intercept('GET', 'http://localhost/food?search=%5B%7B%22and%22%3A%5B%7B%22type%22%3A%7B%22operator%22%3A%22%3D%22%2C%22value%22%3A%22fruit%22%7D%7D%5D%7D%5D')
+					.intercept('GET', 'http://localhost/food?type=search&filter=%5B%7B%22and%22%3A%5B%7B%22type%22%3A%7B%22operator%22%3A%22%3D%22%2C%22value%22%3A%22fruit%22%7D%7D%5D%7D%5D')
 					.reply(200);
 
 				data
@@ -1094,7 +1103,7 @@ describe('DataApiHelper', function() {
 						RequestMock.teardown();
 						RequestMock.setup();
 
-						const requestUrlWithNoQuery = 'http://localhost/food';
+						const requestUrlWithNoQuery = 'http://localhost/food?type=search';
 
 						RequestMock.intercept('GET', requestUrlWithNoQuery).reply(200);
 
@@ -1111,7 +1120,7 @@ describe('DataApiHelper', function() {
 		context('when using multiple searches with different data clients', function() {
 			it('should not aggregate the previous query into the next fetch', function(done) {
 				RequestMock
-					.intercept('GET', 'http://localhost/food?search=%5B%7B%22and%22%3A%5B%7B%22type%22%3A%7B%22operator%22%3A%22%3D%22%2C%22value%22%3A%22fruit%22%7D%7D%5D%7D%5D')
+					.intercept('GET', 'http://localhost/food?type=search&filter=%5B%7B%22and%22%3A%5B%7B%22type%22%3A%7B%22operator%22%3A%22%3D%22%2C%22value%22%3A%22fruit%22%7D%7D%5D%7D%5D')
 					.reply(200);
 
 				WeDeploy.data()
@@ -1121,7 +1130,7 @@ describe('DataApiHelper', function() {
 						RequestMock.teardown();
 						RequestMock.setup();
 
-						const requestUrlWithNoQuery = 'http://localhost/food';
+						const requestUrlWithNoQuery = 'http://localhost/food?type=search';
 
 						RequestMock.intercept('GET', requestUrlWithNoQuery).reply(200);
 
