@@ -276,6 +276,36 @@ class DataApiHelper extends ApiHelper {
 	}
 
 	/**
+	 * Replaces the attributes of a document form the passed-in object and saves
+	 * the record. If the object is invalid, the saving will fail and an error
+	 * object will be returned.
+	 *
+	 * ```javascript
+	 * var data = WeDeploy.data('http://demodata.wedeploy.io');
+	 *
+	 * data.replace('movies/1019112353', {'title'=> 'Star Wars: Episode I'})
+	 * 		 .then(function(movie){
+	 * 			 console.log(movie)
+	 *     });
+	 * ```
+	 * @param {string} doc Key used to update the document.
+	 * @param {Object} data Attributes on the object that is to be updated.
+	 * @return {!CancellablePromise}
+	 */
+	replace(doc, data) {
+		assertDefAndNotNull(doc, 'Document key must be specified.');
+		assertObject(data, 'Data must be specified.');
+
+		return this.wedeployClient
+			.url(this.wedeployClient.dataUrl_)
+			.auth(this.helperAuthScope)
+			.path(doc)
+			.put(data)
+			.then((response) => assertResponseSucceeded(response))
+			.then((response) => response.body());
+	}
+
+	/**
 	 * Update the attributes of a document form the passed-in object and saves
 	 * the record. If the object is invalid, the saving will fail and an error
 	 * object will be returned.
@@ -288,19 +318,19 @@ class DataApiHelper extends ApiHelper {
 	 * 			 console.log(movie)
 	 *     });
 	 * ```
-	 * @param {string} document Key used to update the document.
+	 * @param {string} doc Key used to update the document.
 	 * @param {Object} data Attributes on the object that is to be updated.
 	 * @return {!CancellablePromise}
 	 */
-	update(document, data) {
-		assertDefAndNotNull(document, 'Document key must be specified.');
+	update(doc, data) {
+		assertDefAndNotNull(doc, 'Document key must be specified.');
 		assertObject(data, 'Data must be specified.');
 
 		return this.wedeployClient
 			.url(this.wedeployClient.dataUrl_)
 			.auth(this.helperAuthScope)
-			.path(document)
-			.put(data)
+			.path(doc)
+			.patch(data)
 			.then((response) => assertResponseSucceeded(response))
 			.then((response) => response.body());
 	}

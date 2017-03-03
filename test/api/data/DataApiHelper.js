@@ -169,7 +169,7 @@ describe('DataApiHelper', function() {
 
 	describe('.update()', function() {
 		beforeEach(function() {
-			RequestMock.setup('PUT', 'http://localhost/collection/1');
+			RequestMock.setup('PATCH', 'http://localhost/collection/1');
 		});
 
 		context('when using invalid params', function() {
@@ -190,7 +190,7 @@ describe('DataApiHelper', function() {
 
 		context('when updating and it returns an error', function() {
 			it('should fail updating because of an server error ', function(done) {
-				RequestMock.intercept('PUT', 'http://localhost/collection/242424')
+				RequestMock.intercept('PATCH', 'http://localhost/collection/242424')
 					.reply(500, '{"error": "Error 500"}');
 
 				WeDeploy
@@ -205,7 +205,7 @@ describe('DataApiHelper', function() {
 			});
 
 			it('should fail updating because the row doesn\'t exist', function(done) {
-				RequestMock.intercept('PUT', 'http://localhost/collection/242424')
+				RequestMock.intercept('PATCH', 'http://localhost/collection/242424')
 					.reply(404, '{"error": "Error 404"}');
 
 				WeDeploy
@@ -247,6 +247,93 @@ describe('DataApiHelper', function() {
 						newKey: 'newValue'
 					})
 					.then((response) => {
+						assert.strictEqual('{"id": 1, "ping": "pongUpdated", "newKey": "newValue"}', response);
+						done();
+					});
+			});
+		});
+	});
+
+	describe('.replace()', function() {
+		beforeEach(function() {
+			RequestMock.setup('PUT', 'http://localhost/collection/1');
+		});
+
+		context('when using invalid params', function() {
+			it('should fail trying to replacing data without specifying the collection', function() {
+				assert.throws(function() {
+					WeDeploy.data().replace(null, {
+						ping: 'pong'
+					});
+				}, Error);
+			});
+
+			it('should fail trying to replace data without specifying the data param', function() {
+				assert.throws(function() {
+					WeDeploy.data().update('collection', null);
+				}, Error);
+			});
+		});
+
+		context('when replacing and it returns an error', function() {
+			it('should fail replacing because of an server error ', function(done) {
+				RequestMock.intercept('PUT', 'http://localhost/collection/242424')
+					.reply(500, '{"error": "Error 500"}');
+
+				WeDeploy
+					.data()
+					.replace('collection/242424', {
+						ping: 'pong'
+					})
+					.catch(error => {
+						assert.strictEqual('{"error": "Error 500"}', error);
+						done();
+					});
+			});
+
+			it('should fail replacing because the row doesn\'t exist', function(done) {
+				RequestMock.intercept('PUT', 'http://localhost/collection/242424')
+					.reply(404, '{"error": "Error 404"}');
+
+				WeDeploy
+					.data()
+					.replace('collection/242424', {
+						ping: 'pong'
+					})
+					.catch(error => {
+						assert.strictEqual('{"error": "Error 404"}', error);
+						done();
+					});
+			});
+		});
+
+		context('when replacing with one object', function() {
+			it('should replace an object', function(done) {
+				RequestMock.intercept().reply(200, '{"id": 1, "ping": "pongUpdated"}');
+
+				WeDeploy
+					.data()
+					.replace('collection/1', {
+						ping: 'pongUpdated'
+					})
+					.then(response => {
+						assert.strictEqual('{"id": 1, "ping": "pongUpdated"}', response);
+						done();
+					});
+			});
+		});
+
+		context('when replacing with one object and a new key', function() {
+			it('should replace a value and add the new key to the object', function(done) {
+				RequestMock.intercept().reply(200, '{"id": 1, "ping": "pongUpdated", "newKey": "newValue"}');
+
+				WeDeploy
+					.data()
+					.replace('collection/1', {
+						ping: 'pongUpdated',
+						newKey: 'newValue'
+					})
+					.then(response => {
 						assert.strictEqual('{"id": 1, "ping": "pongUpdated", "newKey": "newValue"}', response);
 						done();
 					});
