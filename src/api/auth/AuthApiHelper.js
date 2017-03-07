@@ -142,14 +142,16 @@ class AuthApiHelper extends ApiHelper {
 	 */
 	makeUserAuthFromData(data) {
 		let auth = new Auth();
+		let properties = {};
+		Object.keys(data).forEach((key) => {
+			properties[key] = {
+				enumerable: true,
+				value: data[key],
+				writable: true
+			};
+		});
+		Object.defineProperties(auth, properties);
 		auth.setWedeployClient(this.wedeployClient);
-		auth.setCreatedAt(data.createdAt);
-		auth.setEmail(data.email);
-		auth.setId(data.id);
-		auth.setName(data.name);
-		auth.setPhotoUrl(data.photoUrl);
-		auth.setToken(data.token);
-		auth.setSupportedScopes(data.supportedScopes);
 		return auth;
 	}
 

@@ -410,7 +410,8 @@ describe('AuthApiHelper', function() {
 				email: 'email',
 				id: 'id',
 				name: 'name',
-				photoUrl: 'photoUrl'
+				photoUrl: 'photoUrl',
+				extra: 'extra'
 			};
 			RequestMock.intercept().reply(200, JSON.stringify(data), {
 				'content-type': 'application/json'
@@ -425,6 +426,7 @@ describe('AuthApiHelper', function() {
 					assert.strictEqual('name', user.name);
 					assert.strictEqual('photoUrl', user.photoUrl);
 					assert.strictEqual('token', user.token);
+					assert.strictEqual('extra', user.extra);
 					done();
 				});
 		});
