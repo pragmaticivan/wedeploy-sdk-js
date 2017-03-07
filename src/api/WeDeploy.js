@@ -218,7 +218,11 @@ class WeDeploy {
 		} else if (body instanceof Embodied) {
 			clientRequest.body(body.toString());
 		} else if (WeDeploy.isContentTypeJson(clientRequest)) {
-			clientRequest.body(JSON.stringify(clientRequest.body()));
+			let body = clientRequest.body();
+			if (core.isDefAndNotNull(body)) {
+				body = JSON.stringify(body);
+				clientRequest.body(body);
+			}
 		}
 
 		this.encodeParams_(clientRequest);
