@@ -7,6 +7,7 @@ import GithubAuthProvider from './GithubAuthProvider';
 import globals from '../../globals/globals';
 import GoogleAuthProvider from './GoogleAuthProvider';
 import { Storage, LocalStorageMechanism } from 'metal-storage';
+import { isObject } from 'metal';
 
 import { assertDefAndNotNull, assertFunction, assertObject, assertUserSignedIn,
 	assertBrowserEnvironment, assertResponseSucceeded } from '../assertions';
@@ -142,15 +143,17 @@ class AuthApiHelper extends ApiHelper {
 	 */
 	makeUserAuthFromData(data) {
 		let auth = new Auth();
-		let properties = {};
-		Object.keys(data).forEach((key) => {
-			properties[key] = {
-				enumerable: true,
-				value: data[key],
-				writable: true
-			};
-		});
-		Object.defineProperties(auth, properties);
+		if (isObject(data)) {
+			let properties = {};
+			Object.keys(data).forEach((key) => {
+				properties[key] = {
+					enumerable: true,
+					value: data[key],
+					writable: true
+				};
+			});
+			Object.defineProperties(auth, properties);
+		}
 		auth.setWedeployClient(this.wedeployClient);
 		return auth;
 	}
