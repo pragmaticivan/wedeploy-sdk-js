@@ -80,6 +80,19 @@ describe('WeDeploy Tests', function() {
 			});
 	});
 
+	it('should send DELETE request when body is null and content type is json', function(done) {
+		RequestMock.intercept('DELETE', 'http://localhost/url', '').reply(200);
+
+		WeDeploy.url('http://localhost/url')
+			.delete()
+			.then(function(response) {
+				assert.strictEqual('http://localhost/url', response.request().url());
+				assert.strictEqual('DELETE', response.request().method());
+				assert.strictEqual(null, response.request().body());
+				done();
+			});
+	});
+
 	it('should send GET request', function(done) {
 		RequestMock.intercept('GET', 'http://localhost/url').reply(200);
 		WeDeploy.url('http://localhost/url').get().then(function(response) {
