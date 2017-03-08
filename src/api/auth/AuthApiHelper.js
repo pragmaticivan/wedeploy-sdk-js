@@ -57,9 +57,17 @@ class AuthApiHelper extends ApiHelper {
 	 */
 	createUser(data) {
 		assertObject(data, 'User data must be specified as object');
-		return this.wedeployClient
+
+		let request = this.wedeployClient
 			.url(this.wedeployClient.authUrl_)
-			.path('/users')
+			.path('/users');
+
+		let authScope = this.resolveAuthScope();
+		if (authScope) {
+			request.auth(authScope.token);
+		}
+
+		return request
 			.post(data)
 			.then((response) => assertResponseSucceeded(response))
 			.then((response) => this.makeUserAuthFromData(response.body()));

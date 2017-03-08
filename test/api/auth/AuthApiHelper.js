@@ -217,6 +217,18 @@ describe('AuthApiHelper', function() {
 				});
 		});
 
+		it('should call create user successfully 123', function(done) {
+			const auth = WeDeploy.auth('http://auth');
+			RequestMock.intercept('POST', 'http://auth/users').reply(200);
+			auth.auth('token1');
+			auth
+				.createUser({})
+				.then((user) => {
+					assert.strictEqual(getAuthorizationHeader_(), 'Bearer token1');
+					done();
+				});
+		});
+
 		it('should call create user unsuccessfully', function(done) {
 			const auth = WeDeploy.auth();
 			RequestMock.intercept().reply(400);
