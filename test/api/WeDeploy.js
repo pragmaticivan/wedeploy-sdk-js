@@ -353,11 +353,6 @@ describe('WeDeploy Tests', function() {
 	});
 
 	it('should support FormData as request body', function(done) {
-		if (typeof window === 'undefined') {
-			done();
-			return;
-		}
-
 		RequestMock.intercept('POST', 'http://localhost/url').reply(200);
 		const formData = new FormData();
 		WeDeploy.url('http://localhost/url').post(formData).then(function(response) {
@@ -408,11 +403,6 @@ describe('WeDeploy Tests', function() {
 	});
 
 	it('should send data passed through "form" method as FormData object via the body', function(done) {
-		if (typeof window === 'undefined') {
-			done();
-			return;
-		}
-
 		RequestMock.intercept('POST', 'http://localhost/url').reply(200);
 		WeDeploy.url('http://localhost/url').form('age', 12).form('weight', 100).post().then(function(response) {
 			const body = response.request().body();
@@ -422,22 +412,7 @@ describe('WeDeploy Tests', function() {
 		});
 	});
 
-	it('should not allow FormData when it is not implemented (such as on Node)', function() {
-		if (typeof window !== 'undefined') {
-			return;
-		}
-
-		assert.throws(function() {
-			WeDeploy.url('http://localhost/url').form('a', 'b');
-		}, Error);
-	});
-
 	it('should not send data passed through "form" method via the body if the body is already set', function(done) {
-		if (typeof window === 'undefined') {
-			done();
-			return;
-		}
-
 		RequestMock.intercept('POST', 'http://localhost/url').reply(200);
 		WeDeploy.url('http://localhost/url').form('age', 12).post({}).then(function(response) {
 			const body = response.request().body();

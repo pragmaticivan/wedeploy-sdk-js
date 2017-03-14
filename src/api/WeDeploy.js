@@ -5,6 +5,7 @@ import { core } from 'metal';
 import Auth from './auth/Auth';
 import AuthApiHelper from './auth/AuthApiHelper';
 import DataApiHelper from './data/DataApiHelper';
+import EmailApiHelper from './email/EmailApiHelper';
 import Base64 from '../crypt/Base64';
 import Embodied from '../api-query/Embodied';
 import Query from '../api-query/Query';
@@ -17,10 +18,16 @@ import { assertUriWithNoPath } from './assertions';
 
 
 let io;
+let FormData;
 
 // Optimistic initialization of `io` reference from global `globals.window.io`.
 if (typeof globals.window !== 'undefined') {
 	io = globals.window.io;
+}
+
+// Optimistic initialization of `FormData` reference from global `globals.window.FormData`.
+if (typeof globals.window !== 'undefined') {
+	FormData = globals.window.FormData;
 }
 
 /**
@@ -77,6 +84,24 @@ class WeDeploy {
 		}
 		WeDeploy.data_.auth(WeDeploy.auth().currentUser);
 		return WeDeploy.data_;
+	}
+
+	/**
+	 * Static factory for creating WeDeploy email for the given url.
+	 * @param {string=} opt_emailUrl The url that points to the email services.
+	 * @return {data} WeDeploy email instance.
+	 */
+	static email(opt_emailUrl) {
+		assertUriWithNoPath(opt_emailUrl, 'The email url should not have a path');
+
+		if (core.isString(opt_emailUrl)) {
+			WeDeploy.emailUrl_ = opt_emailUrl;
+		}
+		if (!WeDeploy.email_) {
+			WeDeploy.email_ = new EmailApiHelper(WeDeploy);
+		}
+		WeDeploy.email_.auth(WeDeploy.auth().currentUser);
+		return WeDeploy.email_;
 	}
 
 	/**
@@ -436,6 +461,14 @@ class WeDeploy {
 	}
 
 	/**
+	 * Sets the FormData
+	 * @param {Object} formData implementation object.
+	 */
+	static formData(formData) {
+		FormData = formData;
+	}
+
+	/**
 	 * Static factory for creating WeDeploy client for the given url.
 	 * @param {string} url The url that the client should use for sending requests.
 	 * @return {WeDeploy} Returns the {@link WeDeploy} object itself, so calls can be chained.
@@ -508,7 +541,9 @@ class WeDeploy {
 
 WeDeploy.auth_ = null;
 WeDeploy.data_ = null;
+WeDeploy.email_ = null;
 WeDeploy.authUrl_ = '';
 WeDeploy.dataUrl_ = '';
+WeDeploy.emailUrl_ = '';
 
 export default WeDeploy;
