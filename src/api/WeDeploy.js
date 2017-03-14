@@ -16,9 +16,8 @@ import { MultiMap } from 'metal-structs';
 import Uri from 'metal-uri';
 import { assertUriWithNoPath } from './assertions';
 
-
 let io;
-let FormData;
+let FormDataImpl;
 
 // Optimistic initialization of `io` reference from global `globals.window.io`.
 if (typeof globals.window !== 'undefined') {
@@ -27,7 +26,7 @@ if (typeof globals.window !== 'undefined') {
 
 // Optimistic initialization of `FormData` reference from global `globals.window.FormData`.
 if (typeof globals.window !== 'undefined') {
-	FormData = globals.window.FormData;
+	FormDataImpl = globals.window.FormData;
 }
 
 /**
@@ -227,7 +226,7 @@ class WeDeploy {
 		let body = clientRequest.body();
 
 		if (core.isElement(body)) {
-			body = new FormData(body);
+			body = new FormDataImpl(body);
 			clientRequest.body(body);
 		}
 
@@ -238,7 +237,7 @@ class WeDeploy {
 			body = null;
 		}
 
-		if (typeof FormData !== 'undefined' && body instanceof FormData) {
+		if (typeof FormDataImpl !== 'undefined' && body instanceof FormDataImpl) {
 			clientRequest.headers().remove('content-type');
 		} else if (body instanceof Embodied) {
 			clientRequest.body(body.toString());
@@ -286,12 +285,12 @@ class WeDeploy {
 	 * @chainable
 	 */
 	form(name, value) {
-		if (typeof FormData === 'undefined') {
+		if (typeof FormDataImpl === 'undefined') {
 			throw new Error('form() is only available when FormData API is available.');
 		}
 
 		if (!this.formData_) {
-			this.formData_ = new FormData();
+			this.formData_ = new FormDataImpl();
 		}
 		this.formData_.append(name, value);
 		return this;
@@ -465,7 +464,7 @@ class WeDeploy {
 	 * @param {Object} formData implementation object.
 	 */
 	static formData(formData) {
-		FormData = formData;
+		FormDataImpl = formData;
 	}
 
 	/**
