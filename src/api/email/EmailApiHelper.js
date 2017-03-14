@@ -14,7 +14,7 @@ class EmailApiHelper extends ApiHelper {
 	 */
 	constructor(wedeployClient) {
 		super(wedeployClient);
-		this.params_ = {};
+		this.params = {};
 	}
 
 	/**
@@ -24,9 +24,9 @@ class EmailApiHelper extends ApiHelper {
 	 * @chainable
 	 */
 	from(from) {
-		assertDefAndNotNull(from, '"from" must be specified');
+		assertDefAndNotNull(from, 'Parameter "from" must be specified');
 
-		this.params_.from = from;
+		this.params.from = from;
 
 		return this;
 	}
@@ -38,9 +38,9 @@ class EmailApiHelper extends ApiHelper {
 	 * @chainable
 	 */
 	bcc(bcc) {
-		assertDefAndNotNull(bcc, '"bcc" must be specified');
+		assertDefAndNotNull(bcc, 'Parameter "bcc" must be specified');
 
-		this.params_.bcc = bcc;
+		this.params.bcc = bcc;
 
 		return this;
 	}
@@ -52,9 +52,9 @@ class EmailApiHelper extends ApiHelper {
 	 * @chainable
 	 */
 	cc(cc) {
-		assertDefAndNotNull(cc, '"cc" must be specified');
+		assertDefAndNotNull(cc, 'Parameter "cc" must be specified');
 
-		this.params_.cc = cc;
+		this.params.cc = cc;
 
 		return this;
 	}
@@ -66,9 +66,9 @@ class EmailApiHelper extends ApiHelper {
 	 * @chainable
 	 */
 	message(message) {
-		assertDefAndNotNull(message, '"message" must be specified');
+		assertDefAndNotNull(message, 'Parameter "message" must be specified');
 
-		this.params_.message = message;
+		this.params.message = message;
 
 		return this;
 	}
@@ -80,9 +80,9 @@ class EmailApiHelper extends ApiHelper {
 	 * @chainable
 	 */
 	priority(priority) {
-		assertDefAndNotNull(priority, '"priority" must be specified');
+		assertDefAndNotNull(priority, 'Parameter "priority" must be specified');
 
-		this.params_.priority = priority;
+		this.params.priority = priority;
 
 		return this;
 	}
@@ -94,9 +94,9 @@ class EmailApiHelper extends ApiHelper {
 	 * @chainable
 	 */
 	replyTo(replyTo) {
-		assertDefAndNotNull(replyTo, '"replyTo" must be specified');
+		assertDefAndNotNull(replyTo, 'Parameter "replyTo" must be specified');
 
-		this.params_.replyTo = replyTo;
+		this.params.replyTo = replyTo;
 
 		return this;
 	}
@@ -108,9 +108,9 @@ class EmailApiHelper extends ApiHelper {
 	 * @chainable
 	 */
 	to(to) {
-		assertDefAndNotNull(to, '"to" must be specified');
+		assertDefAndNotNull(to, 'Parameter "to" must be specified');
 
-		this.params_.to = to;
+		this.params.to = to;
 
 		return this;
 	}
@@ -122,9 +122,9 @@ class EmailApiHelper extends ApiHelper {
 	 * @chainable
 	 */
 	subject(subject) {
-		assertDefAndNotNull(subject, '"subject" must be specified');
+		assertDefAndNotNull(subject, 'Parameter "subject" must be specified');
 
-		this.params_.subject = subject;
+		this.params.subject = subject;
 
 		return this;
 	}
@@ -135,14 +135,16 @@ class EmailApiHelper extends ApiHelper {
 	 */
 	send() {
 		const client = this.wedeployClient
-			.url(this.wedeployClient.emailUrl_);
-
-		const clientWithParams = this.setParams_(client);
-		this.params_ = null;
-
-		return clientWithParams
+			.url(this.wedeployClient.emailUrl_)
 			.auth(this.helperAuthScope)
-			.path(this.emailPath_())
+			.path('emails');
+
+		Object.keys(this.params)
+			.forEach((key) => client.form(key, this.params[key]));
+
+		this.params = {};
+
+		return client
 			.post()
 			.then((response) => assertResponseSucceeded(response))
 			.then((response) => response.body());
@@ -154,54 +156,16 @@ class EmailApiHelper extends ApiHelper {
 	 * @return {!CancellablePromise}
 	 */
 	status(emailId) {
-		assertDefAndNotNull(emailId, '"emailId" param must be specified');
+		assertDefAndNotNull(emailId, 'Parameter "emailId" param must be specified');
 
 		return this.wedeployClient
 			.url(this.wedeployClient.emailUrl_)
 			.auth(this.helperAuthScope)
-			.path(this.emailPath_(), emailId, this.statusPath_())
+			.path('emails', emailId, 'status')
 			.get()
 			.then((response) => assertResponseSucceeded(response))
 			.then((response) => response.body());
 	}
-
-	/**
-	 * Set params on wedeploy client.
-	 * @param  {WeDeploy} wedeployClient
-	 * @return {WeDeploy}
-	 */
-	setParams_(wedeployClient) {
-		let client = wedeployClient;
-
-		const keys = Object.keys(this.params_);
-
-		if (keys.length === 0) {
-			return client;
-		}
-
-		keys.forEach((key) => {
-			client = client.form(key, this.params_[key]);
-		});
-
-		return client;
-	}
-
-	/**
-	 * Email path
-	 * @return {string}
-	 */
-	emailPath_() {
-		return 'emails';
-	}
-
-	/**
-	 * Status path
-	 * @return {string}
-	 */
-	statusPath_() {
-		return 'status';
-	}
-
 }
 
 export default EmailApiHelper;
