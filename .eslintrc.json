@@ -5,9 +5,9 @@
       "sourceType": "module"
   },
   "globals": {
-    "RequestMock": false,
-    "assert": false,
-    "sinon": false
+    "RequestMock": true,
+    "assert": true,
+    "sinon": true
   },
   "env": {
     "browser": true,
