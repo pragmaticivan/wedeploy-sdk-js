@@ -223,7 +223,7 @@ describe('AuthApiHelper', function() {
 			auth.auth('token1');
 			auth
 				.createUser({})
-				.then((user) => {
+				.then(() => {
 					assert.strictEqual(getAuthorizationHeader_(), 'Bearer token1');
 					done();
 				});
