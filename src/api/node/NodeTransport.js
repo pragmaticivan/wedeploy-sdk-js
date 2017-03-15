@@ -6,6 +6,7 @@ import CancellablePromise from 'metal-promise';
 import ClientResponse from '../ClientResponse';
 import Transport from '../Transport';
 import Uri from 'metal-uri';
+import FormData from 'form-data';
 
 /**
  * Provides a convenient interface for data transport.
@@ -64,8 +65,13 @@ class NodeTransport extends Transport {
 			options.headers = headers;
 		}
 
+		let isFormData = false;
 		if (body) {
-			options.body = body;
+			if (body instanceof FormData) {
+				isFormData = true;
+			} else {
+				options.body = body;
+			}
 		}
 
 		if (opt_timeout) {
@@ -80,9 +86,18 @@ class NodeTransport extends Transport {
 					reject(error);
 					return;
 				}
-
 				resolve(response);
 			});
+
+			// TODO: Request doesn't handle multipart/form-data very well. So the function
+			// .form() or the param formData doesn't work as expected.
+			// That's a path to overwrite the private attribute _form to bind the FormData
+			// to the request (https://github.com/request/request/blob/master/request.js#L1269)
+			// by default the package request uses `multipart` in a different function
+			// and scope, instead using FormData package by default.
+			if (isFormData) {
+				connection._form = body;
+			}
 		}).thenCatch((reason) => {
 			connection.abort();
 			throw reason;
