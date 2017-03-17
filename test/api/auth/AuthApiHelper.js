@@ -447,13 +447,18 @@ describe('AuthApiHelper', function() {
 			globals.document = {
 				cookie: ''
 			};
+			globals.window = {
+				location: {
+					hostname: 'localhost'
+				}
+			};
 			RequestMock.intercept().reply(200, JSON.stringify({}), {
 				'content-type': 'application/json'
 			});
 			WeDeploy.auth('http://auth')
 				.loadCurrentUser('xyz')
 				.then(() => {
-					assert.strictEqual('access_token=xyz;', globals.document.cookie);
+					assert.strictEqual('access_token=xyz; Domain=localhost;', globals.document.cookie);
 					done();
 				});
 		});

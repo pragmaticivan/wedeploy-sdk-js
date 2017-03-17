@@ -45,8 +45,9 @@ class AuthApiHelper extends ApiHelper {
 	 * @param {string} accessToken
 	 */
 	createAccessTokenCookie(accessToken) {
-		if (globals.document) {
-			globals.document.cookie = 'access_token=' + accessToken + ';';
+		if (globals.document && globals.window) {
+			globals.document.cookie = 'access_token=' + accessToken + '; Domain=' +
+				globals.window.location.hostname + ';';
 		}
 	}
 
@@ -77,8 +78,10 @@ class AuthApiHelper extends ApiHelper {
 	 * Deletes access token cookie.
 	 */
 	deleteAccessTokenCookie() {
-		if (globals.document) {
-			globals.document.cookie = 'access_token=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+		if (globals.document && globals.window) {
+			globals.document.cookie =
+				'access_token=;expires=Thu, 01 Jan 1970 00:00:01 GMT;Domain=' +
+				globals.window.location.hostname + ';';
 		}
 	}
 
