@@ -3,7 +3,6 @@
 import TransportFactory from '../../src/api/TransportFactory';
 
 describe('TransportFactory', function() {
-
 	it('should instance() be singleton', function() {
 		const instance = TransportFactory.instance();
 		assert.strictEqual(instance, TransportFactory.instance());

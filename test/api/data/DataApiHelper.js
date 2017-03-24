@@ -4,6 +4,7 @@ import Auth from '../../../src/api/auth/Auth';
 import WeDeploy from '../../../src/api/WeDeploy';
 import Geo from '../../../src/api-query/Geo';
 
+/* eslint-disable max-len,require-jsdoc */
 describe('DataApiHelper', function() {
 	afterEach(function() {
 		WeDeploy.data_ = null;
@@ -42,7 +43,6 @@ describe('DataApiHelper', function() {
 
 	describe('query formation', function() {
 		it('should create a query and add virtual filters into the query', function() {
-
 			const data = WeDeploy.data();
 
 			data.where('age', '>', '18')
@@ -213,7 +213,7 @@ describe('DataApiHelper', function() {
 					.update('collection/242424', {
 						ping: 'pong'
 					})
-					.catch(error => {
+					.catch((error) => {
 						assert.strictEqual('{"error": "Error 404"}', error);
 						done();
 					});
@@ -285,7 +285,7 @@ describe('DataApiHelper', function() {
 					.replace('collection/242424', {
 						ping: 'pong'
 					})
-					.catch(error => {
+					.catch((error) => {
 						assert.strictEqual('{"error": "Error 500"}', error);
 						done();
 					});
@@ -300,7 +300,7 @@ describe('DataApiHelper', function() {
 					.replace('collection/242424', {
 						ping: 'pong'
 					})
-					.catch(error => {
+					.catch((error) => {
 						assert.strictEqual('{"error": "Error 404"}', error);
 						done();
 					});
@@ -316,7 +316,7 @@ describe('DataApiHelper', function() {
 					.replace('collection/1', {
 						ping: 'pongUpdated'
 					})
-					.then(response => {
+					.then((response) => {
 						assert.strictEqual('{"id": 1, "ping": "pongUpdated"}', response);
 						done();
 					});
@@ -333,7 +333,7 @@ describe('DataApiHelper', function() {
 						ping: 'pongUpdated',
 						newKey: 'newValue'
 					})
-					.then(response => {
+					.then((response) => {
 						assert.strictEqual('{"id": 1, "ping": "pongUpdated", "newKey": "newValue"}', response);
 						done();
 					});
@@ -363,7 +363,7 @@ describe('DataApiHelper', function() {
 					.delete('collection/242424', {
 						ping: 'pong'
 					})
-					.catch(error => {
+					.catch((error) => {
 						assert.strictEqual('{"error": "Error 500"}', error);
 						done();
 					});

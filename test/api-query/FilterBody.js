@@ -4,6 +4,7 @@ import Embodied from '../../src/api-query/Embodied';
 import Filter from '../../src/api-query/Filter';
 import FilterBody from '../../src/api-query/FilterBody';
 
+/* eslint-disable max-len,require-jsdoc */
 describe('FilterBody', function() {
 	it('should return the filter\'s body object', function() {
 		const filterBody = new FilterBody('age', '>', 0);

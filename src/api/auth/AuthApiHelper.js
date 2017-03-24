@@ -233,7 +233,7 @@ class AuthApiHelper extends ApiHelper {
 	 * @protected
 	 */
 	removeUrlFragmentCompletely_() {
-		globals.window.history.pushState({}, document.title, window.location.pathname + window.location.search);
+		globals.window.history.pushState({}, '', window.location.pathname + window.location.search);
 	}
 
 	/**

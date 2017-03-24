@@ -6,6 +6,7 @@ import Filter from '../../src/api-query/Filter';
 import WeDeploy from '../../src/api/WeDeploy';
 import Transport from '../../src/api/Transport';
 
+/* eslint-disable max-len,require-jsdoc */
 describe('WeDeploy Tests', function() {
 	beforeEach(function() {
 		RequestMock.setup('GET', 'http://localhost/url/a');
@@ -132,13 +133,15 @@ describe('WeDeploy Tests', function() {
 			assert.strictEqual('http://localhost/url', response.request().url());
 			assert.strictEqual('GET', response.request().method());
 			assert.ok(!response.request().body());
-			assert.strictEqual('{"foo":["foo"],"bar":["[\\"bar1\\",\\"bar2\\"]"]}', response.request().params().toString());
+			assert.strictEqual('{"foo":["foo"],"bar":["[\\"bar1\\",\\"bar2\\"]"]}',
+				response.request().params().toString());
 			done();
 		});
 	});
 
 	it('should transform Filter into Query when sending via GET', function(done) {
-		RequestMock.intercept('GET', 'http://localhost/url' + '?filter=%5B%7B%22name%22%3A%7B%22operator%22%3A%22%3D%22%2C%22value%22%3A%22foo%22%7D%7D%5D').reply(200);
+		RequestMock.intercept('GET', 'http://localhost/url' +
+			'?filter=%5B%7B%22name%22%3A%7B%22operator%22%3A%22%3D%22%2C%22value%22%3A%22foo%22%7D%7D%5D').reply(200);
 		WeDeploy.url('http://localhost/url').get(Filter.field('name', 'foo')).then(function(response) {
 			assert.strictEqual('http://localhost/url', response.request().url());
 			assert.strictEqual('GET', response.request().method());
@@ -268,7 +271,9 @@ describe('WeDeploy Tests', function() {
 			.header('header', 1)
 			.get()
 			.then(function(response) {
-				assert.strictEqual('{"content-type":["application/json"],"x-requested-with":["XMLHttpRequest"],"header":[1]}', response.request().headers().toString());
+				assert.strictEqual(
+					'{"content-type":["application/json"],"x-requested-with":["XMLHttpRequest"],"header":[1]}',
+					response.request().headers().toString());
 				done();
 			});
 	});
@@ -280,7 +285,9 @@ describe('WeDeploy Tests', function() {
 			.header('header', 2)
 			.get()
 			.then(function(response) {
-				assert.strictEqual('{"content-type":["application/json"],"x-requested-with":["XMLHttpRequest"],"header":[2]}', response.request().headers().toString());
+				assert.strictEqual(
+					'{"content-type":["application/json"],"x-requested-with":["XMLHttpRequest"],"header":[2]}',
+					response.request().headers().toString());
 				done();
 			});
 	});

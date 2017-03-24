@@ -2,6 +2,7 @@
 
 import { async } from 'metal';
 
+/* eslint-disable max-len,require-jsdoc */
 class AjaxRequestMock {
 	static intercept() {
 		return this;
@@ -15,7 +16,7 @@ class AjaxRequestMock {
 
 	static get() {
 		if (AjaxRequestMock.fakeServer.requests) {
-			var request = AjaxRequestMock.fakeServer.requests[0];
+			let request = AjaxRequestMock.fakeServer.requests[0];
 			convertEvents_(request);
 			return request;
 		}
@@ -51,6 +52,7 @@ class AjaxRequestMock {
  * This is a simple hack converting the events to the ones expected as coming
  * from the browser.
  */
+
 function convertEvents_(request) {
 	if (!AjaxRequestMock.addedEvents && request) {
 		AjaxRequestMock.addedEvents = true;

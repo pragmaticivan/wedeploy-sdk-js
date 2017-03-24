@@ -2,6 +2,7 @@
 
 import Embodied from '../../src/api-query/Embodied';
 
+/* eslint-disable max-len,require-jsdoc */
 describe('Embodied', function() {
 	it('should return empty body object', function() {
 		const body = new Embodied();

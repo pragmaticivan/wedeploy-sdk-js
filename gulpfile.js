@@ -87,10 +87,12 @@ let options = {
 	},
 
 	// See the `build:es2015` task for more information.
-	uglifySrc: 'build/!(es2015)/**.js'
+	uglifySrc: 'build/!(es2015)/**.js',
+	useEslint: true
 };
 metal.registerTasks(options);
 
+/* eslint-disable no-console,require-jsdoc */
 gulp.task('ci', function(cb) {
 	if (process.env.SAUCE_USERNAME) {
 		return runSequence('lint', 'test:saucelabs', 'test:node', 'build', cb);

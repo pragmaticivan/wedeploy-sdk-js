@@ -6,6 +6,7 @@ import GithubAuthProvider from '../../../src/api/auth/GithubAuthProvider';
 import GoogleAuthProvider from '../../../src/api/auth/GoogleAuthProvider';
 import WeDeploy from '../../../src/api/WeDeploy';
 
+/* eslint-disable max-len,require-jsdoc */
 describe('AuthApiHelper', function() {
 	afterEach(function() {
 		WeDeploy.auth_ = null;
@@ -59,14 +60,14 @@ describe('AuthApiHelper', function() {
 	});
 
 	describe('Sign in with redirect', skipForNode_(function() {
-		it('should throws exception when signin-in with redirect using null provider', function() {
+		it('should throw exception when signin-in with redirect using null provider', function() {
 			const auth = WeDeploy.auth();
 			assert.throws(function() {
 				auth.signInWithRedirect(null);
 			}, Error);
 		});
 
-		it('should throws exception signing-in with redirect using not supported sign-in type for the environment', function() {
+		it('should throw exception signing-in with redirect using not supported sign-in type for the environment', function() {
 			const auth = WeDeploy.auth();
 			assert.throws(function() {
 				auth.signInWithRedirect(undefined);
@@ -145,7 +146,7 @@ describe('AuthApiHelper', function() {
 			);
 		});
 
-		it('should throws exception when calling when sending password reset with email not specified', function() {
+		it('should throw exception when calling when sending password reset with email not specified', function() {
 			assert.throws(() => WeDeploy.auth().sendPasswordResetEmail(), Error);
 		});
 
@@ -198,11 +199,11 @@ describe('AuthApiHelper', function() {
 			RequestMock.setup('POST', 'http://localhost/users');
 		});
 
-		it('should throws exception when calling create user with user data not specified', function() {
+		it('should throw exception when calling create user with user data not specified', function() {
 			assert.throws(() => WeDeploy.auth().createUser(), Error);
 		});
 
-		it('should throws exception when calling create user with user data not an object', function() {
+		it('should throw exception when calling create user with user data not an object', function() {
 			assert.throws(() => WeDeploy.auth().createUser(''), Error);
 		});
 
@@ -263,11 +264,11 @@ describe('AuthApiHelper', function() {
 			);
 		});
 
-		it('should throws exception when calling sign-in with email and password when email not specified', function() {
+		it('should throw exception when calling sign-in with email and password when email not specified', function() {
 			assert.throws(() => WeDeploy.auth().signInWithEmailAndPassword(), Error);
 		});
 
-		it('should throws exception when calling sign-in with email and password when password not specified', function() {
+		it('should throw exception when calling sign-in with email and password when password not specified', function() {
 			assert.throws(() => WeDeploy.auth().signInWithEmailAndPassword('email@domain.com'), Error);
 		});
 
@@ -318,7 +319,7 @@ describe('AuthApiHelper', function() {
 			RequestMock.setup('GET', 'http://localhost/oauth/revoke?token');
 		});
 
-		it('should throws exception when calling sign-out without being signed-in', function() {
+		it('should throw exception when calling sign-out without being signed-in', function() {
 			assert.throws(() => WeDeploy.auth().signOut(), Error);
 		});
 
@@ -363,11 +364,11 @@ describe('AuthApiHelper', function() {
 			RequestMock.setup('GET', 'http://localhost/users/userId');
 		});
 
-		it('should throws exception when calling getUser without user id', function() {
+		it('should throw exception when calling getUser without user id', function() {
 			assert.throws(() => WeDeploy.auth().getUser(), Error);
 		});
 
-		it('should throws exception when calling getUser without being signed-in', function() {
+		it('should throw exception when calling getUser without being signed-in', function() {
 			assert.throws(() => WeDeploy.auth().getUser('userId'), Error);
 		});
 
@@ -465,12 +466,12 @@ describe('AuthApiHelper', function() {
 	});
 
 	describe('onSignIn and onSignOut', function() {
-		it('should throws exception when calling onSignIn without function callback', function() {
+		it('should throw exception when calling onSignIn without function callback', function() {
 			assert.throws(() => WeDeploy.auth().onSignIn(), Error);
 			assert.throws(() => WeDeploy.auth().onSignIn({}), Error);
 		});
 
-		it('should throws exception when calling onSignOut without function callback', function() {
+		it('should throw exception when calling onSignOut without function callback', function() {
 			assert.throws(() => WeDeploy.auth().onSignOut(), Error);
 			assert.throws(() => WeDeploy.auth().onSignOut({}), Error);
 		});
@@ -574,7 +575,7 @@ describe('AuthApiHelper', function() {
 				.catch(() => done());
 		});
 
-		it('should throws exception if token not specified', function() {
+		it('should throw exception if token not specified', function() {
 			assert.throws(function() {
 				WeDeploy.auth('http://auth').verifyToken();
 			}, Error);
@@ -610,7 +611,7 @@ describe('AuthApiHelper', function() {
 				.catch(() => done());
 		});
 
-		it('should throws exception if token not specified', function() {
+		it('should throw exception if token not specified', function() {
 			assert.throws(function() {
 				WeDeploy.auth('http://auth').verifyUser();
 			}, Error);

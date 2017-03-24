@@ -2,6 +2,7 @@
 
 import AuthProvider from '../../../src/api/auth/AuthProvider';
 
+/* eslint-disable max-len,require-jsdoc */
 describe('AuthProvider', function() {
 	it('should support default constructor', function() {
 		assert.doesNotThrow(function() {

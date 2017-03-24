@@ -6,6 +6,7 @@ import url from 'url';
 let defVerb_;
 let defAddress_;
 
+/* eslint-disable max-len,require-jsdoc */
 class NodeRequestMock {
 	static inject(name, module) {
 		NodeRequestMock[name] = module;

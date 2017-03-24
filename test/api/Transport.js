@@ -78,7 +78,8 @@ describe('Transport Tests', function() {
 		headers.add('content-type', 'application/json');
 		headers.add('content-type', 'text/html');
 		transport.send(clientRequest).then(function(response) {
-			assert.strictEqual('{"content-type":["application/json","text/html"]}', response.request().headers().toString());
+			assert.strictEqual('{"content-type":["application/json","text/html"]}',
+				response.request().headers().toString());
 			done();
 		});
 	});
