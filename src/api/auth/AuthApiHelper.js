@@ -53,7 +53,7 @@ class AuthApiHelper extends ApiHelper {
 
 	/**
 	 * Creates user.
-	 * @param {!object} data The data to be used to create the user.
+	 * @param {!Object} data The data to be used to create the user.
 	 * @return {CancellablePromise}
 	 */
 	createUser(data) {
@@ -148,7 +148,7 @@ class AuthApiHelper extends ApiHelper {
 
 	/**
 	 * Makes user Auth from data object.
-	 * @param {object} data
+	 * @param {Object} data
 	 * @return {Auth}
 	 * @protected
 	 */

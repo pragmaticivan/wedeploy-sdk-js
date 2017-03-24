@@ -60,8 +60,8 @@ function assertObject(value, errorMessage) {
 /**
  * Checks if a response has succeeded. The function checks if the `succeeded` method of
  * response object returns true. Throws an exception if the returned value is false.
- * @param {!object} response The response to be checked.
- * @return {object} The response itself if valid. Otherwise throws an exception.
+ * @param {!Object} response The response to be checked.
+ * @return {Object} The response itself if valid. Otherwise throws an exception.
  */
 function assertResponseSucceeded(response) {
 	if (!response.succeeded()) {
@@ -73,7 +73,7 @@ function assertResponseSucceeded(response) {
 /**
  * Checks if a valid user is provided to the function. Throws an exception
  * in case of an invalid user.
- * @param {!object} user The user to be checked.
+ * @param {!Object} user The user to be checked.
  */
 function assertUserSignedIn(user) {
 	if (!core.isDefAndNotNull(user)) {

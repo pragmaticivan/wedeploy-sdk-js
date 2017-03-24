@@ -240,7 +240,7 @@ class Auth {
 
 	/**
 	 * Sets the WeDeploy client.
-	 * @param {object} wedeployClient
+	 * @param {Object} wedeployClient
 	 */
 	setWedeployClient(wedeployClient) {
 		this.wedeployClient = wedeployClient;
@@ -248,7 +248,7 @@ class Auth {
 
 	/**
 	 * Updates the user.
-	 * @param {!object} data
+	 * @param {!Object} data
 	 * @return {CompletableFuture}
 	 */
 	updateUser(data) {
