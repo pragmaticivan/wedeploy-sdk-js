@@ -10,7 +10,12 @@ import Range from '../api-query/Range';
 import TransportFactory from '../api/TransportFactory';
 import FormData from 'form-data';
 
-TransportFactory[TransportFactory.DEFAULT_TRANSPORT_NAME] = NodeTransport;
+// The default transport is AjaxTransport which works in ReactNative environment,
+// so in case of ReactNative we will stay with it, otherwise we will switch to NodeTransport.
+if (typeof navigator === 'undefined' || navigator.product !== 'ReactNative') {
+  TransportFactory[TransportFactory.DEFAULT_TRANSPORT_NAME] = NodeTransport;
+}
+
 WeDeploy.socket(io);
 WeDeploy.formData(FormData);
 WeDeploy.Filter = Filter;
