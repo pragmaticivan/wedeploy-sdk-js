@@ -518,8 +518,11 @@ class WeDeploy {
 		const uri = new Uri(clientRequest.url());
 		uri.addParametersFromMultiMap(clientRequest.params());
 
+		const jsonp = (typeof navigator === 'undefined' || navigator.product !== 'ReactNative');
+
 		opt_options = opt_options || {
-			forceNew: true
+			forceNew: true,
+			jsonp: jsonp
 		};
 		opt_options.query = 'url=' + encodeURIComponent(uri.getPathname() + uri.getSearch());
 		opt_options.path = opt_options.path || uri.getPathname();

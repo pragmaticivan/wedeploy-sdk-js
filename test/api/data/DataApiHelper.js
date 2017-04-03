@@ -1330,6 +1330,7 @@ describe('DataApiHelper', function() {
 				WeDeploy.socket(function(url, opts) {
 					assert.deepEqual({
 						forceNew: true,
+						jsonp: true,
 						path: '/fruits',
 						query: 'url=' + encodeURIComponent('/fruits')
 					}, opts);

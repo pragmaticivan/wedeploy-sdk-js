@@ -25,6 +25,7 @@ describe('WeDeploy Tests', function() {
 			assert.strictEqual('http://domain:8080', url);
 			assert.deepEqual({
 				forceNew: true,
+				jsonp: true,
 				path: '/path/a',
 				query: 'url=' + encodeURIComponent('/path/a?foo=1')
 			}, opts);

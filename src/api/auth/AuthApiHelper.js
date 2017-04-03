@@ -101,7 +101,7 @@ class AuthApiHelper extends ApiHelper {
 	 * @protected
 	 */
 	getRedirectAccessToken_() {
-		if (globals.window) {
+		if (globals.window && globals.window.location) {
 			let fragment = globals.window.location.hash;
 			if (fragment.indexOf('#access_token=') === 0) {
 				return fragment.substring(14);
