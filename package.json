@@ -4,8 +4,9 @@
   "description": "WeDeploy Api",
   "repository": "wedeploy/api-js",
   "scripts": {
-    "prepublish": "gulp build",
-    "test": "gulp ci"
+    "prepublish": "publish-please guard && gulp build",
+    "test": "gulp ci",
+    "publish-please": "publish-please"
   },
   "main": "build/node/api-min.js",
   "jsnext:main": "build/es2015/api-min.js",
@@ -45,6 +46,7 @@
     "isparta": "^4.0.0",
     "metal-tools-build-rollup": "^2.0.0",
     "nock": "^9.0.2",
+    "publish-please": "^2.3.0",
     "rollup-plugin-babel": "^2.6.1",
     "rollup-plugin-commonjs": "^7.0.0",
     "rollup-plugin-eslint": "^3.0.0",
