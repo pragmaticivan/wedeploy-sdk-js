@@ -79,6 +79,17 @@ class DataApiHelper extends ApiHelper {
 	}
 
 	/**
+	 * Adds a filter to be compose with this filter using "prefix" operator.
+	 * @param {string} field The name of the field to filter by.
+	 * @param {string=} opt_query The query string.
+	 * @return {DataApiHelper} Returns the {@link DataApiHelper} object itself, so calls can be chained.
+	 * @chainnable
+	 */
+	prefix(field, opt_query) {
+		return this.where(Filter.prefix(field, opt_query));
+	}
+
+	/**
 	 * Adds a filter to be compose with this filter using "similar" operator.
 	 * @param {string} fieldOrQuery If no second string argument is given, this
 	 * should be the query string, in which case all fields will be matched.

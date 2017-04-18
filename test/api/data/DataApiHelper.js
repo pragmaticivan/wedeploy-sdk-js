@@ -633,6 +633,49 @@ describe('DataApiHelper', function() {
 		});
 	});
 
+	describe('.prefix()', function() {
+		it('should send request with query prefix in the body', function(done) {
+			RequestMock.intercept(
+				'GET',
+				'http://localhost/food?filter=%5B%7B%22and%22%3A%5B%7B%22'+
+				'name%22%3A%7B%22operator%22%3A%22prefix%22%2C%22value%22%'+
+				'3A%22cus%22%7D%7D%5D%7D%5D'
+			).reply(200, '[{"id": 2, "name": "cuscuz"}]');
+
+			WeDeploy
+				.data()
+				.prefix('name', 'cus')
+				.get('food')
+				.then(function(response) {
+					assert.strictEqual('[{"id": 2, "name": "cuscuz"}]', response);
+					done();
+				});
+		});
+
+		it('should build the prefix query into the query body', function() {
+			const data = WeDeploy
+				.data()
+				.prefix('name', 'cus');
+
+			const query = data.processAndResetQueryState();
+
+			const queryBody = {
+				body_: {
+					filter: [{
+						and: [{
+							name: {
+								operator: 'prefix',
+								value: 'cus'
+							}
+						}]
+					}]
+				}
+			};
+
+			assert.deepEqual(queryBody, query);
+		});
+	});
+
 	describe('.similar()', function() {
 		it('should send request with query similar in the body', function(done) {
 			RequestMock.intercept(
