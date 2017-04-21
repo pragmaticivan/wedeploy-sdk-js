@@ -397,7 +397,13 @@ class AuthApiHelper extends ApiHelper {
       .then(response => assertResponseSucceeded(response))
       .then(response => {
         let data = response.body();
-        data.token = opt_password ? null : tokenOrEmail;
+        if (opt_password) {
+          data.token = null;
+          data.email = tokenOrEmail;
+          data.password = opt_password;
+        } else {
+          data.token = tokenOrEmail;
+        }
         return this.makeUserAuthFromData(data);
       });
   }

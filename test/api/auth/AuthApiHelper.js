@@ -597,16 +597,34 @@ describe('AuthApiHelper', function() {
       RequestMock.setup('GET', 'http://auth/user');
     });
 
-    it('should verify user', function(done) {
+    it('should verify user by credentials and respond with email and password passed as parameters', function(
+      done
+    ) {
       const auth = WeDeploy.auth('http://auth');
       const data = {
-        name: 'username',
+        token: 'token',
+      };
+      RequestMock.intercept().reply(200, JSON.stringify(data), {
+        'content-type': 'application/json',
+      });
+      auth.verifyUser('email@domain.com', 'password').then(user => {
+        assert.strictEqual('email@domain.com', user.email);
+        assert.strictEqual('password', user.password);
+        assert.strictEqual(null, user.token);
+        done();
+      });
+    });
+
+    it('should verify user by token and respond with token', function(done) {
+      const auth = WeDeploy.auth('http://auth');
+      const data = {
+        token: 'token',
       };
       RequestMock.intercept().reply(200, JSON.stringify(data), {
         'content-type': 'application/json',
       });
       auth.verifyUser('token').then(user => {
-        assert.strictEqual('username', user.name);
+        assert.strictEqual('token', user.token);
         done();
       });
     });
