@@ -2,6 +2,9 @@
   "name": "wedeploy",
   "version": "1.8.0",
   "description": "WeDeploy Api",
+  "engines": {
+    "node": ">=7.6.0"
+  },
   "repository": "wedeploy/api-js",
   "scripts": {
     "format": "prettier --single-quote --no-bracket-spacing --trailing-comma es5 --write \"{src/**/*.js,test/**/*.js,*.js}\" && eslint --fix \"{src/**/*.js,test/**/*.js,*.js}\"",
