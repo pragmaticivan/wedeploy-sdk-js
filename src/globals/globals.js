@@ -1,11 +1,11 @@
 let globals = {};
 
 if (typeof window !== 'undefined') {
-	globals.window = window;
+  globals.window = window;
 }
 
 if (typeof document !== 'undefined') {
-	globals.document = document;
+  globals.document = document;
 }
 
 export default globals;

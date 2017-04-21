@@ -1,23 +1,26 @@
 'use strict';
 
 import Auth from './auth/Auth';
-import { assertDefAndNotNull } from './assertions';
+import {assertDefAndNotNull} from './assertions';
 
 /**
  * Class responsible for encapsulating API calls.
  */
 class ApiHelper {
-	/**
+  /**
 	 * Constructs an {@link ApiHelper} instance.
 	 * @param {!WeDeploy} wedeployClient {@link WeDeploy} client reference.
 	 * @constructor
 	 */
-	constructor(wedeployClient) {
-		assertDefAndNotNull(wedeployClient, 'WeDeploy client reference must be specified');
-		this.wedeployClient = wedeployClient;
-	}
+  constructor(wedeployClient) {
+    assertDefAndNotNull(
+      wedeployClient,
+      'WeDeploy client reference must be specified'
+    );
+    this.wedeployClient = wedeployClient;
+  }
 
-	/**
+  /**
 	 * Adds authorization information to this request.
 	 * @param {!Auth|string} authOrTokenOrEmail Either an {@link Auth} instance,
 	 * an authorization token, or the email.
@@ -26,14 +29,13 @@ class ApiHelper {
 	 * @return {ApiHelper}
 	 * @chainable
 	 */
-	auth(authOrTokenOrEmail, opt_password) {
-		this.helperAuthScope = authOrTokenOrEmail;
-		if (!(this.helperAuthScope instanceof Auth)) {
-			this.helperAuthScope = Auth.create(authOrTokenOrEmail, opt_password);
-		}
-		return this;
-	}
-
+  auth(authOrTokenOrEmail, opt_password) {
+    this.helperAuthScope = authOrTokenOrEmail;
+    if (!(this.helperAuthScope instanceof Auth)) {
+      this.helperAuthScope = Auth.create(authOrTokenOrEmail, opt_password);
+    }
+    return this;
+  }
 }
 
 export default ApiHelper;

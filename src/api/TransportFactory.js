@@ -6,53 +6,53 @@ import AjaxTransport from './browser/AjaxTransport';
  * Provides a factory for data transport.
  */
 class TransportFactory {
-	/**
+  /**
 	 * Constructs an {@link TransportFactory} instance.
 	 * @constructor
 	 */
-	constructor() {
-		this.transports = {};
-		this.transports[TransportFactory.DEFAULT_TRANSPORT_NAME] =
-			TransportFactory[TransportFactory.DEFAULT_TRANSPORT_NAME];
-	}
+  constructor() {
+    this.transports = {};
+    this.transports[TransportFactory.DEFAULT_TRANSPORT_NAME] =
+      TransportFactory[TransportFactory.DEFAULT_TRANSPORT_NAME];
+  }
 
-	/**
+  /**
 	 * Returns {@link TransportFactory} instance.
 	 * @return {!TransportFactory} Instance of TransportFactory
 	 */
-	static instance() {
-		if (!TransportFactory.instance_) {
-			TransportFactory.instance_ = new TransportFactory();
-		}
-		return TransportFactory.instance_;
-	}
+  static instance() {
+    if (!TransportFactory.instance_) {
+      TransportFactory.instance_ = new TransportFactory();
+    }
+    return TransportFactory.instance_;
+  }
 
-	/**
+  /**
 	 * Gets an instance of the transport implementation with the given name.
 	 * @param {string} implementationName
 	 * @return {!Transport}
 	 */
-	get(implementationName) {
-		let TransportClass = this.transports[implementationName];
+  get(implementationName) {
+    let TransportClass = this.transports[implementationName];
 
-		if (!TransportClass) {
-			throw new Error('Invalid transport name: ' + implementationName);
-		}
+    if (!TransportClass) {
+      throw new Error('Invalid transport name: ' + implementationName);
+    }
 
-		try {
-			return new (TransportClass)();
-		} catch (err) {
-			throw new Error('Can\'t create transport', err);
-		}
-	}
+    try {
+      return new TransportClass();
+    } catch (err) {
+      throw new Error('Can\'t create transport', err);
+    }
+  }
 
-	/**
+  /**
 	 * Returns the default transport implementation.
 	 * @return {!Transport}
 	 */
-	getDefault() {
-		return this.get(TransportFactory.DEFAULT_TRANSPORT_NAME);
-	}
+  getDefault() {
+    return this.get(TransportFactory.DEFAULT_TRANSPORT_NAME);
+  }
 }
 
 TransportFactory.DEFAULT_TRANSPORT_NAME = 'default';

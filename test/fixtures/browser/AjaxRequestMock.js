@@ -1,48 +1,48 @@
 'use strict';
 
-import { async } from 'metal';
+import {async} from 'metal';
 
 /* eslint-disable max-len,require-jsdoc */
 class AjaxRequestMock {
-	static intercept() {
-		return this;
-	}
+  static intercept() {
+    return this;
+  }
 
-	static reply(status, body, headers) {
-		AjaxRequestMock.status = status;
-		AjaxRequestMock.headers = headers;
-		AjaxRequestMock.body = body;
-	}
+  static reply(status, body, headers) {
+    AjaxRequestMock.status = status;
+    AjaxRequestMock.headers = headers;
+    AjaxRequestMock.body = body;
+  }
 
-	static get() {
-		if (AjaxRequestMock.fakeServer.requests) {
-			let request = AjaxRequestMock.fakeServer.requests[0];
-			convertEvents_(request);
-			return request;
-		}
-	}
+  static get() {
+    if (AjaxRequestMock.fakeServer.requests) {
+      let request = AjaxRequestMock.fakeServer.requests[0];
+      convertEvents_(request);
+      return request;
+    }
+  }
 
-	static getUrl() {
-		return AjaxRequestMock.get().url;
-	}
+  static getUrl() {
+    return AjaxRequestMock.get().url;
+  }
 
-	static setup() {
-		AjaxRequestMock.fakeServer = sinon.fakeServer.create();
-		AjaxRequestMock.addedEvents = false;
-		async.nextTick(() => {
-			convertEvents_(AjaxRequestMock.get());
-			AjaxRequestMock.fakeServer.respondWith([
-				AjaxRequestMock.status,
-				AjaxRequestMock.headers,
-				AjaxRequestMock.body || ''
-			]);
-			AjaxRequestMock.fakeServer.respond();
-		});
-	}
+  static setup() {
+    AjaxRequestMock.fakeServer = sinon.fakeServer.create();
+    AjaxRequestMock.addedEvents = false;
+    async.nextTick(() => {
+      convertEvents_(AjaxRequestMock.get());
+      AjaxRequestMock.fakeServer.respondWith([
+        AjaxRequestMock.status,
+        AjaxRequestMock.headers,
+        AjaxRequestMock.body || '',
+      ]);
+      AjaxRequestMock.fakeServer.respond();
+    });
+  }
 
-	static teardown() {
-		AjaxRequestMock.fakeServer.restore();
-	}
+  static teardown() {
+    AjaxRequestMock.fakeServer.restore();
+  }
 }
 
 /**
@@ -54,17 +54,17 @@ class AjaxRequestMock {
  */
 
 function convertEvents_(request) {
-	if (!AjaxRequestMock.addedEvents && request) {
-		AjaxRequestMock.addedEvents = true;
-		request.addEventListener('error', function(event) {
-			event.stopPropagation();
-			request.dispatchEvent(new sinon.ProgressEvent('load', event, request));
-		});
-		request.addEventListener('abort', function(event) {
-			event.stopPropagation();
-			request.dispatchEvent(new sinon.ProgressEvent('error', event, request));
-		});
-	}
+  if (!AjaxRequestMock.addedEvents && request) {
+    AjaxRequestMock.addedEvents = true;
+    request.addEventListener('error', function(event) {
+      event.stopPropagation();
+      request.dispatchEvent(new sinon.ProgressEvent('load', event, request));
+    });
+    request.addEventListener('abort', function(event) {
+      event.stopPropagation();
+      request.dispatchEvent(new sinon.ProgressEvent('error', event, request));
+    });
+  }
 }
 
 export default AjaxRequestMock;

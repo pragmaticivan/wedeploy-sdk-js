@@ -1,0 +1,21 @@
+{
+  "extends": ["liferay"],
+  "env": {
+    "node": true,
+    "es6": true
+  },
+  "globals": {
+    "RequestMock": true,
+    "assert": true,
+    "sinon": true
+  },
+  "env": {
+    "browser": true,
+    "es6": true,
+    "mocha": true,
+    "node": true
+  },
+  "rules": {
+    "max-len": 0
+  }
+}

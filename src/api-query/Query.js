@@ -1,6 +1,6 @@
 'use strict';
 
-import { core } from 'metal';
+import {core} from 'metal';
 import Embodied from './Embodied';
 import Filter from './Filter';
 import Aggregation from './Aggregation';
@@ -10,7 +10,7 @@ import Aggregation from './Aggregation';
  * @extends {Embodied}
  */
 class Query extends Embodied {
-	/**
+  /**
 	 * Adds an aggregation to this {@link Query} instance.
 	 * @param {string} name The aggregation name.
 	 * @param {!Aggregation|string} aggregationOrField Either an
@@ -19,29 +19,29 @@ class Query extends Embodied {
 	 * @return {!Query}
 	 * @static
 	 */
-	static aggregate(name, aggregationOrField, opt_operator) {
-		return new Query().aggregate(name, aggregationOrField, opt_operator);
-	}
+  static aggregate(name, aggregationOrField, opt_operator) {
+    return new Query().aggregate(name, aggregationOrField, opt_operator);
+  }
 
-	/**
+  /**
 	 * Sets this query's type to "count".
 	 * @return {!Query}
 	 * @static
 	 */
-	static count() {
-		return new Query().type('count');
-	}
+  static count() {
+    return new Query().type('count');
+  }
 
-	/**
+  /**
 	 * Sets this query's type to "fetch".
 	 * @return {!Query}
 	 * @static
 	 */
-	static fetch() {
-		return new Query().type('fetch');
-	}
+  static fetch() {
+    return new Query().type('fetch');
+  }
 
-	/**
+  /**
 	 * Adds a filter to this Query.
 	 * @param {!Filter|string} fieldOrFilter Either a {@link Filter} or the
 	 *   name of the field to filter by.
@@ -50,42 +50,43 @@ class Query extends Embodied {
 	 * @return {!Query}
 	 * @static
 	 */
-	static filter(fieldOrFilter, opt_operatorOrValue, opt_value) {
-		return new Query().filter(fieldOrFilter, opt_operatorOrValue, opt_value);
-	}
+  static filter(fieldOrFilter, opt_operatorOrValue, opt_value) {
+    return new Query().filter(fieldOrFilter, opt_operatorOrValue, opt_value);
+  }
 
-	/**
+  /**
 	 * Sets the query offset.
 	 * @param {number} offset The index of the first entry that should be returned
 	 *   by this query.
 	 * @return {!Query}
 	 * @static
 	 */
-	static offset(offset) {
-		return new Query().offset(offset);
-	}
+  static offset(offset) {
+    return new Query().offset(offset);
+  }
 
-	/**
+  /**
 	 * Adds a highlight entry to this {@link Query} instance.
 	 * @param {string} field The field's name.
 	 * @return {!Query}
 	 * @static
 	 */
-	static highlight(field) {
-		return new Query().highlight(field);
-	}
+  static highlight(field) {
+    return new Query().highlight(field);
+  }
 
-	/**
+  /**
 	 * Sets the query limit.
-	 * @param {number} limit The max amount of entries that this query should return.
+	 * @param {number} limit The max amount of entries that this query should
+	 *   return.
 	 * @return {!Query}
 	 * @static
 	 */
-	static limit(limit) {
-		return new Query().limit(limit);
-	}
+  static limit(limit) {
+    return new Query().limit(limit);
+  }
 
-	/**
+  /**
 	 * Adds a search to this {@link Query} instance.
 	 * @param {!Filter|string} filterOrTextOrField If no other arguments
 	 *   are passed to this function, this should be either a {@link Filter}
@@ -100,11 +101,15 @@ class Query extends Embodied {
 	 * @return {!Query}
 	 * @static
 	 */
-	static search(filterOrTextOrField, opt_textOrOperator, opt_value) {
-		return new Query().search(filterOrTextOrField, opt_textOrOperator, opt_value);
-	}
+  static search(filterOrTextOrField, opt_textOrOperator, opt_value) {
+    return new Query().search(
+      filterOrTextOrField,
+      opt_textOrOperator,
+      opt_value
+    );
+  }
 
-	/**
+  /**
 	 * Adds a sort entry to this query, specifying the field this query should be
 	 * sorted by and, optionally, the sort direction.
 	 * @param {string} field The field that the query should be sorted by.
@@ -113,127 +118,135 @@ class Query extends Embodied {
 	 * @return {!Query}
 	 * @static
 	 */
-	static sort(field, opt_direction) {
-		return new Query().sort(field, opt_direction);
-	}
+  static sort(field, opt_direction) {
+    return new Query().sort(field, opt_direction);
+  }
 
-	/**
+  /**
 	 * Sets the query type.
 	 * @param {string} type The query's type. For example: "count", "fetch".
 	 * @return {!Query}
 	 * @static
 	 */
-	static type(type) {
-		return new Query().type(type);
-	}
+  static type(type) {
+    return new Query().type(type);
+  }
 
-	/**
+  /**
 	 * Adds an aggregation to this {@link Query} instance.
 	 * @param {string} name The aggregation name.
 	 * @param {!Aggregation|string} aggregationOrField Either an
 	 *   {@link Aggregation} instance or the name of the aggregation field.
 	 * @param {string=} opt_operator The aggregation operator.
-	 * @return {Query} Returns the {@link Query} object itself, so calls can be chained.
+	 * @return {Query} Returns the {@link Query} object itself, so calls can be
+	 *   chained.
 	 * @chainnable
 	 */
-	aggregate(name, aggregationOrField, opt_operator) {
-		let aggregation = aggregationOrField;
-		if (!(aggregation instanceof Aggregation)) {
-			aggregation = Aggregation.field(aggregationOrField, opt_operator);
-		}
+  aggregate(name, aggregationOrField, opt_operator) {
+    let aggregation = aggregationOrField;
+    if (!(aggregation instanceof Aggregation)) {
+      aggregation = Aggregation.field(aggregationOrField, opt_operator);
+    }
 
-		let field = aggregation.getField();
-		let value = {};
-		value[field] = {
-			name: name,
-			operator: aggregation.getOperator()
-		};
-		if (core.isDefAndNotNull(aggregation.getValue())) {
-			value[field].value = aggregation.getValue();
-		}
+    let field = aggregation.getField();
+    let value = {};
+    value[field] = {
+      name: name,
+      operator: aggregation.getOperator(),
+    };
+    if (core.isDefAndNotNull(aggregation.getValue())) {
+      value[field].value = aggregation.getValue();
+    }
 
-		if (!this.body_.aggregation) {
-			this.body_.aggregation = [];
-		}
-		this.body_.aggregation.push(value);
-		return this;
-	}
+    if (!this.body_.aggregation) {
+      this.body_.aggregation = [];
+    }
+    this.body_.aggregation.push(value);
+    return this;
+  }
 
-	/**
+  /**
 	 * Sets this query's type to "count".
-	 * @return {Query} Returns the {@link Query} object itself, so calls can be chained.
+	 * @return {Query} Returns the {@link Query} object itself, so calls can be
+	 *   chained.
 	 * @chainnable
 	 */
-	count() {
-		return this.type('count');
-	}
+  count() {
+    return this.type('count');
+  }
 
-	/**
+  /**
 	 * Sets this query's type to "fetch".
-	 * @return {Query} Returns the {@link Query} object itself, so calls can be chained.
+	 * @return {Query} Returns the {@link Query} object itself, so calls can be
+	 *   chained.
 	 * @chainnable
 	 */
-	fetch() {
-		return this.type('fetch');
-	}
+  fetch() {
+    return this.type('fetch');
+  }
 
-	/**
+  /**
 	 * Adds a filter to this Query.
 	 * @param {!Filter|string} fieldOrFilter Either a {@link Filter} or the
 	 *   name of the field to filter by.
 	 * @param {*=} opt_operatorOrValue Either the field's operator or its value.
 	 * @param {*=} opt_value The filter's value.
-	 * @return {Query} Returns the {@link Query} object itself, so calls can be chained.
+	 * @return {Query} Returns the {@link Query} object itself, so calls can be
+	 *   chained.
 	 * @chainnable
 	 */
-	filter(fieldOrFilter, opt_operatorOrValue, opt_value) {
-		let filter = Filter.toFilter(fieldOrFilter, opt_operatorOrValue, opt_value);
-		if (!this.body_.filter) {
-			this.body_.filter = [];
-		}
-		this.body_.filter.push(filter.body());
-		return this;
-	}
+  filter(fieldOrFilter, opt_operatorOrValue, opt_value) {
+    let filter = Filter.toFilter(fieldOrFilter, opt_operatorOrValue, opt_value);
+    if (!this.body_.filter) {
+      this.body_.filter = [];
+    }
+    this.body_.filter.push(filter.body());
+    return this;
+  }
 
-	/**
+  /**
 	 * Sets the query offset.
 	 * @param {number} offset The index of the first entry that should be returned
 	 *   by this query.
-	 * @return {Query} Returns the {@link Query} object itself, so calls can be chained.
+	 * @return {Query} Returns the {@link Query} object itself, so calls can be
+	 *   chained.
 	 * @chainnable
 	 */
-	offset(offset) {
-		this.body_.offset = offset;
-		return this;
-	}
+  offset(offset) {
+    this.body_.offset = offset;
+    return this;
+  }
 
-	/**
+  /**
 	 * Adds a highlight entry to this {@link Query} instance.
 	 * @param {string} field The field's name.
-	 * @return {Query} Returns the {@link Query} object itself, so calls can be chained.
+	 * @return {Query} Returns the {@link Query} object itself, so calls can be
+	 *   chained.
 	 * @chainnable
 	 */
-	highlight(field) {
-		if (!this.body_.highlight) {
-			this.body_.highlight = [];
-		}
+  highlight(field) {
+    if (!this.body_.highlight) {
+      this.body_.highlight = [];
+    }
 
-		this.body_.highlight.push(field);
-		return this;
-	}
+    this.body_.highlight.push(field);
+    return this;
+  }
 
-	/**
+  /**
 	 * Sets the query limit.
-	 * @param {number} limit The max amount of entries that this query should return.
-	 * @return {Query} Returns the {@link Query} object itself, so calls can be chained.
+	 * @param {number} limit The max amount of entries that this query should
+	 *   return.
+	 * @return {Query} Returns the {@link Query} object itself, so calls can be
+	 *   chained.
 	 * @chainnable
 	 */
-	limit(limit) {
-		this.body_.limit = limit;
-		return this;
-	}
+  limit(limit) {
+    this.body_.limit = limit;
+    return this;
+  }
 
-	/**
+  /**
 	 * Adds a search to this {@link Query} instance.
 	 * @param {!Filter|string=} filterOrTextOrField If no other arguments
 	 *   are passed to this function, this should be either a {@link Filter}
@@ -246,58 +259,61 @@ class Query extends Embodied {
 	 *   match filter, or the operator that should be used.
 	 * @param {*=} opt_value The value to be used by the filter. Should
 	 *   only be passed if an operator was passed as the second argument.
-	 * @return {Query} Returns the {@link Query} object itself, so calls can be chained.
+	 * @return {Query} Returns the {@link Query} object itself, so calls can be
+	 *   chained.
 	 * @chainnable
 	 */
-	search(filterOrTextOrField, opt_textOrOperator, opt_value) {
-		let filter = filterOrTextOrField;
+  search(filterOrTextOrField, opt_textOrOperator, opt_value) {
+    let filter = filterOrTextOrField;
 
-		if (opt_value) {
-			filter = Filter.field(filterOrTextOrField, opt_textOrOperator, opt_value);
-		} else if (opt_textOrOperator) {
-			filter = Filter.match(filterOrTextOrField, opt_textOrOperator);
-		} else if (filter && !(filter instanceof Filter)) {
-			filter = Filter.match(filterOrTextOrField);
-		}
+    if (opt_value) {
+      filter = Filter.field(filterOrTextOrField, opt_textOrOperator, opt_value);
+    } else if (opt_textOrOperator) {
+      filter = Filter.match(filterOrTextOrField, opt_textOrOperator);
+    } else if (filter && !(filter instanceof Filter)) {
+      filter = Filter.match(filterOrTextOrField);
+    }
 
-		this.type('search');
+    this.type('search');
 
-		if (filter) {
-			this.filter(filter);
-		}
+    if (filter) {
+      this.filter(filter);
+    }
 
-		return this;
-	}
+    return this;
+  }
 
-	/**
+  /**
 	 * Adds a sort entry to this query, specifying the field this query should be
 	 * sorted by and, optionally, the sort direction.
 	 * @param {string} field The field that the query should be sorted by.
 	 * @param {string=} opt_direction The direction the sort operation should use.
 	 *   If none is given, "asc" is used by default.
-	 * @return {Query} Returns the {@link Query} object itself, so calls can be chained.
+	 * @return {Query} Returns the {@link Query} object itself, so calls can be
+	 *   chained.
 	 * @chainnable
 	 */
-	sort(field, opt_direction) {
-		if (!this.body_.sort) {
-			this.body_.sort = [];
-		}
-		let sortEntry = {};
-		sortEntry[field] = opt_direction || 'asc';
-		this.body_.sort.push(sortEntry);
-		return this;
-	}
+  sort(field, opt_direction) {
+    if (!this.body_.sort) {
+      this.body_.sort = [];
+    }
+    let sortEntry = {};
+    sortEntry[field] = opt_direction || 'asc';
+    this.body_.sort.push(sortEntry);
+    return this;
+  }
 
-	/**
+  /**
 	 * Sets the query type.
 	 * @param {string} type The query's type. For example: "count", "fetch".
-	 * @return {Query} Returns the {@link Query} object itself, so calls can be chained.
+	 * @return {Query} Returns the {@link Query} object itself, so calls can be
+	 *   chained.
 	 * @chainnable
 	 */
-	type(type) {
-		this.body_.type = type;
-		return this;
-	}
+  type(type) {
+    this.body_.type = type;
+    return this;
+  }
 }
 
 export default Query;

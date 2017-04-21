@@ -13,29 +13,35 @@ import FormData from 'form-data';
  * @interface
  */
 class NodeTransport extends Transport {
-	/**
+  /**
 	 * @inheritDoc
 	 */
-	send(clientRequest) {
-		let deferred = this.request(
-			clientRequest.url(), clientRequest.method(), clientRequest.body(),
-			clientRequest.headers(), clientRequest.params(), null, false);
+  send(clientRequest) {
+    let deferred = this.request(
+      clientRequest.url(),
+      clientRequest.method(),
+      clientRequest.body(),
+      clientRequest.headers(),
+      clientRequest.params(),
+      null,
+      false
+    );
 
-		return deferred.then(function(response) {
-			let clientResponse = new ClientResponse(clientRequest);
-			clientResponse.body(response.body);
-			clientResponse.statusCode(response.statusCode);
-			clientResponse.statusText(http.STATUS_CODES[response.statusCode]);
+    return deferred.then(function(response) {
+      let clientResponse = new ClientResponse(clientRequest);
+      clientResponse.body(response.body);
+      clientResponse.statusCode(response.statusCode);
+      clientResponse.statusText(http.STATUS_CODES[response.statusCode]);
 
-			Object.keys(response.headers).forEach(function(name) {
-				clientResponse.header(name, response.headers[name]);
-			});
+      Object.keys(response.headers).forEach(function(name) {
+        clientResponse.header(name, response.headers[name]);
+      });
 
-			return clientResponse;
-		});
-	}
+      return clientResponse;
+    });
+  }
 
-	/**
+  /**
 	 * Requests the url using XMLHttpRequest.
 	 * @param {!string} url
 	 * @param {!string} method
@@ -46,64 +52,64 @@ class NodeTransport extends Transport {
 	 * @return {CancellablePromise} Deferred ajax request.
 	 * @protected
 	 */
-	request(url, method, body, opt_headers, opt_params, opt_timeout) {
-		if (opt_params) {
-			url = new Uri(url).addParametersFromMultiMap(opt_params).toString();
-		}
+  request(url, method, body, opt_headers, opt_params, opt_timeout) {
+    if (opt_params) {
+      url = new Uri(url).addParametersFromMultiMap(opt_params).toString();
+    }
 
-		let options = {
-			method: method,
-			uri: url
-		};
+    let options = {
+      method: method,
+      uri: url,
+    };
 
-		if (opt_headers) {
-			let headers = {};
-			opt_headers.names().forEach(function(name) {
-				headers[name] = opt_headers.getAll(name).join(', ');
-			});
+    if (opt_headers) {
+      let headers = {};
+      opt_headers.names().forEach(function(name) {
+        headers[name] = opt_headers.getAll(name).join(', ');
+      });
 
-			options.headers = headers;
-		}
+      options.headers = headers;
+    }
 
-		let isFormData = false;
-		if (body) {
-			if (body instanceof FormData) {
-				isFormData = true;
-			} else {
-				options.body = body;
-			}
-		}
+    let isFormData = false;
+    if (body) {
+      if (body instanceof FormData) {
+        isFormData = true;
+      } else {
+        options.body = body;
+      }
+    }
 
-		if (opt_timeout) {
-			options.timeout = opt_timeout;
-		}
+    if (opt_timeout) {
+      options.timeout = opt_timeout;
+    }
 
-		let connection;
+    let connection;
 
-		return new CancellablePromise((resolve, reject) => {
-			connection = request(options, (error, response) => {
-				if (error) {
-					reject(error);
-					return;
-				}
-				resolve(response);
-			});
+    return new CancellablePromise((resolve, reject) => {
+      connection = request(options, (error, response) => {
+        if (error) {
+          reject(error);
+          return;
+        }
+        resolve(response);
+      });
 
-			// TODO: Request doesn't handle multipart/form-data very well. So the function
-			// .form() or the param formData doesn't work as expected.
-			// That's a path to overwrite the private attribute _form to bind the FormData
-			// to the request (https://github.com/request/request/blob/master/request.js#L1269)
-			// by default the package request uses `multipart` in a different function
-			// and scope, instead using FormData package by default.
-			if (isFormData) {
-				connection._form = body;
-			}
-		}).thenCatch((reason) => {
-			connection.abort();
-			throw reason;
-		});
-	}
-
+      // TODO: Request doesn't handle multipart/form-data very well.
+      // So the function .form() or the param formData doesn't work as expected.
+      // That's a path to overwrite the private attribute _form to bind the
+      // FormData to the request
+      // (https://github.com/request/request/blob/master/request.js#L1269)
+      // by default the package request uses `multipart` in a different function
+      // and scope, instead using FormData package by default.
+      if (isFormData) {
+        connection._form = body;
+      }
+    }).thenCatch(reason => {
+      connection.abort();
+      throw reason;
+    });
+  }
 }
 
 export default NodeTransport;

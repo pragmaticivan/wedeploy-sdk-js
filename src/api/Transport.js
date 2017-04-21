@@ -5,8 +5,7 @@
  * @interface
  */
 class Transport {
-
-	/**
+  /**
 	 * Sends a message for the specified client.
 	 * @method send
 	 * @param {!ClientRequest} clientRequest

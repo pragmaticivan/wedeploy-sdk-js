@@ -13,5 +13,5 @@ globals.window.Query = Query;
 globals.window.Range = Range;
 globals.window.WeDeploy = WeDeploy;
 
-export { Filter, Geo, Query, Range, WeDeploy };
+export {Filter, Geo, Query, Range, WeDeploy};
 export default WeDeploy;

@@ -4,9 +4,11 @@
   "description": "WeDeploy Api",
   "repository": "wedeploy/api-js",
   "scripts": {
+    "format": "prettier --single-quote --no-bracket-spacing --trailing-comma es5 --write \"{src/**/*.js,test/**/*.js,*.js}\" && eslint --fix \"{src/**/*.js,test/**/*.js,*.js}\"",
+    "lint": "gulp lint",
     "prepublish": "publish-please guard && gulp build",
-    "test": "gulp ci",
-    "publish-please": "publish-please"
+    "publish-please": "publish-please",
+    "test": "gulp ci"
   },
   "main": "build/node/api-min.js",
   "jsnext:main": "build/es2015/api-min.js",
@@ -35,8 +37,8 @@
     "babel-preset-metal": "^4.1.0",
     "babel-preset-metal-resolve-source": "^1.0.0",
     "chai": "^3.5.0",
-    "eslint": "^3.14.1",
-    "eslint-config-google": "^0.7.1",
+    "eslint": "^3.19.0",
+    "eslint-config-liferay": "^1.0.1",
     "gulp": "^3.8.11",
     "gulp-babel": "^6.1.2",
     "gulp-concat": "^2.6.0",
@@ -46,6 +48,7 @@
     "isparta": "^4.0.0",
     "metal-tools-build-rollup": "^2.0.0",
     "nock": "^9.0.2",
+    "prettier": "^1.2.2",
     "publish-please": "^2.3.0",
     "rollup-plugin-babel": "^2.6.1",
     "rollup-plugin-commonjs": "^7.0.0",
