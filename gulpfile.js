@@ -4,7 +4,6 @@ const babel = require('gulp-babel');
 const buildRollup = require('metal-tools-build-rollup');
 const commonJs = require('rollup-plugin-commonjs');
 const concat = require('gulp-concat');
-const eslint = require('rollup-plugin-eslint');
 const gulp = require('gulp');
 const metal = require('gulp-metal');
 const nodeResolve = require('rollup-plugin-node-resolve');
@@ -111,7 +110,6 @@ gulp.task('build:node', function() {
       format: 'cjs',
       exports: 'default',
       plugins: [
-        eslint(),
         commonJs(),
         rollupBabel({
           presets: ['es2015-rollup'],
@@ -131,7 +129,6 @@ gulp.task('build:es2015', function() {
     rollupConfig: {
       format: 'es',
       plugins: [
-        eslint(),
         nodeResolve({
           jsnext: true,
         }),
@@ -189,7 +186,7 @@ gulp.task('build:js:all', function(done) {
 });
 
 gulp.task('build', function(done) {
-  runSequence('clean', ['build:js'], 'uglify', done);
+  runSequence('clean', ['build:js', 'lint'], 'uglify', done);
 });
 
 function concatSocket(filePath, dest) {
