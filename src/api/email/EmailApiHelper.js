@@ -1,7 +1,8 @@
 'use strict';
 
-import ApiHelper from '../ApiHelper';
 import {assertDefAndNotNull, assertResponseSucceeded} from '../assertions';
+import {MultiMap} from 'metal-structs';
+import ApiHelper from '../ApiHelper';
 
 /**
  * Class responsible for encapsulate email api calls.
@@ -14,7 +15,7 @@ class EmailApiHelper extends ApiHelper {
 	 */
   constructor(wedeployClient) {
     super(wedeployClient);
-    this.params = {};
+    this.params = new MultiMap();
   }
 
   /**
@@ -27,7 +28,7 @@ class EmailApiHelper extends ApiHelper {
   from(from) {
     assertDefAndNotNull(from, 'Parameter "from" must be specified');
 
-    this.params.from = from;
+    this.params.set('from', from);
 
     return this;
   }
@@ -42,7 +43,7 @@ class EmailApiHelper extends ApiHelper {
   bcc(bcc) {
     assertDefAndNotNull(bcc, 'Parameter "bcc" must be specified');
 
-    this.params.bcc = bcc;
+    this.params.add('bcc', bcc);
 
     return this;
   }
@@ -57,7 +58,7 @@ class EmailApiHelper extends ApiHelper {
   cc(cc) {
     assertDefAndNotNull(cc, 'Parameter "cc" must be specified');
 
-    this.params.cc = cc;
+    this.params.add('cc', cc);
 
     return this;
   }
@@ -72,7 +73,7 @@ class EmailApiHelper extends ApiHelper {
   message(message) {
     assertDefAndNotNull(message, 'Parameter "message" must be specified');
 
-    this.params.message = message;
+    this.params.set('message', message);
 
     return this;
   }
@@ -87,7 +88,7 @@ class EmailApiHelper extends ApiHelper {
   priority(priority) {
     assertDefAndNotNull(priority, 'Parameter "priority" must be specified');
 
-    this.params.priority = priority;
+    this.params.set('priority', priority);
 
     return this;
   }
@@ -102,7 +103,7 @@ class EmailApiHelper extends ApiHelper {
   replyTo(replyTo) {
     assertDefAndNotNull(replyTo, 'Parameter "replyTo" must be specified');
 
-    this.params.replyTo = replyTo;
+    this.params.set('replyTo', replyTo);
 
     return this;
   }
@@ -117,7 +118,7 @@ class EmailApiHelper extends ApiHelper {
   to(to) {
     assertDefAndNotNull(to, 'Parameter "to" must be specified');
 
-    this.params.to = to;
+    this.params.add('to', to);
 
     return this;
   }
@@ -132,7 +133,7 @@ class EmailApiHelper extends ApiHelper {
   subject(subject) {
     assertDefAndNotNull(subject, 'Parameter "subject" must be specified');
 
-    this.params.subject = subject;
+    this.params.set('subject', subject);
 
     return this;
   }
@@ -147,9 +148,15 @@ class EmailApiHelper extends ApiHelper {
       .auth(this.helperAuthScope)
       .path('emails');
 
-    Object.keys(this.params).forEach(key => client.form(key, this.params[key]));
+    this.params.names().forEach(name => {
+      const values = this.params.getAll(name);
 
-    this.params = {};
+      values.forEach(value => {
+        client.form(name, value);
+      });
+    });
+
+    this.params.clear();
 
     return client
       .post()
@@ -158,7 +165,7 @@ class EmailApiHelper extends ApiHelper {
   }
 
   /**
-	 * Check the status of an email.
+	 * Checks the status of an email.
 	 * @param  {string} emailId
 	 * @return {!CancellablePromise}
 	 */
