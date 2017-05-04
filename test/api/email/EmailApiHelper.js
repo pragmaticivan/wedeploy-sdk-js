@@ -292,7 +292,7 @@ describe('EmailApiHelper', function() {
       const email = WeDeploy.email().from('test@test.com');
 
       email.send().then(result => {
-        assert.isTrue(email.params.isEmpty());
+        assert.strictEqual(true, email.params.isEmpty());
         done();
       });
     });
