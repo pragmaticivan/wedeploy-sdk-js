@@ -7,10 +7,10 @@
   },
   "repository": "wedeploy/api-js",
   "scripts": {
-    "build": "webpack && webpack --config webpack.node.config.js",
+    "build": "webpack && webpack --config webpack.node.config.js && gulp build:socket",
     "format": "prettier --single-quote --no-bracket-spacing --trailing-comma es5 --write \"{src/**/*.js,test/**/*.js,*.js}\" && eslint --fix \"{src/**/*.js,test/**/*.js,*.js}\"",
     "lint": "gulp lint",
-    "prepublish": "publish-please guard && gulp build",
+    "prepublish": "publish-please guard && npm run build",
     "publish-please": "publish-please",
     "test:ci": "gulp ci",
     "test": "gulp test && gulp test:node"
@@ -47,7 +47,7 @@
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.1",
     "gulp-metal": "^2.0.2",
-    "gulp-sourcemaps": "^2.6.0",
+    "gulp-uglify": "^2.1.2",
     "nock": "^9.0.2",
     "prettier": "^1.2.2",
     "publish-please": "^2.3.0",

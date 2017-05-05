@@ -3,7 +3,7 @@ const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
   entry: {
-    'node': './src/env/node.js',
+    node: './src/env/node.js',
   },
   externals: [nodeExternals()],
   module: {
@@ -20,9 +20,7 @@ module.exports = {
       },
     ],
   },
-  plugins: [
-    new webpack.optimize.UglifyJsPlugin(),
-  ],
+  plugins: [new webpack.optimize.UglifyJsPlugin()],
   output: {
     filename: `build/node/api-min.js`,
     libraryTarget: 'commonjs2',

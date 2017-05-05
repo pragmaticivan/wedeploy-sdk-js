@@ -4,17 +4,11 @@ const concat = require('gulp-concat');
 const gulp = require('gulp');
 const metal = require('gulp-metal');
 const runSequence = require('run-sequence');
-const sourcemaps = require('gulp-sourcemaps');
+const uglify = require('gulp-uglify');
 
 let options = {
   globalName: 'wedeploy',
   buildSrc: ['src/**/!(node)/*.js', '!src/env/node.js'],
-  bundleFileName: 'api.js',
-  mainBuildJsTasks: ['build:js:all'],
-  dest: 'build/globals',
-  rollupConfig: {
-    exports: 'named',
-  },
   src: 'src/env/browser.js',
   testNodeSrc: [
     'test/environment/node/env.js',
@@ -78,9 +72,6 @@ let options = {
       version: '5.0',
     },
   },
-
-  // See the `build:es2015` task for more information.
-  uglifySrc: 'build/!(es2015)/**.js',
   useEslint: true,
 };
 metal.registerTasks(options);
@@ -88,34 +79,21 @@ metal.registerTasks(options);
 /* eslint-disable no-console,require-jsdoc */
 gulp.task('ci', function(cb) {
   if (process.env.SAUCE_USERNAME) {
-    return runSequence('lint', 'test:saucelabs', 'test:node', 'build', cb);
+    return runSequence('lint', 'test:saucelabs', 'test:node', cb);
   }
   console.warn('Not running tests (most likely due to security restrictions)');
   console.warn('See https://docs.travis-ci.com/user/sauce-connect/ for help');
   cb();
 });
 
-gulp.task('build:socket', function(done) {
-  return runSequence('build:socket:globals', 'build:socket:es2015', done);
-});
-
-gulp.task('build:socket:globals', function() {
-  return concatSocket('build/globals/api.js', 'build/globals');
-});
-
-gulp.task('build:socket:es2015', function() {
-  return concatSocket('build/es2015/api.js', 'build/es2015');
+gulp.task('build:socket', function() {
+  return concatSocket('build/browser/api-min.js', 'build/browser');
 });
 
 function concatSocket(filePath, dest) {
   return gulp
     .src(['node_modules/socket.io-client/dist/socket.io.js', filePath])
-    .pipe(
-      sourcemaps.init({
-        loadMaps: true,
-      })
-    )
-    .pipe(concat('api.js'))
-    .pipe(sourcemaps.write())
+    .pipe(concat('api-min.js'))
+    .pipe(uglify())
     .pipe(gulp.dest(dest));
 }

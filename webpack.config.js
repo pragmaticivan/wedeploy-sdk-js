@@ -2,7 +2,7 @@ const webpack = require('webpack');
 
 module.exports = {
   entry: {
-    'browser': './src/env/browser.js',
+    browser: './src/env/browser.js',
   },
   module: {
     rules: [
@@ -18,9 +18,7 @@ module.exports = {
       },
     ],
   },
-  plugins: [
-    new webpack.optimize.UglifyJsPlugin(),
-  ],
+  plugins: [new webpack.optimize.UglifyJsPlugin()],
   output: {
     filename: `build/browser/api-min.js`,
     libraryTarget: 'umd',
