@@ -28,4 +28,4 @@ WeDeploy.Range = Range;
 // named exports.
 WeDeploy.WeDeploy = WeDeploy;
 
-export default WeDeploy;
+module.exports = WeDeploy;
