@@ -143,10 +143,7 @@ class EmailApiHelper extends ApiHelper {
 	 * @return {!CancellablePromise}
 	 */
   send() {
-    const client = this.wedeployClient
-      .url(this.wedeployClient.emailUrl_)
-      .auth(this.helperAuthScope)
-      .path('emails');
+    const client = this.buildUrl_().path('emails');
 
     this.params.names().forEach(name => {
       const values = this.params.getAll(name);
@@ -157,6 +154,7 @@ class EmailApiHelper extends ApiHelper {
     });
 
     this.params.clear();
+    this.headers_.clear();
 
     return client
       .post()
@@ -172,13 +170,24 @@ class EmailApiHelper extends ApiHelper {
   status(emailId) {
     assertDefAndNotNull(emailId, 'Parameter "emailId" param must be specified');
 
-    return this.wedeployClient
-      .url(this.wedeployClient.emailUrl_)
-      .auth(this.helperAuthScope)
+    return this.buildUrl_()
       .path('emails', emailId, 'status')
       .get()
       .then(response => assertResponseSucceeded(response))
       .then(response => response.body());
+  }
+
+  /**
+   * Builds URL by joining the headers and auth.
+   * @return {WeDeploy} Returns the {@link WeDeploy} object itself, so calls can
+   *   be chained.
+   * @chainable
+   */
+  buildUrl_() {
+    return this.wedeployClient
+      .url(this.wedeployClient.emailUrl_)
+      .headers(this.headers_)
+      .auth(this.helperAuthScope);
   }
 }
 

@@ -1,6 +1,7 @@
 'use strict';
 
 import {core} from 'metal';
+import {MultiMap} from 'metal-structs';
 
 import {
   assertDefAndNotNull,
@@ -31,6 +32,7 @@ class Auth {
     this.photoUrl = null;
     this.supportedScopes = [];
     this.wedeployClient = null;
+    this.headers_ = new MultiMap();
   }
 
   /**
@@ -195,6 +197,24 @@ class Auth {
   }
 
   /**
+	 * Sets the headers.
+	 * @param {!MultiMap|Object} headers The headers to be set
+	 */
+  setHeaders(headers) {
+    if (!(headers instanceof MultiMap)) {
+      headers = MultiMap.fromObject(headers);
+    }
+
+    headers.names().forEach(name => {
+      const values = headers.getAll(name);
+
+      values.forEach(value => {
+        this.headers_.set(name, value);
+      });
+    });
+  }
+
+  /**
 	 * Sets the id.
 	 * @param {string} id
 	 */
@@ -257,8 +277,7 @@ class Auth {
 	 */
   updateUser(data) {
     assertObject(data, 'User data must be specified as object');
-    return this.wedeployClient
-      .url(this.wedeployClient.authUrl_)
+    return this.buildUrl_()
       .path('/users', this.getId().toString())
       .auth(this)
       .patch(data)
@@ -271,12 +290,23 @@ class Auth {
 	 */
   deleteUser() {
     assertDefAndNotNull(this.getId(), 'Cannot delete user without id');
-    return this.wedeployClient
-      .url(this.wedeployClient.authUrl_)
+    return this.buildUrl_()
       .path('/users', this.getId().toString())
       .auth(this)
       .delete()
       .then(response => assertResponseSucceeded(response));
+  }
+
+  /**
+   * Builds URL by joining the headers.
+   * @return {WeDeploy} Returns the {@link WeDeploy} object itself, so calls can
+   *   be chained.
+   * @chainable
+   */
+  buildUrl_() {
+    return this.wedeployClient
+      .url(this.wedeployClient.authUrl_)
+      .headers(this.headers_);
   }
 }
 

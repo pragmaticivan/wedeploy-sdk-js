@@ -314,9 +314,7 @@ class DataApiHelper extends ApiHelper {
     assertDefAndNotNull(collection, 'Collection key must be specified.');
     assertObject(data, 'Data can\'t be empty.');
 
-    return this.wedeployClient
-      .url(this.wedeployClient.dataUrl_)
-      .auth(this.helperAuthScope)
+    return this.buildUrl_()
       .path(collection)
       .post(data)
       .then(response => assertResponseSucceeded(response))
@@ -344,9 +342,7 @@ class DataApiHelper extends ApiHelper {
     assertDefAndNotNull(doc, 'Document key must be specified.');
     assertObject(data, 'Data must be specified.');
 
-    return this.wedeployClient
-      .url(this.wedeployClient.dataUrl_)
-      .auth(this.helperAuthScope)
+    return this.buildUrl_()
       .path(doc)
       .put(data)
       .then(response => assertResponseSucceeded(response))
@@ -374,9 +370,7 @@ class DataApiHelper extends ApiHelper {
     assertDefAndNotNull(doc, 'Document key must be specified.');
     assertObject(data, 'Data must be specified.');
 
-    return this.wedeployClient
-      .url(this.wedeployClient.dataUrl_)
-      .auth(this.helperAuthScope)
+    return this.buildUrl_()
       .path(doc)
       .patch(data)
       .then(response => assertResponseSucceeded(response))
@@ -392,9 +386,7 @@ class DataApiHelper extends ApiHelper {
   delete(key) {
     assertDefAndNotNull(key, 'Document/Field/Collection key must be specified');
 
-    return this.wedeployClient
-      .url(this.wedeployClient.dataUrl_)
-      .auth(this.helperAuthScope)
+    return this.buildUrl_()
       .path(key)
       .delete()
       .then(response => assertResponseSucceeded(response))
@@ -409,9 +401,7 @@ class DataApiHelper extends ApiHelper {
   get(key) {
     assertDefAndNotNull(key, 'Document/Field/Collection key must be specified');
 
-    return this.wedeployClient
-      .url(this.wedeployClient.dataUrl_)
-      .auth(this.helperAuthScope)
+    return this.buildUrl_()
       .path(key)
       .get(this.processAndResetQueryState())
       .then(response => assertResponseSucceeded(response))
@@ -429,9 +419,7 @@ class DataApiHelper extends ApiHelper {
 
     this.isSearch_ = true;
 
-    return this.wedeployClient
-      .url(this.wedeployClient.dataUrl_)
-      .auth(this.helperAuthScope)
+    return this.buildUrl_()
       .path(key)
       .get(this.processAndResetQueryState())
       .then(response => assertResponseSucceeded(response))
@@ -448,15 +436,26 @@ class DataApiHelper extends ApiHelper {
   watch(collection, opt_options) {
     assertDefAndNotNull(collection, 'Collection key must be specified');
 
-    return this.wedeployClient
-      .url(this.wedeployClient.dataUrl_)
-      .auth(this.helperAuthScope)
+    return this.buildUrl_()
       .path(collection)
       .watch(this.processAndResetQueryState(), opt_options);
   }
 
   /**
-	 * Gets the currentl used main {@link Filter} object. If none exists yet, a
+	* Builds URL by joining the headers and auth.
+	* @return {WeDeploy} Returns the {@link WeDeploy} object itself, so calls can
+	*   be chained.
+	* @chainable
+	*/
+  buildUrl_() {
+    return this.wedeployClient
+      .url(this.wedeployClient.dataUrl_)
+      .headers(this.headers_)
+      .auth(this.helperAuthScope);
+  }
+
+  /**
+	 * Gets the currently used main {@link Filter} object. If none exists yet, a
 	 * new one is created.
 	 * @return {!Query}
 	 * @protected
@@ -501,9 +500,10 @@ class DataApiHelper extends ApiHelper {
     }
 
     const query = this.query_;
-    this.query_ = null;
+    this.headers_.clear();
     this.filter_ = null;
     this.isSearch_ = false;
+    this.query_ = null;
     return query;
   }
 }

@@ -54,6 +54,17 @@ describe('AuthApiHelper', function() {
     });
   });
 
+  it('should set header to WeDeploy.auth() when getUser is invoked', function(
+    done
+  ) {
+    RequestMock.intercept().reply(200);
+    WeDeploy.auth().currentUser = Auth.create('token1');
+    WeDeploy.auth().header('TestHost', 'localhost').getUser('id').then(() => {
+      assert.strictEqual(getTestHostHeader_(), 'localhost');
+      done();
+    });
+  });
+
   it('should map providers', function() {
     const auth = WeDeploy.auth();
     assert.ok(auth.provider.Google);
@@ -202,6 +213,16 @@ describe('AuthApiHelper', function() {
         done();
       });
     });
+
+    it('should set header on sending password reset email', function(done) {
+      const auth = WeDeploy.auth().header('TestHost', 'localhost');
+      RequestMock.intercept().reply(200);
+      auth.sendPasswordResetEmail('email@domain.com').then(response => {
+        assert.strictEqual(getTestHostHeader_(), 'localhost');
+
+        done();
+      });
+    });
   });
 
   describe('Create user', function() {
@@ -257,6 +278,15 @@ describe('AuthApiHelper', function() {
         done();
       });
     });
+
+    it('should set header on create user', function(done) {
+      const auth = WeDeploy.auth('http://auth');
+      RequestMock.intercept('POST', 'http://auth/users').reply(200);
+      auth.header('TestHost', 'localhost').createUser({}).then(user => {
+        assert.strictEqual(getTestHostHeader_(), 'localhost');
+        done();
+      });
+    });
   });
 
   describe('Sign in with email and password', function() {
@@ -294,6 +324,24 @@ describe('AuthApiHelper', function() {
         .signInWithEmailAndPassword('email@domain.com', 'password')
         .then(user => {
           assert.ok(user instanceof Auth);
+          done();
+        });
+    });
+
+    it('should set header on sign-in with email and password', function(done) {
+      const auth = WeDeploy.auth();
+      auth.loadCurrentUser = () => new Auth();
+      const authData = {
+        access_token: 'xyz',
+      };
+      RequestMock.intercept().reply(200, JSON.stringify(authData), {
+        'content-type': 'application/json',
+      });
+      auth
+        .header('TestHost', 'localhost')
+        .signInWithEmailAndPassword('email@domain.com', 'password')
+        .then(user => {
+          assert.strictEqual(getTestHostHeader_(), 'localhost');
           done();
         });
     });
@@ -366,6 +414,16 @@ describe('AuthApiHelper', function() {
         done();
       });
     });
+
+    it('should set header to sign-out', function(done) {
+      const auth = WeDeploy.auth().header('TestHost', 'localhost');
+      auth.currentUser = {};
+      RequestMock.intercept().reply(200);
+      auth.signOut().then(response => {
+        assert.strictEqual(getTestHostHeader_(), 'localhost');
+        done();
+      });
+    });
   });
 
   describe('Get user', function() {
@@ -411,6 +469,16 @@ describe('AuthApiHelper', function() {
       });
       auth.getUser('userId').catch(reason => {
         assert.deepEqual(responseErrorObject, reason);
+        done();
+      });
+    });
+
+    it('should set headers on getUser', function(done) {
+      const auth = WeDeploy.auth();
+      auth.currentUser = {};
+      RequestMock.intercept().reply(200);
+      auth.header('TestHost', 'localhost').getUser('userId').then(user => {
+        assert.strictEqual(getTestHostHeader_(), 'localhost');
         done();
       });
     });
@@ -466,6 +534,19 @@ describe('AuthApiHelper', function() {
         );
         done();
       });
+    });
+
+    it('should set header when load current user is invoked', function(done) {
+      RequestMock.intercept().reply(200, JSON.stringify({}), {
+        'content-type': 'application/json',
+      });
+      WeDeploy.auth('http://auth')
+        .header('TestHost', 'localhost')
+        .loadCurrentUser('xyz')
+        .then(() => {
+          assert.strictEqual(getTestHostHeader_(), 'localhost');
+          done();
+        });
     });
   });
 
@@ -590,6 +671,20 @@ describe('AuthApiHelper', function() {
         WeDeploy.auth('http://auth').verifyToken();
       }, Error);
     });
+
+    it('should set header to verify token method', function(done) {
+      const auth = WeDeploy.auth('http://auth').header('TestHost', 'localhost');
+      const data = {
+        access_token: 'token',
+      };
+      RequestMock.intercept().reply(200, JSON.stringify(data), {
+        'content-type': 'application/json',
+      });
+      auth.verifyToken('token').then(response => {
+        assert.strictEqual(getTestHostHeader_(), 'localhost');
+        done();
+      });
+    });
   });
 
   describe('Verify user', function() {
@@ -653,6 +748,18 @@ function getAuthorizationHeader_() {
   const request = RequestMock.get();
   const headers = request.requestHeaders || request.req.headers;
   return headers.Authorization || headers.authorization;
+}
+
+/**
+ * Gets the "TestHost" header from the request object. Manages different
+ * mock formats (browser vs node).
+ * @return {?string}
+ * @protected
+ */
+function getTestHostHeader_() {
+  const request = RequestMock.get();
+  const headers = request.requestHeaders || request.req.headers;
+  return headers.TestHost || headers.testhost;
 }
 
 /**

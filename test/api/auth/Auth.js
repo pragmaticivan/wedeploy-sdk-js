@@ -118,6 +118,19 @@ describe('Auth', function() {
         done();
       });
     });
+
+    it('should set headers to updateUser', function(done) {
+      const auth = Auth.create();
+      auth.setId(3);
+      auth.setHeaders({HostHeader: 'localhost'});
+
+      auth.setWedeployClient(WeDeploy);
+      RequestMock.intercept('PATCH', 'http://localhost/users/3').reply(200);
+      auth.updateUser({}).then(function(response) {
+        assert.strictEqual(getTestHostHeader_(), 'localhost');
+        done();
+      });
+    });
   });
 
   describe('Auth.deleteUser', function() {
@@ -163,5 +176,29 @@ describe('Auth', function() {
         done();
       });
     });
+
+    it('should set headers to deleteUser', function(done) {
+      const auth = Auth.create();
+      auth.setId('id');
+      auth.setHeaders({HostHeader: 'localhost'});
+      auth.setWedeployClient(WeDeploy);
+      RequestMock.intercept('DELETE', 'http://localhost/users/id').reply(200);
+      auth.deleteUser().then(function(response) {
+        assert.strictEqual(getTestHostHeader_(), 'localhost');
+        done();
+      });
+    });
   });
 });
+
+/**
+ * Gets the "TestHost" header from the request object. Manages different
+ * mock formats (browser vs node).
+ * @return {?string}
+ * @protected
+ */
+function getTestHostHeader_() {
+  const request = RequestMock.get();
+  const headers = request.requestHeaders || request.req.headers;
+  return headers.HostHeader || headers.hostheader;
+}

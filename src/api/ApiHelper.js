@@ -1,7 +1,8 @@
 'use strict';
 
-import Auth from './auth/Auth';
 import {assertDefAndNotNull} from './assertions';
+import {MultiMap} from 'metal-structs';
+import Auth from './auth/Auth';
 
 /**
  * Class responsible for encapsulating API calls.
@@ -18,6 +19,25 @@ class ApiHelper {
       'WeDeploy client reference must be specified'
     );
     this.wedeployClient = wedeployClient;
+    this.headers_ = new MultiMap();
+  }
+
+  /**
+	 * Adds a header. If a header with the same name already exists, it will not
+	 * be overwritten, but the new value will be stored as well. The order is
+	 * preserved.
+	 * @param {string} name
+	 * @param {string} value
+	 * @return {!ClientMessage} Returns the {@link ClientMessage}
+	 *   object itself, so calls can be chained.
+	 * @chainable
+	 */
+  header(name, value) {
+    if (arguments.length !== 2) {
+      throw new Error('Invalid arguments');
+    }
+    this.headers_.set(name, value);
+    return this;
   }
 
   /**

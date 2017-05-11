@@ -170,6 +170,20 @@ describe('DataApiHelper', function() {
           });
       });
     });
+
+    it('should set headers on create', function(done) {
+      RequestMock.intercept().reply(200, '{"id": 1, "ping": "pong"}');
+
+      WeDeploy.data()
+        .header('TestHost', 'localhost')
+        .create('collection', {
+          ping: 'pong',
+        })
+        .then(response => {
+          assert.strictEqual(getTestHostHeader_(), 'localhost');
+          done();
+        });
+    });
   });
 
   describe('.update()', function() {
@@ -264,6 +278,20 @@ describe('DataApiHelper', function() {
             done();
           });
       });
+    });
+
+    it('should set headers on update', function(done) {
+      RequestMock.intercept().reply(200, '{"id": 1, "ping": "pongUpdated"}');
+
+      WeDeploy.data()
+        .header('TestHost', 'localhost')
+        .update('collection/1', {
+          ping: 'pongUpdated',
+        })
+        .then(response => {
+          assert.strictEqual(getTestHostHeader_(), 'localhost');
+          done();
+        });
     });
   });
 
@@ -360,6 +388,20 @@ describe('DataApiHelper', function() {
           });
       });
     });
+
+    it('should set headers on replace', function(done) {
+      RequestMock.intercept().reply(200, '{"id": 1, "ping": "pongUpdated"}');
+
+      WeDeploy.data()
+        .header('TestHost', 'localhost')
+        .replace('collection/1', {
+          ping: 'pongUpdated',
+        })
+        .then(response => {
+          assert.strictEqual(getTestHostHeader_(), 'localhost');
+          done();
+        });
+    });
   });
 
   describe('.delete()', function() {
@@ -403,7 +445,7 @@ describe('DataApiHelper', function() {
       });
     });
 
-    context('when successfuly deletes data', function() {
+    context('when successfully deletes data', function() {
       it('should delete a field', function(done) {
         RequestMock.intercept(
           'DELETE',
@@ -1169,6 +1211,21 @@ describe('DataApiHelper', function() {
     });
 
     context('when using valid params', function() {
+      it('should set headers on search', function(done) {
+        RequestMock.intercept('GET', 'http://localhost/food?type=search').reply(
+          200,
+          '{"total":1}'
+        );
+
+        WeDeploy.data()
+          .header('TestHost', 'localhost')
+          .search('food')
+          .then(function(response) {
+            assert.strictEqual(getTestHostHeader_(), 'localhost');
+            done();
+          });
+      });
+
       it('should send search request when no filters are provided', function(
         done
       ) {
@@ -1315,6 +1372,21 @@ describe('DataApiHelper', function() {
     });
 
     context('when using valid params', function() {
+      it('should set headers on get', function(done) {
+        RequestMock.intercept('GET', 'http://localhost/food').reply(
+          200,
+          '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]'
+        );
+
+        WeDeploy.data()
+          .header('TestHost', 'localhost')
+          .get('food')
+          .then(response => {
+            assert.strictEqual(getTestHostHeader_(), 'localhost');
+            done();
+          });
+      });
+
       it('should return all data of a collection', function(done) {
         RequestMock.intercept('GET', 'http://localhost/food').reply(
           200,
@@ -1458,3 +1530,15 @@ describe('DataApiHelper', function() {
     );
   });
 });
+
+/**
+ * Gets the "TestHost" header from the request object. Manages different
+ * mock formats (browser vs node).
+ * @return {?string}
+ * @protected
+ */
+function getTestHostHeader_() {
+  const request = RequestMock.get();
+  const headers = request.requestHeaders || request.req.headers;
+  return headers.TestHost || headers.testhost;
+}

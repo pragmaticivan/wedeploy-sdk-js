@@ -265,6 +265,22 @@ describe('EmailApiHelper', function() {
         done();
       });
     });
+
+    it('should set headers on send', function(done) {
+      RequestMock.intercept('POST', 'http://localhost/emails').reply(
+        200,
+        '{"sent": "ok"}'
+      );
+
+      WeDeploy.email()
+        .header('TestHost', 'localhost')
+        .from('test@test.com')
+        .send()
+        .then(result => {
+          assert.strictEqual(getTestHostHeader_(), 'localhost');
+          done();
+        });
+    });
   });
 
   describe('.status()', function() {
@@ -288,5 +304,32 @@ describe('EmailApiHelper', function() {
         email.status(null);
       }, Error);
     });
+
+    it('should set headers on status', function(done) {
+      RequestMock.intercept('GET', 'http://localhost/emails/xyz/status').reply(
+        200,
+        '{"sent": "ok"}'
+      );
+
+      WeDeploy.email()
+        .header('TestHost', 'localhost')
+        .status('xyz')
+        .then(result => {
+          assert.strictEqual(getTestHostHeader_(), 'localhost');
+          done();
+        });
+    });
   });
 });
+
+/**
+ * Gets the "TestHost" header from the request object. Manages different
+ * mock formats (browser vs node).
+ * @return {?string}
+ * @protected
+ */
+function getTestHostHeader_() {
+  const request = RequestMock.get();
+  const headers = request.requestHeaders || request.req.headers;
+  return headers.TestHost || headers.testhost;
+}

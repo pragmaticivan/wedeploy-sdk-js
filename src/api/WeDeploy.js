@@ -332,11 +332,34 @@ class WeDeploy {
   }
 
   /**
-	 * Gets the headers.
-	 * @return {!MultiMap}
-	 */
-  headers() {
-    return this.headers_;
+	 * Gets or sets the headers. If headers are passed to the function as
+   * parameter, they will be set as internal headers, overwriting the existing
+   * ones. Otherwise, the currently set headers will be returned.
+   * @param {MultiMap|Object=} opt_headers Headers to be set
+	 * @return {WeDeploy|MultiMap} If headers were passed to te function,
+   *   the returned result will be the {@link WeDeploy} object itself, so calls
+   *   can be chained. If headers were not passed to the function, the returned
+   *   result will be the current headers.
+   * @chainable Chainable when used as setter.
+   */
+  headers(opt_headers) {
+    if (core.isDefAndNotNull(opt_headers)) {
+      if (!(opt_headers instanceof MultiMap)) {
+        opt_headers = MultiMap.fromObject(opt_headers);
+      }
+
+      opt_headers.names().forEach(name => {
+        const values = opt_headers.getAll(name);
+
+        values.forEach(value => {
+          this.headers_.set(name, value);
+        });
+      });
+
+      return this;
+    } else {
+      return this.headers_;
+    }
   }
 
   /**
@@ -410,6 +433,8 @@ class WeDeploy {
     if (core.isDefAndNotNull(this.auth_)) {
       wedeployClient.auth(this.auth_);
     }
+
+    wedeployClient.headers(this.headers_);
 
     return wedeployClient.use(this.customTransport_);
   }

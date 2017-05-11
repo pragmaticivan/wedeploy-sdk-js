@@ -69,9 +69,7 @@ class AuthApiHelper extends ApiHelper {
   createUser(data) {
     assertObject(data, 'User data must be specified as object');
 
-    let request = this.wedeployClient
-      .url(this.wedeployClient.authUrl_)
-      .path('/users');
+    let request = this.buildUrl_().path('/users');
 
     let authScope = this.resolveAuthScope();
     if (authScope) {
@@ -135,8 +133,7 @@ class AuthApiHelper extends ApiHelper {
   getUser(userId) {
     assertDefAndNotNull(userId, 'User userId must be specified');
     assertUserSignedIn(this.currentUser);
-    return this.wedeployClient
-      .url(this.wedeployClient.authUrl_)
+    return this.buildUrl_()
       .path('/users', userId)
       .auth(this.resolveAuthScope().token)
       .get()
@@ -276,8 +273,7 @@ class AuthApiHelper extends ApiHelper {
 	 */
   sendPasswordResetEmail(email) {
     assertDefAndNotNull(email, 'Send password reset email must be specified');
-    return this.wedeployClient
-      .url(this.wedeployClient.authUrl_)
+    return this.buildUrl_()
       .path('/user/recover')
       .param('email', email)
       .post()
@@ -294,8 +290,7 @@ class AuthApiHelper extends ApiHelper {
     assertDefAndNotNull(email, 'Sign-in email must be specified');
     assertDefAndNotNull(password, 'Sign-in password must be specified');
 
-    return this.wedeployClient
-      .url(this.wedeployClient.authUrl_)
+    return this.buildUrl_()
       .path('/oauth/token')
       .param('grant_type', 'password')
       .param('username', email)
@@ -334,8 +329,7 @@ class AuthApiHelper extends ApiHelper {
 	 */
   signOut() {
     assertUserSignedIn(this.currentUser);
-    return this.wedeployClient
-      .url(this.wedeployClient.authUrl_)
+    return this.buildUrl_()
       .path('/oauth/revoke')
       .param('token', this.currentUser.token)
       .get()
@@ -345,6 +339,18 @@ class AuthApiHelper extends ApiHelper {
         this.unloadCurrentUser_();
         return response;
       });
+  }
+
+  /**
+   * Builds URL by joining the headers.
+   * @return {WeDeploy} Returns the {@link WeDeploy} object itself, so calls can
+   *   be chained.
+   * @chainable
+   */
+  buildUrl_() {
+    return this.wedeployClient
+      .url(this.wedeployClient.authUrl_)
+      .headers(this.headers_);
   }
 
   /**
@@ -368,8 +374,7 @@ class AuthApiHelper extends ApiHelper {
 	 */
   verifyToken(token) {
     assertDefAndNotNull(token, 'Token must be specified');
-    return this.wedeployClient
-      .url(this.wedeployClient.authUrl_)
+    return this.buildUrl_()
       .path('/oauth/tokeninfo')
       .param('token', token)
       .get()
@@ -389,8 +394,7 @@ class AuthApiHelper extends ApiHelper {
 	 */
   verifyUser(tokenOrEmail, opt_password) {
     assertDefAndNotNull(tokenOrEmail, 'Token or email must be specified');
-    return this.wedeployClient
-      .url(this.wedeployClient.authUrl_)
+    return this.buildUrl_()
       .path('/user')
       .auth(tokenOrEmail, opt_password)
       .get()
