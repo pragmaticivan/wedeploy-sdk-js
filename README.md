@@ -52,11 +52,11 @@ npm install
 ## Build
 
 ```
-gulp build
+npm run build
 ```
 
 ```
-gulp watch
+npm run build:watch
 ```
 
 ## Test
@@ -64,18 +64,33 @@ gulp watch
 ### Test on node.js
 
 ```
-gulp test:node
+npm run test:node
 ```
 
+```
+npm run test:node:watch
+```
 
 ### Test on browsers
 
 ```
-gulp test
+npm run test:browsers
 ```
 
 ```
-gulp test:watch
+npm run test:browsers:watch
+```
+
+### Test on both browsers and node
+
+```
+npm run test
+```
+
+## Release
+
+```
+npm run release
 ```
 
 ## License
