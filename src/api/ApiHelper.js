@@ -51,6 +51,7 @@ class ApiHelper {
 	 */
   auth(authOrTokenOrEmail, opt_password) {
     this.helperAuthScope = Auth.create(authOrTokenOrEmail, opt_password);
+    this.helperAuthScope.wedeployClient = this.wedeployClient;
     return this;
   }
 }
