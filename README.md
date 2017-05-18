@@ -71,20 +71,26 @@ npm run test:node
 npm run test:node:watch
 ```
 
-### Test on browsers
+### Test on browser
 
 ```
-npm run test:browsers
+npm run test:browser
 ```
 
 ```
-npm run test:browsers:watch
+npm run test:browser:watch
 ```
 
-### Test on both browsers and node
+### Test on both browser and node
 
 ```
 npm run test
+```
+
+### Test on browser with code coverage
+
+```
+npm run test:coverage
 ```
 
 ## Release

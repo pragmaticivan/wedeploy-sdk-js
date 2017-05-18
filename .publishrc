@@ -9,6 +9,6 @@
   },
   "confirm": true,
   "publishTag": "latest",
-  "prePublishScript": "gulp build",
+  "prePublishScript": "npm run release",
   "postPublishScript": ""
 }

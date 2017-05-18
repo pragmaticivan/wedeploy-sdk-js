@@ -7,7 +7,6 @@ const del = require('del');
 const eslint = require('gulp-eslint');
 const gulp = require('gulp');
 const isparta = require('isparta');
-const metal = require('gulp-metal');
 const mocha = require('gulp-mocha');
 const nodeExternals = require('webpack-node-externals');
 const runSequence = require('run-sequence');
@@ -23,82 +22,122 @@ let apiSuffix = '';
 let socketIoSuffix = '';
 let sourceMap = 'inline-source-map';
 
+const sauceLabsBrowsers = {
+  sl_chrome: {
+    base: 'SauceLabs',
+    browserName: 'chrome',
+  },
+  sl_safari_9: {
+    base: 'SauceLabs',
+    browserName: 'safari',
+    version: '9',
+  },
+  sl_firefox: {
+    base: 'SauceLabs',
+    browserName: 'firefox',
+  },
+  sl_ie_10: {
+    base: 'SauceLabs',
+    browserName: 'internet explorer',
+    platform: 'Windows 7',
+    version: '10',
+  },
+  sl_ie_11: {
+    base: 'SauceLabs',
+    browserName: 'internet explorer',
+    platform: 'Windows 8.1',
+    version: '11',
+  },
+  sl_edge_20: {
+    base: 'SauceLabs',
+    browserName: 'microsoftedge',
+    platform: 'Windows 10',
+    version: '13',
+  },
+  sl_edge_21: {
+    base: 'SauceLabs',
+    browserName: 'microsoftedge',
+    platform: 'Windows 10',
+    version: '14',
+  },
+  sl_iphone: {
+    base: 'SauceLabs',
+    browserName: 'iphone',
+    platform: 'OS X 10.10',
+    version: '9.2',
+  },
+  sl_android_4: {
+    base: 'SauceLabs',
+    browserName: 'android',
+    platform: 'Linux',
+    version: '4.4',
+  },
+  sl_android_5: {
+    base: 'SauceLabs',
+    browserName: 'android',
+    platform: 'Linux',
+    version: '5.0',
+  },
+};
+
+const babelOptions = {
+  presets: [babelPresetResolveSource, babelPresetMetal],
+  sourceMap: 'both',
+};
+
+const babelConfigCoverage = {
+  frameworks: ['mocha', 'chai', 'sinon', 'source-map-support', 'commonjs'],
+
+  files: [
+    'node_modules/metal/src/**/*.js',
+    'node_modules/metal-*/src/**/*.js',
+    'src/**/!(node)/*.js',
+    'test/environment/browser/env.js',
+    'test/**/*.js',
+  ],
+
+  exclude: ['src/env/node.js', 'test/**/node/**/*.js'],
+
+  preprocessors: {
+    'src/**/!(*.soy).js': ['coverage', 'commonjs'],
+    'src/**/*.soy.js': ['babel', 'commonjs'],
+    'node_modules/metal/**/*.js': ['babel', 'commonjs'],
+    'node_modules/metal-*/**/*.js': ['babel', 'commonjs'],
+    'test/**/*.js': ['babel', 'commonjs'],
+  },
+
+  babelPreprocessor: {options: babelOptions},
+};
+
+const babelConfigKarma = {
+  frameworks: ['mocha', 'chai', 'sinon', 'source-map-support', 'commonjs'],
+
+  files: [
+    'node_modules/metal/src/**/*.js',
+    'node_modules/metal-*/src/**/*.js',
+    'src/**/!(node)/*.js',
+    'test/environment/browser/env.js',
+    'test/**/*.js',
+  ],
+
+  exclude: ['src/env/node.js', 'test/**/node/**/*.js'],
+
+  preprocessors: {
+    'src/**/*.js': ['babel', 'commonjs'],
+    'node_modules/metal/**/*.js': ['babel', 'commonjs'],
+    'node_modules/metal-*/**/*.js': ['babel', 'commonjs'],
+    'test/**/*.js': ['babel', 'commonjs'],
+  },
+
+  babelPreprocessor: {options: babelOptions},
+};
+
 if (release) {
   plugins.push(new webpack.optimize.UglifyJsPlugin());
   apiSuffix = '-min';
   socketIoSuffix = '.min';
   sourceMap = false;
 }
-
-let options = {
-  buildSrc: ['src/**/!(node)/*.js', '!src/env/node.js'],
-  globalName: 'wedeploy',
-  src: 'src/env/browser.js',
-  testNodeSrc: [
-    'test/environment/node/env.js',
-    'test/**/*.js',
-    '!test/**/browser/**/*.js',
-  ],
-  testSaucelabsBrowsers: {
-    sl_chrome: {
-      base: 'SauceLabs',
-      browserName: 'chrome',
-    },
-    sl_safari_9: {
-      base: 'SauceLabs',
-      browserName: 'safari',
-      version: '9',
-    },
-    sl_firefox: {
-      base: 'SauceLabs',
-      browserName: 'firefox',
-    },
-    sl_ie_10: {
-      base: 'SauceLabs',
-      browserName: 'internet explorer',
-      platform: 'Windows 7',
-      version: '10',
-    },
-    sl_ie_11: {
-      base: 'SauceLabs',
-      browserName: 'internet explorer',
-      platform: 'Windows 8.1',
-      version: '11',
-    },
-    sl_edge_20: {
-      base: 'SauceLabs',
-      browserName: 'microsoftedge',
-      platform: 'Windows 10',
-      version: '13',
-    },
-    sl_edge_21: {
-      base: 'SauceLabs',
-      browserName: 'microsoftedge',
-      platform: 'Windows 10',
-      version: '14',
-    },
-    sl_iphone: {
-      base: 'SauceLabs',
-      browserName: 'iphone',
-      platform: 'OS X 10.10',
-      version: '9.2',
-    },
-    sl_android_4: {
-      base: 'SauceLabs',
-      browserName: 'android',
-      platform: 'Linux',
-      version: '4.4',
-    },
-    sl_android_5: {
-      base: 'SauceLabs',
-      browserName: 'android',
-      platform: 'Linux',
-      version: '5.0',
-    },
-  },
-  useEslint: true,
-};
-metal.registerTasks(options);
 
 gulp.task('build:browser', function() {
   const webpackConfig = {
@@ -130,7 +169,7 @@ gulp.task('build:browser', function() {
   return new Promise((resolve, reject) => {
     webpack(webpackConfig, (error, stats) => {
       if (error) {
-        console.log(error);
+        console.error(error);
         reject(error);
       } else {
         const output = stats.toString({
@@ -176,7 +215,7 @@ gulp.task('build:node', function() {
   return new Promise((resolve, reject) => {
     webpack(webpackConfig, (error, stats) => {
       if (error) {
-        console.log(error);
+        console.error(error);
         reject(error);
       } else {
         const output = stats.toString({
@@ -235,93 +274,34 @@ gulp.task('lint', function() {
 });
 
 gulp.task('test', function(done) {
-  runSequence('test:browsers', 'test:node', done);
+  runSequence('test:browser', 'test:node', done);
 });
 
-gulp.task('test:browsers', function(done) {
-  new Server(
-    {
-      browsers: ['Chrome'],
+gulp.task('test:browser', function(done) {
+  const config = Object.assign({}, babelConfigKarma, {
+    browsers: ['Chrome'],
 
-      exclude: ['src/env/node.js', 'test/**/node/**/*.js'],
+    singleRun: !watch,
+  });
 
-      files: [
-        {pattern: 'node_modules/metal/src/**/*.js', watched: false},
-        {pattern: 'node_modules/metal-*/src/**/*.js', watched: false},
-        {pattern: 'src/**/!(node)/*.js', watched: false},
-        {pattern: 'test/environment/browser/env.js', watched: false},
-        {pattern: 'test/**/*.js', watched: false},
-      ],
-
-      frameworks: ['mocha', 'chai', 'sinon'],
-
-      preprocessors: {
-        'node_modules/metal/src/**/*.js': ['webpack'],
-        'node_modules/metal-*/src/**/*.js': ['webpack'],
-        'src/**/!(node)/*.js': ['webpack'],
-        'test/environment/browser/env.js': ['webpack'],
-        'test/**/*.js': ['webpack'],
-      },
-
-      webpack: {
-        // set devtool to 'inline-source-map' if source maps are needed.
-        // disabled by default since with source maps test run twice slower
-        devtool: false,
-      },
-
-      webpackMiddleware: {
-        noInfo: true,
-        stats: 'errors-only',
-      },
-      singleRun: !watch,
-    },
-    done
-  ).start();
+  new Server(config, done).start();
 });
 
 gulp.task('test:coverage', function(done) {
-  let babelOptions = {
-    presets: [babelPresetResolveSource, babelPresetMetal],
-    sourceMap: 'both',
-  };
+  const config = Object.assign({}, babelConfigCoverage, {
+    browsers: ['Chrome'],
 
-  new Server(
-    {
-      frameworks: ['mocha', 'chai', 'sinon', 'source-map-support', 'commonjs'],
+    reporters: ['coverage', 'progress'],
 
-      files: [
-        'node_modules/metal/src/**/*.js',
-        'node_modules/metal-*/src/**/*.js',
-        'src/**/!(node)/*.js',
-        'test/environment/browser/env.js',
-        'test/**/*.js',
-      ],
-
-      exclude: ['src/env/node.js', 'test/**/node/**/*.js'],
-
-      preprocessors: {
-        'src/**/!(*.soy).js': ['coverage', 'commonjs'],
-        'src/**/*.soy.js': ['babel', 'commonjs'],
-        'node_modules/metal/**/*.js': ['babel', 'commonjs'],
-        'node_modules/metal-*/**/*.js': ['babel', 'commonjs'],
-        'test/**/*.js': ['babel', 'commonjs'],
-      },
-
-      browsers: ['Chrome'],
-
-      reporters: ['coverage', 'progress'],
-
-      babelPreprocessor: {options: babelOptions},
-
-      coverageReporter: {
-        instrumenters: {isparta: isparta},
-        instrumenter: {'**/*.js': 'isparta'},
-        instrumenterOptions: {isparta: {babel: babelOptions}},
-        reporters: [{type: 'lcov', subdir: 'lcov'}, {type: 'text-summary'}],
-      },
+    coverageReporter: {
+      instrumenters: {isparta: isparta},
+      instrumenter: {'**/*.js': 'isparta'},
+      instrumenterOptions: {isparta: {babel: babelOptions}},
+      reporters: [{type: 'lcov', subdir: 'lcov'}, {type: 'text-summary'}],
     },
-    done
-  ).start();
+  });
+
+  new Server(config, done).start();
 });
 
 gulp.task('test:node', function() {
@@ -343,6 +323,31 @@ gulp.task('test:node', function() {
 
 gulp.task('test:node:watch', ['test:node'], function() {
   gulp.watch(['src/**/*', 'test/**/*'], ['test:node']);
+});
+
+gulp.task('test:saucelabs', function(done) {
+  const config = Object.assign({}, babelConfigKarma, {
+    browsers: Object.keys(sauceLabsBrowsers),
+
+    browserDisconnectTimeout: 10000,
+    browserDisconnectTolerance: 2,
+    browserNoActivityTimeout: 240000,
+
+    captureTimeout: 240000,
+    customLaunchers: sauceLabsBrowsers,
+
+    reporters: ['dots', 'saucelabs'],
+
+    sauceLabs: {
+      recordScreenshots: false,
+      startConnect: false,
+      tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER,
+    },
+
+    singleRun: true,
+  });
+
+  new Server(config, done).start();
 });
 
 function concatSocketIO(filePath, dest) {
