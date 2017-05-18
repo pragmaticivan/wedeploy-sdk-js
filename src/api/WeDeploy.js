@@ -116,6 +116,7 @@ class WeDeploy {
 	 */
   auth(authOrTokenOrEmail, opt_password) {
     this.auth_ = Auth.create(authOrTokenOrEmail, opt_password);
+    this.auth_.setWedeployClient(WeDeploy);
     return this;
   }
 
