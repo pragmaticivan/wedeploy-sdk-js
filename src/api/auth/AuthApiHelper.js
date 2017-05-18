@@ -61,6 +61,16 @@ class AuthApiHelper extends ApiHelper {
   }
 
   /**
+   * @param {Object} data
+   * @return {Auth}
+   */
+  createAuthFromData(data) {
+    const auth = Auth.createFromData(data);
+    auth.setWedeployClient(this.wedeployClient);
+    return auth;
+  }
+
+  /**
 	 * Creates user.
 	 * @param {!Object} data The data to be used to create the user.
 	 * @return {CancellablePromise}
@@ -78,7 +88,7 @@ class AuthApiHelper extends ApiHelper {
     return request
       .post(data)
       .then(response => assertResponseSucceeded(response))
-      .then(response => Auth.createFromData(response.body()));
+      .then(response => this.createAuthFromData(response.body()));
   }
 
   /**
@@ -137,7 +147,7 @@ class AuthApiHelper extends ApiHelper {
       .auth(this.resolveAuthScope().token)
       .get()
       .then(response => assertResponseSucceeded(response))
-      .then(response => Auth.createFromData(response.body()));
+      .then(response => this.createAuthFromData(response.body()));
   }
 
   /**
@@ -214,7 +224,7 @@ class AuthApiHelper extends ApiHelper {
     }
     let currentUser = this.storage && this.storage.get('currentUser');
     if (currentUser) {
-      this.currentUser = Auth.createFromData(currentUser);
+      this.currentUser = this.createAuthFromData(currentUser);
     }
   }
 
@@ -384,7 +394,7 @@ class AuthApiHelper extends ApiHelper {
         } else {
           data.token = tokenOrEmail;
         }
-        return Auth.createFromData(data);
+        return this.createAuthFromData(data);
       });
   }
 }
