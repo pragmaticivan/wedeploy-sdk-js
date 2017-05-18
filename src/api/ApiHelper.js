@@ -50,10 +50,7 @@ class ApiHelper {
 	 * @chainable
 	 */
   auth(authOrTokenOrEmail, opt_password) {
-    this.helperAuthScope = authOrTokenOrEmail;
-    if (!(this.helperAuthScope instanceof Auth)) {
-      this.helperAuthScope = Auth.create(authOrTokenOrEmail, opt_password);
-    }
+    this.helperAuthScope = Auth.create(authOrTokenOrEmail, opt_password);
     return this;
   }
 }

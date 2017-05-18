@@ -7,7 +7,6 @@ import GithubAuthProvider from './GithubAuthProvider';
 import globals from '../../globals/globals';
 import GoogleAuthProvider from './GoogleAuthProvider';
 import {Storage, LocalStorageMechanism} from 'metal-storage';
-import {isObject} from 'metal';
 
 import {
   assertDefAndNotNull,
@@ -79,7 +78,7 @@ class AuthApiHelper extends ApiHelper {
     return request
       .post(data)
       .then(response => assertResponseSucceeded(response))
-      .then(response => this.makeUserAuthFromData(response.body()));
+      .then(response => Auth.createFromData(response.body()));
   }
 
   /**
@@ -138,7 +137,7 @@ class AuthApiHelper extends ApiHelper {
       .auth(this.resolveAuthScope().token)
       .get()
       .then(response => assertResponseSucceeded(response))
-      .then(response => this.makeUserAuthFromData(response.body()));
+      .then(response => Auth.createFromData(response.body()));
   }
 
   /**
@@ -157,29 +156,6 @@ class AuthApiHelper extends ApiHelper {
       }
       return this.currentUser;
     });
-  }
-
-  /**
-	 * Makes user Auth from data object.
-	 * @param {Object} data
-	 * @return {Auth}
-	 * @protected
-	 */
-  makeUserAuthFromData(data) {
-    let auth = new Auth();
-    if (isObject(data)) {
-      let properties = {};
-      Object.keys(data).forEach(key => {
-        properties[key] = {
-          enumerable: true,
-          value: data[key],
-          writable: true,
-        };
-      });
-      Object.defineProperties(auth, properties);
-    }
-    auth.setWedeployClient(this.wedeployClient);
-    return auth;
   }
 
   /**
@@ -238,7 +214,7 @@ class AuthApiHelper extends ApiHelper {
     }
     let currentUser = this.storage && this.storage.get('currentUser');
     if (currentUser) {
-      this.currentUser = this.makeUserAuthFromData(currentUser);
+      this.currentUser = Auth.createFromData(currentUser);
     }
   }
 
@@ -408,7 +384,7 @@ class AuthApiHelper extends ApiHelper {
         } else {
           data.token = tokenOrEmail;
         }
-        return this.makeUserAuthFromData(data);
+        return Auth.createFromData(data);
       });
   }
 }

@@ -1,6 +1,6 @@
 'use strict';
 
-import {core} from 'metal';
+import {core, isDef, isDefAndNotNull, isObject, isString} from 'metal';
 import {MultiMap} from 'metal-structs';
 
 import {
@@ -37,14 +37,50 @@ class Auth {
 
   /**
 	 * Constructs an {@link Auth} instance.
-	 * @param {string} tokenOrUsername Either the authorization token, or
-	 *   the username.
+	 * @param {string} authOrTokenOrEmail Either an auth instance, the
+	 *   authorization token, or the username.
 	 * @param {string=} opt_password If a username is given as the first param,
 	 *   this should be the password.
 	 * @return {!Auth}
 	 */
-  static create(tokenOrUsername, opt_password) {
-    return new Auth(tokenOrUsername, opt_password);
+  static create(authOrTokenOrEmail, opt_password) {
+    if (authOrTokenOrEmail instanceof Auth) {
+      return authOrTokenOrEmail;
+    } else if (isString(authOrTokenOrEmail) && isString(opt_password)) {
+      return new Auth(authOrTokenOrEmail, opt_password);
+    } else if (isString(authOrTokenOrEmail) && !isDef(opt_password)) {
+      return new Auth(authOrTokenOrEmail);
+    } else if (
+      isDefAndNotNull(authOrTokenOrEmail) &&
+      isObject(authOrTokenOrEmail)
+    ) {
+      return Auth.createFromData(authOrTokenOrEmail);
+    } else {
+      return new Auth();
+    }
+  }
+
+  /**
+	 * Makes user Auth from data object.
+	 * @param {Object} data
+	 * @return {Auth}
+	 * @protected
+	 */
+  static createFromData(data) {
+    let auth = new Auth();
+    if (isObject(data)) {
+      let properties = {};
+      Object.keys(data).forEach(key => {
+        properties[key] = {
+          enumerable: true,
+          value: data[key],
+          writable: true,
+        };
+      });
+      Object.defineProperties(auth, properties);
+    }
+    auth.setWedeployClient(this.wedeployClient);
+    return auth;
   }
 
   /**
@@ -298,11 +334,11 @@ class Auth {
   }
 
   /**
-   * Builds URL by joining the headers.
-   * @return {WeDeploy} Returns the {@link WeDeploy} object itself, so calls can
-   *   be chained.
-   * @chainable
-   */
+	 * Builds URL by joining the headers.
+	 * @return {WeDeploy} Returns the {@link WeDeploy} object itself, so calls can
+	 *   be chained.
+	 * @chainable
+	 */
   buildUrl_() {
     return this.wedeployClient
       .url(this.wedeployClient.authUrl_)

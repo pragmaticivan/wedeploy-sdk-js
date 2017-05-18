@@ -115,10 +115,7 @@ class WeDeploy {
 	 * @chainable
 	 */
   auth(authOrTokenOrEmail, opt_password) {
-    this.auth_ = authOrTokenOrEmail;
-    if (!(this.auth_ instanceof Auth)) {
-      this.auth_ = Auth.create(authOrTokenOrEmail, opt_password);
-    }
+    this.auth_ = Auth.create(authOrTokenOrEmail, opt_password);
     return this;
   }
 
