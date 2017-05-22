@@ -53,9 +53,13 @@ class NodeTransport extends Transport {
 	 * @protected
 	 */
   request(url, method, body, opt_headers, opt_params, opt_timeout) {
+    url = new Uri(url);
+
     if (opt_params) {
-      url = new Uri(url).addParametersFromMultiMap(opt_params).toString();
+      url.addParametersFromMultiMap(opt_params);
     }
+
+    url = url.toString();
 
     let options = {
       method: method,
