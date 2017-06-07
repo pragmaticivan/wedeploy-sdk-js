@@ -41,7 +41,7 @@
     "metal-structs": "^1.0.0",
     "metal-uri": "^2.2.5",
     "request": "^2.67.0",
-    "socket.io-client": "^1.7.2"
+    "socket.io-client": "^2.0.2"
   },
   "devDependencies": {
     "babel-core": "^6.24.1",

@@ -19,7 +19,6 @@ const release = process.env.NODE_ENV === 'production';
 const plugins = [];
 const watch = process.env.WATCH === 'true';
 let apiSuffix = '';
-let socketIoSuffix = '';
 let sourceMap = 'inline-source-map';
 
 const sauceLabsBrowsers = {
@@ -135,7 +134,6 @@ const babelConfigKarma = {
 if (release) {
   plugins.push(new webpack.optimize.UglifyJsPlugin());
   apiSuffix = '-min';
-  socketIoSuffix = '.min';
   sourceMap = false;
 }
 
@@ -352,10 +350,7 @@ gulp.task('test:saucelabs', function(done) {
 
 function concatSocketIO(filePath, dest) {
   return gulp
-    .src([
-      `node_modules/socket.io-client/dist/socket.io${socketIoSuffix}.js`,
-      filePath,
-    ])
+    .src(['node_modules/socket.io-client/dist/socket.io.slim.js', filePath])
     .pipe(
       sourcemaps.init({
         loadMaps: true,
@@ -368,10 +363,7 @@ function concatSocketIO(filePath, dest) {
 
 function concatSocketIORelease(filePath, dest) {
   return gulp
-    .src([
-      `node_modules/socket.io-client/dist/socket.io${socketIoSuffix}.js`,
-      filePath,
-    ])
+    .src(['node_modules/socket.io-client/dist/socket.io.slim.js', filePath])
     .pipe(concat(`api${apiSuffix}.js`))
     .pipe(gulp.dest(dest));
 }
