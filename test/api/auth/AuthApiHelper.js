@@ -484,6 +484,102 @@ describe('AuthApiHelper', function() {
     });
   });
 
+  describe('Get all users', function() {
+    beforeEach(function() {
+      RequestMock.setup('GET', 'http://localhost/users');
+    });
+
+    it('should throw exception when calling getAllUsers without user id', function() {
+      assert.throws(() => WeDeploy.auth().getAllUsers(), Error);
+    });
+
+    it('should throw exception when calling getAllUsers without being signed-in', function() {
+      assert.throws(() => WeDeploy.auth().getAllUser(), Error);
+    });
+
+    it('should call getAllUsers successfully', function(done) {
+      const auth = WeDeploy.auth();
+      auth.currentUser = {};
+      const user1 = {
+        createdAt: 'createdAt1',
+        email: 'email1',
+        id: 'id1',
+        name: 'name1',
+        photoUrl: 'photoUrl1',
+        extra: 'extra1',
+      };
+      const user2 = {
+        createdAt: 'createdAt2',
+        email: 'email2',
+        id: 'id2',
+        name: 'name2',
+        photoUrl: 'photoUrl2',
+        extra: 'extra2',
+      };
+      RequestMock.intercept().reply(200, JSON.stringify([user1, user2]), {
+        'content-type': 'application/json',
+      });
+      auth.getAllUsers().then(users => {
+        assert.ok(users instanceof Array);
+        assert.ok(users[0] instanceof Auth);
+        assert.ok(users[1] instanceof Auth);
+        done();
+      });
+    });
+
+    it('should call getAllUsers unsuccessfully', function(done) {
+      const auth = WeDeploy.auth();
+      auth.currentUser = {};
+      RequestMock.intercept().reply(400);
+      auth.getAllUsers().catch(() => done());
+    });
+  });
+
+  describe('delete User', function() {
+    beforeEach(function() {
+      RequestMock.setup('DELETE', 'http://localhost/users/id');
+    });
+
+    it('should throws exception when calling deleteUser without user having id', function() {
+      const auth = WeDeploy.auth();
+      assert.throws(() => auth.deleteUser('id'), Error);
+    });
+
+    it('should call deleteUser successfully', function(done) {
+      const auth = WeDeploy.auth();
+      auth.currentUser = {};
+      RequestMock.intercept('DELETE', 'http://localhost/users/id').reply(200);
+      auth.deleteUser('id').then(() => done());
+    });
+
+    it('should call deleteUser unsuccessfully', function(done) {
+      const auth = WeDeploy.auth();
+      auth.currentUser = {};
+      RequestMock.intercept('DELETE', 'http://localhost/users/id').reply(400);
+      auth.deleteUser('id').catch(() => done());
+    });
+
+    it('should call deleteUser unsuccessfully with error response as reason', function(
+      done
+    ) {
+      const auth = WeDeploy.auth();
+      auth.currentUser = {};
+      const responseErrorObject = {
+        error: true,
+      };
+      RequestMock.intercept(
+        'DELETE',
+        'http://localhost/users/id'
+      ).reply(400, JSON.stringify(responseErrorObject), {
+        'content-type': 'application/json',
+      });
+      auth.deleteUser('id').catch(reason => {
+        assert.deepEqual(responseErrorObject, reason);
+        done();
+      });
+    });
+  });
+
   describe('Load current user', function() {
     beforeEach(function() {
       RequestMock.setup('GET', 'http://auth/user');

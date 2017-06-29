@@ -104,6 +104,36 @@ class AuthApiHelper extends ApiHelper {
   }
 
   /**
+   * Deletes user by id.
+   * @param {!string} userId
+   * @return {CancellablePromise}
+   */
+  deleteUser(userId) {
+    assertDefAndNotNull(userId, 'Cannot delete user without id');
+    assertUserSignedIn(this.currentUser);
+    return this.buildUrl_()
+      .path('/users', userId)
+      .auth(this.resolveAuthScope().token)
+      .delete()
+      .then(response => assertResponseSucceeded(response));
+  }
+
+  /**
+   * Gets all auth users
+   * @param {!string} userId
+   * @return {CancellablePromise}
+   */
+  getAllUsers() {
+    assertUserSignedIn(this.currentUser);
+    return this.buildUrl_()
+      .path('/users')
+      .auth(this.resolveAuthScope().token)
+      .get()
+      .then(response => assertResponseSucceeded(response))
+      .then(response => response.body().map(this.createAuthFromData, this));
+  }
+
+  /**
 	 * Gets the current browser url without the fragment part.
 	 * @return {!string}
 	 * @protected
