@@ -75,7 +75,7 @@ describe('AuthApiHelper', function() {
   describe(
     'Sign in with redirect',
     skipForNode_(function() {
-      it('should throw exception when signin-in with redirect using null provider', function() {
+      it('should throw exception when signing-in with redirect using null provider', function() {
         const auth = WeDeploy.auth();
         assert.throws(function() {
           auth.signInWithRedirect(null);
@@ -540,7 +540,7 @@ describe('AuthApiHelper', function() {
       RequestMock.setup('DELETE', 'http://localhost/users/id');
     });
 
-    it('should throws exception when calling deleteUser without user having id', function() {
+    it('should throw exception when calling deleteUser without user having id', function() {
       const auth = WeDeploy.auth();
       assert.throws(() => auth.deleteUser('id'), Error);
     });
