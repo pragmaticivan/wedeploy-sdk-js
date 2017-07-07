@@ -801,7 +801,7 @@ describe('AuthApiHelper', function() {
       auth.verifyUser('email@domain.com', 'password').then(user => {
         assert.strictEqual('email@domain.com', user.email);
         assert.strictEqual('password', user.password);
-        assert.strictEqual(null, user.token);
+        assert.strictEqual('token', user.token);
         done();
       });
     });

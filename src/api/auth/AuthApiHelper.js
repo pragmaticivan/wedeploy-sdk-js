@@ -418,7 +418,6 @@ class AuthApiHelper extends ApiHelper {
       .then(response => {
         let data = response.body();
         if (opt_password) {
-          data.token = null;
           data.email = tokenOrEmail;
           data.password = opt_password;
         } else {
