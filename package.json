@@ -1,6 +1,6 @@
 {
   "name": "wedeploy",
-  "version": "2.1.4",
+  "version": "2.2.0",
   "description": "WeDeploy Api",
   "engines": {
     "node": ">=7.6.0"
