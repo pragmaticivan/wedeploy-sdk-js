@@ -3,7 +3,7 @@
   "version": "2.2.0",
   "description": "WeDeploy Api",
   "engines": {
-    "node": ">=8.1.3"
+    "node": ">=8.1.4"
   },
   "repository": "wedeploy/api-js",
   "scripts": {
