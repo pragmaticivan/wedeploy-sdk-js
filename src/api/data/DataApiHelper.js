@@ -144,6 +144,30 @@ class DataApiHelper extends ApiHelper {
   }
 
   /**
+	 * Returns a {@link Filter} instance that uses the ">" operator.
+	 * @param {string} field The name of the field to filter by.
+	 * @param {*} value The filter's value.
+	 * @return {DataApiHelper} Returns the {@link DataApiHelper} object itself, so
+	 *   calls can be chained.
+	 * @chainnable
+	 */
+  gt(field, value) {
+    return this.where(Filter.gt(field, value));
+  }
+
+  /**
+	 * Returns a {@link Filter} instance that uses the ">=" operator.
+	 * @param {string} field The name of the field to filter by.
+	 * @param {*} value The filter's value.
+	 * @return {DataApiHelper} Returns the {@link DataApiHelper} object itself, so
+	 *   calls can be chained.
+	 * @chainnable
+	 */
+  gte(field, value) {
+    return this.where(Filter.gte(field, value));
+  }
+
+  /**
 	 * Adds a filter to be compose with this filter using "any" operator.
 	 * @param {string} field The name of the field to filter by.
 	 * @param {!(Array|*)} args A variable amount of values to be used with
