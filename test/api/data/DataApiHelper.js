@@ -864,7 +864,7 @@ describe('DataApiHelper', function() {
         'GET',
         'http://localhost/food?filter=%5B%7B%22and%22%3A%5B%7B' +
           '%22size%22%3A%7B%22operator%22%3A%22%3E%22%2C' +
-          '%22value%22%3A30%7D%7D%5D%7D%5D',
+          '%22value%22%3A30%7D%7D%5D%7D%5D'
       ).reply(200, '[{"id": 2, "name": "cuscuz", "size": 10}]');
 
       WeDeploy.data().gt('size', 30).get('food').then(function(response) {
@@ -907,8 +907,8 @@ describe('DataApiHelper', function() {
       RequestMock.intercept(
         'GET',
         'http://localhost/food?filter=%5B%7B%22and' +
-        '%22%3A%5B%7B%22size%22%3A%7B%22operator%22%3A%22%3E%3' +
-        'D%22%2C%22value%22%3A30%7D%7D%5D%7D%5D',
+          '%22%3A%5B%7B%22size%22%3A%7B%22operator%22%3A%22%3E%3' +
+          'D%22%2C%22value%22%3A30%7D%7D%5D%7D%5D'
       ).reply(200, '[{"id": 2, "name": "cuscuz", "size": 10}]');
 
       WeDeploy.data().gte('size', 30).get('food').then(function(response) {
