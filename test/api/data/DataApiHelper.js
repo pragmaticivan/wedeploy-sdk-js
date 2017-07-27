@@ -1570,8 +1570,64 @@ describe('DataApiHelper', function() {
           done();
         });
 
+        WeDeploy.auth().currentUser = null;
         WeDeploy.data().watch('fruits');
         WeDeploy.socket();
+      });
+
+      context('when using authentication', function() {
+        it('should add Authentication header using token', function(done) {
+          WeDeploy.socket(function(url, opts) {
+            assert.deepEqual(
+              {
+                forceNew: true,
+                jsonp: true,
+                transportOptions: {
+                  polling: {extraHeaders: {Authorization: 'Bearer token'}},
+                },
+                query: 'url=%2Ffruits',
+                path: '/fruits',
+              },
+              opts
+            );
+            done();
+          });
+
+          WeDeploy.auth().currentUser = Auth.create('token');
+          WeDeploy.data().watch('fruits');
+          WeDeploy.socket();
+        });
+
+        it('should add Authentication header using email and password', function(
+          done
+        ) {
+          WeDeploy.socket(function(url, opts) {
+            assert.deepEqual(
+              {
+                forceNew: true,
+                jsonp: true,
+                transportOptions: {
+                  polling: {
+                    extraHeaders: {
+                      Authorization: 'Basic dGVzdEB3ZWRlcGxveS5jb206cGFzcw==',
+                    },
+                  },
+                },
+                query: 'url=%2Ffruits',
+                path: '/fruits',
+              },
+              opts
+            );
+            done();
+          });
+
+          WeDeploy.auth().currentUser = Auth.create(
+            'test@wedeploy.com',
+            'pass'
+          );
+          WeDeploy.data().watch('fruits');
+          WeDeploy.socket();
+        });
       });
     });
 
