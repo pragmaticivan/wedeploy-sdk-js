@@ -571,8 +571,43 @@ class WeDeploy {
     opt_options.query =
       'url=' + encodeURIComponent(uri.getPathname() + uri.getSearch());
     opt_options.path = opt_options.path || uri.getPathname();
+    opt_options = this.resolveTransportOptions_(opt_options);
 
     return io(uri.getProtocol() + '//' + uri.getHost(), opt_options);
+  }
+
+  /**
+   * Resolves the polling options object by adding Authorization header if the
+   *   current auth object has token, or it has both email and password.
+   * @param {!Object} options The object where transport options should be added
+   * @return {Object} Returns the modified options object
+   */
+  resolveTransportOptions_(options) {
+    if (!this.auth_) {
+      return options;
+    }
+
+    if (this.auth_.hasToken()) {
+      options.transportOptions = {
+        polling: {
+          extraHeaders: {
+            Authorization: `Bearer ${this.auth_.getToken()}`,
+          },
+        },
+      };
+    } else if (this.auth_.hasEmail() && this.auth_.hasPassword()) {
+      const credentials =
+        this.auth_.getEmail() + ':' + this.auth_.getPassword();
+      options.transportOptions = {
+        polling: {
+          extraHeaders: {
+            Authorization: `Basic ${Base64.encodeString(credentials)}`,
+          },
+        },
+      };
+    }
+
+    return options;
   }
 
   /**

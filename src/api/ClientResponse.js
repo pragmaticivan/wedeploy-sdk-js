@@ -17,7 +17,7 @@ class ClientResponse extends ClientMessage {
   constructor(clientRequest) {
     super();
     if (!clientRequest) {
-      throw new Error('Can\'t create response without request');
+      throw new Error('Can not create response without request');
     }
     this.clientRequest_ = clientRequest;
   }
