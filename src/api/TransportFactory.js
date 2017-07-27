@@ -42,7 +42,7 @@ class TransportFactory {
     try {
       return new TransportClass();
     } catch (err) {
-      throw new Error('Can\'t create transport', err);
+      throw new Error('Can not create transport', err);
     }
   }
 
