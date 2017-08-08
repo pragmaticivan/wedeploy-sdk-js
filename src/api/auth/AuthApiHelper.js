@@ -266,7 +266,7 @@ class AuthApiHelper extends ApiHelper {
     globals.window.history.pushState(
       {},
       '',
-      window.location.pathname + window.location.search
+      globals.window.location.pathname + globals.window.location.search
     );
   }
 

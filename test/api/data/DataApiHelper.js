@@ -22,9 +22,10 @@ describe('DataApiHelper', function() {
       assert.notStrictEqual(data, WeDeploy.data());
     });
 
-    it('should return the instance with url filled', function() {
+    it('should return the instance with url filled but different object', function() {
       const data = WeDeploy.data('http://host');
-      assert.strictEqual(data, WeDeploy.data('http://host'));
+      assert.deepEqual(data, WeDeploy.data('http://host'));
+      assert.notStrictEqual(data, WeDeploy.data('http://host'));
     });
 
     it('should raise an error if the data url has a path', function() {
@@ -33,11 +34,13 @@ describe('DataApiHelper', function() {
       }, Error);
     });
 
-    it('should always use latest scoped auth defined', function() {
-      WeDeploy.auth().currentUser = Auth.create('token1');
-      assert.strictEqual('token1', WeDeploy.data().helperAuthScope.getToken());
-      WeDeploy.auth().currentUser = Auth.create('token2');
-      assert.strictEqual('token2', WeDeploy.data().helperAuthScope.getToken());
+    it('should return the instance of scoped auth', function() {
+      const auth = Auth.create('token');
+      const dataClient = WeDeploy.data().auth(auth);
+      assert.strictEqual(
+        auth,
+        dataClient.helperAuthScope
+      );
     });
   });
 

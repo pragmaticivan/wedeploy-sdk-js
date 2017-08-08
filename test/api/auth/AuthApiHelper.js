@@ -619,12 +619,24 @@ describe('AuthApiHelper', function() {
       globals.window = {
         location: {
           hostname: 'localhost',
+          hash: '#access_token=xyz',
+        },
+        history: {
+          pushState: () => {
+            globals.window.location.hash = '';
+          },
         },
       };
+
       RequestMock.intercept().reply(200, JSON.stringify({}), {
         'content-type': 'application/json',
       });
-      WeDeploy.auth('http://auth').loadCurrentUser('xyz').then(() => {
+      const auth = WeDeploy.auth('http://auth');
+
+      RequestMock.intercept().reply(200, JSON.stringify({}), {
+        'content-type': 'application/json',
+      });
+      auth.loadCurrentUser('xyz').then(() => {
         assert.strictEqual(
           'access_token=xyz; Domain=localhost;',
           globals.document.cookie

@@ -15,9 +15,9 @@ describe('EmailApiHelper', function() {
   });
 
   describe('WeDeploy.email()', function() {
-    it('should return the same instance', function() {
+    it('should not return the same instance', function() {
       let email = WeDeploy.email();
-      assert.deepEqual(email, WeDeploy.email());
+      assert.notStrictEqual(email, WeDeploy.email());
     });
 
     it('should return the instance with url filled', function() {
@@ -32,10 +32,11 @@ describe('EmailApiHelper', function() {
     });
 
     it('should return the instance of scoped auth', function() {
-      WeDeploy.auth().currentUser = Auth.create('token');
+      const auth = Auth.create('token');
+      const emailClient = WeDeploy.email().auth(auth);
       assert.strictEqual(
-        WeDeploy.auth().currentUser,
-        WeDeploy.email().helperAuthScope
+        auth,
+        emailClient.helperAuthScope
       );
     });
   });
