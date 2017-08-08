@@ -37,10 +37,7 @@ describe('DataApiHelper', function() {
     it('should return the instance of scoped auth', function() {
       const auth = Auth.create('token');
       const dataClient = WeDeploy.data().auth(auth);
-      assert.strictEqual(
-        auth,
-        dataClient.helperAuthScope
-      );
+      assert.strictEqual(auth, dataClient.helperAuthScope);
     });
   });
 
@@ -1572,8 +1569,6 @@ describe('DataApiHelper', function() {
           );
           done();
         });
-
-        WeDeploy.auth().currentUser = null;
         WeDeploy.data().watch('fruits');
         WeDeploy.socket();
       });
@@ -1595,9 +1590,7 @@ describe('DataApiHelper', function() {
             );
             done();
           });
-
-          WeDeploy.auth().currentUser = Auth.create('token');
-          WeDeploy.data().watch('fruits');
+          WeDeploy.data().auth(Auth.create('token')).watch('fruits');
           WeDeploy.socket();
         });
 
@@ -1624,11 +1617,9 @@ describe('DataApiHelper', function() {
             done();
           });
 
-          WeDeploy.auth().currentUser = Auth.create(
-            'test@wedeploy.com',
-            'pass'
-          );
-          WeDeploy.data().watch('fruits');
+          WeDeploy.data()
+            .auth(Auth.create('test@wedeploy.com', 'pass'))
+            .watch('fruits');
           WeDeploy.socket();
         });
       });
