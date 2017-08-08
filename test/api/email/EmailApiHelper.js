@@ -34,10 +34,7 @@ describe('EmailApiHelper', function() {
     it('should return the instance of scoped auth', function() {
       const auth = Auth.create('token');
       const emailClient = WeDeploy.email().auth(auth);
-      assert.strictEqual(
-        auth,
-        emailClient.helperAuthScope
-      );
+      assert.strictEqual(auth, emailClient.helperAuthScope);
     });
   });
 
