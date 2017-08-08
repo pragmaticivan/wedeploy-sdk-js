@@ -29,26 +29,26 @@ describe('AuthApiHelper', function() {
     RequestMock.setup('GET', 'http://localhost/users/id');
   });
 
-  it('should WeDeploy.auth() returns same instance', function() {
+  it('should WeDeploy.auth() return different instances', function() {
     const auth = WeDeploy.auth();
-    assert.strictEqual(auth, WeDeploy.auth());
+    assert.notStrictEqual(auth, WeDeploy.auth());
   });
 
-  it('should WeDeploy.auth() use current user information', function(done) {
+  it('should WeDeploy.auth() not use current user information', function() {
     RequestMock.intercept().reply(200);
-    WeDeploy.auth().currentUser = Auth.create('token1');
-    WeDeploy.auth().getUser('id').then(() => {
-      assert.strictEqual(getAuthorizationHeader_(), 'Bearer token1');
-      done();
-    });
+    const auth1 = WeDeploy.auth();
+    auth1.currentUser = Auth.create('token1');
+    const auth2 = WeDeploy.auth();
+    assert.strictEqual(null, auth2.currentUser);
   });
 
   it('should WeDeploy.auth() use auth scope instead of current user information', function(
     done
   ) {
     RequestMock.intercept().reply(200);
-    WeDeploy.auth().currentUser = Auth.create('token1');
-    WeDeploy.auth().auth('token2').getUser('id').then(() => {
+    const auth1 = WeDeploy.auth();
+    auth1.currentUser = Auth.create('token1');
+    auth1.auth('token2').getUser('id').then(() => {
       assert.strictEqual(getAuthorizationHeader_(), 'Bearer token2');
       done();
     });
@@ -58,8 +58,9 @@ describe('AuthApiHelper', function() {
     done
   ) {
     RequestMock.intercept().reply(200);
-    WeDeploy.auth().currentUser = Auth.create('token1');
-    WeDeploy.auth().header('TestHost', 'localhost').getUser('id').then(() => {
+    const auth = WeDeploy.auth();
+    auth.currentUser = Auth.create('token1');
+    auth.header('TestHost', 'localhost').getUser('id').then(() => {
       assert.strictEqual(getTestHostHeader_(), 'localhost');
       done();
     });

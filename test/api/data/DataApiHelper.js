@@ -17,9 +17,9 @@ describe('DataApiHelper', function() {
   });
 
   describe('WeDeploy.data()', function() {
-    it('returns same instance', function() {
+    it('should return different instances', function() {
       const data = WeDeploy.data();
-      assert.strictEqual(data, WeDeploy.data());
+      assert.notStrictEqual(data, WeDeploy.data());
     });
 
     it('should return the instance with url filled', function() {

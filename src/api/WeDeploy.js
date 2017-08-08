@@ -57,7 +57,6 @@ class WeDeploy {
     }
 
     this.auth_ = null;
-    this.data_ = null;
     this.body_ = null;
     this.url_ = Uri.joinPaths(url || '', ...paths);
     this.headers_ = new MultiMap();
@@ -79,11 +78,8 @@ class WeDeploy {
     if (core.isString(opt_dataUrl)) {
       WeDeploy.dataUrl_ = opt_dataUrl;
     }
-    if (!WeDeploy.data_) {
-      WeDeploy.data_ = new DataApiHelper(WeDeploy);
-    }
-    WeDeploy.data_.auth(WeDeploy.auth().currentUser);
-    return WeDeploy.data_;
+
+    return new DataApiHelper(WeDeploy);
   }
 
   /**
@@ -97,11 +93,8 @@ class WeDeploy {
     if (core.isString(opt_emailUrl)) {
       WeDeploy.emailUrl_ = opt_emailUrl;
     }
-    if (!WeDeploy.email_) {
-      WeDeploy.email_ = new EmailApiHelper(WeDeploy);
-    }
-    WeDeploy.email_.auth(WeDeploy.auth().currentUser);
-    return WeDeploy.email_;
+
+    return new EmailApiHelper(WeDeploy);
   }
 
   /**
@@ -129,10 +122,7 @@ class WeDeploy {
     if (core.isString(opt_authUrl)) {
       WeDeploy.authUrl_ = opt_authUrl;
     }
-    if (!WeDeploy.auth_) {
-      WeDeploy.auth_ = new AuthApiHelper(WeDeploy);
-    }
-    return WeDeploy.auth_;
+    return new AuthApiHelper(WeDeploy);
   }
 
   /**
@@ -622,9 +612,6 @@ class WeDeploy {
   }
 }
 
-WeDeploy.auth_ = null;
-WeDeploy.data_ = null;
-WeDeploy.email_ = null;
 WeDeploy.authUrl_ = '';
 WeDeploy.dataUrl_ = '';
 WeDeploy.emailUrl_ = '';
