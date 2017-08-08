@@ -70,7 +70,7 @@ class WeDeploy {
   /**
 	 * Static factory for creating WeDeploy data for the given url.
 	 * @param {string=} opt_dataUrl The url that points to the data services.
-	 * @return {data} WeDeploy data instance.
+	 * @return {!DataApiHelper} Returns an {@link DataApiHelper} instance.
 	 */
   static data(opt_dataUrl) {
     assertUriWithNoPath(opt_dataUrl, 'The data url should not have a path');
@@ -85,7 +85,7 @@ class WeDeploy {
   /**
 	 * Static factory for creating WeDeploy email for the given url.
 	 * @param {string=} opt_emailUrl The url that points to the email services.
-	 * @return {data} WeDeploy email instance.
+	 * @return {!EmailApiHelper} Returns an {@link EmailApiHelper} instance.
 	 */
   static email(opt_emailUrl) {
     assertUriWithNoPath(opt_emailUrl, 'The email url should not have a path');
@@ -116,7 +116,7 @@ class WeDeploy {
   /**
 	 * Static factory for creating WeDeploy auth for the given url.
 	 * @param {string=} opt_authUrl The url that points to the auth service.
-	 * @return {!Auth} Returns an {@link Auth} instance.
+	 * @return {!AuthApiHelper} Returns an {@link AuthApiHelper} instance.
 	 */
   static auth(opt_authUrl) {
     if (core.isString(opt_authUrl)) {
