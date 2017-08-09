@@ -23,7 +23,7 @@ import {
 class AuthApiHelper extends ApiHelper {
   /**
 	 * Constructs an {@link AuthApiHelper} instance.
-	 * @param {!string} wedeployClient
+	 * @param {!WeDeploy} wedeployClient
 	 * @param {!string} authUrl
 	 * @constructor
 	 */
