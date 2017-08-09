@@ -606,7 +606,4 @@ class WeDeploy {
   }
 }
 
-WeDeploy.dataUrl_ = '';
-WeDeploy.emailUrl_ = '';
-
 export default WeDeploy;
