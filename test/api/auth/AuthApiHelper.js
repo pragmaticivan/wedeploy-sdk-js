@@ -30,15 +30,15 @@ describe('AuthApiHelper', function() {
   });
 
   it('should WeDeploy.auth() return different instances', function() {
-    const auth = WeDeploy.auth();
-    assert.notStrictEqual(auth, WeDeploy.auth());
+    const auth = WeDeploy.auth('http://localhost');
+    assert.notStrictEqual(auth, WeDeploy.auth('http://localhost'));
   });
 
   it('should WeDeploy.auth() not use current user information', function() {
     RequestMock.intercept().reply(200);
-    const auth1 = WeDeploy.auth();
+    const auth1 = WeDeploy.auth('http://localhost');
     auth1.currentUser = Auth.create('token1');
-    const auth2 = WeDeploy.auth();
+    const auth2 = WeDeploy.auth('http://localhost');
     assert.strictEqual(null, auth2.currentUser);
   });
 
@@ -46,7 +46,7 @@ describe('AuthApiHelper', function() {
     done
   ) {
     RequestMock.intercept().reply(200);
-    const auth1 = WeDeploy.auth();
+    const auth1 = WeDeploy.auth('http://localhost');
     auth1.currentUser = Auth.create('token1');
     auth1.auth('token2').getUser('id').then(() => {
       assert.strictEqual(getAuthorizationHeader_(), 'Bearer token2');
@@ -58,7 +58,7 @@ describe('AuthApiHelper', function() {
     done
   ) {
     RequestMock.intercept().reply(200);
-    const auth = WeDeploy.auth();
+    const auth = WeDeploy.auth('http://localhost');
     auth.currentUser = Auth.create('token1');
     auth.header('TestHost', 'localhost').getUser('id').then(() => {
       assert.strictEqual(getTestHostHeader_(), 'localhost');
@@ -67,7 +67,7 @@ describe('AuthApiHelper', function() {
   });
 
   it('should map providers', function() {
-    const auth = WeDeploy.auth();
+    const auth = WeDeploy.auth('http://localhost');
     assert.ok(auth.provider.Google);
     assert.ok(auth.provider.Github);
     assert.ok(auth.provider.Facebook);
@@ -77,28 +77,28 @@ describe('AuthApiHelper', function() {
     'Sign in with redirect',
     skipForNode_(function() {
       it('should throw exception when signing-in with redirect using null provider', function() {
-        const auth = WeDeploy.auth();
+        const auth = WeDeploy.auth('http://localhost');
         assert.throws(function() {
           auth.signInWithRedirect(null);
         }, Error);
       });
 
       it('should throw exception signing-in with redirect using not supported sign-in type for the environment', function() {
-        const auth = WeDeploy.auth();
+        const auth = WeDeploy.auth('http://localhost');
         assert.throws(function() {
           auth.signInWithRedirect(undefined);
         }, Error);
       });
 
       it('should fail sign-in with redirect using not supported provider', function() {
-        const auth = WeDeploy.auth();
+        const auth = WeDeploy.auth('http://localhost');
         assert.throws(function() {
           auth.signInWithRedirect({});
         }, Error);
       });
 
       it('should not fail sign-in with redirect using Github provider', function() {
-        const auth = WeDeploy.auth();
+        const auth = WeDeploy.auth('http://localhost');
         globals.window = {
           location: {
             href: '',
@@ -110,7 +110,7 @@ describe('AuthApiHelper', function() {
       });
 
       it('should not fail sign-in with redirect using Google provider', function() {
-        const auth = WeDeploy.auth();
+        const auth = WeDeploy.auth('http://localhost');
         globals.window = {
           location: {
             href: '',
@@ -170,17 +170,17 @@ describe('AuthApiHelper', function() {
     });
 
     it('should throw exception when calling when sending password reset with email not specified', function() {
-      assert.throws(() => WeDeploy.auth().sendPasswordResetEmail(), Error);
+      assert.throws(() => WeDeploy.auth('http://localhost').sendPasswordResetEmail(), Error);
     });
 
     it('should call send password reset email successfully', function(done) {
-      const auth = WeDeploy.auth();
+      const auth = WeDeploy.auth('http://localhost');
       RequestMock.intercept().reply(200);
       auth.sendPasswordResetEmail('email@domain.com').then(() => done());
     });
 
     it('should call send password reset email unsuccessfully', function(done) {
-      const auth = WeDeploy.auth();
+      const auth = WeDeploy.auth('http://localhost');
       RequestMock.intercept().reply(400);
       auth.sendPasswordResetEmail('email@domain.com').catch(() => done());
     });
@@ -188,7 +188,7 @@ describe('AuthApiHelper', function() {
     it('should call send password reset email with email as parameter', function(
       done
     ) {
-      const auth = WeDeploy.auth();
+      const auth = WeDeploy.auth('http://localhost');
       RequestMock.intercept().reply(200);
       auth.sendPasswordResetEmail('email@domain.com').then(response => {
         assert.strictEqual(
@@ -202,7 +202,7 @@ describe('AuthApiHelper', function() {
     it('should call send password reset email unsuccessfully with error response as reason', function(
       done
     ) {
-      const auth = WeDeploy.auth();
+      const auth = WeDeploy.auth('http://localhost');
       const responseErrorObject = {
         error: true,
       };
@@ -216,7 +216,7 @@ describe('AuthApiHelper', function() {
     });
 
     it('should set header on sending password reset email', function(done) {
-      const auth = WeDeploy.auth().header('TestHost', 'localhost');
+      const auth = WeDeploy.auth('http://localhost').header('TestHost', 'localhost');
       RequestMock.intercept().reply(200);
       auth.sendPasswordResetEmail('email@domain.com').then(response => {
         assert.strictEqual(getTestHostHeader_(), 'localhost');
@@ -232,11 +232,11 @@ describe('AuthApiHelper', function() {
     });
 
     it('should throw exception when calling create user with user data not specified', function() {
-      assert.throws(() => WeDeploy.auth().createUser(), Error);
+      assert.throws(() => WeDeploy.auth('http://localhost').createUser(), Error);
     });
 
     it('should throw exception when calling create user with user data not an object', function() {
-      assert.throws(() => WeDeploy.auth().createUser(''), Error);
+      assert.throws(() => WeDeploy.auth('http://localhost').createUser(''), Error);
     });
 
     it('should call create user successfully', function(done) {
@@ -259,7 +259,7 @@ describe('AuthApiHelper', function() {
     });
 
     it('should call create user unsuccessfully', function(done) {
-      const auth = WeDeploy.auth();
+      const auth = WeDeploy.auth('http://localhost');
       RequestMock.intercept().reply(400);
       auth.createUser({}).catch(() => done());
     });
@@ -267,7 +267,7 @@ describe('AuthApiHelper', function() {
     it('should call create user unsuccessfully with error response as reason', function(
       done
     ) {
-      const auth = WeDeploy.auth();
+      const auth = WeDeploy.auth('http://localhost');
       const responseErrorObject = {
         error: true,
       };
@@ -300,12 +300,12 @@ describe('AuthApiHelper', function() {
     });
 
     it('should throw exception when calling sign-in with email and password when email not specified', function() {
-      assert.throws(() => WeDeploy.auth().signInWithEmailAndPassword(), Error);
+      assert.throws(() => WeDeploy.auth('http://localhost').signInWithEmailAndPassword(), Error);
     });
 
     it('should throw exception when calling sign-in with email and password when password not specified', function() {
       assert.throws(
-        () => WeDeploy.auth().signInWithEmailAndPassword('email@domain.com'),
+        () => WeDeploy.auth('http://localhost').signInWithEmailAndPassword('email@domain.com'),
         Error
       );
     });
@@ -313,7 +313,7 @@ describe('AuthApiHelper', function() {
     it('should call sign-in with email and password successfully', function(
       done
     ) {
-      const auth = WeDeploy.auth();
+      const auth = WeDeploy.auth('http://localhost');
       auth.loadCurrentUser = () => new Auth();
       const authData = {
         access_token: 'xyz',
@@ -330,7 +330,7 @@ describe('AuthApiHelper', function() {
     });
 
     it('should set header on sign-in with email and password', function(done) {
-      const auth = WeDeploy.auth();
+      const auth = WeDeploy.auth('http://localhost');
       auth.loadCurrentUser = () => new Auth();
       const authData = {
         access_token: 'xyz',
@@ -350,7 +350,7 @@ describe('AuthApiHelper', function() {
     it('should call sign-in with email and password unsuccessfully', function(
       done
     ) {
-      const auth = WeDeploy.auth();
+      const auth = WeDeploy.auth('http://localhost');
       RequestMock.intercept().reply(400);
       auth
         .signInWithEmailAndPassword('email@domain.com', 'password')
@@ -360,7 +360,7 @@ describe('AuthApiHelper', function() {
     it('should call sign-in with email and password unsuccessfully with error response as reason', function(
       done
     ) {
-      const auth = WeDeploy.auth();
+      const auth = WeDeploy.auth('http://localhost');
       const responseErrorObject = {
         error: true,
       };
@@ -382,18 +382,18 @@ describe('AuthApiHelper', function() {
     });
 
     it('should throw exception when calling sign-out without being signed-in', function() {
-      assert.throws(() => WeDeploy.auth().signOut(), Error);
+      assert.throws(() => WeDeploy.auth('http://localhost').signOut(), Error);
     });
 
     it('should call sign-out successfully', function(done) {
-      const auth = WeDeploy.auth();
+      const auth = WeDeploy.auth('http://localhost');
       auth.currentUser = {};
       RequestMock.intercept().reply(200);
       auth.signOut().then(() => done());
     });
 
     it('should call sign-out unsuccessfully', function(done) {
-      const auth = WeDeploy.auth();
+      const auth = WeDeploy.auth('http://localhost');
       auth.currentUser = {};
       RequestMock.intercept().reply(400);
       auth.signOut().catch(() => done());
@@ -402,7 +402,7 @@ describe('AuthApiHelper', function() {
     it('should call sign-out unsuccessfully with error response as reason', function(
       done
     ) {
-      const auth = WeDeploy.auth();
+      const auth = WeDeploy.auth('http://localhost');
       auth.currentUser = {};
       const responseErrorObject = {
         error: true,
@@ -417,7 +417,7 @@ describe('AuthApiHelper', function() {
     });
 
     it('should set header to sign-out', function(done) {
-      const auth = WeDeploy.auth().header('TestHost', 'localhost');
+      const auth = WeDeploy.auth('http://localhost').header('TestHost', 'localhost');
       auth.currentUser = {};
       RequestMock.intercept().reply(200);
       auth.signOut().then(response => {
@@ -433,15 +433,15 @@ describe('AuthApiHelper', function() {
     });
 
     it('should throw exception when calling getUser without user id', function() {
-      assert.throws(() => WeDeploy.auth().getUser(), Error);
+      assert.throws(() => WeDeploy.auth('http://localhost').getUser(), Error);
     });
 
     it('should throw exception when calling getUser without being signed-in', function() {
-      assert.throws(() => WeDeploy.auth().getUser('userId'), Error);
+      assert.throws(() => WeDeploy.auth('http://localhost').getUser('userId'), Error);
     });
 
     it('should call getUser successfully', function(done) {
-      const auth = WeDeploy.auth();
+      const auth = WeDeploy.auth('http://localhost');
       auth.currentUser = {};
       RequestMock.intercept().reply(200);
       auth.getUser('userId').then(user => {
@@ -451,7 +451,7 @@ describe('AuthApiHelper', function() {
     });
 
     it('should call getUser unsuccessfully', function(done) {
-      const auth = WeDeploy.auth();
+      const auth = WeDeploy.auth('http://localhost');
       auth.currentUser = {};
       RequestMock.intercept().reply(400);
       auth.getUser('userId').catch(() => done());
@@ -460,7 +460,7 @@ describe('AuthApiHelper', function() {
     it('should call getUser unsuccessfully with error response as reason', function(
       done
     ) {
-      const auth = WeDeploy.auth();
+      const auth = WeDeploy.auth('http://localhost');
       auth.currentUser = {};
       const responseErrorObject = {
         error: true,
@@ -475,7 +475,7 @@ describe('AuthApiHelper', function() {
     });
 
     it('should set headers on getUser', function(done) {
-      const auth = WeDeploy.auth();
+      const auth = WeDeploy.auth('http://localhost');
       auth.currentUser = {};
       RequestMock.intercept().reply(200);
       auth.header('TestHost', 'localhost').getUser('userId').then(user => {
@@ -491,15 +491,15 @@ describe('AuthApiHelper', function() {
     });
 
     it('should throw exception when calling getAllUsers without user id', function() {
-      assert.throws(() => WeDeploy.auth().getAllUsers(), Error);
+      assert.throws(() => WeDeploy.auth('http://localhost').getAllUsers(), Error);
     });
 
     it('should throw exception when calling getAllUsers without being signed-in', function() {
-      assert.throws(() => WeDeploy.auth().getAllUser(), Error);
+      assert.throws(() => WeDeploy.auth('http://localhost').getAllUser(), Error);
     });
 
     it('should call getAllUsers successfully', function(done) {
-      const auth = WeDeploy.auth();
+      const auth = WeDeploy.auth('http://localhost');
       auth.currentUser = {};
       const user1 = {
         createdAt: 'createdAt1',
@@ -529,7 +529,7 @@ describe('AuthApiHelper', function() {
     });
 
     it('should call getAllUsers unsuccessfully', function(done) {
-      const auth = WeDeploy.auth();
+      const auth = WeDeploy.auth('http://localhost');
       auth.currentUser = {};
       RequestMock.intercept().reply(400);
       auth.getAllUsers().catch(() => done());
@@ -542,19 +542,19 @@ describe('AuthApiHelper', function() {
     });
 
     it('should throw exception when calling deleteUser without user having id', function() {
-      const auth = WeDeploy.auth();
+      const auth = WeDeploy.auth('http://localhost');
       assert.throws(() => auth.deleteUser('id'), Error);
     });
 
     it('should call deleteUser successfully', function(done) {
-      const auth = WeDeploy.auth();
+      const auth = WeDeploy.auth('http://localhost');
       auth.currentUser = {};
       RequestMock.intercept('DELETE', 'http://localhost/users/id').reply(200);
       auth.deleteUser('id').then(() => done());
     });
 
     it('should call deleteUser unsuccessfully', function(done) {
-      const auth = WeDeploy.auth();
+      const auth = WeDeploy.auth('http://localhost');
       auth.currentUser = {};
       RequestMock.intercept('DELETE', 'http://localhost/users/id').reply(400);
       auth.deleteUser('id').catch(() => done());
@@ -563,7 +563,7 @@ describe('AuthApiHelper', function() {
     it('should call deleteUser unsuccessfully with error response as reason', function(
       done
     ) {
-      const auth = WeDeploy.auth();
+      const auth = WeDeploy.auth('http://localhost');
       auth.currentUser = {};
       const responseErrorObject = {
         error: true,
@@ -661,13 +661,13 @@ describe('AuthApiHelper', function() {
 
   describe('onSignIn and onSignOut', function() {
     it('should throw exception when calling onSignIn without function callback', function() {
-      assert.throws(() => WeDeploy.auth().onSignIn(), Error);
-      assert.throws(() => WeDeploy.auth().onSignIn({}), Error);
+      assert.throws(() => WeDeploy.auth('http://localhost').onSignIn(), Error);
+      assert.throws(() => WeDeploy.auth('http://localhost').onSignIn({}), Error);
     });
 
     it('should throw exception when calling onSignOut without function callback', function() {
-      assert.throws(() => WeDeploy.auth().onSignOut(), Error);
-      assert.throws(() => WeDeploy.auth().onSignOut({}), Error);
+      assert.throws(() => WeDeploy.auth('http://localhost').onSignOut(), Error);
+      assert.throws(() => WeDeploy.auth('http://localhost').onSignOut({}), Error);
     });
 
     it(
@@ -689,7 +689,6 @@ describe('AuthApiHelper', function() {
           },
         };
         assert.strictEqual('#access_token=xyz', globals.window.location.hash);
-        WeDeploy.auth();
         assert.strictEqual('', globals.window.location.hash);
       })
     );
@@ -700,14 +699,14 @@ describe('AuthApiHelper', function() {
           hash: '',
         },
       };
-      const auth = WeDeploy.auth();
+      const auth = WeDeploy.auth('http://localhost');
       auth.onSignIn(() => assert.fail());
     });
 
     it('should invokes callback when calling onSignIn after a signInWithEmailAndPassword', function(
       done
     ) {
-      const auth = WeDeploy.auth();
+      const auth = WeDeploy.auth('http://localhost');
       auth.loadCurrentUser = token => Auth.create(token);
       const callback = sinon.stub();
       auth.onSignIn(callback);
@@ -732,7 +731,7 @@ describe('AuthApiHelper', function() {
     it('should invokes callback when calling onSignOut after a signOut', function(
       done
     ) {
-      const auth = WeDeploy.auth();
+      const auth = WeDeploy.auth('http://localhost');
       auth.currentUser = {};
       const callback = sinon.stub();
       auth.onSignOut(callback);

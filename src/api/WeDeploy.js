@@ -14,7 +14,7 @@ import TransportFactory from './TransportFactory';
 import ClientRequest from './ClientRequest';
 import {MultiMap} from 'metal-structs';
 import Uri from 'metal-uri';
-import {assertUriWithNoPath} from './assertions';
+import {assertDefAndNotNull, assertUriWithNoPath} from './assertions';
 
 let io;
 let FormDataImpl;
@@ -115,14 +115,19 @@ class WeDeploy {
 
   /**
 	 * Static factory for creating WeDeploy auth for the given url.
+<<<<<<< Updated upstream
 	 * @param {string=} opt_authUrl The url that points to the auth service.
 	 * @return {!AuthApiHelper} Returns an {@link AuthApiHelper} instance.
+=======
+	 * @param {string=} authUrl The url that points to the auth service.
+	 * @return {!Auth} Returns an {@link Auth} instance.
+>>>>>>> Stashed changes
 	 */
-  static auth(opt_authUrl) {
-    if (core.isString(opt_authUrl)) {
-      WeDeploy.authUrl_ = opt_authUrl;
-    }
-    return new AuthApiHelper(WeDeploy);
+  static auth(authUrl) {
+		assertDefAndNotNull(authUrl, 'The auth url should be provided');
+    assertUriWithNoPath(authUrl, 'The auth url should not have a path');
+
+    return new AuthApiHelper(WeDeploy, authUrl);
   }
 
   /**
@@ -612,7 +617,6 @@ class WeDeploy {
   }
 }
 
-WeDeploy.authUrl_ = '';
 WeDeploy.dataUrl_ = '';
 WeDeploy.emailUrl_ = '';
 

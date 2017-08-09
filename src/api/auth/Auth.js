@@ -301,9 +301,11 @@ class Auth {
   /**
 	 * Sets the WeDeploy client.
 	 * @param {Object} wedeployClient
+	 * @param {!string} authUrl
 	 */
-  setWedeployClient(wedeployClient) {
+  setWedeployClient(wedeployClient, authUrl) {
     this.wedeployClient = wedeployClient;
+    this.authUrl = authUrl;
   }
 
   /**
@@ -341,7 +343,7 @@ class Auth {
 	 */
   buildUrl_() {
     return this.wedeployClient
-      .url(this.wedeployClient.authUrl_)
+      .url(this.authUrl)
       .headers(this.headers_);
   }
 }
