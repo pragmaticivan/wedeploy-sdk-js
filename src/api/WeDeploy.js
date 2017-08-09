@@ -573,6 +573,10 @@ class WeDeploy {
     opt_options.path = opt_options.path || uri.getPathname();
     opt_options = this.resolveTransportOptions_(opt_options);
 
+    if (uri.isUsingDefaultProtocol()) {
+      uri.setProtocol('https:');
+    }
+
     return io(uri.getProtocol() + '//' + uri.getHost(), opt_options);
   }
 
