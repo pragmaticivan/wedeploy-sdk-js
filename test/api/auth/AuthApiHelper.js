@@ -702,7 +702,7 @@ describe('AuthApiHelper', function() {
       auth.onSignIn(() => assert.fail());
     });
 
-    it('should invokes callback when calling onSignIn after a signInWithEmailAndPassword', function(
+    it('should invoke callback when calling onSignIn after a signInWithEmailAndPassword', function(
       done
     ) {
       const auth = WeDeploy.auth('http://localhost');
@@ -727,7 +727,7 @@ describe('AuthApiHelper', function() {
         });
     });
 
-    it('should invokes callback when calling onSignOut after a signOut', function(
+    it('should invoke callback when calling onSignOut after a signOut', function(
       done
     ) {
       const auth = WeDeploy.auth('http://localhost');
