@@ -67,13 +67,13 @@ describe('Auth', function() {
   describe('Auth.updateUser', function() {
     it('should throws exception when calling updateUser without data', function() {
       const auth = Auth.create();
-      auth.setWedeployClient(WeDeploy);
+      auth.setWedeployClient(WeDeploy, 'http://localhost');
       assert.throws(() => auth.updateUser(), Error);
     });
 
     it('should throws exception when calling updateUser without data', function() {
       const auth = Auth.create();
-      auth.setWedeployClient(WeDeploy);
+      auth.setWedeployClient(WeDeploy, 'http://localhost');
       assert.throws(() => auth.updateUser(), Error);
     });
 
@@ -81,7 +81,7 @@ describe('Auth', function() {
       const auth = Auth.create();
       auth.setId(3);
 
-      auth.setWedeployClient(WeDeploy);
+      auth.setWedeployClient(WeDeploy, 'http://localhost');
       RequestMock.intercept('PATCH', 'http://localhost/users/3').reply(200);
       auth.updateUser({}).then(() => done());
     });
@@ -90,7 +90,7 @@ describe('Auth', function() {
       const auth = Auth.create();
       auth.setId(3);
 
-      auth.setWedeployClient(WeDeploy);
+      auth.setWedeployClient(WeDeploy, 'http://localhost');
       RequestMock.intercept('PATCH', 'http://localhost/users/3').reply(400);
       auth.updateUser({}).catch(() => done());
     });
@@ -101,7 +101,7 @@ describe('Auth', function() {
       const auth = Auth.create();
       auth.setId(3);
 
-      auth.setWedeployClient(WeDeploy);
+      auth.setWedeployClient(WeDeploy, 'http://localhost');
       auth.currentUser = {};
       const responseErrorObject = {
         error: true,
@@ -124,7 +124,7 @@ describe('Auth', function() {
       auth.setId(3);
       auth.setHeaders({HostHeader: 'localhost'});
 
-      auth.setWedeployClient(WeDeploy);
+      auth.setWedeployClient(WeDeploy, 'http://localhost');
       RequestMock.intercept('PATCH', 'http://localhost/users/3').reply(200);
       auth.updateUser({}).then(function(response) {
         assert.strictEqual(getTestHostHeader_(), 'localhost');
@@ -136,14 +136,14 @@ describe('Auth', function() {
   describe('Auth.deleteUser', function() {
     it('should throws exception when calling deleteUser without user having id', function() {
       const auth = Auth.create();
-      auth.setWedeployClient(WeDeploy);
+      auth.setWedeployClient(WeDeploy, 'http://localhost');
       assert.throws(() => auth.deleteUser(), Error);
     });
 
     it('should call deleteUser successfully', function(done) {
       const auth = Auth.create();
       auth.setId('id');
-      auth.setWedeployClient(WeDeploy);
+      auth.setWedeployClient(WeDeploy, 'http://localhost');
       RequestMock.intercept('DELETE', 'http://localhost/users/id').reply(200);
       auth.deleteUser().then(() => done());
     });
@@ -151,7 +151,7 @@ describe('Auth', function() {
     it('should call deleteUser unsuccessfully', function(done) {
       const auth = Auth.create();
       auth.setId('id');
-      auth.setWedeployClient(WeDeploy);
+      auth.setWedeployClient(WeDeploy, 'http://localhost');
       RequestMock.intercept('DELETE', 'http://localhost/users/id').reply(400);
       auth.deleteUser().catch(() => done());
     });
@@ -161,7 +161,7 @@ describe('Auth', function() {
     ) {
       const auth = Auth.create();
       auth.setId('id');
-      auth.setWedeployClient(WeDeploy);
+      auth.setWedeployClient(WeDeploy, 'http://localhost');
       const responseErrorObject = {
         error: true,
       };
@@ -181,7 +181,7 @@ describe('Auth', function() {
       const auth = Auth.create();
       auth.setId('id');
       auth.setHeaders({HostHeader: 'localhost'});
-      auth.setWedeployClient(WeDeploy);
+      auth.setWedeployClient(WeDeploy, 'http://localhost');
       RequestMock.intercept('DELETE', 'http://localhost/users/id').reply(200);
       auth.deleteUser().then(function(response) {
         assert.strictEqual(getTestHostHeader_(), 'localhost');

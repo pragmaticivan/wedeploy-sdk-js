@@ -23,14 +23,16 @@ import {
 class AuthApiHelper extends ApiHelper {
   /**
 	 * Constructs an {@link AuthApiHelper} instance.
-	 * @param {!string} wedeployClient
+	 * @param {!WeDeploy} wedeployClient
+	 * @param {!string} authUrl
 	 * @constructor
 	 */
-  constructor(wedeployClient) {
+  constructor(wedeployClient, authUrl) {
     super(wedeployClient);
     this.currentUser = null;
     this.onSignInCallback = null;
     this.onSignOutCallback = null;
+    this.authUrl = authUrl;
 
     if (LocalStorageMechanism.isSupported()) {
       this.storage = new Storage(new LocalStorageMechanism());
@@ -266,7 +268,7 @@ class AuthApiHelper extends ApiHelper {
     globals.window.history.pushState(
       {},
       '',
-      window.location.pathname + window.location.search
+      globals.window.location.pathname + globals.window.location.search
     );
   }
 
@@ -333,9 +335,7 @@ class AuthApiHelper extends ApiHelper {
     if (!provider.hasRedirectUri()) {
       provider.setRedirectUri(this.getHrefWithoutFragment_());
     }
-    globals.window.location.href = provider.makeAuthorizationUrl(
-      this.wedeployClient.authUrl_
-    );
+    globals.window.location.href = provider.makeAuthorizationUrl(this.authUrl);
   }
 
   /**
@@ -364,9 +364,7 @@ class AuthApiHelper extends ApiHelper {
    * @chainable
    */
   buildUrl_() {
-    return this.wedeployClient
-      .url(this.wedeployClient.authUrl_)
-      .headers(this.headers_);
+    return this.wedeployClient.url(this.authUrl).headers(this.headers_);
   }
 
   /**

@@ -14,7 +14,7 @@ import TransportFactory from './TransportFactory';
 import ClientRequest from './ClientRequest';
 import {MultiMap} from 'metal-structs';
 import Uri from 'metal-uri';
-import {assertUriWithNoPath} from './assertions';
+import {assertDefAndNotNull, assertUriWithNoPath} from './assertions';
 
 let io;
 let FormDataImpl;
@@ -57,7 +57,6 @@ class WeDeploy {
     }
 
     this.auth_ = null;
-    this.data_ = null;
     this.body_ = null;
     this.url_ = Uri.joinPaths(url || '', ...paths);
     this.headers_ = new MultiMap();
@@ -70,38 +69,38 @@ class WeDeploy {
 
   /**
 	 * Static factory for creating WeDeploy data for the given url.
-	 * @param {string=} opt_dataUrl The url that points to the data services.
-	 * @return {data} WeDeploy data instance.
+	 * @param {string=} dataUrl The url that points to the data services.
+	 * @return {!DataApiHelper} Returns an {@link DataApiHelper} instance.
 	 */
-  static data(opt_dataUrl) {
-    assertUriWithNoPath(opt_dataUrl, 'The data url should not have a path');
+  static data(dataUrl) {
+    assertDefAndNotNull(dataUrl, 'The data url should be provided');
+    assertUriWithNoPath(dataUrl, 'The data url should not have a path');
 
-    if (core.isString(opt_dataUrl)) {
-      WeDeploy.dataUrl_ = opt_dataUrl;
-    }
-    if (!WeDeploy.data_) {
-      WeDeploy.data_ = new DataApiHelper(WeDeploy);
-    }
-    WeDeploy.data_.auth(WeDeploy.auth().currentUser);
-    return WeDeploy.data_;
+    return new DataApiHelper(WeDeploy, dataUrl);
   }
 
   /**
 	 * Static factory for creating WeDeploy email for the given url.
-	 * @param {string=} opt_emailUrl The url that points to the email services.
-	 * @return {data} WeDeploy email instance.
+	 * @param {string=} emailUrl The url that points to the email services.
+	 * @return {!EmailApiHelper} Returns an {@link EmailApiHelper} instance.
 	 */
-  static email(opt_emailUrl) {
-    assertUriWithNoPath(opt_emailUrl, 'The email url should not have a path');
+  static email(emailUrl) {
+    assertDefAndNotNull(emailUrl, 'The email url should be provided');
+    assertUriWithNoPath(emailUrl, 'The email url should not have a path');
 
-    if (core.isString(opt_emailUrl)) {
-      WeDeploy.emailUrl_ = opt_emailUrl;
-    }
-    if (!WeDeploy.email_) {
-      WeDeploy.email_ = new EmailApiHelper(WeDeploy);
-    }
-    WeDeploy.email_.auth(WeDeploy.auth().currentUser);
-    return WeDeploy.email_;
+    return new EmailApiHelper(WeDeploy, emailUrl);
+  }
+
+  /**
+	 * Static factory for creating WeDeploy auth for the given url.
+	 * @param {string=} authUrl The url that points to the auth service.
+	 * @return {!AuthApiHelper} Returns an {@link AuthApiHelper} instance.
+	 */
+  static auth(authUrl) {
+    assertDefAndNotNull(authUrl, 'The auth url should be provided');
+    assertUriWithNoPath(authUrl, 'The auth url should not have a path');
+
+    return new AuthApiHelper(WeDeploy, authUrl);
   }
 
   /**
@@ -118,21 +117,6 @@ class WeDeploy {
     this.auth_ = Auth.create(authOrTokenOrEmail, opt_password);
     this.auth_.setWedeployClient(WeDeploy);
     return this;
-  }
-
-  /**
-	 * Static factory for creating WeDeploy auth for the given url.
-	 * @param {string=} opt_authUrl The url that points to the auth service.
-	 * @return {!Auth} Returns an {@link Auth} instance.
-	 */
-  static auth(opt_authUrl) {
-    if (core.isString(opt_authUrl)) {
-      WeDeploy.authUrl_ = opt_authUrl;
-    }
-    if (!WeDeploy.auth_) {
-      WeDeploy.auth_ = new AuthApiHelper(WeDeploy);
-    }
-    return WeDeploy.auth_;
   }
 
   /**
@@ -331,15 +315,15 @@ class WeDeploy {
 
   /**
 	 * Gets or sets the headers. If headers are passed to the function as
-   * parameter, they will be set as internal headers, overwriting the existing
-   * ones. Otherwise, the currently set headers will be returned.
-   * @param {MultiMap|Object=} opt_headers Headers to be set
+	 * parameter, they will be set as internal headers, overwriting the existing
+	 * ones. Otherwise, the currently set headers will be returned.
+	 * @param {MultiMap|Object=} opt_headers Headers to be set
 	 * @return {WeDeploy|MultiMap} If headers were passed to te function,
-   *   the returned result will be the {@link WeDeploy} object itself, so calls
-   *   can be chained. If headers were not passed to the function, the returned
-   *   result will be the current headers.
-   * @chainable Chainable when used as setter.
-   */
+	 *   the returned result will be the {@link WeDeploy} object itself, so calls
+	 *   can be chained. If headers were not passed to the function, the returned
+	 *   result will be the current headers.
+	 * @chainable Chainable when used as setter.
+	 */
   headers(opt_headers) {
     if (core.isDefAndNotNull(opt_headers)) {
       if (!(opt_headers instanceof MultiMap)) {
@@ -621,12 +605,5 @@ class WeDeploy {
     return this;
   }
 }
-
-WeDeploy.auth_ = null;
-WeDeploy.data_ = null;
-WeDeploy.email_ = null;
-WeDeploy.authUrl_ = '';
-WeDeploy.dataUrl_ = '';
-WeDeploy.emailUrl_ = '';
 
 export default WeDeploy;

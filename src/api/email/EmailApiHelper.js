@@ -11,10 +11,12 @@ class EmailApiHelper extends ApiHelper {
   /**
 	 * Constructs an {@link EmailApiHelper} instance.
 	 * @param {!WeDeploy} wedeployClient {@link WeDeploy} client reference.
+	 * @param {!string} emailUrl
 	 * @constructor
 	 */
-  constructor(wedeployClient) {
+  constructor(wedeployClient, emailUrl) {
     super(wedeployClient);
+    this.emailUrl = emailUrl;
     this.params = new MultiMap();
   }
 
@@ -185,7 +187,7 @@ class EmailApiHelper extends ApiHelper {
    */
   buildUrl_() {
     return this.wedeployClient
-      .url(this.wedeployClient.emailUrl_)
+      .url(this.emailUrl)
       .headers(this.headers_)
       .auth(this.helperAuthScope);
   }

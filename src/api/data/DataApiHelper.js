@@ -17,12 +17,14 @@ class DataApiHelper extends ApiHelper {
   /**
 	 * Constructs an {@link DataApiHelper} instance.
 	 * @param {!WeDeploy} wedeployClient {@link WeDeploy} client reference.
+	 * @param {!string} dataUrl
 	 * @constructor
 	 */
-  constructor(wedeployClient) {
+  constructor(wedeployClient, dataUrl) {
     super(wedeployClient);
 
     this.isSearch_ = false;
+    this.dataUrl = dataUrl;
   }
 
   /**
@@ -473,7 +475,7 @@ class DataApiHelper extends ApiHelper {
 	*/
   buildUrl_() {
     return this.wedeployClient
-      .url(this.wedeployClient.dataUrl_)
+      .url(this.dataUrl)
       .headers(this.headers_)
       .auth(this.helperAuthScope);
   }
