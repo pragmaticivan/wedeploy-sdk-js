@@ -304,8 +304,8 @@ class Auth {
 	 * @param {!string} authUrl
 	 */
   setWedeployClient(wedeployClient, authUrl) {
+		this.authUrl = authUrl;
     this.wedeployClient = wedeployClient;
-    this.authUrl = authUrl;
   }
 
   /**

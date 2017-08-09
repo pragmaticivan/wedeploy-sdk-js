@@ -9,7 +9,6 @@ import WeDeploy from '../../../src/api/WeDeploy';
 /* eslint-disable max-len,require-jsdoc */
 describe('AuthApiHelper', function() {
   afterEach(function() {
-    WeDeploy.auth_ = null;
     if (typeof window === 'undefined') {
       globals.window = null;
     } else {
@@ -671,9 +670,8 @@ describe('AuthApiHelper', function() {
     });
 
     it(
-      'should invokes callback when after a sign-in redirect',
+      'should invoke callback when after a sign-in redirect',
       skipForNode_(function() {
-        WeDeploy.auth_ = null;
         globals.window = {
           location: {
             protocol: 'http:',
@@ -688,7 +686,8 @@ describe('AuthApiHelper', function() {
             },
           },
         };
-        assert.strictEqual('#access_token=xyz', globals.window.location.hash);
+				assert.strictEqual('#access_token=xyz', globals.window.location.hash);
+				WeDeploy.auth('http://localhost');
         assert.strictEqual('', globals.window.location.hash);
       })
     );

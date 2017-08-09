@@ -69,32 +69,38 @@ class WeDeploy {
 
 	/**
 	 * Static factory for creating WeDeploy data for the given url.
-	 * @param {string=} opt_dataUrl The url that points to the data services.
+	 * @param {string=} dataUrl The url that points to the data services.
 	 * @return {!DataApiHelper} Returns an {@link DataApiHelper} instance.
 	 */
-	static data(opt_dataUrl) {
-		assertUriWithNoPath(opt_dataUrl, 'The data url should not have a path');
+	static data(dataUrl) {
+		assertDefAndNotNull(dataUrl, 'The data url should be provided');
+		assertUriWithNoPath(dataUrl, 'The data url should not have a path');
 
-		if (core.isString(opt_dataUrl)) {
-			WeDeploy.dataUrl_ = opt_dataUrl;
-		}
-
-		return new DataApiHelper(WeDeploy);
+		return new DataApiHelper(WeDeploy, dataUrl);
 	}
 
 	/**
 	 * Static factory for creating WeDeploy email for the given url.
-	 * @param {string=} opt_emailUrl The url that points to the email services.
+	 * @param {string=} emailUrl The url that points to the email services.
 	 * @return {!EmailApiHelper} Returns an {@link EmailApiHelper} instance.
 	 */
-	static email(opt_emailUrl) {
-		assertUriWithNoPath(opt_emailUrl, 'The email url should not have a path');
+	static email(emailUrl) {
+		assertDefAndNotNull(emailUrl, 'The email url should be provided');
+		assertUriWithNoPath(emailUrl, 'The email url should not have a path');
 
-		if (core.isString(opt_emailUrl)) {
-			WeDeploy.emailUrl_ = opt_emailUrl;
-		}
+		return new EmailApiHelper(WeDeploy, emailUrl);
+	}
 
-		return new EmailApiHelper(WeDeploy);
+	/**
+	 * Static factory for creating WeDeploy auth for the given url.
+	 * @param {string=} authUrl The url that points to the auth service.
+	 * @return {!AuthApiHelper} Returns an {@link AuthApiHelper} instance.
+	 */
+	static auth(authUrl) {
+		assertDefAndNotNull(authUrl, 'The auth url should be provided');
+		assertUriWithNoPath(authUrl, 'The auth url should not have a path');
+
+		return new AuthApiHelper(WeDeploy, authUrl);
 	}
 
 	/**
@@ -111,18 +117,6 @@ class WeDeploy {
 		this.auth_ = Auth.create(authOrTokenOrEmail, opt_password);
 		this.auth_.setWedeployClient(WeDeploy);
 		return this;
-	}
-
-	/**
-	 * Static factory for creating WeDeploy auth for the given url.
-	 * @param {string=} authUrl The url that points to the auth service.
-	 * @return {!AuthApiHelper} Returns an {@link AuthApiHelper} instance.
-	 */
-	static auth(authUrl) {
-		assertDefAndNotNull(authUrl, 'The auth url should be provided');
-		assertUriWithNoPath(authUrl, 'The auth url should not have a path');
-
-		return new AuthApiHelper(WeDeploy, authUrl);
 	}
 
 	/**

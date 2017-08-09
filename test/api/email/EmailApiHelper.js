@@ -5,7 +5,6 @@ import WeDeploy from '../../../src/api/WeDeploy';
 
 describe('EmailApiHelper', function() {
   afterEach(function() {
-    WeDeploy.email_ = null;
     RequestMock.teardown();
   });
 
@@ -16,13 +15,8 @@ describe('EmailApiHelper', function() {
 
   describe('WeDeploy.email()', function() {
     it('should not return the same instance', function() {
-      let email = WeDeploy.email();
-      assert.notStrictEqual(email, WeDeploy.email());
-    });
-
-    it('should return the instance with url filled', function() {
-      let email = WeDeploy.email('http://host.com');
-      assert.strictEqual(email.wedeployClient.emailUrl_, 'http://host.com');
+      let email = WeDeploy.email('http://localhost');
+      assert.notStrictEqual(email, WeDeploy.email('http://localhost'));
     });
 
     it('should raise an error if the email url has a path', function() {
@@ -33,21 +27,21 @@ describe('EmailApiHelper', function() {
 
     it('should return the instance of scoped auth', function() {
       const auth = Auth.create('token');
-      const emailClient = WeDeploy.email().auth(auth);
+      const emailClient = WeDeploy.email('http://localhost').auth(auth);
       assert.strictEqual(auth, emailClient.helperAuthScope);
     });
   });
 
   describe('.from()', function() {
     it('should add "from" param into post form', function() {
-      const email = WeDeploy.email().from('test@test.com');
+      const email = WeDeploy.email('http://localhost').from('test@test.com');
       assert.deepEqual(['from'], email.params.names());
 
       assert.deepEqual(['test@test.com'], email.params.getAll('from'));
     });
 
     it('should accept single value only in "from" param into post form', function() {
-      const email = WeDeploy.email()
+      const email = WeDeploy.email('http://localhost')
         .from('test@test.com')
         .from('test2@test2.com');
       assert.deepEqual(['from'], email.params.names());
@@ -56,7 +50,7 @@ describe('EmailApiHelper', function() {
     });
 
     it('should fail if param is not specified', function() {
-      const email = WeDeploy.email();
+      const email = WeDeploy.email('http://localhost');
       assert.throws(function() {
         email.from(null);
       }, Error);
@@ -65,14 +59,14 @@ describe('EmailApiHelper', function() {
 
   describe('.bcc()', function() {
     it('should add "bcc" param into post form', function() {
-      const email = WeDeploy.email().bcc('test@test.com');
+      const email = WeDeploy.email('http://localhost').bcc('test@test.com');
       assert.deepEqual(['bcc'], email.params.names());
 
       assert.deepEqual(['test@test.com'], email.params.getAll('bcc'));
     });
 
     it('should accept multiple values in "bcc" param into post form', function() {
-      const email = WeDeploy.email()
+      const email = WeDeploy.email('http://localhost')
         .bcc('test@test.com')
         .bcc('test2@test2.com');
       assert.deepEqual(['bcc'], email.params.names());
@@ -84,7 +78,7 @@ describe('EmailApiHelper', function() {
     });
 
     it('should fail if param is not specified', function() {
-      const email = WeDeploy.email();
+      const email = WeDeploy.email('http://localhost');
       assert.throws(function() {
         email.bcc(null);
       }, Error);
@@ -93,14 +87,14 @@ describe('EmailApiHelper', function() {
 
   describe('.cc()', function() {
     it('should add "cc" param into post form', function() {
-      const email = WeDeploy.email().cc('test@test.com');
+      const email = WeDeploy.email('http://localhost').cc('test@test.com');
       assert.deepEqual(['cc'], email.params.names());
 
       assert.deepEqual(['test@test.com'], email.params.getAll('cc'));
     });
 
     it('should accept multiple values in "cc" param into post form', function() {
-      const email = WeDeploy.email().cc('test@test.com').cc('test2@test2.com');
+      const email = WeDeploy.email('http://localhost').cc('test@test.com').cc('test2@test2.com');
       assert.deepEqual(['cc'], email.params.names());
 
       assert.deepEqual(
@@ -110,7 +104,7 @@ describe('EmailApiHelper', function() {
     });
 
     it('should fail if param is not specified', function() {
-      const email = WeDeploy.email();
+      const email = WeDeploy.email('http://localhost');
       assert.throws(function() {
         email.cc(null);
       }, Error);
@@ -119,12 +113,12 @@ describe('EmailApiHelper', function() {
 
   describe('.message()', function() {
     it('should add "message" param into post form', function() {
-      const email = WeDeploy.email().message('message');
+      const email = WeDeploy.email('http://localhost').message('message');
       assert.deepEqual(['message'], email.params.names());
     });
 
     it('should accept single value only in "message" param into post form', function() {
-      const email = WeDeploy.email()
+      const email = WeDeploy.email('http://localhost')
         .message('test@test.com')
         .message('test2@test2.com');
       assert.deepEqual(['message'], email.params.names());
@@ -133,7 +127,7 @@ describe('EmailApiHelper', function() {
     });
 
     it('should fail if param is not specified', function() {
-      const email = WeDeploy.email();
+      const email = WeDeploy.email('http://localhost');
       assert.throws(function() {
         email.message(null);
       }, Error);
@@ -142,21 +136,21 @@ describe('EmailApiHelper', function() {
 
   describe('.priority()', function() {
     it('should add "priority" param into post form', function() {
-      const email = WeDeploy.email().priority('1');
+      const email = WeDeploy.email('http://localhost').priority('1');
       assert.deepEqual(['priority'], email.params.names());
 
       assert.deepEqual(['1'], email.params.getAll('priority'));
     });
 
     it('should accept single value only in "priority" param into post form', function() {
-      const email = WeDeploy.email().priority('1').priority('2');
+      const email = WeDeploy.email('http://localhost').priority('1').priority('2');
       assert.deepEqual(['priority'], email.params.names());
 
       assert.deepEqual(['2'], email.params.getAll('priority'));
     });
 
     it('should fail if param is not specified', function() {
-      const email = WeDeploy.email();
+      const email = WeDeploy.email('http://localhost');
       assert.throws(function() {
         email.priority(null);
       }, Error);
@@ -165,14 +159,14 @@ describe('EmailApiHelper', function() {
 
   describe('.replyTo()', function() {
     it('should add "replyTo" param into post form', function() {
-      const email = WeDeploy.email().replyTo('test@test.com');
+      const email = WeDeploy.email('http://localhost').replyTo('test@test.com');
       assert.deepEqual(['replyTo'], email.params.names());
 
       assert.deepEqual(['test@test.com'], email.params.getAll('replyTo'));
     });
 
     it('should accept single value only in "replyTo" param into post form', function() {
-      const email = WeDeploy.email()
+      const email = WeDeploy.email('http://localhost')
         .replyTo('test@test.com')
         .replyTo('test2@test2.com');
       assert.deepEqual(['replyTo'], email.params.names());
@@ -181,7 +175,7 @@ describe('EmailApiHelper', function() {
     });
 
     it('should fail if param is not specified', function() {
-      const email = WeDeploy.email();
+      const email = WeDeploy.email('http://localhost');
       assert.throws(function() {
         email.replyTo(null);
       }, Error);
@@ -190,14 +184,14 @@ describe('EmailApiHelper', function() {
 
   describe('.to()', function() {
     it('should add "to" param into post form', function() {
-      const email = WeDeploy.email().to('test@test.com');
+      const email = WeDeploy.email('http://localhost').to('test@test.com');
       assert.deepEqual(['to'], email.params.names());
 
       assert.deepEqual(['test@test.com'], email.params.getAll('to'));
     });
 
     it('should accept multiple values in "to" param into post form', function() {
-      const email = WeDeploy.email().to('test@test.com').to('test2@test2.com');
+      const email = WeDeploy.email('http://localhost').to('test@test.com').to('test2@test2.com');
       assert.deepEqual(['to'], email.params.names());
 
       assert.deepEqual(
@@ -207,7 +201,7 @@ describe('EmailApiHelper', function() {
     });
 
     it('should fail if param is not specified', function() {
-      const email = WeDeploy.email();
+      const email = WeDeploy.email('http://localhost');
       assert.throws(function() {
         email.to(null);
       }, Error);
@@ -216,21 +210,21 @@ describe('EmailApiHelper', function() {
 
   describe('.subject()', function() {
     it('should add subject param into post form', function() {
-      const email = WeDeploy.email().subject('subject');
+      const email = WeDeploy.email('http://localhost').subject('subject');
       assert.deepEqual(['subject'], email.params.names());
 
       assert.deepEqual(['subject'], email.params.getAll('subject'));
     });
 
     it('should accept single value only in "subject" param into post form', function() {
-      const email = WeDeploy.email().subject('subject').subject('subject2');
+      const email = WeDeploy.email('http://localhost').subject('subject').subject('subject2');
       assert.deepEqual(['subject'], email.params.names());
 
       assert.deepEqual(['subject2'], email.params.getAll('subject'));
     });
 
     it('should fail if param is not specified', function() {
-      const email = WeDeploy.email();
+      const email = WeDeploy.email('http://localhost');
       assert.throws(function() {
         email.subject(null);
       }, Error);
@@ -244,7 +238,7 @@ describe('EmailApiHelper', function() {
         '{"sent": "ok"}'
       );
 
-      WeDeploy.email().from('test@test.com').send().then(result => {
+      WeDeploy.email('http://localhost').from('test@test.com').send().then(result => {
         assert.equal('{"sent": "ok"}', result);
         done();
       });
@@ -256,7 +250,7 @@ describe('EmailApiHelper', function() {
         '{"sent": "ok"}'
       );
 
-      const email = WeDeploy.email().from('test@test.com');
+      const email = WeDeploy.email('http://localhost').from('test@test.com');
 
       email.send().then(result => {
         assert.strictEqual(true, email.params.isEmpty());
@@ -270,7 +264,7 @@ describe('EmailApiHelper', function() {
         '{"sent": "ok"}'
       );
 
-      WeDeploy.email()
+      WeDeploy.email('http://localhost')
         .header('TestHost', 'localhost')
         .from('test@test.com')
         .send()
@@ -290,14 +284,14 @@ describe('EmailApiHelper', function() {
         '{"sent": "ok"}'
       );
 
-      WeDeploy.email().status('xyz').then(result => {
+      WeDeploy.email('http://localhost').status('xyz').then(result => {
         assert.equal('{"sent": "ok"}', result);
         done();
       });
     });
 
     it('should fail if param is not specified', function() {
-      const email = WeDeploy.email();
+      const email = WeDeploy.email('http://localhost');
       assert.throws(function() {
         email.status(null);
       }, Error);
@@ -309,7 +303,7 @@ describe('EmailApiHelper', function() {
         '{"sent": "ok"}'
       );
 
-      WeDeploy.email()
+      WeDeploy.email('http://localhost')
         .header('TestHost', 'localhost')
         .status('xyz')
         .then(result => {
