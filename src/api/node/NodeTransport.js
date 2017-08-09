@@ -55,10 +55,6 @@ class NodeTransport extends Transport {
   request(url, method, body, opt_headers, opt_params, opt_timeout) {
     url = new Uri(url);
 
-    if (url.isUsingDefaultProtocol()) {
-      url.setProtocol('https:');
-    }
-
     if (opt_params) {
       url.addParametersFromMultiMap(opt_params);
     }

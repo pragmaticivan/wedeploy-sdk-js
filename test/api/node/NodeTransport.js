@@ -90,19 +90,6 @@ describe('NodeTransport', function() {
     });
   });
 
-  it('should change the protocol to https in client uri when protocol was not set explicitly', function(
-    done
-  ) {
-    RequestMock.intercept('GET', 'https://localhost/url').reply(200);
-    const transport = new NodeTransport();
-    const clientRequest = new ClientRequest();
-    clientRequest.url('localhost/url');
-    transport.send(clientRequest).then(function(response) {
-      assert.strictEqual('https://localhost:443/url', RequestMock.getUrl());
-      done();
-    });
-  });
-
   it('should parse request query string', function(done) {
     RequestMock.intercept(
       'GET',
@@ -163,24 +150,6 @@ describe('NodeTransport', function() {
       })
       .catch(function(e) {
         assert.strictEqual('ESOCKETTIMEDOUT', e.code);
-        done();
-      });
-  });
-
-  it('should change the protocol to https in client uri when protocol was not set explicitly', function(
-    done
-  ) {
-    RequestMock.intercept('GET', 'https://localhost/url?foo=1').reply(200);
-    const transport = new NodeTransport();
-    const clientRequest = new ClientRequest();
-    clientRequest.url('localhost/url?foo=1');
-    transport
-      .request(clientRequest.url(), clientRequest.method())
-      .then(function(xhrResponse) {
-        assert.strictEqual(
-          'https://localhost/url?foo=1',
-          xhrResponse.request.uri.href
-        );
         done();
       });
   });

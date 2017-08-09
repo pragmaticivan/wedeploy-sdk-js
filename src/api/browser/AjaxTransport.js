@@ -1,9 +1,8 @@
 'use strict';
 
 import Ajax from 'metal-ajax';
-import ClientResponse from '../ClientResponse';
 import Transport from '../Transport';
-import Uri from 'metal-uri';
+import ClientResponse from '../ClientResponse';
 
 /**
  * The implementation of an ajax transport to be used with {@link WeDeploy}.
@@ -14,14 +13,8 @@ class AjaxTransport extends Transport {
 	 * @inheritDoc
 	 */
   send(clientRequest) {
-    let url = new Uri(clientRequest.url());
-
-    if (url.isUsingDefaultProtocol()) {
-      url.setProtocol('https:');
-    }
-
     let deferred = Ajax.request(
-      url.toString(),
+      clientRequest.url(),
       clientRequest.method(),
       clientRequest.body(),
       clientRequest.headers(),

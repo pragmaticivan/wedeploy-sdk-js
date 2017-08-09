@@ -35,15 +35,4 @@ describe('AjaxTransport', function() {
     });
     RequestMock.get().abort();
   });
-
-  it('should cancel send request to an url', function(done) {
-    RequestMock.intercept().reply(200);
-    const transport = new AjaxTransport();
-    const clientRequest = new ClientRequest();
-    clientRequest.url('example.com');
-    transport.send(clientRequest).then(function(response) {
-      assert.strictEqual('https://example.com/', RequestMock.getUrl());
-      done();
-    });
-  });
 });

@@ -73,10 +73,6 @@ class AuthProvider {
       uri.setParameterValue('scope', this.getScope());
     }
 
-    if (uri.isUsingDefaultProtocol()) {
-      uri.setProtocol('https:');
-    }
-
     return uri.toString();
   }
 

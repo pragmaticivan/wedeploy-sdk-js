@@ -58,26 +58,6 @@ describe('WeDeploy Tests', function() {
     WeDeploy.socket();
   });
 
-  it('should change the protocol to https in client uri when protocol was not set explicitly', function(
-    done
-  ) {
-    WeDeploy.socket(function(url, opts) {
-      assert.strictEqual('https://domain:8080', url);
-      assert.deepEqual(
-        {
-          forceNew: true,
-          jsonp: true,
-          path: '/path/a',
-          query: 'url=' + encodeURIComponent('/path/a?foo=1'),
-        },
-        opts
-      );
-      done();
-    });
-    WeDeploy.url('domain:8080/path/a?foo=1').watch();
-    WeDeploy.socket();
-  });
-
   it('should use different transport', function() {
     const transport = new Transport();
     const client = WeDeploy.url().use(transport);
