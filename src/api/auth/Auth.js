@@ -63,10 +63,11 @@ class Auth {
   /**
 	 * Makes user Auth from data object.
 	 * @param {Object} data
+	 * @param {?string=} authUrl
 	 * @return {Auth}
 	 * @protected
 	 */
-  static createFromData(data) {
+  static createFromData(data, authUrl) {
     let auth = new Auth();
     if (isObject(data)) {
       let properties = {};
@@ -79,7 +80,7 @@ class Auth {
       });
       Object.defineProperties(auth, properties);
     }
-    auth.setWedeployClient(this.wedeployClient);
+    auth.setWedeployClient(this.wedeployClient, authUrl);
     return auth;
   }
 
@@ -301,7 +302,7 @@ class Auth {
   /**
 	 * Sets the WeDeploy client.
 	 * @param {Object} wedeployClient
-	 * @param {!string} authUrl
+	 * @param {?string=} authUrl
 	 */
   setWedeployClient(wedeployClient, authUrl) {
     this.authUrl = authUrl;
@@ -342,6 +343,10 @@ class Auth {
 	 * @chainable
 	 */
   buildUrl_() {
+    assertDefAndNotNull(
+      this.authUrl,
+      'Cannot perform operation without an auth url'
+    );
     return this.wedeployClient.url(this.authUrl).headers(this.headers_);
   }
 }

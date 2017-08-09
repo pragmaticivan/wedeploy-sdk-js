@@ -67,8 +67,8 @@ class AuthApiHelper extends ApiHelper {
    * @return {Auth}
    */
   createAuthFromData(data) {
-    const auth = Auth.createFromData(data);
-    auth.setWedeployClient(this.wedeployClient);
+    const auth = Auth.createFromData(data, this.authUrl);
+    auth.setWedeployClient(this.wedeployClient, this.authUrl);
     return auth;
   }
 
