@@ -23,8 +23,8 @@ class DataApiHelper extends ApiHelper {
   constructor(wedeployClient, dataUrl) {
     super(wedeployClient);
 
-		this.isSearch_ = false;
-		this.dataUrl = dataUrl;
+    this.isSearch_ = false;
+    this.dataUrl = dataUrl;
   }
 
   /**

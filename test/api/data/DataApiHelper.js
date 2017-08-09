@@ -451,10 +451,12 @@ describe('DataApiHelper', function() {
           'http://localhost/collection/1/title'
         ).reply(204);
 
-        WeDeploy.data('http://localhost').delete('collection/1/title').then(response => {
-          assert.strictEqual(undefined, response);
-          done();
-        });
+        WeDeploy.data('http://localhost')
+          .delete('collection/1/title')
+          .then(response => {
+            assert.strictEqual(undefined, response);
+            done();
+          });
       });
 
       it('should delete a data row', function(done) {
@@ -462,10 +464,12 @@ describe('DataApiHelper', function() {
           204
         );
 
-        WeDeploy.data('http://localhost').delete('collection/1').then(response => {
-          assert.strictEqual(undefined, response);
-          done();
-        });
+        WeDeploy.data('http://localhost')
+          .delete('collection/1')
+          .then(response => {
+            assert.strictEqual(undefined, response);
+            done();
+          });
       });
 
       it('should delete a collection', function(done) {
@@ -473,10 +477,12 @@ describe('DataApiHelper', function() {
           204
         );
 
-        WeDeploy.data('http://localhost').delete('collection').then(response => {
-          assert.strictEqual(undefined, response);
-          done();
-        });
+        WeDeploy.data('http://localhost')
+          .delete('collection')
+          .then(response => {
+            assert.strictEqual(undefined, response);
+            done();
+          });
       });
     });
   });
@@ -488,10 +494,13 @@ describe('DataApiHelper', function() {
         '[{"id": 1, "ping": "pong1"}]'
       );
 
-      WeDeploy.data('http://localhost').limit(1).get('collection').then(response => {
-        assert.strictEqual('[{"id": 1, "ping": "pong1"}]', response);
-        done();
-      });
+      WeDeploy.data('http://localhost')
+        .limit(1)
+        .get('collection')
+        .then(response => {
+          assert.strictEqual('[{"id": 1, "ping": "pong1"}]', response);
+          done();
+        });
     });
 
     it('should build the limit into the query body', function() {
@@ -507,10 +516,13 @@ describe('DataApiHelper', function() {
         '5'
       );
 
-      WeDeploy.data('http://localhost').count().get('food').then(function(response) {
-        assert.strictEqual('5', response);
-        done();
-      });
+      WeDeploy.data('http://localhost')
+        .count()
+        .get('food')
+        .then(function(response) {
+          assert.strictEqual('5', response);
+          done();
+        });
     });
 
     it('should build the count type into the query body', function() {
@@ -547,13 +559,16 @@ describe('DataApiHelper', function() {
         'http://localhost/food?highlight=%5B%22field%22%5D'
       ).reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
 
-      WeDeploy.data('http://localhost').highlight('field').get('food').then(function(response) {
-        assert.strictEqual(
-          '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]',
-          response
-        );
-        done();
-      });
+      WeDeploy.data('http://localhost')
+        .highlight('field')
+        .get('food')
+        .then(function(response) {
+          assert.strictEqual(
+            '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]',
+            response
+          );
+          done();
+        });
     });
 
     it('should build the highlight into the query body', function() {
@@ -570,13 +585,16 @@ describe('DataApiHelper', function() {
         'http://localhost/food?sort=%5B%7B%22id%22%3A%22asc%22%7D%5D'
       ).reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
 
-      WeDeploy.data('http://localhost').orderBy('id', 'asc').get('food').then(function(response) {
-        assert.strictEqual(
-          '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]',
-          response
-        );
-        done();
-      });
+      WeDeploy.data('http://localhost')
+        .orderBy('id', 'asc')
+        .get('food')
+        .then(function(response) {
+          assert.strictEqual(
+            '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]',
+            response
+          );
+          done();
+        });
     });
 
     it('should build the orderBy into the query body', function() {
@@ -610,7 +628,11 @@ describe('DataApiHelper', function() {
     });
 
     it('should build the none query into the query body', function() {
-      const data = WeDeploy.data('http://localhost').none('name', 'cuscuz', 'tapioca');
+      const data = WeDeploy.data('http://localhost').none(
+        'name',
+        'cuscuz',
+        'tapioca'
+      );
 
       const query = data.processAndResetQueryState();
 
@@ -778,13 +800,16 @@ describe('DataApiHelper', function() {
           '%22value%22%3A30%7D%7D%5D%7D%5D'
       ).reply(200, '[{"id": 2, "name": "cuscuz", "size": 10}]');
 
-      WeDeploy.data('http://localhost').lt('size', 30).get('food').then(function(response) {
-        assert.strictEqual(
-          '[{"id": 2, "name": "cuscuz", "size": 10}]',
-          response
-        );
-        done();
-      });
+      WeDeploy.data('http://localhost')
+        .lt('size', 30)
+        .get('food')
+        .then(function(response) {
+          assert.strictEqual(
+            '[{"id": 2, "name": "cuscuz", "size": 10}]',
+            response
+          );
+          done();
+        });
     });
 
     it('should build the lt query into the query body', function() {
@@ -822,13 +847,16 @@ describe('DataApiHelper', function() {
           '%22value%22%3A30%7D%7D%5D%7D%5D'
       ).reply(200, '[{"id": 2, "name": "cuscuz", "size": 10}]');
 
-      WeDeploy.data('http://localhost').lte('size', 30).get('food').then(function(response) {
-        assert.strictEqual(
-          '[{"id": 2, "name": "cuscuz", "size": 10}]',
-          response
-        );
-        done();
-      });
+      WeDeploy.data('http://localhost')
+        .lte('size', 30)
+        .get('food')
+        .then(function(response) {
+          assert.strictEqual(
+            '[{"id": 2, "name": "cuscuz", "size": 10}]',
+            response
+          );
+          done();
+        });
     });
 
     it('should build the lte query into the query body', function() {
@@ -866,13 +894,16 @@ describe('DataApiHelper', function() {
           '%22value%22%3A30%7D%7D%5D%7D%5D'
       ).reply(200, '[{"id": 2, "name": "cuscuz", "size": 10}]');
 
-      WeDeploy.data('http://localhost').gt('size', 30).get('food').then(function(response) {
-        assert.strictEqual(
-          '[{"id": 2, "name": "cuscuz", "size": 10}]',
-          response
-        );
-        done();
-      });
+      WeDeploy.data('http://localhost')
+        .gt('size', 30)
+        .get('food')
+        .then(function(response) {
+          assert.strictEqual(
+            '[{"id": 2, "name": "cuscuz", "size": 10}]',
+            response
+          );
+          done();
+        });
     });
 
     it('should build the gt query into the query body', function() {
@@ -910,13 +941,16 @@ describe('DataApiHelper', function() {
           'D%22%2C%22value%22%3A30%7D%7D%5D%7D%5D'
       ).reply(200, '[{"id": 2, "name": "cuscuz", "size": 10}]');
 
-      WeDeploy.data('http://localhost').gte('size', 30).get('food').then(function(response) {
-        assert.strictEqual(
-          '[{"id": 2, "name": "cuscuz", "size": 10}]',
-          response
-        );
-        done();
-      });
+      WeDeploy.data('http://localhost')
+        .gte('size', 30)
+        .get('food')
+        .then(function(response) {
+          assert.strictEqual(
+            '[{"id": 2, "name": "cuscuz", "size": 10}]',
+            response
+          );
+          done();
+        });
     });
 
     it('should build the gte query into the query body', function() {
@@ -964,7 +998,11 @@ describe('DataApiHelper', function() {
     });
 
     it('should build the any query into the query body', function() {
-      const data = WeDeploy.data('http://localhost').any('name', 'cuscuz', 'tapioca');
+      const data = WeDeploy.data('http://localhost').any(
+        'name',
+        'cuscuz',
+        'tapioca'
+      );
 
       const query = data.processAndResetQueryState();
 
@@ -1057,7 +1095,10 @@ describe('DataApiHelper', function() {
     });
 
     it('should build the distance query into the query body', function() {
-      const data = WeDeploy.data('http://localhost').distance('point', Geo.circle([0, 0], 2));
+      const data = WeDeploy.data('http://localhost').distance(
+        'point',
+        Geo.circle([0, 0], 2)
+      );
 
       const query = data.processAndResetQueryState();
 
@@ -1265,7 +1306,11 @@ describe('DataApiHelper', function() {
     });
 
     it('should build the aggregate query into the query body', function() {
-      const data = WeDeploy.data('http://localhost').aggregate('name', 'field', '=');
+      const data = WeDeploy.data('http://localhost').aggregate(
+        'name',
+        'field',
+        '='
+      );
 
       const query = data.processAndResetQueryState();
 
@@ -1321,13 +1366,15 @@ describe('DataApiHelper', function() {
           '{"total":1,"highlights":{"2":{}},"documents":[{"id":2,"ping":"pong1"}],"scores":{"2":0.13102644681930542},"queryTime":1}'
         );
 
-        WeDeploy.data('http://localhost').search('food').then(function(response) {
-          assert.strictEqual(
-            '{"total":1,"highlights":{"2":{}},"documents":[{"id":2,"ping":"pong1"}],"scores":{"2":0.13102644681930542},"queryTime":1}',
-            response
-          );
-          done();
-        });
+        WeDeploy.data('http://localhost')
+          .search('food')
+          .then(function(response) {
+            assert.strictEqual(
+              '{"total":1,"highlights":{"2":{}},"documents":[{"id":2,"ping":"pong1"}],"scores":{"2":0.13102644681930542},"queryTime":1}',
+              response
+            );
+            done();
+          });
       });
 
       it('should send request with query search in the body', function(done) {
@@ -1430,19 +1477,22 @@ describe('DataApiHelper', function() {
             'http://localhost/food?type=search&filter=%5B%7B%22and%22%3A%5B%7B%22type%22%3A%7B%22operator%22%3A%22%3D%22%2C%22value%22%3A%22fruit%22%7D%7D%5D%7D%5D'
           ).reply(200);
 
-          WeDeploy.data('http://localhost').where('type', 'fruit').search('food').then(() => {
-            RequestMock.teardown();
-            RequestMock.setup();
+          WeDeploy.data('http://localhost')
+            .where('type', 'fruit')
+            .search('food')
+            .then(() => {
+              RequestMock.teardown();
+              RequestMock.setup();
 
-            const requestUrlWithNoQuery = 'http://localhost/food?type=search';
+              const requestUrlWithNoQuery = 'http://localhost/food?type=search';
 
-            RequestMock.intercept('GET', requestUrlWithNoQuery).reply(200);
+              RequestMock.intercept('GET', requestUrlWithNoQuery).reply(200);
 
-            WeDeploy.data('http://localhost').search('food').then(() => {
-              assert.strictEqual(requestUrlWithNoQuery, RequestMock.getUrl());
-              done();
+              WeDeploy.data('http://localhost').search('food').then(() => {
+                assert.strictEqual(requestUrlWithNoQuery, RequestMock.getUrl());
+                done();
+              });
             });
-          });
         });
       }
     );
@@ -1526,19 +1576,22 @@ describe('DataApiHelper', function() {
           'http://localhost/food?filter=%5B%7B%22and%22%3A%5B%7B%22type%22%3A%7B%22operator%22%3A%22%3D%22%2C%22value%22%3A%22fruit%22%7D%7D%5D%7D%5D'
         ).reply(200);
 
-        WeDeploy.data('http://localhost').where('type', 'fruit').get('food').then(() => {
-          RequestMock.teardown();
-          RequestMock.setup();
+        WeDeploy.data('http://localhost')
+          .where('type', 'fruit')
+          .get('food')
+          .then(() => {
+            RequestMock.teardown();
+            RequestMock.setup();
 
-          const requestUrlWithNoQuery = 'http://localhost/food';
+            const requestUrlWithNoQuery = 'http://localhost/food';
 
-          RequestMock.intercept('GET', requestUrlWithNoQuery).reply(200);
+            RequestMock.intercept('GET', requestUrlWithNoQuery).reply(200);
 
-          WeDeploy.data('http://localhost').get('food').then(() => {
-            assert.strictEqual(requestUrlWithNoQuery, RequestMock.getUrl());
-            done();
+            WeDeploy.data('http://localhost').get('food').then(() => {
+              assert.strictEqual(requestUrlWithNoQuery, RequestMock.getUrl());
+              done();
+            });
           });
-        });
       });
     });
   });
@@ -1589,7 +1642,9 @@ describe('DataApiHelper', function() {
             );
             done();
           });
-          WeDeploy.data('http://localhost').auth(Auth.create('token')).watch('fruits');
+          WeDeploy.data('http://localhost')
+            .auth(Auth.create('token'))
+            .watch('fruits');
           WeDeploy.socket();
         });
 
@@ -1661,7 +1716,9 @@ describe('DataApiHelper', function() {
             WeDeploy.data('http://localhost').watch('food');
           });
 
-          WeDeploy.data('http://localhost').where('type', 'fruit').watch('food');
+          WeDeploy.data('http://localhost')
+            .where('type', 'fruit')
+            .watch('food');
         });
       }
     );

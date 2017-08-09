@@ -335,9 +335,7 @@ class AuthApiHelper extends ApiHelper {
     if (!provider.hasRedirectUri()) {
       provider.setRedirectUri(this.getHrefWithoutFragment_());
     }
-    globals.window.location.href = provider.makeAuthorizationUrl(
-      this.authUrl
-    );
+    globals.window.location.href = provider.makeAuthorizationUrl(this.authUrl);
   }
 
   /**
@@ -366,9 +364,7 @@ class AuthApiHelper extends ApiHelper {
    * @chainable
    */
   buildUrl_() {
-    return this.wedeployClient
-      .url(this.authUrl)
-      .headers(this.headers_);
+    return this.wedeployClient.url(this.authUrl).headers(this.headers_);
   }
 
   /**

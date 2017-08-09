@@ -15,9 +15,9 @@ class EmailApiHelper extends ApiHelper {
 	 * @constructor
 	 */
   constructor(wedeployClient, emailUrl) {
-		super(wedeployClient);
-		this.emailUrl = emailUrl;
-		this.params = new MultiMap();
+    super(wedeployClient);
+    this.emailUrl = emailUrl;
+    this.params = new MultiMap();
   }
 
   /**

@@ -94,7 +94,9 @@ describe('EmailApiHelper', function() {
     });
 
     it('should accept multiple values in "cc" param into post form', function() {
-      const email = WeDeploy.email('http://localhost').cc('test@test.com').cc('test2@test2.com');
+      const email = WeDeploy.email('http://localhost')
+        .cc('test@test.com')
+        .cc('test2@test2.com');
       assert.deepEqual(['cc'], email.params.names());
 
       assert.deepEqual(
@@ -143,7 +145,9 @@ describe('EmailApiHelper', function() {
     });
 
     it('should accept single value only in "priority" param into post form', function() {
-      const email = WeDeploy.email('http://localhost').priority('1').priority('2');
+      const email = WeDeploy.email('http://localhost')
+        .priority('1')
+        .priority('2');
       assert.deepEqual(['priority'], email.params.names());
 
       assert.deepEqual(['2'], email.params.getAll('priority'));
@@ -191,7 +195,9 @@ describe('EmailApiHelper', function() {
     });
 
     it('should accept multiple values in "to" param into post form', function() {
-      const email = WeDeploy.email('http://localhost').to('test@test.com').to('test2@test2.com');
+      const email = WeDeploy.email('http://localhost')
+        .to('test@test.com')
+        .to('test2@test2.com');
       assert.deepEqual(['to'], email.params.names());
 
       assert.deepEqual(
@@ -217,7 +223,9 @@ describe('EmailApiHelper', function() {
     });
 
     it('should accept single value only in "subject" param into post form', function() {
-      const email = WeDeploy.email('http://localhost').subject('subject').subject('subject2');
+      const email = WeDeploy.email('http://localhost')
+        .subject('subject')
+        .subject('subject2');
       assert.deepEqual(['subject'], email.params.names());
 
       assert.deepEqual(['subject2'], email.params.getAll('subject'));
@@ -238,10 +246,13 @@ describe('EmailApiHelper', function() {
         '{"sent": "ok"}'
       );
 
-      WeDeploy.email('http://localhost').from('test@test.com').send().then(result => {
-        assert.equal('{"sent": "ok"}', result);
-        done();
-      });
+      WeDeploy.email('http://localhost')
+        .from('test@test.com')
+        .send()
+        .then(result => {
+          assert.equal('{"sent": "ok"}', result);
+          done();
+        });
     });
 
     it('should clear the params after sending the email', function(done) {

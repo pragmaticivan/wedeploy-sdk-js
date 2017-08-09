@@ -304,7 +304,7 @@ class Auth {
 	 * @param {!string} authUrl
 	 */
   setWedeployClient(wedeployClient, authUrl) {
-		this.authUrl = authUrl;
+    this.authUrl = authUrl;
     this.wedeployClient = wedeployClient;
   }
 
@@ -342,9 +342,7 @@ class Auth {
 	 * @chainable
 	 */
   buildUrl_() {
-    return this.wedeployClient
-      .url(this.authUrl)
-      .headers(this.headers_);
+    return this.wedeployClient.url(this.authUrl).headers(this.headers_);
   }
 }
 
