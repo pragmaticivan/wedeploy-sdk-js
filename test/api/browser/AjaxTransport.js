@@ -35,4 +35,20 @@ describe('AjaxTransport', function() {
     });
     RequestMock.get().abort();
   });
+
+  it('should change the protocol to https in client uri when protocol was not set explicitly', function(
+    done
+  ) {
+    RequestMock.intercept().reply(200);
+    const transport = new AjaxTransport();
+    const clientRequest = new ClientRequest();
+    clientRequest.url('example.com');
+    transport.send(clientRequest).then(function(response) {
+      assert.strictEqual(
+        RequestMock.getUrl().indexOf('https://example.com'),
+        0
+      );
+      done();
+    });
+  });
 });

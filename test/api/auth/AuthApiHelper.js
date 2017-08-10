@@ -157,6 +157,16 @@ describe('AuthApiHelper', function() {
           globals.window.location.href
         );
       });
+
+      it('should change the protocol to https in redirect uri when protocol was not set explicitly', function() {
+        const provider = new GithubAuthProvider();
+        assert.strictEqual(
+          provider
+            .makeAuthorizationUrl('currentUrl')
+            .indexOf('https://currenturl'),
+          0
+        );
+      });
     })
   );
 
