@@ -1,5 +1,6 @@
 'use strict';
 
+import {core} from 'metal';
 import globals from '../../../src/globals/globals';
 import Auth from '../../../src/api/auth/Auth';
 import GithubAuthProvider from '../../../src/api/auth/GithubAuthProvider';
@@ -887,6 +888,21 @@ describe('AuthApiHelper', function() {
       assert.throws(function() {
         WeDeploy.auth('http://auth').verifyUser();
       }, Error);
+    });
+
+    it('should return user object and not an instance of Auth', function(done) {
+      const auth = WeDeploy.auth('http://auth');
+      const data = {
+        token: 'token',
+      };
+      RequestMock.intercept().reply(200, JSON.stringify(data), {
+        'content-type': 'application/json',
+      });
+      auth.verifyUser('token').then(user => {
+        assert.ok(!(user instanceof Auth));
+        assert.ok(core.isObject(user));
+        done();
+      });
     });
   });
 });
