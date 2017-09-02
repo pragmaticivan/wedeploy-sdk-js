@@ -191,7 +191,7 @@ class AuthApiHelper extends ApiHelper {
     return this.verifyUser(token).then(currentUser => {
       this.currentUser = currentUser;
       if (this.storage) {
-        this.storage.set('currentUser', currentUser);
+        this.storage.set('currentUser', currentUser.getData());
       }
       if (this.currentUser.hasToken()) {
         this.createAccessTokenCookie(this.currentUser.getToken());

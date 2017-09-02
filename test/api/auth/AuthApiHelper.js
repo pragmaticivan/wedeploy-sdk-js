@@ -651,6 +651,34 @@ describe('AuthApiHelper', function() {
       });
     });
 
+    it('should store current user to local storage', function(done) {
+      if (globals.window) {
+        const auth = WeDeploy.auth('http://auth');
+        const data = {
+          createdAt: 'createdAt',
+          email: 'email',
+          id: 'id',
+          name: 'name',
+          photoUrl: 'photoUrl',
+          extra: 'extra',
+        };
+        RequestMock.intercept().reply(200, JSON.stringify(data), {
+          'content-type': 'application/json',
+        });
+        auth.loadCurrentUser('token').then(user => {
+          assert.ok(user instanceof Auth);
+          const currentUser = JSON.parse(
+            globals.window.localStorage.getItem('currentUser')
+          );
+          data.token = 'token';
+          assert.deepEqual(currentUser, data);
+          done();
+        });
+      } else {
+        done();
+      }
+    });
+
     it('should load current user and set access token cookie', function(done) {
       globals.document = {
         cookie: '',
@@ -856,6 +884,7 @@ describe('AuthApiHelper', function() {
         'content-type': 'application/json',
       });
       auth.verifyUser('email@domain.com', 'password').then(user => {
+        assert.ok(user instanceof Auth);
         assert.strictEqual('email@domain.com', user.email);
         assert.strictEqual('password', user.password);
         assert.strictEqual('token', user.token);
