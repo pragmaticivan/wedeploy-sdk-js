@@ -783,8 +783,7 @@ describe('AuthApiHelper', function() {
         access_token: 'xyz',
       };
 
-      const url =
-        'http://localhost/oauth/token';
+      const url = 'http://localhost/oauth/token';
       RequestMock.intercept('POST', url).reply(200, JSON.stringify(data), {
         'content-type': 'application/json',
       });
