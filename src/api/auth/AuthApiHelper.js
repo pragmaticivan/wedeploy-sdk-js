@@ -310,10 +310,10 @@ class AuthApiHelper extends ApiHelper {
 
     return this.buildUrl_()
       .path('/oauth/token')
-      .param('grant_type', 'password')
-      .param('username', email)
-      .param('password', password)
-      .get()
+      .form('grant_type', 'password')
+      .form('username', email)
+      .form('password', password)
+      .post()
       .then(response => assertResponseSucceeded(response))
       .then(response => this.loadCurrentUser(response.body().access_token))
       .then(user => {

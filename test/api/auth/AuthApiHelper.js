@@ -313,11 +313,7 @@ describe('AuthApiHelper', function() {
 
   describe('Sign in with email and password', function() {
     beforeEach(function() {
-      RequestMock.setup(
-        'GET',
-        'http://localhost/oauth/token?grant_type=password' +
-          '&username=email%40domain.com&password=password'
-      );
+      RequestMock.setup('POST', 'http://localhost/oauth/token');
     });
 
     it('should throw exception when calling sign-in with email and password when email not specified', function() {
@@ -788,9 +784,8 @@ describe('AuthApiHelper', function() {
       };
 
       const url =
-        'http://localhost/oauth/token?grant_type=password' +
-        '&username=email%40domain.com&password=password';
-      RequestMock.intercept('GET', url).reply(200, JSON.stringify(data), {
+        'http://localhost/oauth/token';
+      RequestMock.intercept('POST', url).reply(200, JSON.stringify(data), {
         'content-type': 'application/json',
       });
       auth
