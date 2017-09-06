@@ -32,6 +32,7 @@ class Auth {
     this.photoUrl = null;
     this.supportedScopes = [];
     this.wedeployClient = null;
+    this.data_ = null;
     this.headers_ = new MultiMap();
   }
 
@@ -70,6 +71,7 @@ class Auth {
   static createFromData(data, authUrl) {
     let auth = new Auth();
     if (isObject(data)) {
+      auth.data_ = data;
       let properties = {};
       Object.keys(data).forEach(key => {
         properties[key] = {
@@ -90,6 +92,14 @@ class Auth {
 	 */
   getCreatedAt() {
     return this.createdAt;
+  }
+
+  /**
+   * Gets the auth data
+   * @return {Object}
+   */
+  getData() {
+    return this.data_;
   }
 
   /**
@@ -154,6 +164,14 @@ class Auth {
 	 */
   hasCreatedAt() {
     return core.isDefAndNotNull(this.createdAt);
+  }
+
+  /**
+	 * Checks if data is set.
+	 * @return {boolean}
+	 */
+  hasData() {
+    return core.isDefAndNotNull(this.data_);
   }
 
   /**
@@ -223,6 +241,14 @@ class Auth {
 	 */
   setCreatedAt(createdAt) {
     this.createdAt = createdAt;
+  }
+
+  /**
+	 * Sets data.
+	 * @param {Object} data
+	 */
+  setData(data) {
+    this.data_ = data;
   }
 
   /**

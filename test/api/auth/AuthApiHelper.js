@@ -1,6 +1,5 @@
 'use strict';
 
-import {core} from 'metal';
 import globals from '../../../src/globals/globals';
 import Auth from '../../../src/api/auth/Auth';
 import GithubAuthProvider from '../../../src/api/auth/GithubAuthProvider';
@@ -652,6 +651,34 @@ describe('AuthApiHelper', function() {
       });
     });
 
+    it('should store current user to local storage', function(done) {
+      if (globals.window) {
+        const auth = WeDeploy.auth('http://auth');
+        const data = {
+          createdAt: 'createdAt',
+          email: 'email',
+          id: 'id',
+          name: 'name',
+          photoUrl: 'photoUrl',
+          extra: 'extra',
+        };
+        RequestMock.intercept().reply(200, JSON.stringify(data), {
+          'content-type': 'application/json',
+        });
+        auth.loadCurrentUser('token').then(user => {
+          assert.ok(user instanceof Auth);
+          const currentUser = JSON.parse(
+            globals.window.localStorage.getItem('currentUser')
+          );
+          data.token = 'token';
+          assert.deepEqual(currentUser, data);
+          done();
+        });
+      } else {
+        done();
+      }
+    });
+
     it('should load current user and set access token cookie', function(done) {
       globals.document = {
         cookie: '',
@@ -857,6 +884,7 @@ describe('AuthApiHelper', function() {
         'content-type': 'application/json',
       });
       auth.verifyUser('email@domain.com', 'password').then(user => {
+        assert.ok(user instanceof Auth);
         assert.strictEqual('email@domain.com', user.email);
         assert.strictEqual('password', user.password);
         assert.strictEqual('token', user.token);
@@ -888,21 +916,6 @@ describe('AuthApiHelper', function() {
       assert.throws(function() {
         WeDeploy.auth('http://auth').verifyUser();
       }, Error);
-    });
-
-    it('should return user object and not an instance of Auth', function(done) {
-      const auth = WeDeploy.auth('http://auth');
-      const data = {
-        token: 'token',
-      };
-      RequestMock.intercept().reply(200, JSON.stringify(data), {
-        'content-type': 'application/json',
-      });
-      auth.verifyUser('token').then(user => {
-        assert.ok(!(user instanceof Auth));
-        assert.ok(core.isObject(user));
-        done();
-      });
     });
   });
 });

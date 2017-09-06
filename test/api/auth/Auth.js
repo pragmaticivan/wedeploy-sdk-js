@@ -35,14 +35,17 @@ describe('Auth', function() {
     });
 
     it('should create Auth instance and set other fields', function() {
+      const data = {token: 'token'};
       const auth = Auth.create();
       auth.setCreatedAt('createdAt');
+      auth.setData(data);
       auth.setId('id');
       auth.setName('name');
       auth.setPassword('password');
       auth.setPhotoUrl('photoUrl');
       auth.setSupportedScopes(['admin']);
       assert.ok(auth.hasCreatedAt());
+      assert.ok(auth.hasData());
       assert.ok(auth.hasId());
       assert.ok(auth.hasName());
       assert.ok(auth.hasPassword());
@@ -56,6 +59,7 @@ describe('Auth', function() {
       assert.strictEqual('password', auth.password);
       assert.strictEqual('photoUrl', auth.photoUrl);
       assert.strictEqual('createdAt', auth.getCreatedAt());
+      assert.strictEqual(data, auth.getData());
       assert.strictEqual('id', auth.getId());
       assert.strictEqual('name', auth.getName());
       assert.strictEqual('password', auth.getPassword());

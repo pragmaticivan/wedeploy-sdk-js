@@ -189,11 +189,10 @@ class AuthApiHelper extends ApiHelper {
 	 */
   loadCurrentUser(token) {
     return this.verifyUser(token).then(currentUser => {
+      this.currentUser = currentUser;
       if (this.storage) {
-        this.storage.set('currentUser', currentUser);
+        this.storage.set('currentUser', currentUser.getData());
       }
-      this.currentUser = this.createAuthFromData(currentUser);
-
       if (this.currentUser.hasToken()) {
         this.createAccessTokenCookie(this.currentUser.getToken());
       }
@@ -257,7 +256,6 @@ class AuthApiHelper extends ApiHelper {
     }
     let currentUser = this.storage && this.storage.get('currentUser');
     if (currentUser) {
-      delete currentUser.headers_;
       this.currentUser = this.createAuthFromData(currentUser);
     }
   }
@@ -423,7 +421,7 @@ class AuthApiHelper extends ApiHelper {
         } else {
           data.token = tokenOrEmail;
         }
-        return data;
+        return this.createAuthFromData(data);
       });
   }
 }
