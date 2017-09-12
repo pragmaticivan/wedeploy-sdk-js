@@ -657,6 +657,50 @@ describe('DataApiHelper', function() {
     });
   });
 
+  describe('.exists()', function() {
+    it('should send request with query exists in the body', function(done) {
+      RequestMock.intercept(
+        'GET',
+        'http://localhost/food?filter=%5B%7B%22and%22%3A%5B%7B%22size%22%3A%7B%22operator%22%3A%22exists%22%7D%7D%5D%7D%5D'
+      ).reply(200, '[{"id": 2, "name": "cuscuz", "size": 10}]');
+
+      WeDeploy.data('http://localhost')
+        .exists('size')
+        .get('food')
+        .then(function(response) {
+          assert.strictEqual(
+            '[{"id": 2, "name": "cuscuz", "size": 10}]',
+            response
+          );
+          done();
+        });
+    });
+
+    it('should build the exists query into the query body', function() {
+      const data = WeDeploy.data('http://localhost').exists('size');
+
+      const query = data.processAndResetQueryState();
+
+      const queryBody = {
+        body_: {
+          filter: [
+            {
+              and: [
+                {
+                  size: {
+                    operator: 'exists',
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      };
+
+      assert.deepEqual(queryBody, query);
+    });
+  });
+
   describe('.match()', function() {
     it('should send request with query match in the body', function(done) {
       RequestMock.intercept(
