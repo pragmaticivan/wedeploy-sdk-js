@@ -347,8 +347,8 @@ class AuthApiHelper extends ApiHelper {
     assertUserSignedIn(this.currentUser);
     return this.buildUrl_()
       .path('/oauth/revoke')
-      .param('token', this.currentUser.token)
-      .get()
+      .form('token', this.currentUser.token)
+      .post()
       .then(response => assertResponseSucceeded(response))
       .then(response => {
         this.maybeCallOnSignOutCallback_();

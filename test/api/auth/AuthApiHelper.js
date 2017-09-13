@@ -401,7 +401,7 @@ describe('AuthApiHelper', function() {
 
   describe('Sign out', function() {
     beforeEach(function() {
-      RequestMock.setup('GET', 'http://localhost/oauth/revoke?token');
+      RequestMock.setup('POST', 'http://localhost/oauth/revoke');
     });
 
     it('should throw exception when calling sign-out without being signed-in', function() {
@@ -410,14 +410,14 @@ describe('AuthApiHelper', function() {
 
     it('should call sign-out successfully', function(done) {
       const auth = WeDeploy.auth('http://localhost');
-      auth.currentUser = {};
+      auth.currentUser = {token: 'testtoken'};
       RequestMock.intercept().reply(200);
       auth.signOut().then(() => done());
     });
 
     it('should call sign-out unsuccessfully', function(done) {
       const auth = WeDeploy.auth('http://localhost');
-      auth.currentUser = {};
+      auth.currentUser = {token: 'testtoken'};
       RequestMock.intercept().reply(400);
       auth.signOut().catch(() => done());
     });
@@ -426,7 +426,7 @@ describe('AuthApiHelper', function() {
       done
     ) {
       const auth = WeDeploy.auth('http://localhost');
-      auth.currentUser = {};
+      auth.currentUser = {token: 'testtoken'};
       const responseErrorObject = {
         error: true,
       };
@@ -444,7 +444,7 @@ describe('AuthApiHelper', function() {
         'TestHost',
         'localhost'
       );
-      auth.currentUser = {};
+      auth.currentUser = {token: 'testtoken'};
       RequestMock.intercept().reply(200);
       auth.signOut().then(response => {
         assert.strictEqual(getTestHostHeader_(), 'localhost');
@@ -799,12 +799,10 @@ describe('AuthApiHelper', function() {
       done
     ) {
       const auth = WeDeploy.auth('http://localhost');
-      auth.currentUser = {};
+      auth.currentUser = {token: 'testtoken'};
       const callback = sinon.stub();
       auth.onSignOut(callback);
-      RequestMock.intercept('GET', 'http://localhost/oauth/revoke?token').reply(
-        200
-      );
+      RequestMock.intercept('POST', 'http://localhost/oauth/revoke').reply(200);
       auth.signOut().then(() => {
         assert.strictEqual(1, callback.callCount);
         done();
