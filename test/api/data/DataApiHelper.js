@@ -745,6 +745,56 @@ describe('DataApiHelper', function() {
     });
   });
 
+  describe('.phrase()', function() {
+    it('should send request with query phrase in the body', function(done) {
+      RequestMock.intercept(
+        'GET',
+        'http://localhost/books?filter=%5B%7B%22and%22%3A%5B%7B%22' +
+          'title%22%3A%7B%22operator%22%3A%22phrase%22%2C%22value%22%' +
+          '3A%22quick%20brown%20fox%22%7D%7D%5D%7D%5D'
+      ).reply(200, '[{"id": 2, "title": "the quick brown fox"}]');
+
+      WeDeploy.data('http://localhost')
+        .phrase('title', 'quick brown fox')
+        .get('books')
+        .then(function(response) {
+          assert.strictEqual(
+            '[{"id": 2, "title": "the quick brown fox"}]',
+            response
+          );
+          done();
+        });
+    });
+
+    it('should build the phrase query into the query body', function() {
+      const data = WeDeploy.data('http://localhost').phrase(
+        'title',
+        'quick brown fox'
+      );
+
+      const query = data.processAndResetQueryState();
+
+      const queryBody = {
+        body_: {
+          filter: [
+            {
+              and: [
+                {
+                  title: {
+                    operator: 'phrase',
+                    value: 'quick brown fox',
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      };
+
+      assert.deepEqual(queryBody, query);
+    });
+  });
+
   describe('.prefix()', function() {
     it('should send request with query prefix in the body', function(done) {
       RequestMock.intercept(
