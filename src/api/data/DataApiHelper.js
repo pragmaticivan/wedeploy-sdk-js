@@ -107,6 +107,18 @@ class DataApiHelper extends ApiHelper {
   }
 
   /**
+	 * Adds a filter to be compose with this filter using "phrase" operator.
+	 * @param {string} field The name of the field to filter by.
+	 * @param {string=} opt_query The query string.
+	 * @return {DataApiHelper} Returns the {@link DataApiHelper} object itself, so
+	 *   calls can be chained.
+	 * @chainnable
+	 */
+  phrase(field, opt_query) {
+    return this.where(Filter.phrase(field, opt_query));
+  }
+
+  /**
 	 * Adds a filter to be compose with this filter using "prefix" operator.
 	 * @param {string} field The name of the field to filter by.
 	 * @param {string=} opt_query The query string.
