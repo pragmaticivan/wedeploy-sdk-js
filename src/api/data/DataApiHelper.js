@@ -4,9 +4,10 @@ import ApiHelper from '../ApiHelper';
 import Query from '../../api-query/Query';
 import Filter from '../../api-query/Filter';
 import {
+  assertResponseSucceeded,
+  assertValidFieldTypes,
   assertDefAndNotNull,
   assertObject,
-  assertResponseSucceeded,
 } from '../assertions';
 import {core} from 'metal';
 
@@ -371,6 +372,33 @@ class DataApiHelper extends ApiHelper {
   }
 
   /**
+	 * Creates a collection and maps the field types.
+	 * @param {!string} collection The name of the collection.
+	 * @param {!Object} fieldTypes Field types mappings of the collection.
+	 * @return {!CancellablePromise}
+	 */
+  createCollection(collection, fieldTypes) {
+    assertDefAndNotNull(collection, 'Collection key must be specified.');
+    assertObject(fieldTypes, 'Field types mappings can\'t be empty.');
+    assertValidFieldTypes(fieldTypes);
+
+    return this.buildUrl_()
+      .post({
+        mappings: fieldTypes,
+        name: collection,
+      })
+      .then(response => assertResponseSucceeded(response))
+      .then(response => response.body())
+      .catch(error => {
+        if (error.code === 400) {
+          throw new Error(`Collection "${collection}" already exists.`);
+        } else {
+          throw error;
+        }
+      });
+  }
+
+  /**
 	 * Replaces the attributes of a document form the passed-in object and saves
 	 * the record. If the object is invalid, the saving will fail and an error
 	 * object will be returned.
@@ -473,6 +501,37 @@ class DataApiHelper extends ApiHelper {
       .get(this.processAndResetQueryState())
       .then(response => assertResponseSucceeded(response))
       .then(response => response.body());
+  }
+
+  /**
+	 * Updates the mapped field types of a collection.
+	 * @param {!string} collection The name of the collection.
+	 * @param {!Object} fieldTypes Field types mappings of the collection.
+	 * @return {!CancellablePromise}
+	 */
+  updateCollection(collection, fieldTypes) {
+    assertDefAndNotNull(collection, 'Collection key must be specified.');
+    assertObject(fieldTypes, 'Field types mappings can\'t be empty.');
+    assertValidFieldTypes(fieldTypes);
+
+    return this.buildUrl_()
+      .patch({
+        mappings: fieldTypes,
+        name: collection,
+      })
+      .then(response => assertResponseSucceeded(response))
+      .then(response => response.body())
+      .catch(error => {
+        if (error.code === 404) {
+          throw new Error(`Collection "${collection}" does not exist.`);
+        } else if (error.code === 400) {
+          throw new Error(
+            'Existing fields cannot be remapped to a ' + 'different type.'
+          );
+        } else {
+          throw error;
+        }
+      });
   }
 
   /**

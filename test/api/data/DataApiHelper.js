@@ -1690,6 +1690,171 @@ describe('DataApiHelper', function() {
     });
   });
 
+  describe('.createCollection()', function() {
+    context('when using invalid params', function() {
+      it('should fail if the collection is not specified', function() {
+        const data = WeDeploy.data('http://localhost');
+        assert.throws(function() {
+          data.createCollection(null);
+        }, Error);
+      });
+
+      it('should fail if mappings are not specified', function() {
+        const data = WeDeploy.data('http://localhost');
+        assert.throws(function() {
+          data.createCollection('collection1');
+        }, Error);
+      });
+
+      it('should fail if there are invalid types mappings', function() {
+        const data = WeDeploy.data('http://localhost');
+        assert.throws(function() {
+          data.createCollection('collection1', {
+            field1: 'string',
+            field2: {
+              field1: {
+                field1: 'fake',
+              },
+            },
+          });
+        }, Error);
+      });
+
+      it('should fail if function is passed as mapping', function() {
+        const data = WeDeploy.data('http://localhost');
+        assert.throws(function() {
+          data.createCollection('collection1', {
+            field1: 'string',
+            field2: {
+              field1: {
+                field1: function a() {},
+              },
+            },
+          });
+        }, Error);
+      });
+
+      it('should fail if an array is passed as mapping', function() {
+        const data = WeDeploy.data('http://localhost');
+        assert.throws(function() {
+          data.createCollection('collection1', {
+            field1: 'string',
+            field2: {
+              field1: {
+                field1: ['one', 'two', 'three'],
+              },
+            },
+          });
+        }, Error);
+      });
+    });
+
+    context('when creating mappings', function() {
+      beforeEach(function() {
+        RequestMock.setup('POST', 'http://localhost');
+      });
+
+      it('should create mappings for the field types', function(done) {
+        RequestMock.intercept().reply(
+          200,
+          '{"mappings":{"field1":"string"},"size":130,"documents":0,"name":"collection1"}'
+        );
+
+        WeDeploy.data('http://localhost')
+          .createCollection('collection', {
+            field1: 'string',
+          })
+          .then(response => {
+            assert.strictEqual(
+              '{"mappings":{"field1":"string"},"size":130,"documents":0,"name":"collection1"}',
+              response
+            );
+            done();
+          });
+      });
+    });
+  });
+
+  describe('.updateCollection', function() {
+    context('when using invalid params', function() {
+      it('should fail if the collection is not specified', function() {
+        const data = WeDeploy.data('http://localhost');
+        assert.throws(function() {
+          data.updateCollection(null);
+        }, Error);
+      });
+
+      it('should fail if mappings are not specified', function() {
+        const data = WeDeploy.data('http://localhost');
+        assert.throws(function() {
+          data.updateCollection('collection1');
+        }, Error);
+      });
+
+      it('should fail if there are invalid types mappings', function() {
+        const data = WeDeploy.data('http://localhost');
+        assert.throws(function() {
+          data.updateCollection('collection1', {
+            field1: 'string',
+            field2: {
+              field1: {
+                field1: 'fake',
+              },
+            },
+          });
+        }, Error);
+      });
+
+      it('should fail if function is passed as mapping', function() {
+        const data = WeDeploy.data('http://localhost');
+        assert.throws(function() {
+          data.createCollection('collection1', {
+            field1: 'string',
+            field2: {
+              field1: {
+                field1: function a() {},
+              },
+            },
+          });
+        }, Error);
+      });
+
+      it('should fail if an array is passed as mapping', function() {
+        const data = WeDeploy.data('http://localhost');
+        assert.throws(function() {
+          data.createCollection('collection1', {
+            field1: 'string',
+            field2: {
+              field1: {
+                field1: ['one', 'two', 'three'],
+              },
+            },
+          });
+        }, Error);
+      });
+    });
+
+    context('when updating mappings', function() {
+      beforeEach(function() {
+        RequestMock.setup('PATCH', 'http://localhost');
+      });
+
+      it('should update mappings for the field types', function(done) {
+        RequestMock.intercept().reply(200, '');
+
+        WeDeploy.data('http://localhost')
+          .updateCollection('collection', {
+            field1: 'string',
+            field2: 'string',
+          })
+          .then(response => {
+            assert.strictEqual('', response);
+            done();
+          });
+      });
+    });
+  });
+
   describe('.watch()', function() {
     context('when using invalid params', function() {
       it('should fail trying to watch data without specifying the collection', function() {

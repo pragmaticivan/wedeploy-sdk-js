@@ -4,6 +4,19 @@ import {core} from 'metal';
 import globals from '../globals/globals';
 import Uri from 'metal-uri';
 
+const collectionTypes = [
+  'binary',
+  'boolean',
+  'date',
+  'double',
+  'float',
+  'geo_point',
+  'geo_shape',
+  'integer',
+  'long',
+  'string',
+];
+
 /**
  * Throws an exception if the current environment is not a browser.
  */
@@ -95,13 +108,43 @@ function assertUriWithNoPath(url, errorMessage) {
   }
 }
 
+/**
+ * Validates the field types in a collection. Throws an exception if some field
+ * is mapped to an unsupported type.
+ * @param {!Object} fieldTypes The collection which types should be validated.
+ */
+function assertValidFieldTypes(fieldTypes) {
+  if (!core.isObject(fieldTypes)) {
+    throw new Error('Field types must be an object');
+  }
+
+  Object.keys(fieldTypes).forEach(key => {
+    const value = fieldTypes[key];
+    if (
+      core.isObject(value) &&
+      !Array.isArray(value) &&
+      !core.isFunction(value)
+    ) {
+      assertValidFieldTypes(value);
+    } else {
+      if (collectionTypes.indexOf(value) === -1) {
+        throw new Error(
+          `Invalid type mapping "${value}". Valid types are: ` +
+            `${collectionTypes.join(', ')}.`
+        );
+      }
+    }
+  });
+}
+
 export {
   assertBrowserEnvironment,
   assertDefAndNotNull,
-  assertNotNull,
   assertFunction,
+  assertNotNull,
   assertObject,
   assertResponseSucceeded,
-  assertUserSignedIn,
   assertUriWithNoPath,
+  assertUserSignedIn,
+  assertValidFieldTypes,
 };
