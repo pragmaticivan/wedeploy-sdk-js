@@ -550,15 +550,16 @@ class DataApiHelper extends ApiHelper {
   }
 
   /**
-	* Builds URL by joining the headers and auth.
-	* @return {WeDeploy} Returns the {@link WeDeploy} object itself, so calls can
-	*   be chained.
-	* @chainable
-	*/
+	 * Builds URL by joining headers, auth and withCredentials.
+	 * @return {WeDeploy} Returns the {@link WeDeploy} object itself, so calls can
+	 *   be chained.
+	 * @chainable
+	 */
   buildUrl_() {
     return this.wedeployClient
       .url(this.dataUrl)
       .headers(this.headers_)
+      .withCredentials(this.withCredentials_)
       .auth(this.helperAuthScope);
   }
 
@@ -612,6 +613,7 @@ class DataApiHelper extends ApiHelper {
     this.filter_ = null;
     this.isSearch_ = false;
     this.query_ = null;
+    this.withCredentials_ = true;
     return query;
   }
 }

@@ -323,6 +323,49 @@ describe('EmailApiHelper', function() {
         });
     });
   });
+
+  describe('.withCredentials()', function() {
+    it('ensures the default to be false when no param is specified', function() {
+      const email = WeDeploy.email('http://localhost').withCredentials();
+
+      assert.strictEqual(email.withCredentials_, false);
+    });
+
+    it('ensures to be true', function() {
+      const email = WeDeploy.email('http://localhost').withCredentials(true);
+
+      assert.strictEqual(email.withCredentials_, true);
+    });
+
+    it('ensures to be false', function() {
+      const email = WeDeploy.email('http://localhost').withCredentials(false);
+
+      assert.strictEqual(email.withCredentials_, false);
+    });
+
+    it('ensures to be truthy', function() {
+      const email = WeDeploy.email('http://localhost').withCredentials(1);
+      assert.strictEqual(email.withCredentials_, true);
+    });
+
+    it('should restore withCredentials after sending request', function(done) {
+      RequestMock.intercept('POST', 'http://localhost/emails').reply(
+        200,
+        '{"sent": "ok"}'
+      );
+
+      const email = WeDeploy.email('http://localhost')
+        .header('TestHost', 'localhost')
+        .from('test@test.com')
+        .withCredentials(false);
+      assert.strictEqual(email.withCredentials_, false);
+
+      email.send().then(result => {
+        assert.strictEqual(email.withCredentials_, true);
+        done();
+      });
+    });
+  });
 });
 
 /**

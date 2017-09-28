@@ -417,6 +417,7 @@ class WeDeploy {
     }
 
     wedeployClient.headers(this.headers_);
+    wedeployClient.withCredentials(this.withCredentials_);
 
     return wedeployClient.use(this.customTransport_);
   }

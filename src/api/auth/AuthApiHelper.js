@@ -358,13 +358,16 @@ class AuthApiHelper extends ApiHelper {
   }
 
   /**
-   * Builds URL by joining the headers.
+   * Builds URL by joining headers and withCredentials.
    * @return {WeDeploy} Returns the {@link WeDeploy} object itself, so calls can
    *   be chained.
    * @chainable
    */
   buildUrl_() {
-    return this.wedeployClient.url(this.authUrl).headers(this.headers_);
+    return this.wedeployClient
+      .url(this.authUrl)
+      .headers(this.headers_)
+      .withCredentials(this.withCredentials_);
   }
 
   /**
