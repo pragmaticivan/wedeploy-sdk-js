@@ -157,6 +157,7 @@ class EmailApiHelper extends ApiHelper {
 
     this.params.clear();
     this.headers_.clear();
+    this.withCredentials_ = true;
 
     return client
       .post()
@@ -180,7 +181,7 @@ class EmailApiHelper extends ApiHelper {
   }
 
   /**
-   * Builds URL by joining the headers and auth.
+   * Builds URL by joining headers, auth and withCredentials.
    * @return {WeDeploy} Returns the {@link WeDeploy} object itself, so calls can
    *   be chained.
    * @chainable
@@ -189,6 +190,7 @@ class EmailApiHelper extends ApiHelper {
     return this.wedeployClient
       .url(this.emailUrl)
       .headers(this.headers_)
+      .withCredentials(this.withCredentials_)
       .auth(this.helperAuthScope);
   }
 }

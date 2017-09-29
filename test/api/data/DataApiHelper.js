@@ -1982,6 +1982,46 @@ describe('DataApiHelper', function() {
       }
     );
   });
+
+  describe('.withCredentials()', function() {
+    it('ensures the default to be false when no param is specified', function() {
+      const data = WeDeploy.data('http://localhost').withCredentials();
+
+      assert.strictEqual(data.withCredentials_, false);
+    });
+
+    it('ensures to be true', function() {
+      const data = WeDeploy.data('http://localhost').withCredentials(true);
+
+      assert.strictEqual(data.withCredentials_, true);
+    });
+
+    it('ensures to be false', function() {
+      const data = WeDeploy.data('http://localhost').withCredentials(false);
+
+      assert.strictEqual(data.withCredentials_, false);
+    });
+
+    it('ensures to be truthy', function() {
+      const data = WeDeploy.data('http://localhost').withCredentials(1);
+      assert.strictEqual(data.withCredentials_, true);
+    });
+
+    it('should restore withCredentials after sending request', function(done) {
+      RequestMock.intercept('GET', 'http://localhost/food').reply(
+        200,
+        '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]'
+      );
+
+      const data = WeDeploy.data('http://localhost').withCredentials(false);
+      assert.strictEqual(data.withCredentials_, false);
+
+      data.get('food').then(response => {
+        assert.strictEqual(data.withCredentials_, true);
+        done();
+      });
+    });
+  });
 });
 
 /**

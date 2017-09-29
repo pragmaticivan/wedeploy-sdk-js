@@ -20,6 +20,7 @@ class ApiHelper {
     );
     this.wedeployClient = wedeployClient;
     this.headers_ = new MultiMap();
+    this.withCredentials_ = true;
   }
 
   /**
@@ -28,7 +29,7 @@ class ApiHelper {
 	 * preserved.
 	 * @param {string} name
 	 * @param {string} value
-	 * @return {!ClientMessage} Returns the {@link ClientMessage}
+	 * @return {!ApiHelper} Returns the {@link ApiHelper}
 	 *   object itself, so calls can be chained.
 	 * @chainable
 	 */
@@ -52,6 +53,18 @@ class ApiHelper {
   auth(authOrTokenOrEmail, opt_password) {
     this.helperAuthScope = Auth.create(authOrTokenOrEmail, opt_password);
     this.helperAuthScope.wedeployClient = this.wedeployClient;
+    return this;
+  }
+
+  /**
+   * Assigns the passed value to the internal with credentials option.
+   * @param {boolean} withCredentials
+   * @return {ApiHelper} Returns the {@link ApiHelper} object itself, so calls
+   *   can be chained.
+   * @chainable
+   */
+  withCredentials(withCredentials) {
+    this.withCredentials_ = !!withCredentials;
     return this;
   }
 }

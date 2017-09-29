@@ -910,6 +910,31 @@ describe('AuthApiHelper', function() {
       }, Error);
     });
   });
+
+  describe('.withCredentials()', function() {
+    it('ensures the default to be false when no param is specified', function() {
+      const auth = WeDeploy.auth('http://auth').withCredentials();
+
+      assert.strictEqual(auth.withCredentials_, false);
+    });
+
+    it('ensures to be true', function() {
+      const auth = WeDeploy.auth('http://auth').withCredentials(true);
+
+      assert.strictEqual(auth.withCredentials_, true);
+    });
+
+    it('ensures to be false', function() {
+      const auth = WeDeploy.auth('http://auth').withCredentials(false);
+
+      assert.strictEqual(auth.withCredentials_, false);
+    });
+
+    it('ensures to be truthy', function() {
+      const auth = WeDeploy.auth('http://auth').withCredentials(1);
+      assert.strictEqual(auth.withCredentials_, true);
+    });
+  });
 });
 
 /**
