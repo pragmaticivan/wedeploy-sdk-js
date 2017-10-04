@@ -101,14 +101,7 @@ npm run release
 
 ## License
 
-```
-Copyright (c) 2016-present, Liferay Inc
-All rights reserved.
-
-This source code is licensed under the BSD-style license found in the
-LICENSE file in the root directory of this source tree. An additional grant 
-of patent rights can be found in the PATENTS file in the same directory.
-```
+[BSD-3-Clause] © Liferay, inc.
 
 
 [build-status-svg]: https://travis-ci.com/wedeploy/api-js.svg?token=a51FNuiJPYZtHhup9q1V&branch=master
@@ -119,3 +112,5 @@ of patent rights can be found in the PATENTS file in the same directory.
 
 [npm-svg]: https://img.shields.io/npm/v/wedeploy.svg
 [npm-link]: https://npmjs.org/wedeploy
+
+[bsd-3-clause]: https://spdx.org/licenses/BSD-3-Clause.html
