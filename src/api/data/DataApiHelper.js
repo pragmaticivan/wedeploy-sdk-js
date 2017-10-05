@@ -333,7 +333,7 @@ class DataApiHelper extends ApiHelper {
 	 *   calls can be chained.
 	 * @chainnable
 	 */
-  aggregate(name, aggregationOrField, opt_operator) {
+  aggregate(name, aggregationOrField, opt_operator = 'terms') {
     this.getOrCreateQuery_().aggregate(name, aggregationOrField, opt_operator);
     return this;
   }
