@@ -1413,8 +1413,8 @@ describe('DataApiHelper', function() {
     it('should send request with query aggregate in the body', function(done) {
       RequestMock.intercept(
         'GET',
-        'http://localhost/food?aggregation=%5B%7B%22field%22%3A%7B' +
-          '%22name%22%3A%22name%22%7D%7D%5D'
+        'http://localhost/food?aggregation=%5B%7B%22field%22%3A%7B%22' +
+          'name%22%3A%22name%22%2C%22operator%22%3A%22terms%22%7D%7D%5D'
       ).reply(200, '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]');
 
       WeDeploy.data('http://localhost')
