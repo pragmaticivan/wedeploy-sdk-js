@@ -50,7 +50,7 @@ class ApiHelper {
     );
     this.wedeployClient = wedeployClient;
     this.headers_ = new MultiMap();
-    this.withCredentials_ = true;
+    this.withCredentials_ = false;
   }
 
   /**

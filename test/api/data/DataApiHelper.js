@@ -2043,11 +2043,11 @@ describe('DataApiHelper', function() {
         '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]'
       );
 
-      const data = WeDeploy.data('http://localhost').withCredentials(false);
-      assert.strictEqual(data.withCredentials_, false);
+      const data = WeDeploy.data('http://localhost').withCredentials(true);
+      assert.strictEqual(data.withCredentials_, true);
 
       data.get('food').then(response => {
-        assert.strictEqual(data.withCredentials_, true);
+        assert.strictEqual(data.withCredentials_, false);
         done();
       });
     });

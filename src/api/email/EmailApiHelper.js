@@ -187,7 +187,7 @@ class EmailApiHelper extends ApiHelper {
 
     this.params.clear();
     this.headers_.clear();
-    this.withCredentials_ = true;
+    this.withCredentials_ = false;
 
     return client
       .post()
