@@ -91,7 +91,7 @@ class WeDeploy {
     this.url_ = Uri.joinPaths(url || '', ...paths);
     this.headers_ = new MultiMap();
     this.params_ = new MultiMap();
-    this.withCredentials_ = true;
+    this.withCredentials_ = false;
 
     this.header('Content-Type', 'application/json');
     this.header('X-Requested-With', 'XMLHttpRequest');

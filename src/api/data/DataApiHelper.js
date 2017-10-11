@@ -643,7 +643,7 @@ class DataApiHelper extends ApiHelper {
     this.filter_ = null;
     this.isSearch_ = false;
     this.query_ = null;
-    this.withCredentials_ = true;
+    this.withCredentials_ = false;
     return query;
   }
 }

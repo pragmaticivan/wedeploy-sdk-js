@@ -387,11 +387,11 @@ describe('EmailApiHelper', function() {
       const email = WeDeploy.email('http://localhost')
         .header('TestHost', 'localhost')
         .from('test@test.com')
-        .withCredentials(false);
-      assert.strictEqual(email.withCredentials_, false);
+        .withCredentials(true);
+      assert.strictEqual(email.withCredentials_, true);
 
       email.send().then(result => {
-        assert.strictEqual(email.withCredentials_, true);
+        assert.strictEqual(email.withCredentials_, false);
         done();
       });
     });
