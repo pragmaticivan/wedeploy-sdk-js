@@ -39,6 +39,7 @@ const gulp = require('gulp');
 const isparta = require('isparta');
 const mocha = require('gulp-mocha');
 const nodeExternals = require('webpack-node-externals');
+const replace = require('gulp-replace');
 const runSequence = require('run-sequence');
 const Server = require('karma').Server;
 const sourcemaps = require('gulp-sourcemaps');
@@ -265,6 +266,7 @@ gulp.task('build', function(done) {
     'clear',
     ['lint', 'build:browser', 'build:node'],
     'build:socket',
+    'patch-socket.io',
     done
   );
 });
@@ -299,6 +301,13 @@ gulp.task('lint', function() {
     .src(['src/**/*.js', 'test/**/*.js', '!node_modules/**'])
     .pipe(eslint())
     .pipe(eslint.format());
+});
+
+gulp.task('patch-socket.io', function() {
+  return gulp
+    .src([`build/browser/api${apiSuffix}.js`])
+    .pipe(replace('(r.withCredentials=!0)', '(r.withCredentials=false)'))
+    .pipe(gulp.dest('build/browser'));
 });
 
 gulp.task('test', function(done) {
