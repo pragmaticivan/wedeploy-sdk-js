@@ -116,11 +116,9 @@ const babelOptions = {
 };
 
 const babelConfigCoverage = {
-  frameworks: ['mocha', 'chai', 'sinon', 'source-map-support', 'commonjs'],
+  frameworks: ['mocha', 'chai', 'sinon', 'source-map-support', 'browserify'],
 
   files: [
-    'node_modules/metal/src/**/*.js',
-    'node_modules/metal-*/src/**/*.js',
     'src/**/!(node)/*.js',
     'test/environment/browser/env.js',
     'test/**/*.js',
@@ -129,44 +127,45 @@ const babelConfigCoverage = {
   exclude: ['src/env/node.js', 'test/**/node/**/*.js'],
 
   preprocessors: {
-    'src/**/!(*.soy).js': ['coverage', 'commonjs'],
-    'src/**/*.soy.js': ['babel', 'commonjs'],
-    'node_modules/metal/**/*.js': ['babel', 'commonjs'],
-    'node_modules/metal-*/**/*.js': ['babel', 'commonjs'],
-    'test/**/*.js': ['babel', 'commonjs'],
-  },
-
-  babelPreprocessor: {options: babelOptions},
-};
-
-const babelConfigKarma = {
-  frameworks: [
-    'browserify',
-    'mocha',
-    'chai',
-    'sinon',
-    'source-map-support',
-    'commonjs',
-  ],
-
-  files: [
-    'node_modules/metal/src/**/*.js',
-    'node_modules/metal-*/src/**/*.js',
-    'src/**/!(node)/*.js',
-    'test/environment/browser/env.js',
-    'test/**/*.js',
-  ],
-
-  exclude: ['src/env/node.js', 'test/**/node/**/*.js'],
-
-  preprocessors: {
-    'src/**/*.js': ['browserify'],
-    'node_modules/metal/**/*.js': ['browserify'],
-    'node_modules/metal-*/**/*.js': ['browserify'],
+    'src/**/!(node)/*.js': ['browserify'],
+    'node_modules/metal/src/**/*.js': ['browserify'],
+    'node_modules/metal-*/src/**/*.js': ['browserify'],
+    'test/environment/browser/env.js': ['browserify'],
     'test/**/*.js': ['browserify'],
   },
 
-  babelPreprocessor: {options: babelOptions},
+  browserify: {
+    debug: true,
+    transform: [
+      [
+        'babelify',
+        {
+          plugins: ['istanbul'],
+          presets: ['env'],
+        },
+      ],
+    ],
+  },
+};
+
+const babelConfigKarma = {
+  frameworks: ['mocha', 'chai', 'sinon', 'source-map-support', 'browserify'],
+
+  files: [
+    'src/**/!(node)/*.js',
+    'test/environment/browser/env.js',
+    'test/**/*.js',
+  ],
+
+  exclude: ['src/env/node.js', 'test/**/node/**/*.js'],
+
+  preprocessors: {
+    'src/**/!(node)/*.js': ['browserify'],
+    'node_modules/metal/src/**/*.js': ['browserify'],
+    'node_modules/metal-*/src/**/*.js': ['browserify'],
+    'test/environment/browser/env.js': ['browserify'],
+    'test/**/*.js': ['browserify'],
+  },
 
   browserify: {
     debug: true,
