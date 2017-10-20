@@ -140,7 +140,14 @@ const babelConfigCoverage = {
 };
 
 const babelConfigKarma = {
-  frameworks: ['mocha', 'chai', 'sinon', 'source-map-support', 'commonjs'],
+  frameworks: [
+    'browserify',
+    'mocha',
+    'chai',
+    'sinon',
+    'source-map-support',
+    'commonjs',
+  ],
 
   files: [
     'node_modules/metal/src/**/*.js',
@@ -153,13 +160,25 @@ const babelConfigKarma = {
   exclude: ['src/env/node.js', 'test/**/node/**/*.js'],
 
   preprocessors: {
-    'src/**/*.js': ['babel', 'commonjs'],
-    'node_modules/metal/**/*.js': ['babel', 'commonjs'],
-    'node_modules/metal-*/**/*.js': ['babel', 'commonjs'],
-    'test/**/*.js': ['babel', 'commonjs'],
+    'src/**/*.js': ['browserify'],
+    'node_modules/metal/**/*.js': ['browserify'],
+    'node_modules/metal-*/**/*.js': ['browserify'],
+    'test/**/*.js': ['browserify'],
   },
 
   babelPreprocessor: {options: babelOptions},
+
+  browserify: {
+    debug: true,
+    transform: [
+      [
+        'babelify',
+        {
+          presets: ['env'],
+        },
+      ],
+    ],
+  },
 };
 
 if (release) {
