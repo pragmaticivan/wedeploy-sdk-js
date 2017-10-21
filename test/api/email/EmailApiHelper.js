@@ -325,10 +325,12 @@ describe('EmailApiHelper', function() {
         '{"sent": "ok"}'
       );
 
-      WeDeploy.email('http://localhost').status('xyz').then(result => {
-        assert.equal('{"sent": "ok"}', result);
-        done();
-      });
+      WeDeploy.email('http://localhost')
+        .status('xyz')
+        .then(result => {
+          assert.equal('{"sent": "ok"}', result);
+          done();
+        });
     });
 
     it('should fail if param is not specified', function() {

@@ -79,7 +79,10 @@ describe('NodeTransport', function() {
     transport.send(clientRequest).then(function(response) {
       assert.strictEqual(
         '{"content-type":["application/json"]}',
-        response.request().headers().toString()
+        response
+          .request()
+          .headers()
+          .toString()
       );
       done();
     });

@@ -73,7 +73,9 @@ class NodeRequestMock {
   }
 
   static getUrl() {
-    return NodeRequestMock.get()._key.split(' ')[1].replace(':80', '');
+    return NodeRequestMock.get()
+      ._key.split(' ')[1]
+      .replace(':80', '');
   }
 
   static setup(defVerb = 'GET', defAddress = 'http://localhost/users') {

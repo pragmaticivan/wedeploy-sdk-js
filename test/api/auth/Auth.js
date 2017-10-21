@@ -140,12 +140,13 @@ describe('Auth', function() {
       const responseErrorObject = {
         error: true,
       };
-      RequestMock.intercept(
-        'PATCH',
-        'http://localhost/users/3'
-      ).reply(400, JSON.stringify(responseErrorObject), {
-        'content-type': 'application/json',
-      });
+      RequestMock.intercept('PATCH', 'http://localhost/users/3').reply(
+        400,
+        JSON.stringify(responseErrorObject),
+        {
+          'content-type': 'application/json',
+        }
+      );
 
       auth.updateUser({}).catch(reason => {
         assert.deepEqual(responseErrorObject, reason);
@@ -199,12 +200,13 @@ describe('Auth', function() {
       const responseErrorObject = {
         error: true,
       };
-      RequestMock.intercept(
-        'DELETE',
-        'http://localhost/users/id'
-      ).reply(400, JSON.stringify(responseErrorObject), {
-        'content-type': 'application/json',
-      });
+      RequestMock.intercept('DELETE', 'http://localhost/users/id').reply(
+        400,
+        JSON.stringify(responseErrorObject),
+        {
+          'content-type': 'application/json',
+        }
+      );
       auth.deleteUser().catch(reason => {
         assert.deepEqual(responseErrorObject, reason);
         done();

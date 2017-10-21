@@ -84,7 +84,10 @@ describe('Transport Tests', function() {
     transport.send(clientRequest).then(function(response) {
       assert.strictEqual(
         '{"query":[1]}',
-        response.request().params().toString()
+        response
+          .request()
+          .params()
+          .toString()
       );
       done();
     });
@@ -99,7 +102,10 @@ describe('Transport Tests', function() {
     transport.send(clientRequest).then(function(response) {
       assert.strictEqual(
         '{"content-type":["application/json"]}',
-        response.request().headers().toString()
+        response
+          .request()
+          .headers()
+          .toString()
       );
       done();
     });
@@ -116,7 +122,10 @@ describe('Transport Tests', function() {
     transport.send(clientRequest).then(function(response) {
       assert.strictEqual(
         '{"content-type":["application/json","text/html"]}',
-        response.request().headers().toString()
+        response
+          .request()
+          .headers()
+          .toString()
       );
       done();
     });

@@ -569,10 +569,13 @@ describe('DataApiHelper', function() {
         '[{"id": 1, "ping": "pong1"}]'
       );
 
-      WeDeploy.data('http://localhost').offset(2).get('food').then(response => {
-        assert.strictEqual('[{"id": 1, "ping": "pong1"}]', response);
-        done();
-      });
+      WeDeploy.data('http://localhost')
+        .offset(2)
+        .get('food')
+        .then(response => {
+          assert.strictEqual('[{"id": 1, "ping": "pong1"}]', response);
+          done();
+        });
     });
 
     it('should build the offset into the query body', function() {
@@ -1573,19 +1576,22 @@ describe('DataApiHelper', function() {
             'http://localhost/food?type=search&filter=%5B%7B%22and%22%3A%5B%7B%22type%22%3A%7B%22operator%22%3A%22%3D%22%2C%22value%22%3A%22fruit%22%7D%7D%5D%7D%5D'
           ).reply(200);
 
-          data.where('type', 'fruit').search('food').then(() => {
-            RequestMock.teardown();
-            RequestMock.setup();
+          data
+            .where('type', 'fruit')
+            .search('food')
+            .then(() => {
+              RequestMock.teardown();
+              RequestMock.setup();
 
-            const requestUrlWithNoQuery = 'http://localhost/food?type=search';
+              const requestUrlWithNoQuery = 'http://localhost/food?type=search';
 
-            RequestMock.intercept('GET', requestUrlWithNoQuery).reply(200);
+              RequestMock.intercept('GET', requestUrlWithNoQuery).reply(200);
 
-            data.search('food').then(() => {
-              assert.strictEqual(requestUrlWithNoQuery, RequestMock.getUrl());
-              done();
+              data.search('food').then(() => {
+                assert.strictEqual(requestUrlWithNoQuery, RequestMock.getUrl());
+                done();
+              });
             });
-          });
         });
       }
     );
@@ -1612,10 +1618,15 @@ describe('DataApiHelper', function() {
 
               RequestMock.intercept('GET', requestUrlWithNoQuery).reply(200);
 
-              WeDeploy.data('http://localhost').search('food').then(() => {
-                assert.strictEqual(requestUrlWithNoQuery, RequestMock.getUrl());
-                done();
-              });
+              WeDeploy.data('http://localhost')
+                .search('food')
+                .then(() => {
+                  assert.strictEqual(
+                    requestUrlWithNoQuery,
+                    RequestMock.getUrl()
+                  );
+                  done();
+                });
             });
         });
       }
@@ -1654,13 +1665,15 @@ describe('DataApiHelper', function() {
           '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]'
         );
 
-        WeDeploy.data('http://localhost').get('food').then(response => {
-          assert.strictEqual(
-            '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]',
-            response
-          );
-          done();
-        });
+        WeDeploy.data('http://localhost')
+          .get('food')
+          .then(response => {
+            assert.strictEqual(
+              '[{"id": 2, "ping": "pong1"}, {"id": 3, "ping": "pong2"}]',
+              response
+            );
+            done();
+          });
       });
     });
 
@@ -1675,19 +1688,22 @@ describe('DataApiHelper', function() {
           'http://localhost/food?filter=%5B%7B%22and%22%3A%5B%7B%22type%22%3A%7B%22operator%22%3A%22%3D%22%2C%22value%22%3A%22fruit%22%7D%7D%5D%7D%5D'
         ).reply(200);
 
-        data.where('type', 'fruit').get('food').then(() => {
-          RequestMock.teardown();
-          RequestMock.setup();
+        data
+          .where('type', 'fruit')
+          .get('food')
+          .then(() => {
+            RequestMock.teardown();
+            RequestMock.setup();
 
-          const requestUrlWithNoQuery = 'http://localhost/food';
+            const requestUrlWithNoQuery = 'http://localhost/food';
 
-          RequestMock.intercept('GET', requestUrlWithNoQuery).reply(200);
+            RequestMock.intercept('GET', requestUrlWithNoQuery).reply(200);
 
-          data.get('food').then(() => {
-            assert.strictEqual(requestUrlWithNoQuery, RequestMock.getUrl());
-            done();
+            data.get('food').then(() => {
+              assert.strictEqual(requestUrlWithNoQuery, RequestMock.getUrl());
+              done();
+            });
           });
-        });
       });
     });
 
@@ -1711,10 +1727,12 @@ describe('DataApiHelper', function() {
 
             RequestMock.intercept('GET', requestUrlWithNoQuery).reply(200);
 
-            WeDeploy.data('http://localhost').get('food').then(() => {
-              assert.strictEqual(requestUrlWithNoQuery, RequestMock.getUrl());
-              done();
-            });
+            WeDeploy.data('http://localhost')
+              .get('food')
+              .then(() => {
+                assert.strictEqual(requestUrlWithNoQuery, RequestMock.getUrl());
+                done();
+              });
           });
       });
     });

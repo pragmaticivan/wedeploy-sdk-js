@@ -77,10 +77,13 @@ describe('AuthApiHelper', function() {
     RequestMock.intercept().reply(200);
     const auth1 = WeDeploy.auth('http://localhost');
     auth1.currentUser = Auth.create('token1');
-    auth1.auth('token2').getUser('id').then(() => {
-      assert.strictEqual(getAuthorizationHeader_(), 'Bearer token2');
-      done();
-    });
+    auth1
+      .auth('token2')
+      .getUser('id')
+      .then(() => {
+        assert.strictEqual(getAuthorizationHeader_(), 'Bearer token2');
+        done();
+      });
   });
 
   it('should set header to WeDeploy.auth() when getUser is invoked', function(
@@ -89,10 +92,13 @@ describe('AuthApiHelper', function() {
     RequestMock.intercept().reply(200);
     const auth = WeDeploy.auth('http://localhost');
     auth.currentUser = Auth.create('token1');
-    auth.header('TestHost', 'localhost').getUser('id').then(() => {
-      assert.strictEqual(getTestHostHeader_(), 'localhost');
-      done();
-    });
+    auth
+      .header('TestHost', 'localhost')
+      .getUser('id')
+      .then(() => {
+        assert.strictEqual(getTestHostHeader_(), 'localhost');
+        done();
+      });
   });
 
   it('should map providers', function() {
@@ -235,7 +241,10 @@ describe('AuthApiHelper', function() {
       auth.sendPasswordResetEmail('email@domain.com').then(response => {
         assert.strictEqual(
           'email@domain.com',
-          response.request().params().get('email')
+          response
+            .request()
+            .params()
+            .get('email')
         );
         done();
       });
@@ -334,10 +343,13 @@ describe('AuthApiHelper', function() {
     it('should set header on create user', function(done) {
       const auth = WeDeploy.auth('http://auth');
       RequestMock.intercept('POST', 'http://auth/users').reply(200);
-      auth.header('TestHost', 'localhost').createUser({}).then(user => {
-        assert.strictEqual(getTestHostHeader_(), 'localhost');
-        done();
-      });
+      auth
+        .header('TestHost', 'localhost')
+        .createUser({})
+        .then(user => {
+          assert.strictEqual(getTestHostHeader_(), 'localhost');
+          done();
+        });
     });
   });
 
@@ -537,10 +549,13 @@ describe('AuthApiHelper', function() {
       const auth = WeDeploy.auth('http://localhost');
       auth.currentUser = {};
       RequestMock.intercept().reply(200);
-      auth.header('TestHost', 'localhost').getUser('userId').then(user => {
-        assert.strictEqual(getTestHostHeader_(), 'localhost');
-        done();
-      });
+      auth
+        .header('TestHost', 'localhost')
+        .getUser('userId')
+        .then(user => {
+          assert.strictEqual(getTestHostHeader_(), 'localhost');
+          done();
+        });
     });
   });
 
@@ -633,12 +648,13 @@ describe('AuthApiHelper', function() {
       const responseErrorObject = {
         error: true,
       };
-      RequestMock.intercept(
-        'DELETE',
-        'http://localhost/users/id'
-      ).reply(400, JSON.stringify(responseErrorObject), {
-        'content-type': 'application/json',
-      });
+      RequestMock.intercept('DELETE', 'http://localhost/users/id').reply(
+        400,
+        JSON.stringify(responseErrorObject),
+        {
+          'content-type': 'application/json',
+        }
+      );
       auth.deleteUser('id').catch(reason => {
         assert.deepEqual(responseErrorObject, reason);
         done();

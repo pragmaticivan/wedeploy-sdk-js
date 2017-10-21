@@ -147,22 +147,26 @@ describe('WeDeploy Tests', function() {
   ) {
     RequestMock.intercept('DELETE', 'http://localhost/url', '').reply(200);
 
-    WeDeploy.url('http://localhost/url').delete().then(function(response) {
-      assert.strictEqual('http://localhost/url', response.request().url());
-      assert.strictEqual('DELETE', response.request().method());
-      assert.strictEqual(null, response.request().body());
-      done();
-    });
+    WeDeploy.url('http://localhost/url')
+      .delete()
+      .then(function(response) {
+        assert.strictEqual('http://localhost/url', response.request().url());
+        assert.strictEqual('DELETE', response.request().method());
+        assert.strictEqual(null, response.request().body());
+        done();
+      });
   });
 
   it('should send GET request', function(done) {
     RequestMock.intercept('GET', 'http://localhost/url').reply(200);
-    WeDeploy.url('http://localhost/url').get().then(function(response) {
-      assert.strictEqual('http://localhost/url', response.request().url());
-      assert.strictEqual('GET', response.request().method());
-      assert.ok(!response.request().body());
-      done();
-    });
+    WeDeploy.url('http://localhost/url')
+      .get()
+      .then(function(response) {
+        assert.strictEqual('http://localhost/url', response.request().url());
+        assert.strictEqual('GET', response.request().method());
+        assert.ok(!response.request().body());
+        done();
+      });
   });
 
   it('should send GET request with params as object', function(done) {
@@ -173,16 +177,21 @@ describe('WeDeploy Tests', function() {
       foo: 'foo',
       bar: 'bar',
     };
-    WeDeploy.url('http://localhost/url').get(params).then(function(response) {
-      assert.strictEqual('http://localhost/url', response.request().url());
-      assert.strictEqual('GET', response.request().method());
-      assert.ok(!response.request().body());
-      assert.strictEqual(
-        '{"foo":["foo"],"bar":["bar"]}',
-        response.request().params().toString()
-      );
-      done();
-    });
+    WeDeploy.url('http://localhost/url')
+      .get(params)
+      .then(function(response) {
+        assert.strictEqual('http://localhost/url', response.request().url());
+        assert.strictEqual('GET', response.request().method());
+        assert.ok(!response.request().body());
+        assert.strictEqual(
+          '{"foo":["foo"],"bar":["bar"]}',
+          response
+            .request()
+            .params()
+            .toString()
+        );
+        done();
+      });
   });
 
   it('should send GET request with params as Embodied', function(done) {
@@ -206,7 +215,10 @@ describe('WeDeploy Tests', function() {
         assert.ok(!response.request().body());
         assert.strictEqual(
           '{"foo":["foo"],"bar":["[\\"bar1\\",\\"bar2\\"]"]}',
-          response.request().params().toString()
+          response
+            .request()
+            .params()
+            .toString()
         );
         done();
       });
@@ -226,7 +238,13 @@ describe('WeDeploy Tests', function() {
         assert.ok(!response.request().body());
         const paramsStr =
           '{"filter":["[{\\"name\\":{\\"operator\\":\\"=\\",\\"value\\":\\"foo\\"}}]"]}';
-        assert.strictEqual(paramsStr, response.request().params().toString());
+        assert.strictEqual(
+          paramsStr,
+          response
+            .request()
+            .params()
+            .toString()
+        );
         done();
       });
   });
@@ -243,7 +261,10 @@ describe('WeDeploy Tests', function() {
         assert.ok(!response.request().body());
         assert.strictEqual(
           '{"body":["strBody"]}',
-          response.request().params().toString()
+          response
+            .request()
+            .params()
+            .toString()
         );
         done();
       });
@@ -251,32 +272,38 @@ describe('WeDeploy Tests', function() {
 
   it('should send POST request with body', function(done) {
     RequestMock.intercept('POST', 'http://localhost/url', '"body"').reply(200);
-    WeDeploy.url('http://localhost/url').post('body').then(function(response) {
-      assert.strictEqual('http://localhost/url', response.request().url());
-      assert.strictEqual('POST', response.request().method());
-      assert.strictEqual('"body"', response.request().body());
-      done();
-    });
+    WeDeploy.url('http://localhost/url')
+      .post('body')
+      .then(function(response) {
+        assert.strictEqual('http://localhost/url', response.request().url());
+        assert.strictEqual('POST', response.request().method());
+        assert.strictEqual('"body"', response.request().body());
+        done();
+      });
   });
 
   it('should send PUT request with body', function(done) {
     RequestMock.intercept('PUT', 'http://localhost/url', '"body"').reply(200);
-    WeDeploy.url('http://localhost/url').put('body').then(function(response) {
-      assert.strictEqual('http://localhost/url', response.request().url());
-      assert.strictEqual('PUT', response.request().method());
-      assert.strictEqual('"body"', response.request().body());
-      done();
-    });
+    WeDeploy.url('http://localhost/url')
+      .put('body')
+      .then(function(response) {
+        assert.strictEqual('http://localhost/url', response.request().url());
+        assert.strictEqual('PUT', response.request().method());
+        assert.strictEqual('"body"', response.request().body());
+        done();
+      });
   });
 
   it('should send PATCH request with body', function(done) {
     RequestMock.intercept('PATCH', 'http://localhost/url', '"body"').reply(200);
-    WeDeploy.url('http://localhost/url').patch('body').then(function(response) {
-      assert.strictEqual('http://localhost/url', response.request().url());
-      assert.strictEqual('PATCH', response.request().method());
-      assert.strictEqual('"body"', response.request().body());
-      done();
-    });
+    WeDeploy.url('http://localhost/url')
+      .patch('body')
+      .then(function(response) {
+        assert.strictEqual('http://localhost/url', response.request().url());
+        assert.strictEqual('PATCH', response.request().method());
+        assert.strictEqual('"body"', response.request().body());
+        done();
+      });
   });
 
   it('should send request with body that was previously set through "body" function', function(
@@ -321,18 +348,22 @@ describe('WeDeploy Tests', function() {
 
   it('should send request to url without path', function(done) {
     RequestMock.intercept('GET', 'http://localhost/url').reply(200);
-    WeDeploy.url('http://localhost/url').get().then(function(response) {
-      assert.strictEqual('http://localhost/url', response.request().url());
-      done();
-    });
+    WeDeploy.url('http://localhost/url')
+      .get()
+      .then(function(response) {
+        assert.strictEqual('http://localhost/url', response.request().url());
+        done();
+      });
   });
 
   it('should send request to url with path', function(done) {
     RequestMock.intercept().reply(200);
-    WeDeploy.url('http://localhost/url/a').get().then(function(response) {
-      assert.strictEqual('http://localhost/url/a', response.request().url());
-      done();
-    });
+    WeDeploy.url('http://localhost/url/a')
+      .get()
+      .then(function(response) {
+        assert.strictEqual('http://localhost/url/a', response.request().url());
+        done();
+      });
   });
 
   it('should send request with query string', function(done) {
@@ -343,7 +374,10 @@ describe('WeDeploy Tests', function() {
       .then(function(response) {
         assert.strictEqual(
           '{"query":[1]}',
-          response.request().params().toString()
+          response
+            .request()
+            .params()
+            .toString()
         );
         done();
       });
@@ -366,7 +400,10 @@ describe('WeDeploy Tests', function() {
       .then(function(response) {
         assert.strictEqual(
           '{"query":["{\\"foo\\":\\"foo\\"}"]}',
-          response.request().params().toString()
+          response
+            .request()
+            .params()
+            .toString()
         );
         done();
       });
@@ -380,7 +417,10 @@ describe('WeDeploy Tests', function() {
       .then(function(response) {
         assert.strictEqual(
           '{"content-type":["application/json"],"x-requested-with":["XMLHttpRequest"],"header":[1]}',
-          response.request().headers().toString()
+          response
+            .request()
+            .headers()
+            .toString()
         );
         done();
       });
@@ -395,7 +435,10 @@ describe('WeDeploy Tests', function() {
       .then(function(response) {
         assert.strictEqual(
           '{"content-type":["application/json"],"x-requested-with":["XMLHttpRequest"],"header":[2]}',
-          response.request().headers().toString()
+          response
+            .request()
+            .headers()
+            .toString()
         );
         done();
       });
@@ -410,7 +453,10 @@ describe('WeDeploy Tests', function() {
       .then(function(response) {
         assert.strictEqual(
           'Bearer My Token',
-          response.request().headers().get('Authorization')
+          response
+            .request()
+            .headers()
+            .get('Authorization')
         );
         done();
       });
@@ -426,7 +472,10 @@ describe('WeDeploy Tests', function() {
       .then(function(response) {
         assert.strictEqual(
           undefined,
-          response.request().headers().get('Authorization')
+          response
+            .request()
+            .headers()
+            .get('Authorization')
         );
         done();
       });
@@ -442,7 +491,11 @@ describe('WeDeploy Tests', function() {
       .then(function(response) {
         assert.strictEqual(
           0,
-          response.request().headers().get('Authorization').indexOf('Basic ')
+          response
+            .request()
+            .headers()
+            .get('Authorization')
+            .indexOf('Basic ')
         );
         done();
       });
@@ -458,7 +511,10 @@ describe('WeDeploy Tests', function() {
       .then(function(response) {
         assert.strictEqual(
           'Bearer My Token',
-          response.request().headers().get('Authorization')
+          response
+            .request()
+            .headers()
+            .get('Authorization')
         );
         done();
       });
@@ -481,15 +537,17 @@ describe('WeDeploy Tests', function() {
     RequestMock.intercept().reply(200, '{"foo": 1}', {
       'content-type': 'application/json',
     });
-    WeDeploy.url('http://localhost/url/a').get().then(function(response) {
-      assert.deepEqual(
-        {
-          foo: 1,
-        },
-        response.body()
-      );
-      done();
-    });
+    WeDeploy.url('http://localhost/url/a')
+      .get()
+      .then(function(response) {
+        assert.deepEqual(
+          {
+            foo: 1,
+          },
+          response.body()
+        );
+        done();
+      });
   });
 
   it('should support FormData as request body', function(done) {
@@ -501,7 +559,10 @@ describe('WeDeploy Tests', function() {
         assert.strictEqual(formData, response.request().body());
         assert.strictEqual(
           undefined,
-          response.request().headers().get('content-type')
+          response
+            .request()
+            .headers()
+            .get('content-type')
         );
         done();
       });
@@ -545,10 +606,12 @@ describe('WeDeploy Tests', function() {
 
     RequestMock.intercept('POST', 'http://localhost/url').reply(200);
     const form = document.createElement('form');
-    WeDeploy.url('http://localhost/url').post(form).then(function(response) {
-      assert.ok(response.request().body() instanceof FormData);
-      done();
-    });
+    WeDeploy.url('http://localhost/url')
+      .post(form)
+      .then(function(response) {
+        assert.ok(response.request().body() instanceof FormData);
+        done();
+      });
   });
 
   it('should send data passed through "form" method as FormData object via the body', function(
@@ -564,7 +627,10 @@ describe('WeDeploy Tests', function() {
         assert.ok(body instanceof FormData);
         assert.strictEqual(
           undefined,
-          response.request().headers().get('content-type')
+          response
+            .request()
+            .headers()
+            .get('content-type')
         );
         done();
       });
@@ -587,34 +653,42 @@ describe('WeDeploy Tests', function() {
 
   it('should response succeeded for status codes 2xx', function(done) {
     RequestMock.intercept('GET', 'http://localhost/url').reply(200);
-    WeDeploy.url('http://localhost/url').get().then(function(response) {
-      assert.ok(response.succeeded());
-      done();
-    });
+    WeDeploy.url('http://localhost/url')
+      .get()
+      .then(function(response) {
+        assert.ok(response.succeeded());
+        done();
+      });
   });
 
   it('should response succeeded for status codes 3xx', function(done) {
     RequestMock.intercept('GET', 'http://localhost/url').reply(300);
-    WeDeploy.url('http://localhost/url').get().then(function(response) {
-      assert.ok(response.succeeded());
-      done();
-    });
+    WeDeploy.url('http://localhost/url')
+      .get()
+      .then(function(response) {
+        assert.ok(response.succeeded());
+        done();
+      });
   });
 
   it('should response not succeeded for status codes 4xx', function(done) {
     RequestMock.intercept('GET', 'http://localhost/url').reply(400);
-    WeDeploy.url('http://localhost/url').get().then(function(response) {
-      assert.ok(!response.succeeded());
-      done();
-    });
+    WeDeploy.url('http://localhost/url')
+      .get()
+      .then(function(response) {
+        assert.ok(!response.succeeded());
+        done();
+      });
   });
 
   it('should response not succeeded for status codes 5xx', function(done) {
     RequestMock.intercept('GET', 'http://localhost/url').reply(500);
-    WeDeploy.url('http://localhost/url').get().then(function(response) {
-      assert.ok(!response.succeeded());
-      done();
-    });
+    WeDeploy.url('http://localhost/url')
+      .get()
+      .then(function(response) {
+        assert.ok(!response.succeeded());
+        done();
+      });
   });
 
   it('should throws exception for invalid constructor', function() {
