@@ -1,11 +1,11 @@
-language: node_js
-node_js:
-  - '8.7.0'
-script:
-- 'npm run test:ci'
-sudo: false
 addons:
   sauce_connect:
+    username: wedeploy-sdk-js
     no_ssl_bump_domains: all
   jwt:
-    secure: BzHMYTTzBQqW/fLnGP16jJhU8wlg9k+vt6VHDwwA+KIf9Cnk0KWTvaknNb1gPXE9nPG9XTqfd5KrvZcCpK2GuUlrxiWwvU2c0yDB7BUm0w0/ksWIIpO7vpBYqTKCDXWQvVzhTaRwnu89k4g4HRGwoS2NclWKu2cimuHupD71E4vI9+qmZ8NWsyXbVivT9MZDyDh3Cw0zBe+sy5bjCUsZ4SoficK0LK1k5p1h+wPYEUrkjwgRmK1vPUV8puTb+HxCGPhrQNo8chYtjD9JHXyA9OxNig+Gy02k0s/wLHvawzBJ1whF0d13l8TPDQqqrn5OoEJjf+02sOKvpElHHWSu1ANIeX47il3aiCEYo9z+eSiIvxg5USuZqik2xwuGb5MKsSzLe8gmD5cA0c+yVaV8HHl6nbvXqpm5wQQzaykl3QUWPVfSh4BKBjDW4CFEMHUKl1P+LgiK9MvtAXCERqD4RvK6lnWVPAWPklnpgqtXWWsG361nws/edIsLxpPr45GbWWKSbqapUo9gkt0iymKWl3+CjGMHiUBb2iXd4KR0LL+b9aLoITfF1qisOwBttTSamJ8zJhky+mQJazHPfhVV73ImlEWpV9OcGxAUIclxuwu1ZfjNGZty4HTV4rFPsagneHD4ifVQD1Mw7PbtO4yU//I68JSWqGE9OaQHUkaEvk8=
+    secure: JXl3gbIOP3GS8aFbHJiNWG6cFztLPOiu4RTpPVoHAOqAgLjF/Lh6ZYd0a3++IAoOmj8v/MwTFgOxFuLcK0tfXbDtxeNlvE8D+3ODXUYBsUmLVsibKL/Ea6wkhCIwYoZ8JXkhAn6yDyPVlbmEB4V1fC07VePhfpjvsxypgEE29Is=
+language: node_js
+node_js:
+- '8.7.0'
+script:
+- 'npm run test:ci'
