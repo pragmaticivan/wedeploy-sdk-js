@@ -130,10 +130,10 @@ function assertUserSignedIn(user) {
  * @param {!AuthApiHelper} authApiHelper - The user to be checked.
  */
 function assertAuthScope(authApiHelper) {
-	const authScope = authApiHelper.resolveAuthScope();
-	if (!authScope || !authScope.token) {
-		throw new Error('You must have some type of authorization');
-	}
+  const authScope = authApiHelper.resolveAuthScope();
+  if (!authScope || !authScope.token) {
+    throw new Error('You must have some type of authorization');
+  }
 }
 
 /**
@@ -179,7 +179,7 @@ function assertValidFieldTypes(fieldTypes) {
 }
 
 export {
-	assertAuthScope,
+  assertAuthScope,
   assertBrowserEnvironment,
   assertDefAndNotNull,
   assertFunction,

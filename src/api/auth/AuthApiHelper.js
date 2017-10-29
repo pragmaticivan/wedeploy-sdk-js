@@ -39,7 +39,7 @@ import GoogleAuthProvider from './GoogleAuthProvider';
 import {Storage, LocalStorageMechanism} from 'metal-storage';
 
 import {
-	assertAuthScope,
+  assertAuthScope,
   assertDefAndNotNull,
   assertFunction,
   assertObject,
