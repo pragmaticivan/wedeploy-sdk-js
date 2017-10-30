@@ -1,6 +1,6 @@
 {
   "name": "wedeploy",
-  "version": "4.0.2",
+  "version": "4.1.0",
   "description": "The WeDeploy SDK for JavaScript",
   "engines": {
     "node": ">=8.7.0"
