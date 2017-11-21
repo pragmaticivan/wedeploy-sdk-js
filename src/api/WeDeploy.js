@@ -30,6 +30,7 @@
 
 'use strict';
 
+import SocketIo from 'socket.io-client';
 import globals from '../globals/globals';
 import {core} from 'metal';
 import Auth from './auth/Auth';
@@ -46,13 +47,8 @@ import {MultiMap} from 'metal-structs';
 import Uri from 'metal-uri';
 import {assertDefAndNotNull, assertUriWithNoPath} from './assertions';
 
-let io;
+let io = SocketIo;
 let FormDataImpl;
-
-// Optimistic initialization of `io` reference from global `globals.window.io`.
-if (typeof globals.window !== 'undefined') {
-  io = globals.window.io;
-}
 
 // Optimistic initialization of `FormData` reference from global
 // `globals.window.FormData`.
