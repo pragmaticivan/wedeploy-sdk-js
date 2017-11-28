@@ -32,7 +32,6 @@
 
 const babelPresetMetal = require('babel-preset-metal');
 const babelPresetResolveSource = require('babel-preset-metal-resolve-source');
-const concat = require('gulp-concat');
 const del = require('del');
 const eslint = require('gulp-eslint');
 const gulp = require('gulp');
@@ -42,7 +41,6 @@ const nodeExternals = require('webpack-node-externals');
 const replace = require('gulp-replace');
 const runSequence = require('run-sequence');
 const Server = require('karma').Server;
-const sourcemaps = require('gulp-sourcemaps');
 const webpack = require('webpack');
 
 const release = process.env.NODE_ENV === 'production';
@@ -283,7 +281,6 @@ gulp.task('build', function(done) {
   runSequence(
     'clear',
     ['lint', 'build:browser', 'build:node'],
-    'build:socket',
     'patch-socket.io',
     done
   );
@@ -297,17 +294,6 @@ gulp.task('ci', function(done) {
   console.warn('Not running tests (most likely due to security restrictions)');
   console.warn('See https://docs.travis-ci.com/user/sauce-connect/ for help');
   done();
-});
-
-gulp.task('build:socket', function() {
-  if (release) {
-    return concatSocketIORelease(
-      `build/browser/api${apiSuffix}.js`,
-      'build/browser'
-    );
-  } else {
-    return concatSocketIO(`build/browser/api${apiSuffix}.js`, 'build/browser');
-  }
 });
 
 gulp.task('build:watch', ['build'], function() {
@@ -324,7 +310,7 @@ gulp.task('lint', function() {
 gulp.task('patch-socket.io', function() {
   return gulp
     .src([`build/browser/api${apiSuffix}.js`])
-    .pipe(replace('(r.withCredentials=!0)', '(r.withCredentials=false)'))
+    .pipe(replace('if (\'withCredentials\' in xhr) {', 'if (false) {'))
     .pipe(gulp.dest('build/browser'));
 });
 
@@ -404,23 +390,3 @@ gulp.task('test:saucelabs', function(done) {
 
   new Server(config, done).start();
 });
-
-function concatSocketIO(filePath, dest) {
-  return gulp
-    .src(['node_modules/socket.io-client/dist/socket.io.slim.js', filePath])
-    .pipe(
-      sourcemaps.init({
-        loadMaps: true,
-      })
-    )
-    .pipe(concat(`api${apiSuffix}.js`))
-    .pipe(sourcemaps.write())
-    .pipe(gulp.dest(dest));
-}
-
-function concatSocketIORelease(filePath, dest) {
-  return gulp
-    .src(['node_modules/socket.io-client/dist/socket.io.slim.js', filePath])
-    .pipe(concat(`api${apiSuffix}.js`))
-    .pipe(gulp.dest(dest));
-}
